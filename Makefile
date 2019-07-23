@@ -87,3 +87,6 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+run:
+	@chalice local --port 8080 --host 0.0.0.0 --stage stg
