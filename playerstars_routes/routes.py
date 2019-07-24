@@ -9,4 +9,4 @@ root = Blueprint(__name__)
             cors=cors,
             authorizer=cupauth)
 def home():
-    from app import app
+    return "homezinha"

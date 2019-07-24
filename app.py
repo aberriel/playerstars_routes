@@ -16,10 +16,10 @@ app.register_blueprint(root, url_prefix='/')
 # app.register_blueprint(bp_produto, url_prefix='/')
 
 
-@app.route('/check')
+@app.route('/check', methods=['POST', 'GET'])
 def index():
     return {'status': 'ok',
-            'data': 'Aune Live is ALIVE!!!!'}
+            'data': 'PlayerStars is alive!!'}
 
 # The view function above will return {"hello": "world"}
 # whenever you make an HTTP GET request to '/'.
