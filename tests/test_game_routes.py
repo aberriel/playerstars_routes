@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 from playerstars_routes import get_all_games
 
 
-@patch('playerstars_routes.game_route.GetAllConsolesInteractor.run',
+@patch('playerstars_routes.game_route.GetAllGamesInteractor.run',
        MagicMock(return_value='ok'))
 def test_get_all_games():
     result = get_all_games()
@@ -12,7 +12,7 @@ def test_get_all_games():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.game_route.GetAllConsolesInteractor.run',
+@patch('playerstars_routes.game_route.GetAllGamesInteractor.run',
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
     result = get_all_games()
