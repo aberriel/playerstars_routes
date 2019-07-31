@@ -7,7 +7,7 @@ from app import index
 from playerstars_routes.routes import home
 from .test_utils import FakeDomain, FakeAdapter
 from unittest.mock import MagicMock, patch
-from playerstars_routes.chalice_support import server_error, success
+from playerstars_routes.chalice_support import success
 
 
 class FakePostRequestModel:
@@ -94,6 +94,3 @@ def test_get_root():
 def test_home():
     result = home()
     assert result == 'homezinha'
-
-
-
