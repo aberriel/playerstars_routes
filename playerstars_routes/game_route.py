@@ -1,7 +1,7 @@
 from chalice import Blueprint
 from .auth import cors, cupauth
 from playerstars_routes.chalice_support import (
-    success, not_found, server_error)
+    success, not_found, server_error, created)
 from playerstars_interactors import (
     GetAllGamesInteractor, PostGameRequestModel, PostGameInteractor,
     SaveGameException)
@@ -48,4 +48,4 @@ def post_game():
         response = interactor.run()
     except SaveGameException as e:
         return server_error(str(e))
-    return success(response)
+    return created(response)
