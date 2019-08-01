@@ -8,5 +8,5 @@ __version__ = '0.1.0'
 
 from .routes import root
 from .game_route import get_all_games, post_game
-from .region_country_route import get_all_region_country
+from .region_country_route import get_all_region_country, post_region_country
 
