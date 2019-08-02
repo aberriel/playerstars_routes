@@ -30,12 +30,12 @@ def make_post_mock_data():
             {
                 "name": "PS 4",
                 "logo_path": "/images/ps4.png",
-                "tag_name": "007"
+                "nickname": "007"
             },
             {
                 "name": "Xbox",
                 "logo_path": "/images/xbox.png",
-                "tag_name": "mario"
+                "nickname": "mario"
             }
         ]
     }"""
