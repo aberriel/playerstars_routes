@@ -5,7 +5,8 @@ from playerstars_routes.chalice_support import (
 from playerstars_interactors import (
     GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
     SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
-    GetConsoleResponseModel)
+    GetConsoleResponseModel, PutConsoleResponseModel, PutConsoleInteractor,
+    PutConsoleRequestModel, UpdateConsoleException)
 
 root = Blueprint(__name__)
 
@@ -53,3 +54,23 @@ def post_console():
     except SaveConsoleException as e:
         return server_error(str(e))
     return created(response)
+
+
+@root.route('/console/{console_id}',
+            methods=['PUT'],
+            cors=cors,
+            authorizer=cupauth)
+def put_console():
+    request = PutConsoleRequestModel(
+        console_id='id1',
+        name='Atari',
+        logo_path='/teste/atari.png',
+        games=[],
+        tag_name='alo'
+    )
+    interactor = PutConsoleInteractor(request)
+    try:
+        response = interactor.run()
+    except UpdateConsoleException as e:
+        return server_error(str(e))
+    return success(response)
