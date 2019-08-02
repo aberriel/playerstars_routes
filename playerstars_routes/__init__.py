@@ -11,3 +11,4 @@ from .game_route import get_all_games, post_game
 from .region_country_route import get_all_region_country, post_region_country
 from .console_route import (
     get_all_consoles, get_console, post_console, put_console)
+from .region_state_route import get_all_region_state, post_region_state
