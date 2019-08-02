@@ -3,6 +3,7 @@ enum34==1.1.6
 flake8==3.7.7
 flake8-bandit==2.1.1
 pip==18.1
+-e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/domain.git#egg=playerstars_domain
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-dynamodb-adapters.git#egg=playerstars_dynamodb_adapters
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-interactors.git#egg=playerstars_interactors
