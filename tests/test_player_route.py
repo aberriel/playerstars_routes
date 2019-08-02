@@ -44,10 +44,21 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-def test_player_registration():
-    pass
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.PlayerRegistrationInteractor.run')
+def test_player_registration(mock):
+    result = player_registration()
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.PlayerRegistrationInteractor.run',
+       MagicMock(side_effect=PlayerRegistrationException('oops')))
 def test_player_registration_raises():
-    pass
+    result = player_registration()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
