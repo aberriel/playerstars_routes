@@ -1,0 +1,129 @@
+from abc import abstractmethod
+from chalice import Blueprint
+from .auth import cors, cupauth
+from playerstars_routes.chalice_support import success, not_found, server_error, created
+
+root = Blueprint(__name__)
+
+
+class BasicRoute:
+
+    @root.route('/{entity_name}/',
+                methods=['GET'],
+                cors=cors,
+                authorizer=cupauth)
+    def get_all(self):
+        response = self.get_all_interactor().run()
+        if response:
+            return success(response)
+        return not_found(self.not_found_all_message())
+
+    @root.route('/{entity_name}/{entity_id}',
+                methods=['GET'],
+                cors=cors,
+                authorizer=cupauth)
+    def get_by_id(self, entity_id):
+        request = self.get_request_model()(entity_id)
+        interactor = self.get_interactor()(request)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(self.not_found_message())
+
+    @root.route('/{entity_name}/',
+                methods=['POST'],
+                cors=cors,
+                authorizer=cupauth)
+    def post(self):
+        from app import app
+        data = app.current_request.json
+        request = self.make_post_request(data)
+        interactor = self.post_interactor()(request)
+        try:
+            response = interactor.run()
+        except self.save_exception() as e:
+            return server_error(str(e))
+        return created(response)
+
+    @root.route('/{entity_name/{entity_id}/',
+                methods=['PUT'],
+                cors=cors,
+                authorizer=cupauth)
+    def put(self, entity_id):
+        from app import app
+        data = app.current_request.json_body
+        request = self.make_put_request(data)
+        interactor = self.put_interactor()(request)
+        try:
+            response = interactor.run()
+        except self.update_exception() as e:
+            return server_error(str(e))
+        return success(response)
+
+    @root.route('/{entity_name}/{entity_id}',
+                methods=['DELETE'],
+                cors=cors,
+                authorizer=cupauth)
+    def delete(self, entity_id):
+        request = self.delete_request_model()(entity_id)
+        interactor = self.delete_interactor()(request)
+        response = interactor.run()
+        if not response:
+            return not_found(self.delete_not_found())
+        return success(response)
+
+    @abstractmethod
+    def make_post_request(self, data):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def get_all_interactor(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def not_found_message(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def not_found_all_message(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def get_request_model(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def get_interactor(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def save_exception(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def post_interactor(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def make_put_request(self, data):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def update_exception(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def put_interactor(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def delete_request_model(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def delete_interactor(self):
+        raise NotImplementedError('Não foi implementado')
+
+    @abstractmethod
+    def delete_not_found(self):
+        raise NotImplementedError('Não foi implementado')

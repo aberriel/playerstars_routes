@@ -1,7 +1,8 @@
 import json
 from unittest.mock import MagicMock, patch
-from playerstars_routes import (
-    get_all_consoles, get_console, post_console, put_console, delete_console)
+from playerstars_routes.console_route import ConsoleRoute
+# from playerstars_routes import (
+#     get_all_consoles, get_console, post_console, put_console, delete_console)
 from playerstars_interactors import (
     SaveConsoleException, UpdateConsoleException)
 
@@ -9,8 +10,8 @@ from playerstars_interactors import (
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run')
 def test_get_all_games(mock):
-    result = get_all_consoles()
-
+    # result = ConsoleRoute().get_all_consoles()
+    result = ConsoleRoute().get_all()
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -20,7 +21,7 @@ def test_get_all_games(mock):
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
-    result = get_all_consoles()
+    result = ConsoleRoute().get_all()
 
     assert result.body['message'] == 'Nenhum console encontrado'
     assert result.body['status'] == 'error'
@@ -30,8 +31,8 @@ def test_get_all_games_not_found():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.GetConsoleInteractor.run')
 def test_get_console(mock):
-    result = get_console('id1')
-
+    # result = ConsoleRoute().get_console('id1')
+    result = ConsoleRoute().get_by_id('id1')
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -41,7 +42,7 @@ def test_get_console(mock):
 @patch('playerstars_routes.console_route.GetConsoleInteractor.run',
        MagicMock(return_value=None))
 def test_get_console_not_found():
-    result = get_console('id1')
+    result = ConsoleRoute().get_by_id('id1')
 
     assert result.body['message'] == 'Console não encontrado'
     assert result.body['status'] == 'error'
@@ -59,11 +60,23 @@ def make_post_mock_data():
     return MagicMock(current_request=MagicMock(json_body=data))
 
 
+def make_put_mock_data():
+    payload = """{
+    "entity_id": "id1",
+    "name": "Super Nintendo",
+    "logo_path": "/images/ss.png",
+    "tag_name": "nick#1",
+    "games" : []
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(json_body=data))
+
+
 # noinspection PyUnusedLocal
 @patch('app.app', make_post_mock_data())
 @patch('playerstars_routes.console_route.PostConsoleInteractor.run')
 def test_post_console(mock):
-    result = post_console()
+    result = ConsoleRoute().post()
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -75,7 +88,7 @@ def test_post_console(mock):
 @patch('playerstars_routes.console_route.PostConsoleInteractor.run',
        MagicMock(side_effect=SaveConsoleException('oops')))
 def test_post_console_raises():
-    result = post_console()
+    result = ConsoleRoute().post()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -83,9 +96,10 @@ def test_post_console_raises():
 
 
 # noinspection PyUnusedLocal
+@patch('app.app', make_put_mock_data())
 @patch('playerstars_routes.console_route.PutConsoleInteractor.run')
 def test_put_console(mock):
-    result = put_console()
+    result = ConsoleRoute().put('id1')
 
     mock.assert_called_once()
     assert result.body['data']
@@ -94,10 +108,11 @@ def test_put_console(mock):
 
 
 # noinspection PyUnusedLocal
+@patch('app.app', make_put_mock_data())
 @patch('playerstars_routes.console_route.PutConsoleInteractor.run',
        MagicMock(side_effect=UpdateConsoleException('oops')))
 def test_put_console_raises():
-    result = put_console()
+    result = ConsoleRoute().put('id1')
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -107,7 +122,7 @@ def test_put_console_raises():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.DeleteConsoleInteractor.run')
 def test_delete_console(mock):
-    result = delete_console('id1')
+    result = ConsoleRoute().delete('id1')
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -118,7 +133,7 @@ def test_delete_console(mock):
 @patch('playerstars_routes.console_route.DeleteConsoleInteractor.run',
        MagicMock(return_value=None))
 def test_delete_console_not_found():
-    result = delete_console('id1')
+    result = ConsoleRoute().delete('id1')
 
     assert result.body['message'] == 'Console não encontrado para ser deletado'
     assert result.body['status'] == 'error'
