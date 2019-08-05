@@ -1,9 +1,11 @@
 from chalice import Blueprint
 from .auth import cors, cupauth
 from playerstars_interactors import (
+    GetRegionCountryInteractor,
     GetAllCountryRegionsInteractor,
     PostRegionCountryRequestModel,
     PostRegionCountryInteractor,
+    GetRegionCountryRequestModel,
     SaveRegionCountryException)
 from playerstars_routes.chalice_support import (
     success, not_found, server_error)
@@ -21,6 +23,19 @@ def get_all_region_country():
     if response:
         return success(response)
     return not_found("Nenhuma região encontrada")
+
+
+@root.route('/region-country/{region_id}',
+            methods=['GET'],
+            cors=cors,
+            authorizer=cupauth)
+def get_region_country(region_id):
+    request = GetRegionCountryRequestModel(region_id)
+    interactor = GetRegionCountryInteractor(request)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found("Região não encontrada")
 
 
 @root.route('/region-country/',
