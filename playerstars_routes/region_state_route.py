@@ -1,43 +1,48 @@
-from chalice import Blueprint
-from .auth import cors, cupauth
 from playerstars_interactors import (
-    GetAllCountryRegionsInteractor,
-    PostRegionCountryRequestModel,
-    PostRegionCountryInteractor,
-    SaveRegionCountryException)
+    GetAllStateRegionsInteractor,
+    PostRegionStateRequestModel,
+    PostRegionStateInteractor,
+    SaveRegionStateException)
 from playerstars_routes.chalice_support import (
     success, not_found, server_error)
+from chalice import Blueprint
+from .auth import cors, cupauth
 
 root = Blueprint(__name__)
 
 
-@root.route('/region-country/',
+@root.route('/region-state/',
             methods=['GET'],
             cors=cors,
             authorizer=cupauth)
-def get_all_region_country():
-    interactor = GetAllCountryRegionsInteractor
+def get_all_region_state():
+    interactor = GetAllStateRegionsInteractor
     response = interactor.run()
     if response:
         return success(response)
     return not_found("Nenhuma região encontrada")
 
 
-@root.route('/region-country/',
+@root.route('/region-state/',
             methods=['POST'],
             cors=cors,
             authorizer=cupauth)
-def post_region_country():
+def post_region_state():
     from app import app
     body = app.current_request.json_body
-    request = PostRegionCountryRequestModel(
+    request = PostRegionStateRequestModel(
         name=body['name'],
         minimum_bet=body['minimum_bet'],
-        countries=body['countries']
+        states=body['states']
     )
-    interactor = PostRegionCountryInteractor(request)
+    interactor = PostRegionStateInteractor(request)
     try:
         response = interactor.run()
-    except SaveRegionCountryException as e:
+    except SaveRegionStateException as e:
         return server_error(str(e))
     return success(response)
+
+
+
+
+
