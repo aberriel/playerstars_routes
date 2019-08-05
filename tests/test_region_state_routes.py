@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 from playerstars_routes import (
     get_all_region_state,
+    get_region_state,
     post_region_state)
 import json
 from playerstars_interactors import SaveRegionStateException
@@ -23,6 +24,26 @@ def test_get_all_region_state():
 def teste_get_all_region_state_not_found():
     result = get_all_region_state()
 
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run')
+def test_get_region_state(mock):
+    result = get_region_state('1d001')
+
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run',
+       MagicMock(return_value=None))
+def test_get_region_state_not_found():
+    result = get_region_state('id001')
+
+    assert result.body['message'] == 'Região não encontrada'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

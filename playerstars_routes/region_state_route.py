@@ -1,7 +1,10 @@
 from playerstars_interactors import (
     GetAllStateRegionsInteractor,
+    GetRegionStateRequestModel,
     PostRegionStateRequestModel,
     PostRegionStateInteractor,
+    GetRegionStateInteractor,
+    GetRegionStateResponseModel,
     SaveRegionStateException)
 from playerstars_routes.chalice_support import (
     success, not_found, server_error)
@@ -21,6 +24,19 @@ def get_all_region_state():
     if response:
         return success(response)
     return not_found("Nenhuma região encontrada")
+
+
+@root.route('/region-state/{region_id}',
+            methods=['GET'],
+            cors=cors,
+            authorizer=cupauth)
+def get_region_state(region_id):
+    request = GetRegionStateRequestModel(region_id)
+    interactor = GetRegionStateInteractor(request)
+    response: GetRegionStateResponseModel = interactor.run()
+    if not response:
+        return not_found("Região não encontrada")
+    return success(response)
 
 
 @root.route('/region-state/',
