@@ -5,8 +5,9 @@ from playerstars_routes.chalice_support import (
 from playerstars_interactors import (
     GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
     SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
-    GetConsoleResponseModel, PutConsoleResponseModel, PutConsoleInteractor,
-    PutConsoleRequestModel, UpdateConsoleException)
+    GetConsoleResponseModel, PutConsoleInteractor,
+    PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
+    DeleteConsoleRequestModel)
 
 root = Blueprint(__name__)
 
@@ -74,3 +75,16 @@ def put_console():
     except UpdateConsoleException as e:
         return server_error(str(e))
     return success(response)
+
+
+@root.route('/console/{console_id}',
+            methods=['DELETE'],
+            cors=cors,
+            authorizer=cupauth)
+def delete_console(console_id):
+    request = DeleteConsoleRequestModel(console_id)
+    interactor = DeleteConsoleInteractor(request)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found("Console não encontrado para ser deletado")
