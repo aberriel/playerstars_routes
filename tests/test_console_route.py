@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 from playerstars_routes import (
-    get_all_consoles, get_console, post_console, put_console)
+    get_all_consoles, get_console, post_console, put_console, delete_console)
 from playerstars_interactors import (
     SaveConsoleException, UpdateConsoleException)
 
@@ -102,3 +102,24 @@ def test_put_console_raises():
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.console_route.DeleteConsoleInteractor.run')
+def test_delete_console(mock):
+    result = delete_console('id1')
+
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.console_route.DeleteConsoleInteractor.run',
+       MagicMock(return_value=None))
+def test_delete_console_not_found():
+    result = delete_console('id1')
+
+    assert result.body['message'] == 'Console não encontrado para ser deletado'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404

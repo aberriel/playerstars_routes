@@ -6,6 +6,7 @@ pip==18.1
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/domain.git#egg=playerstars_domain
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-dynamodb-adapters.git#egg=playerstars_dynamodb_adapters
 -e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-interactors.git#egg=playerstars_interactors
+-e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
 pytest==5.0.0
 pytest-cov==2.7.1
 Sphinx==2.1.2

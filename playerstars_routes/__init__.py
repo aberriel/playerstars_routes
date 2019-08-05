@@ -9,6 +9,6 @@ __version__ = '0.1.0'
 from .routes import root
 from .game_route import get_all_games, post_game
 from .region_country_route import get_all_region_country
-from . console_route import (
-    get_all_consoles, get_console, post_console, put_console)
+from .console_route import (
+    get_all_consoles, get_console, post_console, put_console, delete_console)
 
