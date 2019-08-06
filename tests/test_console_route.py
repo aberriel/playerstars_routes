@@ -1,6 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
-from playerstars_routes.console_route import ConsoleRoute
+from playerstars_routes import post_console, put_console, \
+    get_all_console, get_console_by_id, delete_console
 # from playerstars_routes import (
 #     get_all_consoles, get_console, post_console, put_console, delete_console)
 from playerstars_interactors import (
@@ -11,7 +12,7 @@ from playerstars_interactors import (
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run')
 def test_get_all_games(mock):
     # result = ConsoleRoute().get_all_consoles()
-    result = ConsoleRoute().get_all()
+    result = get_all_console()
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -21,7 +22,7 @@ def test_get_all_games(mock):
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
-    result = ConsoleRoute().get_all()
+    result = get_all_console()
 
     assert result.body['message'] == 'Nenhum console encontrado'
     assert result.body['status'] == 'error'
@@ -32,7 +33,7 @@ def test_get_all_games_not_found():
 @patch('playerstars_routes.console_route.GetConsoleInteractor.run')
 def test_get_console(mock):
     # result = ConsoleRoute().get_console('id1')
-    result = ConsoleRoute().get_by_id('id1')
+    result = get_console_by_id('id1')
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -42,7 +43,7 @@ def test_get_console(mock):
 @patch('playerstars_routes.console_route.GetConsoleInteractor.run',
        MagicMock(return_value=None))
 def test_get_console_not_found():
-    result = ConsoleRoute().get_by_id('id1')
+    result = get_console_by_id('id1')
 
     assert result.body['message'] == 'Console não encontrado'
     assert result.body['status'] == 'error'
@@ -76,7 +77,7 @@ def make_put_mock_data():
 @patch('app.app', make_post_mock_data())
 @patch('playerstars_routes.console_route.PostConsoleInteractor.run')
 def test_post_console(mock):
-    result = ConsoleRoute().post()
+    result = post_console()
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -88,7 +89,7 @@ def test_post_console(mock):
 @patch('playerstars_routes.console_route.PostConsoleInteractor.run',
        MagicMock(side_effect=SaveConsoleException('oops')))
 def test_post_console_raises():
-    result = ConsoleRoute().post()
+    result = post_console()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -99,7 +100,7 @@ def test_post_console_raises():
 @patch('app.app', make_put_mock_data())
 @patch('playerstars_routes.console_route.PutConsoleInteractor.run')
 def test_put_console(mock):
-    result = ConsoleRoute().put('id1')
+    result = put_console('id1')
 
     mock.assert_called_once()
     assert result.body['data']
@@ -112,7 +113,7 @@ def test_put_console(mock):
 @patch('playerstars_routes.console_route.PutConsoleInteractor.run',
        MagicMock(side_effect=UpdateConsoleException('oops')))
 def test_put_console_raises():
-    result = ConsoleRoute().put('id1')
+    result = put_console('id1')
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -122,7 +123,7 @@ def test_put_console_raises():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.DeleteConsoleInteractor.run')
 def test_delete_console(mock):
-    result = ConsoleRoute().delete('id1')
+    result = delete_console('id1')
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -133,7 +134,7 @@ def test_delete_console(mock):
 @patch('playerstars_routes.console_route.DeleteConsoleInteractor.run',
        MagicMock(return_value=None))
 def test_delete_console_not_found():
-    result = ConsoleRoute().delete('id1')
+    result = delete_console('id1')
 
     assert result.body['message'] == 'Console não encontrado para ser deletado'
     assert result.body['status'] == 'error'

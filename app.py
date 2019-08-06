@@ -1,6 +1,7 @@
 from chalice import Chalice
 
 from playerstars_routes import root
+from playerstars_routes.console_route import root as root2
 # from chalicelib.settings import Settings
 
 app = Chalice(app_name='playerstars')
@@ -11,6 +12,7 @@ app.experimental_feature_flags.update([
 ])
 
 app.register_blueprint(root, url_prefix='/')
+app.register_blueprint(root2, url_prefix='/api/')
 # app.register_blueprint(bp_express_checkout, url_prefix='/gateway')
 # app.register_blueprint(bp_pagseguro, url_prefix='/pagseguro')
 # app.register_blueprint(bp_produto, url_prefix='/')

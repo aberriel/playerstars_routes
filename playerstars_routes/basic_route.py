@@ -8,20 +8,12 @@ root = Blueprint(__name__)
 
 class BasicRoute:
 
-    @root.route('/{entity_name}/',
-                methods=['GET'],
-                cors=cors,
-                authorizer=cupauth)
     def get_all(self):
         response = self.get_all_interactor().run()
         if response:
             return success(response)
         return not_found(self.not_found_all_message())
 
-    @root.route('/{entity_name}/{entity_id}',
-                methods=['GET'],
-                cors=cors,
-                authorizer=cupauth)
     def get_by_id(self, entity_id):
         request = self.get_request_model()(entity_id)
         interactor = self.get_interactor()(request)
@@ -30,13 +22,7 @@ class BasicRoute:
             return success(response)
         return not_found(self.not_found_message())
 
-    @root.route('/{entity_name}/',
-                methods=['POST'],
-                cors=cors,
-                authorizer=cupauth)
-    def post(self):
-        from app import app
-        data = app.current_request.json
+    def post(self, data):
         request = self.make_post_request(data)
         interactor = self.post_interactor()(request)
         try:
@@ -45,13 +31,7 @@ class BasicRoute:
             return server_error(str(e))
         return created(response)
 
-    @root.route('/{entity_name/{entity_id}/',
-                methods=['PUT'],
-                cors=cors,
-                authorizer=cupauth)
-    def put(self, entity_id):
-        from app import app
-        data = app.current_request.json_body
+    def put(self, data):
         request = self.make_put_request(data)
         interactor = self.put_interactor()(request)
         try:
@@ -60,10 +40,6 @@ class BasicRoute:
             return server_error(str(e))
         return success(response)
 
-    @root.route('/{entity_name}/{entity_id}',
-                methods=['DELETE'],
-                cors=cors,
-                authorizer=cupauth)
     def delete(self, entity_id):
         request = self.delete_request_model()(entity_id)
         interactor = self.delete_interactor()(request)

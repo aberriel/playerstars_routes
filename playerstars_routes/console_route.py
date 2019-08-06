@@ -5,12 +5,53 @@ from playerstars_interactors import (
     GetConsoleResponseModel, PutConsoleInteractor,
     PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
     DeleteConsoleRequestModel)
+from .auth import cors, cupauth
 from playerstars_routes.basic_route import BasicRoute
 
 root = Blueprint(__name__)
 
 
+@root.route('/console/',
+            methods=['GET'],
+            cors=cors)
+def get_all_console():
+    return ConsoleRoute().get_all()
+
+
+@root.route('/console/{entity_id}',
+            methods=['GET'],
+            cors=cors)
+def get_console_by_id(entity_id):
+    return ConsoleRoute().get_by_id(entity_id)
+
+
+@root.route('/console/',
+            methods=['POST'],
+            cors=cors)
+def post_console():
+    from app import app
+    data = app.current_request.json_body
+    return ConsoleRoute().post(data)
+
+
+@root.route('/console/{entity_id}/',
+            methods=['PUT'],
+            cors=cors)
+def put_console(entity_id):
+    from app import app
+    data = app.current_request.json_body
+    return ConsoleRoute().put(data)
+
+
+@root.route('/console/{entity_id}',
+            methods=['DELETE'],
+            cors=cors)
+def delete_console(entity_id):
+    return ConsoleRoute().delete(entity_id)
+
+
 class ConsoleRoute(BasicRoute):
+
     def make_post_request(self, data):
         return PostConsoleRequestModel(
             name=data['name'],
