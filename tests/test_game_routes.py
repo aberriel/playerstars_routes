@@ -14,7 +14,7 @@ def test_get_all_games(mock):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.game_route.GetAllGamesInteractor.run',
+@patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
     result = get_all_games()
