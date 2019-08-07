@@ -41,7 +41,6 @@ def make_post_mock_data():
                 }]
     }"""
     data = json.loads(payload)
-    print(data)
     return MagicMock(current_request=MagicMock(json_body=data))
 
 

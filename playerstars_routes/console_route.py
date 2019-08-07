@@ -1,90 +1,95 @@
 from chalice import Blueprint
-from .auth import cors, cupauth
-from playerstars_routes.chalice_support import (
-    success, not_found, server_error, bad_request, created)
 from playerstars_interactors import (
     GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
     SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
     GetConsoleResponseModel, PutConsoleInteractor,
     PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
     DeleteConsoleRequestModel)
+from .auth import cors, cupauth
+from playerstars_routes.basic_route import BasicRoute
 
-root = Blueprint(__name__)
-
-
-@root.route('/console/',
-            methods=['GET'],
-            cors=cors,
-            authorizer=cupauth)
-def get_all_consoles():
-    interactor = GetAllConsolesInteractor
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Nenhum console encontrado")
+bp_console = Blueprint(__name__)
 
 
-@root.route('/console/{console_id}',
-            methods=['GET'],
-            cors=cors,
-            authorizer=cupauth)
-def get_console(console_id):
-    request = GetConsoleRequestModel(console_id)
-    interactor = GetConsoleInteractor(request)
-    response: GetConsoleResponseModel = interactor.run()
-    if not response:
-        return not_found("Console não encontrado")
-    return success(response)
+@bp_console.route('/console', methods=['GET'], cors=cors)
+def get_all_console():
+    return ConsoleRoute().get_all()
 
 
-@root.route('/console/',
-            methods=['POST'],
-            cors=cors,
-            authorizer=cupauth)
+@bp_console.route('/console/{entity_id}', methods=['GET'], cors=cors)
+def get_console_by_id(entity_id):
+    return ConsoleRoute().get_by_id(entity_id)
+
+
+@bp_console.route('/console', methods=['POST'], cors=cors)
 def post_console():
     from app import app
     data = app.current_request.json_body
-    request = PostConsoleRequestModel(
-        name=data['name'],
-        logo_path=data['logo_path'],
-        games=data['games'],
-        tag_name=data['tag_name'])
-    interactor = PostConsoleInteractor(request)
-    try:
-        response = interactor.run()
-    except SaveConsoleException as e:
-        return server_error(str(e))
-    return created(response)
+    return ConsoleRoute().post(data)
 
 
-@root.route('/console/{console_id}',
-            methods=['PUT'],
-            cors=cors,
-            authorizer=cupauth)
-def put_console():
-    request = PutConsoleRequestModel(
-        console_id='id1',
-        name='Atari',
-        logo_path='/teste/atari.png',
-        games=[],
-        tag_name='alo'
-    )
-    interactor = PutConsoleInteractor(request)
-    try:
-        response = interactor.run()
-    except UpdateConsoleException as e:
-        return server_error(str(e))
-    return success(response)
+@bp_console.route('/console/{entity_id}', methods=['PUT'], cors=cors)
+def put_console(entity_id):
+    from app import app
+    data = app.current_request.json_body
+    return ConsoleRoute().put(data)
 
 
-@root.route('/console/{console_id}',
-            methods=['DELETE'],
-            cors=cors,
-            authorizer=cupauth)
-def delete_console(console_id):
-    request = DeleteConsoleRequestModel(console_id)
-    interactor = DeleteConsoleInteractor(request)
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Console não encontrado para ser deletado")
+@bp_console.route('/console/{entity_id}', methods=['DELETE'], cors=cors)
+def delete_console(entity_id):
+    return ConsoleRoute().delete(entity_id)
+
+
+class ConsoleRoute(BasicRoute):
+
+    def make_post_request(self, data):
+        return PostConsoleRequestModel(
+            name=data['name'],
+            logo_path=data['logo_path'],
+            games=data['games'],
+            tag_name=data['tag_name'])
+
+    def make_put_request(self, data):
+        return PutConsoleRequestModel(
+            console_id=data['entity_id'],
+            name=data['name'],
+            logo_path=data['logo_path'],
+            games=data['games'],
+            tag_name=data['tag_name']
+        )
+
+    def get_all_interactor(self):
+        return GetAllConsolesInteractor
+
+    def not_found_message(self):
+        return 'Console não encontrado'
+
+    def not_found_all_message(self):
+        return 'Nenhum console encontrado'
+
+    def get_request_model(self):
+        return GetConsoleRequestModel
+
+    def get_interactor(self):
+        return GetConsoleInteractor
+
+    def save_exception(self):
+        return SaveConsoleException
+
+    def post_interactor(self):
+        return PostConsoleInteractor
+
+    def update_exception(self):
+        return UpdateConsoleException
+
+    def put_interactor(self):
+        return PutConsoleInteractor
+
+    def delete_request_model(self):
+        return DeleteConsoleRequestModel
+
+    def delete_interactor(self):
+        return DeleteConsoleInteractor
+
+    def delete_not_found(self):
+        return 'Console não encontrado para ser deletado'
