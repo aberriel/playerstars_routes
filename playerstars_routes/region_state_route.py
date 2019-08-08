@@ -57,8 +57,3 @@ def post_region_state():
     except SaveRegionStateException as e:
         return server_error(str(e))
     return success(response)
-
-
-
-
-

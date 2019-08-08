@@ -3,10 +3,10 @@
 
 from .auth import cors, cupauth
 from chalice import Blueprint
-from playerstars_interactors import PostPlayerResponseModel, \
+from playerstars_interactors import \
     PostPlayerRequestModel, PostPlayerInteractor, SavePlayerException, \
-    GetPlayerInteractor, GetPlayerResponseModel, GetPlayerRequestModel, \
-    GetAllPlayersResponseModel, GetAllPlayersInteractor
+    GetPlayerInteractor, GetPlayerRequestModel, \
+    GetAllPlayersInteractor
 from playerstars_routes.basic_route import BasicRoute
 
 bp_player = Blueprint(__name__)
@@ -22,7 +22,7 @@ def post_player():
 
 @bp_player.route(
     '/player/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
-def get_player(entity_id):
+def get_player_by_id(entity_id):
     return PlayerRoute().get_by_id(entity_id)
 
 
@@ -52,7 +52,10 @@ class PlayerRoute(BasicRoute):
             country=data['country'],
             postal_code=data['postal_code'],
             promo_code=data['promo_code'],
-            consoles=data['consoles']
+            consoles=data['consoles'],
+            favorites=data['favorites'],
+            blue_star_balance=data['blue_star_balance'],
+            golden_star_balance=data['golden_star_balance']
         )
 
     def make_put_request(self, data):
@@ -62,10 +65,10 @@ class PlayerRoute(BasicRoute):
         return GetAllPlayersInteractor
 
     def not_found_message(self):
-        return 'Console não encontrado'
+        return 'Player não encontrado'
 
     def not_found_all_message(self):
-        return 'Nenhum console encontrado'
+        return 'Nenhum player encontrado'
 
     def get_request_model(self):
         return GetPlayerRequestModel
@@ -92,4 +95,4 @@ class PlayerRoute(BasicRoute):
         return NotImplementedError('Não implementado no interactor')
 
     def delete_not_found(self):
-        return 'Console não encontrado para ser deletado'
+        return 'Player não encontrado para ser deletado'

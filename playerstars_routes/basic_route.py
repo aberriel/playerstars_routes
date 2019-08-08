@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from chalice import Blueprint
-from .auth import cors, cupauth
-from playerstars_routes.chalice_support import success, not_found, server_error, created
+from playerstars_routes.chalice_support import success, \
+    not_found, server_error, created
 
 root = Blueprint(__name__)
 
@@ -24,7 +24,6 @@ class BasicRoute:
 
     def post(self, data):
         request = self.make_post_request(data)
-        print('POST REQUEST MODEL: ', request)
         interactor = self.post_interactor()(request)
         try:
             response = interactor.run()

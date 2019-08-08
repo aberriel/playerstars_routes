@@ -2,8 +2,6 @@ import json
 from unittest.mock import MagicMock, patch
 from playerstars_routes import post_console, put_console, \
     get_all_console, get_console_by_id, delete_console
-# from playerstars_routes import (
-#     get_all_consoles, get_console, post_console, put_console, delete_console)
 from playerstars_interactors import (
     SaveConsoleException, UpdateConsoleException)
 

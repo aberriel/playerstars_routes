@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from unittest.mock import MagicMock, patch
-from playerstars_routes import (player_registration)
-from playerstars_interactors import PlayerRegistrationException
+from playerstars_routes import post_player, get_player_by_id, get_all_player
+from playerstars_interactors import SavePlayerException
 
 import json
 
@@ -26,16 +26,22 @@ def make_post_mock_data():
         "postal_code": "22333-000",
         "promo_code": "ABC123",
         "profile_image": "ACCBB4762CF23AA35690CC",
+        "favorites":[],
+        "blue_star_balance":123,
+        "golden_star_balance":  4321,
         "consoles": [
             {
+                "entity_id": "1",
                 "name": "PS 4",
                 "logo_path": "/images/ps4.png",
-                "nickname": "007"
+                "tag_name": "007"
             },
             {
+                "entity_id": "11",
                 "name": "Xbox",
                 "logo_path": "/images/xbox.png",
-                "nickname": "mario"
+                "tag_name": "mario",
+                "games": []
             }
         ]
     }"""
@@ -45,20 +51,67 @@ def make_post_mock_data():
 
 # noinspection PyUnusedLocal
 @patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.PlayerRegistrationInteractor.run')
-def test_player_registration(mock):
-    result = player_registration()
+@patch('playerstars_routes.player_route.PostPlayerInteractor.run')
+def test_post_player(mock):
+    result = post_player()
     mock.assert_called_once()
+
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
 @patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.PlayerRegistrationInteractor.run',
-       MagicMock(side_effect=PlayerRegistrationException('oops')))
-def test_player_registration_raises():
-    result = player_registration()
+@patch('playerstars_routes.player_route.PostPlayerInteractor.run',
+       MagicMock(side_effect=SavePlayerException('oops')))
+def test_post_player_raises():
+    result = post_player()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.GetPlayerInteractor.run')
+def test_get_player(mock):
+    result = get_player_by_id('id1')
+    mock.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.GetPlayerInteractor.run',
+       return_value=None)
+def test_get_player_raises(mock):
+    result = get_player_by_id('id1')
+    mock.assert_called_once()
+    assert result.body['message'] == "Player não encontrado"
+    assert result.body['status'] == "error"
+    assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.GetAllPlayersInteractor.run')
+def test_get_all_player(mock):
+    result = get_all_player()
+    mock.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_post_mock_data())
+@patch('playerstars_routes.player_route.GetAllPlayersInteractor.run',
+       return_value=None)
+def test_get_all_player_raises(mock):
+    result = get_all_player()
+    mock.assert_called_once()
+    assert result.body['message'] == "Nenhum player encontrado"
+    assert result.body['status'] == "error"
+    assert result.status_code == 404
