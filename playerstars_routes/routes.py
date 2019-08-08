@@ -6,6 +6,7 @@ root = Blueprint(__name__)
 
 @root.route('/',
             methods=['GET', 'POST'],
-            cors=cors)
+            cors=cors,
+            authorizer=cupauth)
 def home():
     return "homezinha"

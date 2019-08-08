@@ -2,7 +2,7 @@ from chalice import Blueprint
 from playerstars_interactors import (
     GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
     SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
-    GetConsoleResponseModel, PutConsoleInteractor,
+    PutConsoleInteractor,
     PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
     DeleteConsoleRequestModel)
 from .auth import cors, cupauth
@@ -11,31 +11,35 @@ from playerstars_routes.basic_route import BasicRoute
 bp_console = Blueprint(__name__)
 
 
-@bp_console.route('/console', methods=['GET'], cors=cors)
+@bp_console.route('/console', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_console():
     return ConsoleRoute().get_all()
 
 
-@bp_console.route('/console/{entity_id}', methods=['GET'], cors=cors)
+@bp_console.route(
+    '/console/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_console_by_id(entity_id):
     return ConsoleRoute().get_by_id(entity_id)
 
 
-@bp_console.route('/console', methods=['POST'], cors=cors)
+@bp_console.route(
+    '/console', methods=['POST'], cors=cors, authorizer=cupauth)
 def post_console():
     from app import app
     data = app.current_request.json_body
     return ConsoleRoute().post(data)
 
 
-@bp_console.route('/console/{entity_id}', methods=['PUT'], cors=cors)
+@bp_console.route(
+    '/console/{entity_id}', methods=['PUT'], cors=cors, authorizer=cupauth)
 def put_console(entity_id):
     from app import app
     data = app.current_request.json_body
     return ConsoleRoute().put(data)
 
 
-@bp_console.route('/console/{entity_id}', methods=['DELETE'], cors=cors)
+@bp_console.route(
+    '/console/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
 def delete_console(entity_id):
     return ConsoleRoute().delete(entity_id)
 
