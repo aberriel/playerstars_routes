@@ -9,7 +9,7 @@ __version__ = '0.1.0'
 from .console_route import ConsoleRoute, post_console, put_console, \
     get_all_console, get_console_by_id, delete_console
 from .game_route import get_all_games, post_game
-from .player_route import player_registration
+from .player_route import PlayerRoute, post_player
 from .region_country_route import get_all_region_country, post_region_country, get_region_country
 from .region_state_route import get_all_region_state, post_region_state, get_region_state
 from .routes import root
