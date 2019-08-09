@@ -1,13 +1,13 @@
 import json
+import pytest
 from unittest.mock import MagicMock, patch
-from playerstars_routes import get_all_games, post_game
+from playerstars_routes import get_all_games, post_game, GameRoute
 from playerstars_interactors import SaveGameException
 
 
 @patch('playerstars_routes.game_route.GetAllGamesInteractor.run')
 def test_get_all_games(mock):
     result = get_all_games()
-
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -63,3 +63,33 @@ def test_post_game_raises():
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def test_not_implemented():
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().get_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().get_request_model()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().not_found_message()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().make_put_request()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().update_exception()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().delete_request_model()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().delete_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().put_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        GameRoute().delete_not_found()
+    assert str(exc.value) == "Não implementado no interactor"

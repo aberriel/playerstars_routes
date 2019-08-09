@@ -1,51 +1,69 @@
 from chalice import Blueprint
-from .auth import cors, cupauth
-from playerstars_routes.chalice_support import (
-    success, not_found, server_error, created)
+from .auth import cors
 from playerstars_interactors import (
     GetAllGamesInteractor, PostGameRequestModel, PostGameInteractor,
     SaveGameException)
-from playerstars_domain import Console
+from playerstars_routes.basic_route import BasicRoute
 
 
-root = Blueprint(__name__)
+bp_game = Blueprint(__name__)
 
 
-@root.route('/game/',
-            methods=['GET'],
-            cors=cors,
-            authorizer=cupauth)
+@bp_game.route('/game/', methods=['GET'], cors=cors)
 def get_all_games():
-    interactor = GetAllGamesInteractor
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Nenhum jogo encontrado")
+    return GameRoute().get_all()
 
 
-@root.route('/game/',
-            methods=['POST'],
-            cors=cors,
-            authorizer=cupauth)
+@bp_game.route('/game/', methods=['POST'], cors=cors)
 def post_game():
     from app import app
-    body = app.current_request.json_body
-    console_list = list()
-    for console in body['consoles']:
-        console_list.append(Console(
-            name=console['name'],
-            entity_id=console['entity_id'],
-            logo_path=console['logo_path'],
-            tag_name=console['tag_name']
-        ))
-    request = PostGameRequestModel(
-        name=body['name'],
-        logo_path=body['logo_path'],
-        consoles=console_list
-    )
-    interactor = PostGameInteractor(request)
-    try:
-        response = interactor.run()
-    except SaveGameException as e:
-        return server_error(str(e))
-    return created(response)
+    data = app.current_request.json_body
+    return GameRoute().post(data)
+
+
+class GameRoute(BasicRoute):
+
+    def make_post_request(self, data):
+        return PostGameRequestModel(
+            name=data['name'],
+            logo_path=data['logo_path'],
+            consoles=data['consoles'])
+
+    def get_all_interactor(self):
+        return GetAllGamesInteractor
+
+    def not_found_message(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def not_found_all_message(self):
+        return "Nenhum jogo encontrado"
+
+    def get_request_model(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def get_interactor(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def save_exception(self):
+        return SaveGameException
+
+    def post_interactor(self):
+        return PostGameInteractor
+
+    def make_put_request(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def update_exception(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def put_interactor(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def delete_request_model(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def delete_interactor(self):
+        raise NotImplementedError("Não implementado no interactor")
+
+    def delete_not_found(self):
+        raise NotImplementedError("Não implementado no interactor")
