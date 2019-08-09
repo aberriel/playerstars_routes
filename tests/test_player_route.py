@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from unittest.mock import MagicMock, patch
-from playerstars_routes import post_player, get_player_by_id, get_all_player
+from playerstars_routes import \
+    post_player, get_player_by_id, get_all_player, PlayerRoute
 from playerstars_interactors import SavePlayerException
 
 import json
+import pytest
 
 
 def make_post_mock_data():
@@ -115,3 +117,23 @@ def test_get_all_player_raises(mock):
     assert result.body['message'] == "Nenhum player encontrado"
     assert result.body['status'] == "error"
     assert result.status_code == 404
+
+
+def test_not_implemented():
+    with pytest.raises(NotImplementedError) as exc:
+        PlayerRoute().make_put_request({})
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        PlayerRoute().update_exception()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        PlayerRoute().delete_request_model()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        PlayerRoute().delete_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        PlayerRoute().put_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    assert PlayerRoute().delete_not_found() == 'Player não encontrado para' \
+                                               ' ser deletado'
