@@ -17,7 +17,6 @@ app.experimental_feature_flags.update([
 
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_console, url_prefix='/api/')
-app.register_blueprint(bp_console, url_prefix='/api')
 app.register_blueprint(bp_game, url_prefix='/api')
 app.register_blueprint(bp_player, url_prefix='/api/')
 app.register_blueprint(bp_region_country, url_prefix='/api/')
