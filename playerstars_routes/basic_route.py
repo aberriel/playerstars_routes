@@ -24,7 +24,6 @@ class BasicRoute:
 
     def post(self, data):
         request = self.make_post_request(data)
-        print('POST REQUEST MODEL: ', request)
         interactor = self.post_interactor()(request)
         try:
             response = interactor.run()

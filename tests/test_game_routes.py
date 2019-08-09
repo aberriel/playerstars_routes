@@ -7,14 +7,13 @@ from playerstars_interactors import SaveGameException
 @patch('playerstars_routes.game_route.GetAllGamesInteractor.run')
 def test_get_all_games(mock):
     result = get_all_games()
-
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
+@patch('playerstars_routes.game_route.GetAllGamesInteractor.run',
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
     result = get_all_games()

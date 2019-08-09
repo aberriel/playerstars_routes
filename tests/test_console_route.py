@@ -10,8 +10,7 @@ from playerstars_interactors import (
 
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run')
-def test_get_all_games(mock):
-    # result = ConsoleRoute().get_all_consoles()
+def test_get_all_consoles(mock):
     result = get_all_console()
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -21,7 +20,7 @@ def test_get_all_games(mock):
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
        MagicMock(return_value=None))
-def test_get_all_games_not_found():
+def test_get_all_consoles_not_found():
     result = get_all_console()
 
     assert result.body['message'] == 'Nenhum console encontrado'
