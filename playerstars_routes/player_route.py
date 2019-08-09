@@ -59,7 +59,7 @@ class PlayerRoute(BasicRoute):
         )
 
     def make_put_request(self, data):
-        raise NotImplementedError('Não foi implementado no interactor')
+        raise NotImplementedError('Não implementado no interactor')
 
     def get_all_interactor(self):
         return GetAllPlayersInteractor
@@ -86,13 +86,13 @@ class PlayerRoute(BasicRoute):
         raise NotImplementedError('Não implementado no interactor')
 
     def put_interactor(self):
-        return NotImplementedError('Não implementado no interactor')
+        raise NotImplementedError('Não implementado no interactor')
 
     def delete_request_model(self):
-        return NotImplementedError('Não implementado no interactor')
+        raise NotImplementedError('Não implementado no interactor')
 
     def delete_interactor(self):
-        return NotImplementedError('Não implementado no interactor')
+        raise NotImplementedError('Não implementado no interactor')
 
     def delete_not_found(self):
         return 'Player não encontrado para ser deletado'

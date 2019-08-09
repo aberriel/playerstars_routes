@@ -1,9 +1,10 @@
 from unittest.mock import MagicMock, patch
 from playerstars_routes import (
     get_all_region_state,
-    get_region_state,
-    post_region_state)
+    get_region_state_by_id,
+    post_region_state, RegionStateRoute)
 import json
+import pytest
 from playerstars_interactors import SaveRegionStateException
 
 
@@ -31,19 +32,20 @@ def teste_get_all_region_state_not_found():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run')
 def test_get_region_state(mock):
-    result = get_region_state('1d001')
+    result = get_region_state_by_id('1d001')
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
+
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run',
        MagicMock(return_value=None))
 def test_get_region_state_not_found():
-    result = get_region_state('id001')
+    result = get_region_state_by_id('id001')
 
-    assert result.body['message'] == 'Região não encontrada'
+    assert result.body['message'] == 'Região Estado não encontrada'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -66,7 +68,7 @@ def test_post_region_country(mock):
     result = post_region_state()
 
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 201
 
 
 @patch('app.app', make_post_mock_data())
@@ -78,3 +80,24 @@ def test_post_region_raises():
 
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def test_not_implemented():
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().make_put_request({})
+    assert str(exc.value) == 'Update não implementado'
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().update_exception()
+    assert str(exc.value) == 'Update não implementado'
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().delete_request_model()
+    assert str(exc.value) == 'Delete não implementado'
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().delete_interactor()
+    assert str(exc.value) == 'Delete não implementado'
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().put_interactor()
+    assert str(exc.value) == 'Update não implementado'
+    with pytest.raises(NotImplementedError) as exc:
+        RegionStateRoute().delete_not_found()
+    assert str(exc.value) == 'Delete não implementado'
