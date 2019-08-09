@@ -7,52 +7,76 @@ from playerstars_interactors import (
     PostRegionCountryInteractor,
     GetRegionCountryRequestModel,
     SaveRegionCountryException)
-from playerstars_routes.chalice_support import (
-    success, not_found, server_error)
+from playerstars_routes.basic_route import BasicRoute
 
-root = Blueprint(__name__)
+bp_region_country = Blueprint(__name__)
 
 
-@root.route('/region-country/',
-            methods=['GET'],
-            cors=cors,
-            authorizer=cupauth)
+@bp_region_country.route(
+    '/region-country/', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_region_country():
-    interactor = GetAllCountryRegionsInteractor
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Nenhuma região encontrada")
+    return RegionCountryRoute().get_all()
 
 
-@root.route('/region-country/{region_id}',
-            methods=['GET'],
-            cors=cors,
-            authorizer=cupauth)
-def get_region_country(region_id):
-    request = GetRegionCountryRequestModel(region_id)
-    interactor = GetRegionCountryInteractor(request)
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Região não encontrada")
+@bp_region_country.route(
+    '/region-country/{region_id}', methods=['GET'],
+    cors=cors, authorizer=cupauth)
+def get_region_country_by_id(region_id):
+    return RegionCountryRoute().get_by_id(region_id)
 
 
-@root.route('/region-country/',
-            methods=['POST'],
-            cors=cors,
-            authorizer=cupauth)
+@bp_region_country.route(
+    '/region-country/', methods=['POST'],
+    cors=cors, authorizer=cupauth)
 def post_region_country():
     from app import app
-    body = app.current_request.json_body
-    request = PostRegionCountryRequestModel(
-        name=body['name'],
-        minimum_bet=body['minimum_bet'],
-        countries=body['countries']
-    )
-    interactor = PostRegionCountryInteractor(request)
-    try:
-        response = interactor.run()
-    except SaveRegionCountryException as e:
-        return server_error(str(e))
-    return success(response)
+    data = app.current_request.json_body
+    return RegionCountryRoute().post(data)
+
+
+class RegionCountryRoute(BasicRoute):
+
+    def make_post_request(self, data):
+        return PostRegionCountryRequestModel(
+            name=data['name'],
+            minimum_bet=data['minimum_bet'],
+            countries=data['countries'])
+
+    def make_put_request(self, data):
+        raise NotImplementedError('Update não implementado')
+
+    def get_all_interactor(self):
+        return GetAllCountryRegionsInteractor
+
+    def not_found_message(self):
+        return 'Região País não encontrada'
+
+    def not_found_all_message(self):
+        return 'Nenhuma Região País encontrada'
+
+    def get_request_model(self):
+        return GetRegionCountryRequestModel
+
+    def get_interactor(self):
+        return GetRegionCountryInteractor
+
+    def save_exception(self):
+        return SaveRegionCountryException
+
+    def post_interactor(self):
+        return PostRegionCountryInteractor
+
+    def update_exception(self):
+        raise NotImplementedError('Update não implementado')
+
+    def put_interactor(self):
+        raise NotImplementedError('Update não implementado')
+
+    def delete_request_model(self):
+        raise NotImplementedError('Delete não implementado')
+
+    def delete_interactor(self):
+        raise NotImplementedError('Delete não implementado')
+
+    def delete_not_found(self):
+        raise NotImplementedError('Delete não implementado')

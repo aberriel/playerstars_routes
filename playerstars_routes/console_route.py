@@ -2,7 +2,7 @@ from chalice import Blueprint
 from playerstars_interactors import (
     GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
     SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
-    GetConsoleResponseModel, PutConsoleInteractor,
+    PutConsoleInteractor,
     PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
     DeleteConsoleRequestModel)
 from .auth import cors, cupauth

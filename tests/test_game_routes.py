@@ -17,7 +17,6 @@ def test_get_all_games(mock):
        MagicMock(return_value=None))
 def test_get_all_games_not_found():
     result = get_all_games()
-
     assert result.body['message'] == 'Nenhum jogo encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
