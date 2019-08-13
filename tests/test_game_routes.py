@@ -1,7 +1,8 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from playerstars_routes import get_all_games, post_game, GameRoute
+from playerstars_routes import (
+    get_all_games, post_game, GameRoute, get_game_by_id)
 from playerstars_interactors import SaveGameException
 
 
@@ -19,6 +20,24 @@ def test_get_all_games(mock):
 def test_get_all_games_not_found():
     result = get_all_games()
     assert result.body['message'] == 'Nenhum jogo encontrado'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.game_route.GetGameInteractor.run')
+def test_get_game_by_id(mock):
+    result = get_game_by_id("ID")
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.game_route.GetGameInteractor.run',
+       MagicMock(return_value={}))
+def test_get_game_not_found():
+    result = get_game_by_id("ID")
+
+    assert result.body['message'] == 'Jogo não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -66,15 +85,6 @@ def test_post_game_raises():
 
 
 def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        GameRoute().get_interactor()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        GameRoute().get_request_model()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        GameRoute().not_found_message()
-    assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
         GameRoute().make_put_request()
     assert str(exc.value) == 'Não implementado no interactor'
