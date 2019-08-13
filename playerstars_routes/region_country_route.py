@@ -1,12 +1,11 @@
 from chalice import Blueprint
 from .auth import cors, cupauth
 from playerstars_interactors import (
-    GetRegionCountryInteractor,
-    GetAllCountryRegionsInteractor,
-    PostRegionCountryRequestModel,
-    PostRegionCountryInteractor,
-    GetRegionCountryRequestModel,
-    SaveRegionCountryException)
+    GetRegionCountryInteractor, GetAllRegionCountriesInteractor,
+    PostRegionCountryRequestModel, PostRegionCountryInteractor,
+    GetRegionCountryRequestModel, SaveRegionCountryException,
+    PutRegionCountryRequestModel, PutRegionCountryInteractor,
+    UpdateRegionCountryException)
 from playerstars_routes.basic_route import BasicRoute
 
 bp_region_country = Blueprint(__name__)
@@ -34,6 +33,15 @@ def post_region_country():
     return RegionCountryRoute().post(data)
 
 
+@bp_region_country.route(
+    '/region-country/', methods=['PUT'],
+    cors=cors, authorizer=cupauth)
+def put_region_country():
+    from app import app
+    data = app.current_request.json_body
+    return RegionCountryRoute().put(data)
+
+
 class RegionCountryRoute(BasicRoute):
 
     def make_post_request(self, data):
@@ -43,10 +51,14 @@ class RegionCountryRoute(BasicRoute):
             countries=data['countries'])
 
     def make_put_request(self, data):
-        raise NotImplementedError('Update não implementado')
+        return PutRegionCountryRequestModel(
+            entity_id=data['entity_id'],
+            name=data['name'],
+            minimum_bet=data['minimum_bet'],
+            countries=data['countries'])
 
     def get_all_interactor(self):
-        return GetAllCountryRegionsInteractor
+        return GetAllRegionCountriesInteractor
 
     def not_found_message(self):
         return 'Região País não encontrada'
@@ -67,10 +79,10 @@ class RegionCountryRoute(BasicRoute):
         return PostRegionCountryInteractor
 
     def update_exception(self):
-        raise NotImplementedError('Update não implementado')
+        return UpdateRegionCountryException
 
     def put_interactor(self):
-        raise NotImplementedError('Update não implementado')
+        return PutRegionCountryInteractor
 
     def delete_request_model(self):
         raise NotImplementedError('Delete não implementado')

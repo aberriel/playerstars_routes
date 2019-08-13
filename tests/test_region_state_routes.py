@@ -1,15 +1,16 @@
 from unittest.mock import MagicMock, patch
 from playerstars_routes import (
     get_all_region_state,
-    get_region_state_by_id,
+    get_region_state_by_id, put_region_state,
     post_region_state, RegionStateRoute)
 import json
 import pytest
-from playerstars_interactors import SaveRegionStateException
+from playerstars_interactors import SaveRegionStateException, \
+    UpdateRegionStateException
 
 
 @patch('playerstars_routes.region_state_route.'
-       'GetAllStateRegionsInteractor.run',
+       'GetAllRegionStatesInteractor.run',
        MagicMock(return_value='ok'))
 def test_get_all_region_state():
     result = get_all_region_state()
@@ -20,7 +21,7 @@ def test_get_all_region_state():
 
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.region_state_route.'
-       'GetAllStateRegionsInteractor.run',
+       'GetAllRegionStatesInteractor.run',
        MagicMock(return_value=None))
 def teste_get_all_region_state_not_found():
     result = get_all_region_state()
@@ -82,22 +83,47 @@ def test_post_region_raises():
     assert result.status_code == 500
 
 
+def make_put_mock_data():
+    payload = """{
+    "entity_id": "id123",
+    "name": "Gold",\
+    "minimum_bet" : 1234,\
+    "states":["RJ", "RS", "ES"]
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(json_body=data))
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_put_mock_data())
+@patch('playerstars_routes.region_state_route.'
+       'PutRegionStateInteractor.run')
+def test_put_region_country(mock):
+    result = put_region_state()
+
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('app.app', make_put_mock_data())
+@patch('playerstars_routes.region_state_route.'
+       'PutRegionStateInteractor.run',
+       MagicMock(side_effect=UpdateRegionStateException('oops')))
+def test_put_region_raises():
+    result = put_region_state()
+
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
 def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().make_put_request({})
-    assert str(exc.value) == 'Update não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().update_exception()
-    assert str(exc.value) == 'Update não implementado'
     with pytest.raises(NotImplementedError) as exc:
         RegionStateRoute().delete_request_model()
     assert str(exc.value) == 'Delete não implementado'
     with pytest.raises(NotImplementedError) as exc:
         RegionStateRoute().delete_interactor()
     assert str(exc.value) == 'Delete não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().put_interactor()
-    assert str(exc.value) == 'Update não implementado'
     with pytest.raises(NotImplementedError) as exc:
         RegionStateRoute().delete_not_found()
     assert str(exc.value) == 'Delete não implementado'

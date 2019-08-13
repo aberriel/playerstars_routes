@@ -1,12 +1,11 @@
 from chalice import Blueprint
 from .auth import cors, cupauth
 from playerstars_interactors import (
-    GetAllStateRegionsInteractor,
-    GetRegionStateRequestModel,
-    PostRegionStateRequestModel,
-    PostRegionStateInteractor,
-    GetRegionStateInteractor,
-    SaveRegionStateException)
+    GetAllRegionStatesInteractor, GetRegionStateRequestModel,
+    PostRegionStateRequestModel, PostRegionStateInteractor,
+    GetRegionStateInteractor, SaveRegionStateException,
+    PutRegionStateInteractor, UpdateRegionStateException,
+    PutRegionStateRequestModel)
 from playerstars_routes.basic_route import BasicRoute
 
 bp_region_state = Blueprint(__name__)
@@ -34,6 +33,15 @@ def post_region_state():
     return RegionStateRoute().post(data)
 
 
+@bp_region_state.route(
+    '/region-state/', methods=['PUT'],
+    cors=cors, authorizer=cupauth)
+def put_region_state():
+    from app import app
+    data = app.current_request.json_body
+    return RegionStateRoute().put(data)
+
+
 class RegionStateRoute(BasicRoute):
 
     def make_post_request(self, data):
@@ -43,10 +51,15 @@ class RegionStateRoute(BasicRoute):
             states=data['states'])
 
     def make_put_request(self, data):
-        raise NotImplementedError('Update não implementado')
+        return PutRegionStateRequestModel(
+            entity_id=data['entity_id'],
+            name=data['name'],
+            minimum_bet=data['minimum_bet'],
+            states=data['states']
+        )
 
     def get_all_interactor(self):
-        return GetAllStateRegionsInteractor
+        return GetAllRegionStatesInteractor
 
     def not_found_message(self):
         return 'Região Estado não encontrada'
@@ -67,10 +80,10 @@ class RegionStateRoute(BasicRoute):
         return PostRegionStateInteractor
 
     def update_exception(self):
-        raise NotImplementedError('Update não implementado')
+        return UpdateRegionStateException
 
     def put_interactor(self):
-        raise NotImplementedError('Update não implementado')
+        return PutRegionStateInteractor
 
     def delete_request_model(self):
         raise NotImplementedError('Delete não implementado')
