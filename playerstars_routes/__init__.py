@@ -17,8 +17,11 @@ from .region_country_route import get_all_region_country, \
 from .region_state_route import get_all_region_state, post_region_state, \
     get_region_state_by_id, RegionStateRoute, put_region_state
 from .routes import root
-
+from .user_admin_route import \
+    post_user_admin, get_all_user_admin, get_user_admin_by_id, \
+    UserAdminRoute, put_user_admin
 __all__ = ['ConsoleRoute',
+           'UserAdminRoute',
            'RegionStateRoute',
            'RegionCountryRoute',
            'GameRoute',
@@ -42,4 +45,8 @@ __all__ = ['ConsoleRoute',
            'delete_console',
            'root',
            'put_region_country',
-           'put_region_state']
+           'put_region_state',
+           'post_user_admin',
+           'get_all_user_admin',
+           'get_user_admin_by_id',
+           'put_user_admin']
