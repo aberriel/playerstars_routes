@@ -3,25 +3,23 @@ Feature: Console integrations tests
         Given The request has json body
         """
         {
-            "name": "Super Nintendo",
+            "name": "Super Selminho",
             "logo_path": "/images/ss.png",
             "tag_name": "nick#1",
             "games" : []
         }
         """
-        Given I create a dynamodb mock
-        Given I start http mock
         When post request is made to /api/console
         Then The response has status success
         Then The response has status code 200
-        Then The saved json has body
-        """
-        {
-            "name": "Super Nintendo",
-            "logo_path": "/images/ss.png",
-            "tag_name": "nick#1",
-            "games" : []
-        }
-        """
-        Then I reset the dynamodb mock
+#        Then The saved json has body
+#        """
+#        {
+#            "name": "Super Nintendo",
+#            "logo_path": "/images/ss.png",
+#            "tag_name": "nick#1",
+#            "games" : []
+#        }
+#        """
+#        Then I reset the dynamodb mock
 
