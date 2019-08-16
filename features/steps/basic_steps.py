@@ -49,6 +49,16 @@ def save_new_entry(context):
     assert saved(context)
 
 
+@given('I emptied the database')
+def data_base_is_empty(context):
+    get_all_consoles = context.adapter().list_all
+    if get_all_consoles():
+        for item in get_all_consoles():
+            context.adapter().delete(item.entity_id)
+    database_after_delete = get_all_consoles()
+    assert database_after_delete == []
+
+
 @when('{method} request is made to {url}')
 def json_request(context, method, url):
     if 'json_body' in context:
@@ -60,6 +70,9 @@ def json_request(context, method, url):
 
     # response = app.routes.get(url)[method.upper()].view_function().body
     context.response = response
+    if method.upper() == 'GET':
+        context.dict_list_get_all = context.response.body['data']
+        print(">@>@>@>@>@>@>", context.dict_list_get_all)
     context.item_id = context.response.body['data']
     try:
         context.response.json = json.loads(context.response)
@@ -75,7 +88,8 @@ def json_request_with_id(context, method, entity_id, url):
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
-    print(context.response.body)
+    if method.upper() == 'GET':
+        context.item_id = context.response.body['data']['entity_id']
     context.item_id = context.response.body
     try:
         context.response.json = json.loads(context.response)
@@ -100,7 +114,6 @@ def saved_json(context):
 
     response = context.adapter().get_by_id(context.item_id).to_json()
     del response['entity_id']
-
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
     assert response_string_json == expected_string_json
@@ -117,5 +130,8 @@ def check_retrieved_json(context):
 
 @then('I delete the test entry')
 def delete_test_entry(context):
+    if hasattr(context, 'dict_list_get_all'):
+        for key in context.dict_list_get_all.keys():
+            context.deleted_id = context.adapter().delete(key)
     context.deleted_id = context.adapter().delete(context.item_id)
     assert deleted(context)
