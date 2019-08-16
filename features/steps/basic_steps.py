@@ -29,6 +29,14 @@ def deleted(context):
     return True if not found else False
 
 
+def updated(context):
+    found = False
+    for item in context.adapter().list_all():
+        if context.updated_entity_id == item.entity_id:
+            found = True
+    return True if not found else False
+
+
 @given('I set table name and the adapter class as {table_name}')
 def json_body(context, table_name):
     context.table_name = table_name
@@ -72,7 +80,6 @@ def json_request(context, method, url):
     context.response = response
     if method.upper() == 'GET':
         context.dict_list_get_all = context.response.body['data']
-        print(">@>@>@>@>@>@>", context.dict_list_get_all)
     context.item_id = context.response.body['data']
     try:
         context.response.json = json.loads(context.response)
@@ -90,7 +97,7 @@ def json_request_with_id(context, method, entity_id, url):
     context.response = response
     if method.upper() == 'GET':
         context.item_id = context.response.body['data']['entity_id']
-    context.item_id = context.response.body
+    context.item_id = context.response.body['data']
     try:
         context.response.json = json.loads(context.response)
     except Exception:
@@ -111,7 +118,6 @@ def json_response_status_code(context, status_code):
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
-
     response = context.adapter().get_by_id(context.item_id).to_json()
     del response['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
@@ -135,3 +141,11 @@ def delete_test_entry(context):
             context.deleted_id = context.adapter().delete(key)
     context.deleted_id = context.adapter().delete(context.item_id)
     assert deleted(context)
+
+
+@then('The updated entry json has body')
+def check_updated_json(context):
+    body = context.text
+    context.json_body = json.loads(body)
+    response = context.adapter().get_by_id(context.item_id).to_json()
+    assert context.json_body == response

@@ -97,3 +97,41 @@ Feature: Console integrations tests
         }
         """
         Then I delete the test entry
+
+    Scenario: Updating a console in database
+        Given I set table name and the adapter class as Console
+        Given I save a new entry to the database with json body
+        """
+        {
+            "entity_id": "id1234",
+            "name": "Xbox",
+            "logo_path": "/images/xbox.png",
+            "tag_name": "nick#1",
+            "games" : []
+        }
+        """
+        Given The request has json body
+        """
+        {
+            "entity_id": "id1234",
+            "name": "Xbox4",
+            "logo_path": "/images/xbox4.png",
+            "tag_name": "nick#1",
+            "games" : []
+        }
+        """
+        When put request is made with id id1234 to /api/console
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The updated entry json has body
+        """
+        {
+            "entity_id": "id1234",
+            "name": "Xbox4",
+            "logo_path": "/images/xbox4.png",
+            "tag_name": "nick#1",
+            "games" : []
+        }
+        """
+        Then I delete the test entry
+
