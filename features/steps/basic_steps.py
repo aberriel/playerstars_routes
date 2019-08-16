@@ -135,7 +135,7 @@ def check_retrieved_json(context):
 
 
 @then('I delete the test entry')
-def delete_test_entry(context):
+def check_delete_test_entry(context):
     if hasattr(context, 'dict_list_get_all'):
         for key in context.dict_list_get_all.keys():
             context.deleted_id = context.adapter().delete(key)
