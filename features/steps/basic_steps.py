@@ -29,14 +29,6 @@ def deleted(context):
     return True if not found else False
 
 
-def updated(context):
-    found = False
-    for item in context.adapter().list_all():
-        if context.updated_entity_id == item.entity_id:
-            found = True
-    return True if not found else False
-
-
 @given('I set table name and the adapter class as {table_name}')
 def json_body(context, table_name):
     context.table_name = table_name
