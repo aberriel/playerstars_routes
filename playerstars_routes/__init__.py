@@ -20,6 +20,7 @@ from .routes import root
 from .user_admin_route import \
     post_user_admin, get_all_user_admin, get_user_admin_by_id, \
     UserAdminRoute, put_user_admin
+
 __all__ = ['ConsoleRoute',
            'UserAdminRoute',
            'RegionStateRoute',
