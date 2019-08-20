@@ -117,6 +117,20 @@ def saved_json(context):
     assert response_string_json == expected_string_json
 
 
+@then('The saved jsons has body')
+def saved_jsons(context):
+    body = context.text
+    context.expected_json = json.loads(body)
+    for item in context.item_id:
+        response = context.adapter().get_by_id(item).to_json()
+        del response['entity_id']
+        for game in response['games']:
+            del game['entity_id']
+    response_string_json = json.dumps(response, sort_keys=True)
+    expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    assert response_string_json == expected_string_json
+
+
 @then('The retrived json has body')
 def check_retrieved_json(context):
     body = context.text
