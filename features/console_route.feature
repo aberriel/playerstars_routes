@@ -140,16 +140,6 @@ Feature: Console integrations tests
         Given I save a new entry to the database with json body
         """
         {
-            "entity_id": "id1234",
-            "name": "Xbox",
-            "logo_path": "/images/xbox.png",
-            "tag_name": "nick#1",
-            "games" : []
-        }
-        """
-        Given I save a new entry to the database with json body
-        """
-        {
             "entity_id": "id12345",
             "name": "PS4",
             "logo_path": "/images/ps4.png",
@@ -157,7 +147,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When delete request is made with id id1234 to /api/console
+        When delete request is made with id id12345 to /api/console
         Then The response should have status success
         Then The response should have status_code 200
         Then I delete the test entry
