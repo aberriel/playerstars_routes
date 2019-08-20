@@ -1,7 +1,7 @@
 from app import app
 from behave import *
 import json
-from playerstars_adapters import ConsoleAdapter
+from playerstars_adapters import ConsoleAdapter, CountryRegionAdapter
 
 
 class Object(object):
@@ -9,7 +9,8 @@ class Object(object):
 
 
 convert_string_to_adapter = {
-    'Console': ConsoleAdapter
+    'Console': ConsoleAdapter,
+    'RegionCountry': CountryRegionAdapter
 }
 
 
