@@ -62,3 +62,61 @@ Feature: Region Country integrations tests
         }
         """
         Then I delete the test entry
+
+    Scenario: Recovering all regions country from the database
+        Given I set table name and the adapter class as RegionCountry
+        Given I emptied the database
+        Given I save a new entry to the database with json body
+        """
+        {
+             "name": "Gold",
+             "countries": [
+                    "Brasil",
+                    "Venezuela",
+                    "Cuba"
+             ],
+             "entity_id": "9e29",
+             "minimum_bet": 1234
+        }
+        """
+        Given I save a new entry to the database with json body
+        """
+        {
+             "name": "Silver",
+             "countries": [
+                    "Equador",
+                    "Chile",
+                    "Argentina"
+             ],
+             "entity_id": "946b",
+             "minimum_bet": 12345
+        }
+        """
+        When get request is made to /api/region-country
+        Then The response should have status success
+        Then The retrived json has body
+        """
+        {
+            "946b": {
+            "minimum_bet": 12345,
+            "entity_id": "946b",
+            "countries": [
+                "Equador",
+                "Chile",
+                "Argentina"
+            ],
+            "name": "Silver"
+        },
+        "9e29": {
+            "minimum_bet": 1234,
+            "entity_id": "9e29",
+            "countries": [
+                "Brasil",
+                "Venezuela",
+                "Cuba"
+            ],
+            "name": "Gold"
+        }
+        }
+        """
+        Then I delete the test entry
