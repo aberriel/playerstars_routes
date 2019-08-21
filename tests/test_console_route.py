@@ -1,9 +1,19 @@
-import json
-from unittest.mock import MagicMock, patch
-from playerstars_routes import post_console, put_console, \
-    get_all_console, get_console_by_id, delete_console
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from playerstars_routes import (
+    delete_console,
+    get_all_console,
+    get_console_by_id,
+    post_console,
+    put_console
+)
 from playerstars_interactors import (
-    SaveConsoleException, UpdateConsoleException)
+    SaveConsoleException,
+    UpdateConsoleException)
+from unittest.mock import MagicMock, patch
+
+import json
 
 
 # noinspection PyUnusedLocal
