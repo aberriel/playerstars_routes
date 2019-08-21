@@ -49,7 +49,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        Then I delete the test entry
+        Then  I delete the test entry
 
     Scenario: Recovering all consoles from the database
         Given I set table name and the adapter class as Console
