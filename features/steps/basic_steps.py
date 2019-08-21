@@ -46,6 +46,7 @@ def json_body(context):
 def save_new_entry(context):
     body = context.text
     context.json_body = json.loads(body)
+
     context.saved_entity_id = context.adapter().save(context.json_body)
     assert saved(context)
 
@@ -88,9 +89,10 @@ def json_request_with_id(context, method, entity_id, url):
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
-    if method.upper() == 'GET':
+    if method.upper() in ['GET']:
         context.item_id = context.response.body['data']['entity_id']
-    context.item_id = context.response.body['data']
+    else:
+        context.item_id = context.response.body['data']
     try:
         context.response.json = json.loads(context.response)
     except Exception:
