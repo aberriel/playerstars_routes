@@ -18,7 +18,7 @@ def get_all_region_country():
 
 
 @bp_region_country.route(
-    '/region-country/{region_id}', methods=['GET'],
+    '/region-country/{entity_id}', methods=['GET'],
     cors=cors, authorizer=cupauth)
 def get_region_country_by_id(region_id):
     return RegionCountryRoute().get_by_id(region_id)
