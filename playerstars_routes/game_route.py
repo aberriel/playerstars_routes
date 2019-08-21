@@ -2,16 +2,21 @@ from chalice import Blueprint
 from .auth import cors, cupauth
 from playerstars_interactors import (
     GetAllGamesInteractor, PostGameRequestModel, PostGameInteractor,
-    SaveGameException, GetGameInteractor, GetGameRequestModel)
+    SaveGameException, GetGameInteractor, GetGameRequestModel,
+    GetAllGamesRequestModel, PutGameRequestModel,
+    PutGameInteractor, DeleteGameInteractor,
+    DeleteGameRequestModel, UpdateGameException)
 from playerstars_routes.basic_route import BasicRoute
-
+from playerstars_routes.chalice_support import success, not_found
 
 bp_game = Blueprint(__name__)
 
 
-@bp_game.route('/game/', methods=['GET'], cors=cors, authorizer=cupauth)
-def get_all_games():
-    return GameRoute().get_all()
+@bp_game.route(
+    '/game/{console_id}', methods=['GET'], cors=cors, authorizer=cupauth)
+def get_all_games(console_id):
+    return GameRoute().get_all_by_console_id(console_id)
+
 
 @bp_game.route(
     '/game/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
@@ -26,7 +31,28 @@ def post_game():
     return GameRoute().post(data)
 
 
+@bp_game.route(
+    '/game/{entity_id}', methods=['PUT'], cors=cors, authorizer=cupauth)
+def put_game(entity_id):
+    from app import app
+    data = app.current_request.json_body
+    return GameRoute().put(data)
+
+
+@bp_game.route(
+    '/game/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
+def delete_game(entity_id):
+    return GameRoute().delete(entity_id)
+
+
 class GameRoute(BasicRoute):
+
+    def get_all_by_console_id(self, entity_id):
+        request = GetAllGamesRequestModel(entity_id)
+        response = GetAllGamesInteractor(request).run()
+        if response:
+            return success(response)
+        return not_found(self.not_found_all_message())
 
     def make_post_request(self, data):
         return PostGameRequestModel(
@@ -55,20 +81,25 @@ class GameRoute(BasicRoute):
     def post_interactor(self):
         return PostGameInteractor
 
-    def make_put_request(self):
-        raise NotImplementedError("Não implementado no interactor")
+    def make_put_request(self, data):
+        return PutGameRequestModel(
+            entity_id=data['entity_id'],
+            name=data['name'],
+            logo_path=data['logo_path'],
+            consoles=data['consoles']
+        )
 
     def update_exception(self):
-        raise NotImplementedError("Não implementado no interactor")
+        return UpdateGameException
 
     def put_interactor(self):
-        raise NotImplementedError("Não implementado no interactor")
+        return PutGameInteractor
 
     def delete_request_model(self):
-        raise NotImplementedError("Não implementado no interactor")
+        return DeleteGameRequestModel
 
     def delete_interactor(self):
-        raise NotImplementedError("Não implementado no interactor")
+        return DeleteGameInteractor
 
     def delete_not_found(self):
-        raise NotImplementedError("Não implementado no interactor")
+        return 'Game não encontrado para deletar'

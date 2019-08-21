@@ -8,7 +8,8 @@ __version__ = '0.1.0'
 
 from .console_route import ConsoleRoute, post_console, put_console, \
     get_all_console, get_console_by_id, delete_console
-from .game_route import get_all_games, post_game, GameRoute, get_game_by_id
+from .game_route import get_all_games, post_game, GameRoute, get_game_by_id, \
+    put_game, delete_game
 from .player_route import PlayerRoute, post_player, get_player_by_id, \
     get_all_player
 from .region_country_route import get_all_region_country, \
@@ -50,4 +51,6 @@ __all__ = ['ConsoleRoute',
            'post_user_admin',
            'get_all_user_admin',
            'get_user_admin_by_id',
-           'put_user_admin']
+           'put_user_admin',
+           'delete_game',
+           'put_game']
