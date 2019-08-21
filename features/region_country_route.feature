@@ -120,3 +120,49 @@ Feature: Region Country integrations tests
         }
         """
         Then I delete the test entry
+
+    Scenario: Updating a region country in database
+        Given I set table name and the adapter class as RegionCountry
+        Given I save a new entry to the database with json body
+         """
+         {
+             "name": "Silver",
+             "countries": [
+                    "Equador",
+                    "Chile",
+                    "Argentina"
+             ],
+             "entity_id": "946b",
+             "minimum_bet": 12345
+         }
+         """
+        Given The request has json body
+         """
+         {
+             "name": "Bronze",
+             "countries": [
+                    "Equador",
+                    "Mexico",
+                    "Argentina"
+             ],
+             "entity_id": "946b",
+             "minimum_bet": 12345
+         }
+         """
+        When put request is made with id 946b to /api/region-country
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The updated entry json has body
+        """
+        {
+            "name": "Bronze",
+             "countries": [
+                    "Equador",
+                    "Mexico",
+                    "Argentina"
+             ],
+             "entity_id": "946b",
+             "minimum_bet": 12345
+        }
+        """
+        Then I delete the test entry
