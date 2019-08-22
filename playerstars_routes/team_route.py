@@ -7,27 +7,22 @@ from playerstars_interactors import (
     ConsoleModel,
     GameModel,
     GetAllTeamsInteractor,
-    GetAllTeamsResponseModel,
     GetTeamByUserInteractor,
     GetTeamByUserRequestModel,
-    GetTeamByUserResponseModel,
     GetTeamInteractor,
     GetTeamRequestModel,
-    GetTeamResponseModel,
     MembershipType,
     PostTeamInteractor,
     PostTeamRequestModel,
-    PostTeamResponseModel,
     PutTeamInteractor,
     PutTeamRequestModel,
-    PutTeamResponseModel,
     SaveTeamException,
     UpdateTeamException
 )
 from playerstars_routes.basic_route import BasicRoute
 from playerstars_routes.chalice_support import (
     success,
-    not_found, server_error, created
+    not_found
 )
 
 bp_console = Blueprint(__name__)
@@ -45,11 +40,11 @@ def get_team_by_id(entity_id):
     return TeamRoute().get_by_id(entity_id)
 
 
-@bp_console.route('/team/byuser/{user_id}',
+@bp_console.route('/team/byuser/{player_id}',
                   methods=['GET'],
                   cors=cors, authorizer=cupauth)
-def get_all_teams_by_user(user_id):
-    return TeamRoute().get_by_user(user_id)
+def get_all_teams_by_user(player_id):
+    return TeamRoute().get_by_user(player_id)
 
 
 @bp_console.route('/team',
@@ -121,13 +116,16 @@ class TeamRoute(BasicRoute):
         response = interactor.run()
         if response:
             return success(response)
-        return not_found(self.not_found_message())
+        return not_found(self.not_found_player_all_message())
 
     def not_found_message(self):
         return 'Time não encontrado'
 
     def not_found_all_message(self):
-        return 'Nenhum console encontrado'
+        return 'Nenhum time encontrado'
+
+    def not_found_player_all_message(self):
+        return 'O jogador não possui times'
 
     def get_all_interactor(self):
         return GetAllTeamsInteractor
