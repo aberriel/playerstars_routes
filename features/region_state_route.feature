@@ -90,3 +90,38 @@ Feature: Region State integrations tests
         """
         Then I delete the test entry
 
+     Scenario: Updating a region state in database
+        Given I set table name and the adapter class as RegionState
+        Given I save a new entry to the database with json body
+         """
+         {
+             "name": "BRONZE",
+             "minimum_bet" : 1234,
+             "states":["AC", "BA", "RJ"],
+             "entity_id":"id123"
+         }
+         """
+        Given The request has json body
+         """
+         {
+             "name": "GOLD",
+             "minimum_bet" : 1234,
+             "states":["AC", "BA", "RJ"],
+             "entity_id":"id123"
+         }
+         """
+        When put request is made with id id123 to /api/region-state
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The updated entry json has body
+        """
+         {
+             "name": "GOLD",
+             "minimum_bet" : 1234,
+             "states":["AC", "BA", "RJ"],
+             "entity_id":"id123"
+         }
+        """
+        Then I delete the test entry
+
+    ## FICA FALTANDO O DELETE
