@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from unittest.mock import MagicMock, patch
-from playerstars_routes import \
-    post_player, get_player_by_id, get_all_player, PlayerRoute
 from playerstars_interactors import SavePlayerException
+from playerstars_routes import (
+    get_all_player,
+    get_player_by_id,
+    PlayerRoute,
+    post_player
+)
+from unittest.mock import MagicMock, patch
 
 import json
 import pytest
