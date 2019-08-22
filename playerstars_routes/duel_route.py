@@ -8,23 +8,27 @@ from playerstars_interactors import GetMatchListRequestModel, \
     CreateDuelRequestModel
 from playerstars_routes.basic_route import BasicRoute
 
-bp_match = Blueprint(__name__)
+bp_duel = Blueprint(__name__)
 
 
-@bp_match.route(
+@bp_duel.route(
     '/match-list/{user_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_match_list(user_id):
     return MatchListRoute().get_by_id(user_id)
 
 
-@bp_match.route(
-    '/match-send/', methods=['POST'], cors=cors, authorizer=cupauth)
-def post_match():
+@bp_duel.route(
+    '/create-duel/', methods=['POST'], cors=cors, authorizer=cupauth)
+def post_duel():
     from app import app
     data = app.current_request.json_body
     return MatchListRoute().post(data)
 
 
+@bp_duel.route('/enter-duel/', methods=['POST'], cors=cors, authorizer=cupauth)
+def enter_duel():
+    from app import app
+    data = app.current_request.json_body
 class MatchListRoute(BasicRoute):
 
     def make_post_request(self, data):

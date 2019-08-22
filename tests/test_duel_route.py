@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from playerstars_routes.match_route import get_match_list, post_match, \
+from playerstars_routes import get_match_list, post_duel, \
     MatchListRoute
 from playerstars_interactors import CreateDuelException
 
@@ -38,7 +38,7 @@ def make_post_mock_data():
 @patch('app.app', make_post_mock_data())
 @patch('playerstars_routes.match_route.CreateDuelInteractor.run')
 def test_create_duel(mock):
-    result = post_match()
+    result = post_duel()
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -50,7 +50,7 @@ def test_create_duel(mock):
 @patch('playerstars_routes.match_route.CreateDuelInteractor.run',
        MagicMock(side_effect=CreateDuelException('oops')))
 def test_create_duel_raises():
-    result = post_match()
+    result = post_duel()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
