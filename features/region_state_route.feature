@@ -46,3 +46,47 @@ Feature: Region State integrations tests
         }
         """
         Then I delete the test entry
+
+    Scenario: Recovering all regions state from the database
+        Given I set table name and the adapter class as RegionState
+        Given I emptied the database
+        Given I save a new entry to the database with json body
+        """
+        {
+            "name": "BRONZE",
+            "minimum_bet" : 1234,
+            "states":["AC", "BA", "RJ"],
+            "entity_id":"id123"
+        }
+        """
+        Given I save a new entry to the database with json body
+        """
+        {
+            "name": "SILVER",
+            "minimum_bet" : 1234,
+            "states":["ES", "PE", "SP"],
+            "entity_id":"id12345"
+        }
+        """
+        When get request is made to /api/region-state
+        Then The response should have status success
+        Then The retrived json has body
+        """
+        {
+            "id123": {
+             "name": "BRONZE",
+             "minimum_bet" : 1234,
+             "states":["AC", "BA", "RJ"],
+             "entity_id":"id123"
+        },
+
+             "id12345": {
+             "name": "SILVER",
+             "minimum_bet" : 1234,
+             "states":["ES", "PE", "SP"],
+             "entity_id":"id12345"
+        }
+        }
+        """
+        Then I delete the test entry
+
