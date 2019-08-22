@@ -1,7 +1,8 @@
 from app import app
 from behave import *
 import json
-from playerstars_adapters import ConsoleAdapter
+from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
+                                  StateRegionAdapter)
 
 
 class Object(object):
@@ -9,7 +10,9 @@ class Object(object):
 
 
 convert_string_to_adapter = {
-    'Console': ConsoleAdapter
+    'Console': ConsoleAdapter,
+    'RegionCountry': CountryRegionAdapter,
+    'RegionState': StateRegionAdapter
 }
 
 
@@ -45,6 +48,7 @@ def json_body(context):
 def save_new_entry(context):
     body = context.text
     context.json_body = json.loads(body)
+
     context.saved_entity_id = context.adapter().save(context.json_body)
     assert saved(context)
 
@@ -87,9 +91,10 @@ def json_request_with_id(context, method, entity_id, url):
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
-    if method.upper() == 'GET':
+    if method.upper() in ['GET']:
         context.item_id = context.response.body['data']['entity_id']
-    context.item_id = context.response.body['data']
+    else:
+        context.item_id = context.response.body['data']
     try:
         context.response.json = json.loads(context.response)
     except Exception:
@@ -112,6 +117,20 @@ def saved_json(context):
     context.expected_json = json.loads(body)
     response = context.adapter().get_by_id(context.item_id).to_json()
     del response['entity_id']
+    response_string_json = json.dumps(response, sort_keys=True)
+    expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    assert response_string_json == expected_string_json
+
+
+@then('The saved jsons has body')
+def saved_jsons(context):
+    body = context.text
+    context.expected_json = json.loads(body)
+    for item in context.item_id:
+        response = context.adapter().get_by_id(item).to_json()
+        del response['entity_id']
+        for game in response['games']:
+            del game['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
     assert response_string_json == expected_string_json

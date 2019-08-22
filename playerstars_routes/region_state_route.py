@@ -18,7 +18,7 @@ def get_all_region_state():
 
 
 @bp_region_state.route(
-    '/region-state/{region_id}', methods=['GET'],
+    '/region-state/{entity_id}', methods=['GET'],
     cors=cors, authorizer=cupauth)
 def get_region_state_by_id(region_id):
     return RegionStateRoute().get_by_id(region_id)
@@ -34,9 +34,9 @@ def post_region_state():
 
 
 @bp_region_state.route(
-    '/region-state/', methods=['PUT'],
+    '/region-state/{entity_id}', methods=['PUT'],
     cors=cors, authorizer=cupauth)
-def put_region_state():
+def put_region_state(entity_id):
     from app import app
     data = app.current_request.json_body
     return RegionStateRoute().put(data)
