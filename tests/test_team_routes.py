@@ -7,14 +7,13 @@ from playerstars_interactors import(
 )
 from playerstars_routes import (
     get_all_teams,
-    get_team,
-    get_team_by_user,
+    get_team_by_id,
+    get_all_teams_by_user,
     post_team,
     put_team
 )
 from unittest.mock import MagicMock, patch
 
-import json
 import pytest
 
 
@@ -123,7 +122,7 @@ def test_get_all_teams_not_found(mock):
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.team_route.GetTeamInteractor.run')
 def test_get_team(mock):
-    result = get_team()
+    result = get_team_by_id()
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -133,7 +132,7 @@ def test_get_team(mock):
 @patch('playerstars_routes.team_route.GetTeamInteractor.run',
        MagicMock(return_value=None))
 def test_get_team_not_found():
-    result = get_team()
+    result = get_team_by_id()
     assert result.body['message'] == 'Time não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -142,7 +141,7 @@ def test_get_team_not_found():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.team_route.GetTeamByUser.run')
 def test_get_team_by_user(mock):
-    result = get_team_by_user()
+    result = get_all_teams_by_user()
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -152,7 +151,7 @@ def test_get_team_by_user(mock):
 @patch('playerstars_routes.team_route.GetTeamByUser.run',
        MagicMock(return_value=None))
 def test_get_teams_by_user_not_found():
-    result = get_team_by_user()
+    result = get_all_teams_by_user()
     assert result.body['message'] == 'O jogador não possui times'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -196,7 +195,6 @@ def test_put_team(mock):
        MagicMock(side_effect=UpdateTeamException('oops')))
 def test_put_team_raises():
     result = put_team('id1')
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

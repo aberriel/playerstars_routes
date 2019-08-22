@@ -44,8 +44,8 @@ from .region_state_route import (
 )
 from .routes import root
 from .team_route import (
-    get_all_team,
-    get_all_team_by_user,
+    get_all_teams,
+    get_all_teams_by_user,
     get_team_by_id,
     post_team,
     put_team,
@@ -91,8 +91,8 @@ __all__ = ['ConsoleRoute',
            'put_user_admin',
            'delete_game',
            'put_game',
-           'get_all_team',
-           'get_all_team_by_user',
+           'get_all_teams',
+           'get_all_teams_by_user',
            'get_team_by_id',
            'post_team',
            'put_team',

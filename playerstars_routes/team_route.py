@@ -34,7 +34,7 @@ bp_console = Blueprint(__name__)
 
 
 @bp_console.route('/team', methods=['GET'], cors=cors, authorizer=cupauth)
-def get_all_team():
+def get_all_teams():
     return TeamRoute().get_all()
 
 
@@ -48,7 +48,7 @@ def get_team_by_id(entity_id):
 @bp_console.route('/team/byuser/{user_id}',
                   methods=['GET'],
                   cors=cors, authorizer=cupauth)
-def get_all_team_by_user(user_id):
+def get_all_teams_by_user(user_id):
     return TeamRoute().get_by_user(user_id)
 
 
