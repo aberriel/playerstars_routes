@@ -6,21 +6,58 @@ __author__ = """Storm Development Ltda"""
 __email__ = 'playerstars@stormsec.com.br'
 __version__ = '0.1.0'
 
-from .console_route import ConsoleRoute, post_console, put_console, \
-    get_all_console, get_console_by_id, delete_console
-from .game_route import get_all_games, post_game, GameRoute, get_game_by_id, \
-    put_game, delete_game
-from .player_route import PlayerRoute, post_player, get_player_by_id, \
-    get_all_player
-from .region_country_route import get_all_region_country, \
-    post_region_country, get_region_country_by_id, RegionCountryRoute, \
-    put_region_country
-from .region_state_route import get_all_region_state, post_region_state, \
-    get_region_state_by_id, RegionStateRoute, put_region_state
+from .console_route import (
+    ConsoleRoute,
+    delete_console,
+    get_all_console,
+    get_console_by_id,
+    post_console,
+    put_console
+)
+from .game_route import (
+    delete_game,
+    GameRoute,
+    get_all_games,
+    get_game_by_id,
+    post_game,
+    put_game,
+)
+from .player_route import (
+    get_all_player,
+    get_player_by_id,
+    PlayerRoute,
+    post_player,
+)
+from .region_country_route import (
+    get_all_region_country,
+    get_region_country_by_id,
+    post_region_country,
+    put_region_country,
+    RegionCountryRoute
+)
+from .region_state_route import (
+    get_all_region_state,
+    get_region_state_by_id,
+    post_region_state,
+    put_region_state,
+    RegionStateRoute,
+)
 from .routes import root
-from .user_admin_route import \
-    post_user_admin, get_all_user_admin, get_user_admin_by_id, \
-    UserAdminRoute, put_user_admin
+from .team_route import (
+    get_all_team,
+    get_all_team_by_user,
+    get_team_by_id,
+    post_team,
+    put_team,
+    TeamRoute
+)
+from .user_admin_route import (
+    get_all_user_admin,
+    get_user_admin_by_id,
+    post_user_admin,
+    put_user_admin,
+    UserAdminRoute
+)
 
 __all__ = ['ConsoleRoute',
            'UserAdminRoute',
@@ -53,4 +90,10 @@ __all__ = ['ConsoleRoute',
            'get_user_admin_by_id',
            'put_user_admin',
            'delete_game',
-           'put_game']
+           'put_game',
+           'get_all_team',
+           'get_all_team_by_user',
+           'get_team_by_id',
+           'post_team',
+           'put_team',
+           'TeamRoute']
