@@ -81,3 +81,33 @@ Feature: Console integrations tests
         }
         """
         Then I delete the test entry
+
+    Scenario: Updating a user admin in database
+        Given I set table name and the adapter class as UserAdmin
+        Given I save a new entry to the database with json body
+        """
+        {
+            "name": "Duarte",
+            "email": "dudu_jpa@playerstars.com.br",
+            "entity_id": "id123"
+        }
+        """
+        Given The request has json body
+        """
+        {
+            "name": "Duarte",
+            "email": "barriel_jpa@playerstars.com.br",
+            "entity_id": "id123"
+        }
+        """
+        When put request is made with id id123 to /api/user-admin
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The updated entry json has body
+        """
+        {
+            "name": "Duarte",
+            "email": "barriel_jpa@playerstars.com.br",
+            "entity_id": "id123"
+        }
+        """
