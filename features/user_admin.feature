@@ -66,18 +66,18 @@ Feature: Console integrations tests
         Then The response should have status success
         Then The retrived json has body
         """
-        [
-            {
+        {
+                "id123": {
                 "name": "Duarte",
                 "email": "dudu_jpa@playerstars.com.br",
                 "entity_id": "id123"
             },
-            {
+                "id12345": {
                 "name": "Anselmo",
                 "email": "barriel_jpa@playerstars.com.br",
                 "entity_id": "id12345"
             }
 
-        ]
+        }
         """
         Then I delete the test entry
