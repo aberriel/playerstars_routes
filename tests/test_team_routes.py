@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import pytest
 from datetime import date, datetime
 from playerstars_domain import (
     Console, Game,
@@ -16,7 +16,8 @@ from playerstars_routes import (
     get_team_by_id,
     get_all_teams_by_user,
     post_team,
-    put_team
+    put_team,
+    TeamRoute
 )
 from unittest.mock import MagicMock, patch
 
@@ -313,3 +314,15 @@ def test_put_team_raises(saved_team):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def test_not_implemented():
+    with pytest.raises(NotImplementedError) as exc:
+        TeamRoute().delete_request_model()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        TeamRoute().delete_interactor()
+    assert str(exc.value) == 'Não implementado no interactor'
+    with pytest.raises(NotImplementedError) as exc:
+        TeamRoute().delete_not_found()
+    assert str(exc.value) == 'Não implementado no interactor'
