@@ -1,6 +1,6 @@
 from chalice import Blueprint
 from .auth import cors, cupauth
-
+from playerstars_routes.chalice_support import not_found
 root = Blueprint(__name__)
 
 
@@ -9,4 +9,4 @@ root = Blueprint(__name__)
             cors=cors,
             authorizer=cupauth)
 def home():
-    return "homezinha"
+    return not_found('Página não encontrada no projeto playerstars')

@@ -58,10 +58,12 @@ from .user_admin_route import (
     put_user_admin,
     UserAdminRoute
 )
-from .user_admin_route import \
-    post_user_admin, get_all_user_admin, get_user_admin_by_id, \
-    UserAdminRoute, put_user_admin
-from .duel_route import post_duel, get_match_list, MatchListRoute
+from .duel_route import (
+    post_duel,
+    get_match_list,
+    MatchListRoute,
+    enter_duel
+)
 
 __all__ = [
     'ConsoleRoute',
@@ -101,6 +103,9 @@ __all__ = [
     'get_team_by_id',
     'post_team',
     'put_team',
-    'TeamRoute'
+    'TeamRoute',
+    'post_duel',
+    'get_match_list',
+    'MatchListRoute',
+    'enter_duel'
 ]
-

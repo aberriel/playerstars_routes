@@ -5,9 +5,10 @@ from .auth import cors, cupauth
 from chalice import Blueprint
 from playerstars_interactors import GetMatchListRequestModel, \
     GetMatchListInteractor, CreateDuelException, CreateDuelInteractor, \
-    CreateDuelRequestModel
+    CreateDuelRequestModel, EnterDuelRequestModel, \
+    EnterDuelInteractor, EnterDuelException
 from playerstars_routes.basic_route import BasicRoute
-
+from playerstars_routes.chalice_support import server_error, success
 bp_duel = Blueprint(__name__)
 
 
@@ -25,11 +26,27 @@ def post_duel():
     return MatchListRoute().post(data)
 
 
-@bp_duel.route('/enter-duel/', methods=['POST'], cors=cors, authorizer=cupauth)
+@bp_duel.route(
+    '/enter-duel/', methods=['POST'], cors=cors, authorizer=cupauth)
 def enter_duel():
     from app import app
     data = app.current_request.json_body
+    return MatchListRoute().enter_duel(data)
+
+
 class MatchListRoute(BasicRoute):
+
+    @staticmethod
+    def enter_duel(data):
+        request = EnterDuelRequestModel(
+            player_id=data['player_id'],
+            duel_id=data['duel_id'])
+        interactor = EnterDuelInteractor(request)
+        try:
+            response = interactor.run()
+        except EnterDuelException as e:
+            return server_error(str(e))
+        return success(response)
 
     def make_post_request(self, data):
         return CreateDuelRequestModel(
