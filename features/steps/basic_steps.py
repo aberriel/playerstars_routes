@@ -2,7 +2,7 @@ from app import app
 from behave import *
 import json
 from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
-                                  StateRegionAdapter)
+                                  StateRegionAdapter, UserAdminAdapter)
 
 
 class Object(object):
@@ -12,7 +12,8 @@ class Object(object):
 convert_string_to_adapter = {
     'Console': ConsoleAdapter,
     'RegionCountry': CountryRegionAdapter,
-    'RegionState': StateRegionAdapter
+    'RegionState': StateRegionAdapter,
+    'UserAdmin': UserAdminAdapter
 }
 
 
@@ -71,7 +72,6 @@ def json_request(context, method, url):
 
     url_method = app.routes.get(url)[method.upper()]
     response = url_method.view_function()
-
     # response = app.routes.get(url)[method.upper()].view_function().body
     context.response = response
     if method.upper() == 'GET':
