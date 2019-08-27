@@ -101,7 +101,7 @@ def make_put_mock_data():
 @patch('playerstars_routes.region_country_route.'
        'PutRegionCountryInteractor.run')
 def test_put_region_country(mock):
-    result = put_region_country()
+    result = put_region_country("id123")
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -113,7 +113,7 @@ def test_put_region_country(mock):
        'PutRegionCountryInteractor.run',
        MagicMock(side_effect=UpdateRegionCountryException('oops')))
 def test_put_region_raises():
-    result = put_region_country()
+    result = put_region_country("010101")
 
     assert result.body['status'] == 'error'
     assert result.status_code == 500
