@@ -93,4 +93,4 @@ def test_get_root():
 
 def test_home():
     result = home()
-    assert result == 'homezinha'
+    assert result.status_code == 404
