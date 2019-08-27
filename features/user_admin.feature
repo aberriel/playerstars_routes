@@ -111,3 +111,4 @@ Feature: Console integrations tests
             "entity_id": "id123"
         }
         """
+        Then I delete the test entry
