@@ -2,7 +2,8 @@ from app import app
 from behave import *
 import json
 from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
-                                  StateRegionAdapter, UserAdminAdapter)
+                                  StateRegionAdapter, UserAdminAdapter,
+                                  PlayerAdapter)
 
 
 class Object(object):
@@ -13,7 +14,8 @@ convert_string_to_adapter = {
     'Console': ConsoleAdapter,
     'RegionCountry': CountryRegionAdapter,
     'RegionState': StateRegionAdapter,
-    'UserAdmin': UserAdminAdapter
+    'UserAdmin': UserAdminAdapter,
+    'Player': PlayerAdapter
 }
 
 
@@ -115,8 +117,14 @@ def json_response_status_code(context, status_code):
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
+
     response = context.adapter().get_by_id(context.item_id).to_json()
+
     del response['entity_id']
+    for key, value in response.items():
+        if isinstance(response[key], dict):
+            del value['entity_id']
+
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
     assert response_string_json == expected_string_json
@@ -131,6 +139,9 @@ def saved_jsons(context):
         del response['entity_id']
         for game in response['games']:
             del game['entity_id']
+        # if isinstance(item, list):
+        #     for x in item:
+        #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
     assert response_string_json == expected_string_json
