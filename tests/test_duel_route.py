@@ -1,13 +1,13 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from playerstars_routes.match_route import get_match_list, post_match, \
-    MatchListRoute
-from playerstars_interactors import CreateDuelException
+from playerstars_routes import get_match_list, post_duel, \
+    MatchListRoute, enter_duel
+from playerstars_interactors import CreateDuelException, EnterDuelException
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.match_route.GetMatchListInteractor.run')
+@patch('playerstars_routes.duel_route.GetMatchListInteractor.run')
 def test_get_match_list(mock):
     # result = ConsoleRoute().get_console('id1')
     result = get_match_list('id1')
@@ -17,7 +17,7 @@ def test_get_match_list(mock):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.match_route.GetMatchListInteractor.run',
+@patch('playerstars_routes.duel_route.GetMatchListInteractor.run',
        MagicMock(return_value=None))
 def test_get_match_list_not_found():
     result = get_match_list('id1')
@@ -36,9 +36,9 @@ def make_post_mock_data():
 
 
 @patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.match_route.CreateDuelInteractor.run')
+@patch('playerstars_routes.duel_route.CreateDuelInteractor.run')
 def test_create_duel(mock):
-    result = post_match()
+    result = post_duel()
 
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -47,10 +47,41 @@ def test_create_duel(mock):
 
 # noinspection PyUnusedLocal
 @patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.match_route.CreateDuelInteractor.run',
+@patch('playerstars_routes.duel_route.CreateDuelInteractor.run',
        MagicMock(side_effect=CreateDuelException('oops')))
 def test_create_duel_raises():
-    result = post_match()
+    result = post_duel()
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_enter_duel_mock_data():
+    payload = """{
+    "player_id": "userid#123",
+    "duel_id": "duelid123"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(json_body=data))
+
+
+@patch('app.app', make_enter_duel_mock_data())
+@patch('playerstars_routes.duel_route.EnterDuelInteractor.run')
+def test_enter_duel(mock):
+    result = enter_duel()
+
+    mock.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('app.app', make_enter_duel_mock_data())
+@patch('playerstars_routes.duel_route.EnterDuelInteractor.run',
+       MagicMock(side_effect=EnterDuelException('oops')))
+def test_enter_duel_raises():
+    result = enter_duel()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
