@@ -1,11 +1,6 @@
 DEVPI_URL ?= https://devpi.qa.stormsec.com.br/deploy/dev/+simple
 CI_ENVIRONMENT_NAME ?= dev
 
-STAGE = $(CI_ENVIRONMENT_NAME)
-ifeq ($(CI_ENVIRONMENT_NAME), prd)
-STAGE = 'api'
-endif
-
 .PHONY: clean clean-test clean-pyc clean-build docs help tests
 .DEFAULT_GOAL := help
 
@@ -70,7 +65,7 @@ install: clean ## instala as dependências do projeto
 	pip install -r requirements.txt
 
 deploy: clean install ## Executa o chalice deploy.
-	chalice deploy --stage $(STAGE) | tee deploy.log
+	chalice deploy --stage $(CI_ENVIRONMENT_NAME) | tee deploy.log
 
 run:
 	@chalice local --port 8080 --host 0.0.0.0 --stage stg

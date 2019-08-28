@@ -4,3 +4,4 @@ playerstars_domain==0.1.2
 playerstars_adapters==0.1.1
 playerstars_interactors==0.1.0
 playerstars_mail==0.1.1
+python-decouple==3.1

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from playerstars_interactors import SavePlayerException
 from playerstars_routes import (
     get_all_player,

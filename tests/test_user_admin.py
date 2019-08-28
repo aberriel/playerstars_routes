@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from unittest.mock import MagicMock, patch
 from playerstars_routes import \
     post_user_admin, get_user_admin_by_id, get_all_user_admin, \
