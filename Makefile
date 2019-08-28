@@ -1,17 +1,13 @@
+DEVPI_URL ?= https://devpi.qa.stormsec.com.br/deploy/dev/+simple
+CI_ENVIRONMENT_NAME ?= dev
+
+STAGE = $(CI_ENVIRONMENT_NAME)
+ifeq ($(CI_ENVIRONMENT_NAME), prd)
+STAGE = 'api'
+endif
+
 .PHONY: clean clean-test clean-pyc clean-build docs help tests
 .DEFAULT_GOAL := help
-
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
-
-try:
-	from urllib import pathname2url
-except:
-	from urllib.request import pathname2url
-
-webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
 
 define PRINT_HELP_PYSCRIPT
 import re, sys
@@ -23,8 +19,6 @@ for line in sys.stdin:
 		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
-
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -50,21 +44,12 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint: ## check style with flake8
-	flake8 playerstars_routes tests
-
 tests:
-	python3 -m pytest -s -v --cov=tests --cov=playerstars_routes -W ignore::DeprecationWarning --cov-report html --cov-report term-missing:skip-covered
+	python3 -m pytest -s -v --cov=tests --cov=playerstars_routes -W ignore::DeprecationWarning --cov-report term-missing:skip-covered
 	@echo "Linting..."
-	@flake8 playerstars_routes/ --max-complexity=5 --ignore=S311
+	@flake8 playerstars_routes/ --max-complexity=5
 	@flake8 tests/ --ignore=S101,S311,F811
 	@echo "\033[32mTudo certo!"
-
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source playerstars_routes -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/playerstars_routes.rst
@@ -72,21 +57,20 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	sphinx-apidoc -o docs/ playerstars_routes
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: dist ## package and upload a release
-	twine upload dist/*
+install_dev: clean install ## instala as dependências de desenvolvimento
+	pip install -r requirements_dev.txt
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+install: clean ## instala as dependências do projeto
+	pip install devpi-client
+	devpi use $(DEVPI_URL) --always-set-cfg=yes
+	pip install -r requirements.txt
 
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+deploy: clean install ## Executa o chalice deploy.
+	chalice deploy --stage $(STAGE) | tee deploy.log
 
 run:
 	@chalice local --port 8080 --host 0.0.0.0 --stage stg
