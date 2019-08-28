@@ -9,7 +9,7 @@ Feature: Region State integrations tests
             "states":["ES", "RJ", "MG"]
         }
         """
-        When post request is made to /api/region-state
+        When post request is made to /region-state
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body
@@ -33,7 +33,7 @@ Feature: Region State integrations tests
             "entity_id":"id123"
         }
         """
-        When get request is made with id id123 to /api/region-state
+        When get request is made with id id123 to /region-state
         Then The response should have status success
         Then The response should have status_code 200
         Then The retrived json has body
@@ -68,7 +68,7 @@ Feature: Region State integrations tests
             "entity_id":"id12345"
         }
         """
-        When get request is made to /api/region-state
+        When get request is made to /region-state
         Then The response should have status success
         Then The retrived json has body
         """
@@ -110,7 +110,7 @@ Feature: Region State integrations tests
              "entity_id":"id123"
          }
          """
-        When put request is made with id id123 to /api/region-state
+        When put request is made with id id123 to /region-state
         Then The response should have status success
         Then The response should have status_code 200
         Then The updated entry json has body

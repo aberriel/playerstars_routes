@@ -40,7 +40,7 @@ Feature: Player integrations tests
             ]
         }
         """
-        When post request is made to /api/player
+        When post request is made to /player
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body

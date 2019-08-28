@@ -13,7 +13,7 @@ Feature: Region Country integrations tests
                 ]
         }
         """
-        When post request is made to /api/region-country
+        When post request is made to /region-country
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body
@@ -45,7 +45,7 @@ Feature: Region Country integrations tests
              "minimum_bet": 1234
         }
         """
-        When get request is made with id id123 to /api/region-country
+        When get request is made with id id123 to /region-country
         Then The response should have status success
         Then The response should have status_code 200
         Then The retrived json has body
@@ -92,7 +92,7 @@ Feature: Region Country integrations tests
              "minimum_bet": 12345
         }
         """
-        When get request is made to /api/region-country
+        When get request is made to /region-country
         Then The response should have status success
         Then The retrived json has body
         """
@@ -149,7 +149,7 @@ Feature: Region Country integrations tests
              "minimum_bet": 12345
          }
          """
-        When put request is made with id 946b to /api/region-country
+        When put request is made with id 946b to /region-country
         Then The response should have status success
         Then The response should have status_code 200
         Then The updated entry json has body
