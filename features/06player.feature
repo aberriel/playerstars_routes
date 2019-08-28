@@ -40,7 +40,7 @@ Feature: Player integrations tests
             ]
         }
         """
-        When post request is made to /api/player
+        When post request is made to /player
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body
@@ -87,3 +87,288 @@ Feature: Player integrations tests
          }
         """
         Then I delete the test entry
+
+    Scenario: Getting a player from the database
+        Given I set table name and the adapter class as Player
+        Given I save a new entry to the database with json body
+        """
+        {
+            "entity_id": "id123",
+            "favorites": [],
+            "blue_star_balance": 123,
+            "golden_star_balance": 4321,
+            "states_regions": [],
+            "user": {
+                "group": "player",
+                "country": "Brasil",
+                "nickname": "anselmo.lira",
+                "postal_code": "22333-000",
+                "profile_image": null,
+                "city": "Rio de Janeiro",
+                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
+                "name": "Anselmo Lira",
+                "phone_number": "(21) 99663-6963",
+                "entity_id": "54321",
+                "cpf": "123.456.789-00",
+                "state": "Rio de Janeiro",
+                "date_birth": "1986-12-16",
+                "email": "playerstars@playerstars.com.br"
+            },
+            "countries_regions": [],
+            "games": [],
+            "player_status": "PlayerStatus.OFFLINE",
+            "consoles": [
+                {
+                    "entity_id": "1",
+                    "logo_path": "/images/ps4.png",
+                    "name": "PS 4",
+                    "tag_name": "007",
+                    "games": []
+                },
+                {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+            ]
+         }
+        """
+        When get request is made with id id123 to /player
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The retrived json has body
+        """
+        {
+            "entity_id": "id123",
+            "favorites": [],
+            "blue_star_balance": 123,
+            "golden_star_balance": 4321,
+            "states_regions": [],
+            "user": {
+                "group": "player",
+                "country": "Brasil",
+                "nickname": "anselmo.lira",
+                "postal_code": "22333-000",
+                "profile_image": null,
+                "city": "Rio de Janeiro",
+                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
+                "name": "Anselmo Lira",
+                "phone_number": "(21) 99663-6963",
+                "entity_id": "54321",
+                "cpf": "123.456.789-00",
+                "state": "Rio de Janeiro",
+                "date_birth": "1986-12-16",
+                "email": "playerstars@playerstars.com.br"
+            },
+            "countries_regions": [],
+            "games": [],
+            "player_status": "PlayerStatus.OFFLINE",
+            "consoles": [
+                {
+                    "entity_id": "1",
+                    "logo_path": "/images/ps4.png",
+                    "name": "PS 4",
+                    "tag_name": "007",
+                    "games": []
+                },
+                {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+            ]
+        }
+        """
+        Then I delete the test entry
+
+    Scenario: Recovering all players from the database
+        Given I set table name and the adapter class as Player
+        Given I emptied the database
+        Given I save a new entry to the database with json body
+        """
+        {
+            "entity_id": "id123",
+            "favorites": [],
+            "blue_star_balance": 123,
+            "golden_star_balance": 4321,
+            "states_regions": [],
+            "user": {
+                "group": "player",
+                "country": "Brasil",
+                "nickname": "anselmo.lira",
+                "postal_code": "22333-000",
+                "profile_image": null,
+                "city": "Rio de Janeiro",
+                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
+                "name": "Anselmo Lira",
+                "phone_number": "(21) 99663-6963",
+                "entity_id": "54321",
+                "cpf": "123.456.789-00",
+                "state": "Rio de Janeiro",
+                "date_birth": "1986-12-16",
+                "email": "playerstars@playerstars.com.br"
+            },
+            "countries_regions": [],
+            "games": [],
+            "player_status": "PlayerStatus.OFFLINE",
+            "consoles": [
+                {
+                    "entity_id": "1",
+                    "logo_path": "/images/ps4.png",
+                    "name": "PS 4",
+                    "tag_name": "007",
+                    "games": []
+                },
+                {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+            ]
+         }
+        """
+        Given I save a new entry to the database with json body
+        """
+        {
+            "entity_id": "id123456",
+            "favorites": [],
+            "blue_star_balance": 123,
+            "golden_star_balance": 4321,
+            "states_regions": [],
+            "user": {
+                "group": "player",
+                "country": "Canada",
+                "nickname": "Dudu",
+                "postal_code": "22333-000",
+                "profile_image": null,
+                "city": "Toronto",
+                "address": "Rua XV, Class A, 30 ",
+                "name": "Duarte",
+                "phone_number": "(21) 99663-6963",
+                "entity_id": "54321234",
+                "cpf": "123.000.789-00",
+                "state": "CCAA",
+                "date_birth": "1986-12-16",
+                "email": "playerstars@playerstars.com.br"
+            },
+            "countries_regions": [],
+            "games": [],
+            "player_status": "PlayerStatus.OFFLINE",
+            "consoles": [
+                {
+                    "entity_id": "1",
+                    "logo_path": "/images/ps4.png",
+                    "name": "PS 4",
+                    "tag_name": "007",
+                    "games": []
+                },
+                {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+            ]
+         }
+        """
+        When get request is made to /player
+        Then The response should have status success
+        Then The retrived json has body
+        """
+        {
+            "id123456":{
+                "entity_id": "id123456",
+                "favorites": [],
+                "blue_star_balance": 123,
+                "golden_star_balance": 4321,
+                "states_regions": [],
+                "user": {
+                    "group": "player",
+                    "country": "Canada",
+                    "nickname": "Dudu",
+                    "postal_code": "22333-000",
+                    "profile_image": null,
+                    "city": "Toronto",
+                    "address": "Rua XV, Class A, 30 ",
+                    "name": "Duarte",
+                    "phone_number": "(21) 99663-6963",
+                    "entity_id": "54321234",
+                    "cpf": "123.000.789-00",
+                    "state": "CCAA",
+                    "date_birth": "1986-12-16",
+                    "email": "playerstars@playerstars.com.br"
+                },
+                "countries_regions": [],
+                "games": [],
+                "player_status": "PlayerStatus.OFFLINE",
+                "consoles": [
+                    {
+                        "entity_id": "1",
+                        "logo_path": "/images/ps4.png",
+                        "name": "PS 4",
+                        "tag_name": "007",
+                        "games": []
+                    },
+                    {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+                ]
+            },
+            "id123":{
+                "entity_id": "id123",
+                "favorites": [],
+                "blue_star_balance": 123,
+                "golden_star_balance": 4321,
+                "states_regions": [],
+                "user": {
+                    "group": "player",
+                    "country": "Brasil",
+                    "nickname": "anselmo.lira",
+                    "postal_code": "22333-000",
+                    "profile_image": null,
+                    "city": "Rio de Janeiro",
+                    "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
+                    "name": "Anselmo Lira",
+                    "phone_number": "(21) 99663-6963",
+                    "entity_id": "54321",
+                    "cpf": "123.456.789-00",
+                    "state": "Rio de Janeiro",
+                    "date_birth": "1986-12-16",
+                    "email": "playerstars@playerstars.com.br"
+                },
+                "countries_regions": [],
+                "games": [],
+                "player_status": "PlayerStatus.OFFLINE",
+                "consoles": [
+                    {
+                        "entity_id": "1",
+                        "logo_path": "/images/ps4.png",
+                        "name": "PS 4",
+                        "tag_name": "007",
+                        "games": []
+                    },
+                    {
+                    "entity_id": "11",
+                    "logo_path": "/images/xbox.png",
+                    "name": "Xbox",
+                    "tag_name": "mario",
+                    "games": []
+                }
+                ]
+            }
+
+        }
+        """
+        Then I delete the test entry
+

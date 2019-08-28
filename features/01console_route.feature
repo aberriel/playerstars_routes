@@ -10,7 +10,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When post request is made to /api/console
+        When post request is made to /console
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body
@@ -36,7 +36,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When get request is made with id id123 to /api/console
+        When get request is made with id id123 to /console
         Then The response should have status success
         Then The response should have status_code 200
         Then The retrived json has body
@@ -74,7 +74,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When get request is made to /api/console
+        When get request is made to /console
         Then The response should have status success
         Then The retrived json has body
         """
@@ -120,7 +120,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When put request is made with id id1234 to /api/console
+        When put request is made with id id1234 to /console
         Then The response should have status success
         Then The response should have status_code 200
         Then The updated entry json has body
@@ -147,7 +147,7 @@ Feature: Console integrations tests
             "games" : []
         }
         """
-        When delete request is made with id id12345 to /api/console
+        When delete request is made with id id12345 to /console
         Then The response should have status success
         Then The response should have status_code 200
         Then I delete the test entry

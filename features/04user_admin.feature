@@ -8,7 +8,7 @@ Feature: Console integrations tests
             "email": "dudu_jpa@playerstars.com.br"
         }
         """
-        When post request is made to /api/user-admin
+        When post request is made to /user-admin
         Then The response should have status success
         Then The response should have status_code 201
         Then The saved json has body
@@ -30,7 +30,7 @@ Feature: Console integrations tests
             "entity_id": "id123"
         }
         """
-        When get request is made with id id123 to /api/user-admin
+        When get request is made with id id123 to /user-admin
         Then The response should have status success
         Then The response should have status_code 200
         Then The retrived json has body
@@ -62,7 +62,7 @@ Feature: Console integrations tests
             "entity_id": "id12345"
         }
         """
-        When get request is made to /api/user-admin
+        When get request is made to /user-admin
         Then The response should have status success
         Then The retrived json has body
         """
@@ -100,7 +100,7 @@ Feature: Console integrations tests
             "entity_id": "id123"
         }
         """
-        When put request is made with id id123 to /api/user-admin
+        When put request is made with id id123 to /user-admin
         Then The response should have status success
         Then The response should have status_code 200
         Then The updated entry json has body
