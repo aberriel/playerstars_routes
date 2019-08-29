@@ -27,12 +27,6 @@ def saved(context):
     return True if found else False
 
 
-def deleted(context):
-    found = False
-    for item in context.adapter().list_all():
-        if context.deleted_id == item.entity_id:
-            found = True
-    return True if not found else False
 
 
 @given('I set table name and the adapter class as {table_name}')
@@ -156,8 +150,25 @@ def check_retrieved_json(context):
     assert response_string_json == expected_string_json
 
 
+def deleted(context):
+    found = False
+    if hasattr(context, 'list_deleted_id'):
+        list_all = [x.entity_id for x in context.adapter().list_all()]
+        for deleted_id in context.list_deleted_id:
+            if deleted_id in list_all:
+                found = True
+    for item in context.adapter().list_all():
+        if context.deleted_id == item.entity_id:
+            found = True
+    return True if not found else False
+
+
 @then('I delete the test entry')
 def check_delete_test_entry(context):
+    if isinstance(context.item_id, list):
+        context.list_deleted_id = list()
+        for item in context.item_id:
+            context.list_deleted_id.append(context.adapter().delete(item))
     if hasattr(context, 'dict_list_get_all'):
         for key in context.dict_list_get_all.keys():
             context.deleted_id = context.adapter().delete(key)

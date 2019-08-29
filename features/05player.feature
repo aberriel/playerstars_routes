@@ -373,5 +373,5 @@ Feature: Player integrations tests
         Then I delete the test entry
 
 ## Pendente PUT e DELETE
-    
+
 
