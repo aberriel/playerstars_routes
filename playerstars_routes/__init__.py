@@ -6,14 +6,6 @@ __author__ = """Storm Development Ltda"""
 __email__ = 'playerstars@stormsec.com.br'
 __version__ = '0.1.0'
 
-from .console_route import (
-    ConsoleChaliceRoute,
-    delete_console,
-    get_all_console,
-    get_console_by_id,
-    post_console,
-    put_console
-)
 from .game_route import (
     delete_game,
     GameChaliceRoute,
@@ -64,9 +56,10 @@ from .duel_route import (
     MatchListChaliceRoute,
     enter_duel
 )
+from .basic_entity_route import BasicEntityRoute
 
 __all__ = [
-    'ConsoleChaliceRoute',
+    'BasicEntityRoute',
     'UserAdminChaliceRoute',
     'RegionStateChaliceRoute',
     'RegionCountryChaliceRoute',
@@ -74,7 +67,6 @@ __all__ = [
     'post_player',
     'post_game',
     'post_region_state',
-    'post_console',
     'post_region_country',
     'PlayerChaliceRoute',
     'get_all_player',
@@ -84,11 +76,7 @@ __all__ = [
     'get_all_region_state',
     'get_region_country_by_id',
     'get_all_region_country',
-    'get_all_console',
-    'get_console_by_id',
     'get_player_by_id',
-    'put_console',
-    'delete_console',
     'root',
     'put_region_country',
     'put_region_state',

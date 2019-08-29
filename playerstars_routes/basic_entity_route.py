@@ -7,8 +7,10 @@ from playerstars_interactors import (BasicPutRequestModel, BasicPutInteractor,
 from playerstars_interactors import (BasicDeleteInteractor,
                                      BasicDeleteRequestModel)
 
-from playerstars_routes.chalice_support import success, not_found, \
-    server_error, created
+from playerstars_routes.chalice_support.api_responses import (success,
+                                                              not_found,
+                                                              server_error,
+                                                              created)
 
 
 class BasicEntityRoute:
@@ -16,6 +18,10 @@ class BasicEntityRoute:
         self.adapter_instance = adapter_instance
         self.entity_class = entity_class
         self.entity_name = entity_name
+
+    @staticmethod
+    def capitalize(name):
+        return name[0].upper() + name[1:]
 
     def get_all(self):
         interactor = BasicGetAllInteractor(self.adapter_instance)
@@ -30,7 +36,9 @@ class BasicEntityRoute:
         response = interactor.run()
         if response:
             return success(response)
-        return not_found(f'{self.entity_name} não encontrado')
+
+        objeto = self.capitalize(self.entity_name)
+        return not_found(f'{objeto} não encontrado')
 
     def post(self, json_data):
         request = BasicPostRequestModel(json_data)
@@ -59,6 +67,7 @@ class BasicEntityRoute:
         interactor = BasicDeleteInteractor(request, self.adapter_instance)
         response = interactor.run()
         if not response:
-            return not_found(f'{self.entity_name} não encontrdado para '
+            objeto = self.capitalize(self.entity_name)
+            return not_found(f'{objeto} não encontrado para '
                              f'ser deletado')
         return success(response)
