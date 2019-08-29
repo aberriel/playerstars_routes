@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from playerstars_interactors import SavePlayerException
 from playerstars_routes import (
     get_all_player,
     get_player_by_id,
-    PlayerRoute,
+    PlayerChaliceRoute,
     post_player
 )
 from unittest.mock import MagicMock, patch
@@ -125,19 +122,19 @@ def test_get_all_player_raises(mock):
 
 def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
-        PlayerRoute().make_put_request({})
+        PlayerChaliceRoute().make_put_request({})
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        PlayerRoute().update_exception()
+        PlayerChaliceRoute().update_exception()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        PlayerRoute().delete_request_model()
+        PlayerChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        PlayerRoute().delete_interactor()
+        PlayerChaliceRoute().delete_interactor()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        PlayerRoute().put_interactor()
+        PlayerChaliceRoute().put_interactor()
     assert str(exc.value) == 'Não implementado no interactor'
-    assert PlayerRoute().delete_not_found() == 'Player não encontrado para' \
+    assert PlayerChaliceRoute().delete_not_found() == 'Player não encontrado para' \
                                                ' ser deletado'

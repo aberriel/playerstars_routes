@@ -1,9 +1,21 @@
 {
   "version": "2.0",
-  "app_name": "playerstars_routes",
+  "app_name": "PlayerStars",
+  "environment_variables": {
+    "LOG_LEVEL": "DEBUG"
+  },
   "stages": {
     "dev": {
-      "api_gateway_stage": "api"
+      "api_gateway_stage": "dev"
+    },
+    "stg": {
+      "api_gateway_stage": "stg"
+    },
+    "prd": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "LOG_LEVEL": "INFO"
+      }
     }
   }
 }

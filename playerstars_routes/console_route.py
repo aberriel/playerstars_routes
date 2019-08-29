@@ -1,99 +1,61 @@
 from chalice import Blueprint
-from playerstars_interactors import (
-    GetAllConsolesInteractor, PostConsoleRequestModel, PostConsoleInteractor,
-    SaveConsoleException, GetConsoleInteractor, GetConsoleRequestModel,
-    PutConsoleInteractor,
-    PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
-    DeleteConsoleRequestModel)
+from playerstars_adapters import ConsoleAdapter
+from playerstars_domain import Console
+
+from playerstars_routes import BasicEntityRoute
+from playerstars_routes.settings import Settings
 from .auth import cors, cupauth
-from playerstars_routes.basic_route import BasicRoute
 
 bp_console = Blueprint(__name__)
 
 
-@bp_console.route('/console', methods=['GET'], cors=cors, authorizer=cupauth)
+def private(method):
+    return dict(methods=[method], cors=cors, authorizer=cupauth)
+
+
+def private_get():
+    return private('GET')
+
+
+def private_put():
+    return private('PUT')
+
+
+def private_post():
+    return private('POST')
+
+
+def private_delete():
+    return private('DELETE')
+
+
+def get_router():
+    adapter = ConsoleAdapter(Settings.CONSOLE_TABLE_NAME)
+    return BasicEntityRoute(adapter, Console, 'console')
+
+
+@bp_console.route('/', **private_get())
 def get_all_console():
-    return ConsoleRoute().get_all()
+    return get_router().get_all()
 
 
-@bp_console.route(
-    '/console/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
+@bp_console.route('/{entity_id}', **private_get())
 def get_console_by_id(entity_id):
-    return ConsoleRoute().get_by_id(entity_id)
+    return get_router().get_by_id(entity_id)
 
 
-@bp_console.route(
-    '/console', methods=['POST'], cors=cors, authorizer=cupauth)
+@bp_console.route('/', **private_post())
 def post_console():
-    from app import app
-    data = app.current_request.json_body
-    return ConsoleRoute().post(data)
+    data = bp_console.current_request.json_body
+    return get_router().post(data)
 
 
-@bp_console.route(
-    '/console/{entity_id}', methods=['PUT'], cors=cors, authorizer=cupauth)
+@bp_console.route('/{entity_id}', **private_put())
 def put_console(entity_id):
-    from app import app
-    data = app.current_request.json_body
-    return ConsoleRoute().put(data)
+    data = bp_console.current_request.json_body
+    return get_router().put(data)
 
 
-@bp_console.route(
-    '/console/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
+@bp_console.route('/{entity_id}', **private_delete())
 def delete_console(entity_id):
-    return ConsoleRoute().delete(entity_id)
-
-
-class ConsoleRoute(BasicRoute):
-
-    def make_post_request(self, data):
-        return PostConsoleRequestModel(
-            name=data['name'],
-            logo_path=data['logo_path'],
-            games=data['games'],
-            tag_name=data['tag_name'])
-
-    def make_put_request(self, data):
-        return PutConsoleRequestModel(
-            console_id=data['entity_id'],
-            name=data['name'],
-            logo_path=data['logo_path'],
-            games=data['games'],
-            tag_name=data['tag_name']
-        )
-
-    def get_all_interactor(self):
-        return GetAllConsolesInteractor
-
-    def not_found_message(self):
-        return 'Console não encontrado'
-
-    def not_found_all_message(self):
-        return 'Nenhum console encontrado'
-
-    def get_request_model(self):
-        return GetConsoleRequestModel
-
-    def get_interactor(self):
-        return GetConsoleInteractor
-
-    def save_exception(self):
-        return SaveConsoleException
-
-    def post_interactor(self):
-        return PostConsoleInteractor
-
-    def update_exception(self):
-        return UpdateConsoleException
-
-    def put_interactor(self):
-        return PutConsoleInteractor
-
-    def delete_request_model(self):
-        return DeleteConsoleRequestModel
-
-    def delete_interactor(self):
-        return DeleteConsoleInteractor
-
-    def delete_not_found(self):
-        return 'Console não encontrado para ser deletado'
+    return get_router().delete(entity_id)

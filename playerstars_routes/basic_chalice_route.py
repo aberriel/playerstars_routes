@@ -1,12 +1,15 @@
 from abc import abstractmethod
+
 from chalice import Blueprint
-from playerstars_routes.chalice_support import success, \
-    not_found, server_error, created
+
+from playerstars_routes.chalice_support import (success, not_found,
+                                                server_error, created)
+
 
 root = Blueprint(__name__)
 
 
-class BasicRoute:
+class BasicChaliceRoute:
 
     def get_all(self):
         response = self.get_all_interactor().run()

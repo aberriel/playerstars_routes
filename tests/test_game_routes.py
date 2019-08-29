@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 from playerstars_routes import (
-    get_all_games, post_game, GameRoute, get_game_by_id, put_game,
+    get_all_games, post_game, GameChaliceRoute, get_game_by_id, put_game,
     delete_game)
 from playerstars_interactors import SaveGameException, GetAllGamesInteractor, \
     UpdateGameException
@@ -88,7 +88,7 @@ def test_post_game_raises():
 
 
 def test_get_all_interactor():
-    assert GameRoute().get_all_interactor() == GetAllGamesInteractor
+    assert GameChaliceRoute().get_all_interactor() == GetAllGamesInteractor
 
 
 def make_put_mock_data():

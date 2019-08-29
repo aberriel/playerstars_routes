@@ -6,7 +6,7 @@ from playerstars_interactors import (
     GetRegionCountryRequestModel, SaveRegionCountryException,
     PutRegionCountryRequestModel, PutRegionCountryInteractor,
     UpdateRegionCountryException)
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_region_country = Blueprint(__name__)
 
@@ -14,14 +14,14 @@ bp_region_country = Blueprint(__name__)
 @bp_region_country.route(
     '/region-country/', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_region_country():
-    return RegionCountryRoute().get_all()
+    return RegionCountryChaliceRoute().get_all()
 
 
 @bp_region_country.route(
     '/region-country/{entity_id}', methods=['GET'],
     cors=cors, authorizer=cupauth)
 def get_region_country_by_id(region_id):
-    return RegionCountryRoute().get_by_id(region_id)
+    return RegionCountryChaliceRoute().get_by_id(region_id)
 
 
 @bp_region_country.route(
@@ -30,7 +30,7 @@ def get_region_country_by_id(region_id):
 def post_region_country():
     from app import app
     data = app.current_request.json_body
-    return RegionCountryRoute().post(data)
+    return RegionCountryChaliceRoute().post(data)
 
 
 @bp_region_country.route(
@@ -39,10 +39,10 @@ def post_region_country():
 def put_region_country(entity_id):
     from app import app
     data = app.current_request.json_body
-    return RegionCountryRoute().put(data)
+    return RegionCountryChaliceRoute().put(data)
 
 
-class RegionCountryRoute(BasicRoute):
+class RegionCountryChaliceRoute(BasicChaliceRoute):
 
     def make_post_request(self, data):
         return PostRegionCountryRequestModel(

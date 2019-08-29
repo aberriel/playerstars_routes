@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import pytest
 from datetime import date, datetime
 from playerstars_domain import (
@@ -17,7 +15,7 @@ from playerstars_routes import (
     get_all_teams_by_user,
     post_team,
     put_team,
-    TeamRoute
+    TeamChaliceRoute
 )
 from unittest.mock import MagicMock, patch
 
@@ -318,11 +316,11 @@ def test_put_team_raises(saved_team):
 
 def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
-        TeamRoute().delete_request_model()
+        TeamChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        TeamRoute().delete_interactor()
+        TeamChaliceRoute().delete_interactor()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        TeamRoute().delete_not_found()
+        TeamChaliceRoute().delete_not_found()
     assert str(exc.value) == 'Não implementado no interactor'

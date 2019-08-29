@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 from playerstars_routes import (
     get_all_region_state,
     get_region_state_by_id, put_region_state,
-    post_region_state, RegionStateRoute)
+    post_region_state, RegionStateChaliceRoute)
 import json
 import pytest
 from playerstars_interactors import SaveRegionStateException, \
@@ -119,11 +119,11 @@ def test_put_region_raises():
 
 def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_request_model()
+        RegionStateChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Delete não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_interactor()
+        RegionStateChaliceRoute().delete_interactor()
     assert str(exc.value) == 'Delete não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_not_found()
+        RegionStateChaliceRoute().delete_not_found()
     assert str(exc.value) == 'Delete não implementado'

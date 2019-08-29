@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from unittest.mock import MagicMock, patch
 from playerstars_routes import \
     post_user_admin, get_user_admin_by_id, get_all_user_admin, \
-    UserAdminRoute, put_user_admin
+    UserAdminChaliceRoute, put_user_admin
 from playerstars_interactors import \
     SaveUserAdminException, UpdateUserAdminException
 
@@ -128,9 +125,9 @@ def test_put_user_admin_raises():
 
 def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
-        UserAdminRoute().delete_request_model()
+        UserAdminChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Não implementado no interactor'
     with pytest.raises(NotImplementedError) as exc:
-        UserAdminRoute().delete_interactor()
-    assert UserAdminRoute().delete_not_found() == 'Player não encontrado ' \
+        UserAdminChaliceRoute().delete_interactor()
+    assert UserAdminChaliceRoute().delete_not_found() == 'Player não encontrado ' \
                                                   'para ser deletado'

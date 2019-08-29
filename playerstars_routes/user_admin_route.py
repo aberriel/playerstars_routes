@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from .auth import cors, cupauth
 from chalice import Blueprint
 from playerstars_interactors import \
@@ -9,7 +6,7 @@ from playerstars_interactors import \
     GetAllUsersAdminsInteractor, \
     SaveUserAdminException, UpdateUserAdminException, \
     PutUserAdminInteractor, PutUserAdminRequestModel
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_user_admin = Blueprint(__name__)
 
@@ -19,19 +16,19 @@ bp_user_admin = Blueprint(__name__)
 def post_user_admin():
     from app import app
     data = app.current_request.json_body
-    return UserAdminRoute().post(data)
+    return UserAdminChaliceRoute().post(data)
 
 
 @bp_user_admin.route(
     '/user-admin/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_user_admin_by_id(entity_id):
-    return UserAdminRoute().get_by_id(entity_id)
+    return UserAdminChaliceRoute().get_by_id(entity_id)
 
 
 @bp_user_admin.route(
     '/user-admin/', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_user_admin():
-    return UserAdminRoute().get_all()
+    return UserAdminChaliceRoute().get_all()
 
 
 @bp_user_admin.route(
@@ -39,10 +36,10 @@ def get_all_user_admin():
 def put_user_admin(entity_id):
     from app import app
     data = app.current_request.json_body
-    return UserAdminRoute().put(data)
+    return UserAdminChaliceRoute().put(data)
 
 
-class UserAdminRoute(BasicRoute):
+class UserAdminChaliceRoute(BasicChaliceRoute):
 
     def make_post_request(self, data):
 

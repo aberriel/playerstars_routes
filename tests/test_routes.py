@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # from unittest.mock import MagicMock, patch
 import json
 import logging

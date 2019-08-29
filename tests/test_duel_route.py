@@ -2,14 +2,14 @@ import json
 import pytest
 from unittest.mock import MagicMock, patch
 from playerstars_routes import get_match_list, post_duel, \
-    MatchListRoute, enter_duel
+    MatchListChaliceRoute, enter_duel
 from playerstars_interactors import CreateDuelException, EnterDuelException
 
 
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.duel_route.GetMatchListInteractor.run')
 def test_get_match_list(mock):
-    # result = ConsoleRoute().get_console('id1')
+    # result = ConsoleChaliceRoute().get_console('id1')
     result = get_match_list('id1')
     mock.assert_called_once()
     assert result.body['status'] == 'success'
@@ -90,24 +90,24 @@ def test_enter_duel_raises():
 
 def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().delete_request_model()
+        MatchListChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().delete_interactor()
+        MatchListChaliceRoute().delete_interactor()
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().delete_not_found()
+        MatchListChaliceRoute().delete_not_found()
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().make_put_request({})
+        MatchListChaliceRoute().make_put_request({})
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().get_all_interactor()
+        MatchListChaliceRoute().get_all_interactor()
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().put_interactor()
+        MatchListChaliceRoute().put_interactor()
     assert str(exc.value) == 'Não implementado'
     with pytest.raises(NotImplementedError) as exc:
-        MatchListRoute().update_exception()
+        MatchListChaliceRoute().update_exception()
     assert str(exc.value) == 'Não implementado'
-    assert MatchListRoute().not_found_all_message() == 'Não implementado'
+    assert MatchListChaliceRoute().not_found_all_message() == 'Não implementado'

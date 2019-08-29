@@ -1,5 +1,0 @@
-[run]
-
-[report]
-skip_covered = False
-show_missing = True

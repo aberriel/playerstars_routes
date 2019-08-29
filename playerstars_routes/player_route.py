@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from .auth import cors, cupauth
 from chalice import Blueprint
 from playerstars_interactors import \
     PostPlayerRequestModel, PostPlayerInteractor, SavePlayerException, \
     GetPlayerInteractor, GetPlayerRequestModel, \
     GetAllPlayersInteractor
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_player = Blueprint(__name__)
 
@@ -17,22 +14,22 @@ bp_player = Blueprint(__name__)
 def post_player():
     from app import app
     data = app.current_request.json_body
-    return PlayerRoute().post(data)
+    return PlayerChaliceRoute().post(data)
 
 
 @bp_player.route(
     '/player/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_player_by_id(entity_id):
-    return PlayerRoute().get_by_id(entity_id)
+    return PlayerChaliceRoute().get_by_id(entity_id)
 
 
 @bp_player.route(
     '/player/', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_player():
-    return PlayerRoute().get_all()
+    return PlayerChaliceRoute().get_all()
 
 
-class PlayerRoute(BasicRoute):
+class PlayerChaliceRoute(BasicChaliceRoute):
 
     def make_post_request(self, data):
 
