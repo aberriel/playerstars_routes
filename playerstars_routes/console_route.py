@@ -6,7 +6,7 @@ from playerstars_interactors import (
     PutConsoleRequestModel, UpdateConsoleException, DeleteConsoleInteractor,
     DeleteConsoleRequestModel)
 from .auth import cors, cupauth
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_console = Blueprint(__name__)
 

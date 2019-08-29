@@ -6,7 +6,7 @@ from playerstars_interactors import (
     GetRegionCountryRequestModel, SaveRegionCountryException,
     PutRegionCountryRequestModel, PutRegionCountryInteractor,
     UpdateRegionCountryException)
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_region_country = Blueprint(__name__)
 

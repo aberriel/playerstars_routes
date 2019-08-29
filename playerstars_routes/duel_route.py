@@ -4,7 +4,7 @@ from playerstars_interactors import GetMatchListRequestModel, \
     GetMatchListInteractor, CreateDuelException, CreateDuelInteractor, \
     CreateDuelRequestModel, EnterDuelRequestModel, \
     EnterDuelInteractor, EnterDuelException
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import server_error, success
 bp_duel = Blueprint(__name__)
 

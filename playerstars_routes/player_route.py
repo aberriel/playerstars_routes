@@ -4,7 +4,7 @@ from playerstars_interactors import \
     PostPlayerRequestModel, PostPlayerInteractor, SavePlayerException, \
     GetPlayerInteractor, GetPlayerRequestModel, \
     GetAllPlayersInteractor
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_player = Blueprint(__name__)
 

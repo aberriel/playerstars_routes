@@ -6,7 +6,7 @@ from playerstars_interactors import \
     GetAllUsersAdminsInteractor, \
     SaveUserAdminException, UpdateUserAdminException, \
     PutUserAdminInteractor, PutUserAdminRequestModel
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_user_admin = Blueprint(__name__)
 

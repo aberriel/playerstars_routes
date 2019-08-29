@@ -6,7 +6,7 @@ from playerstars_interactors import (
     GetAllGamesRequestModel, PutGameRequestModel,
     PutGameInteractor, DeleteGameInteractor,
     DeleteGameRequestModel, UpdateGameException)
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import success, not_found
 
 bp_game = Blueprint(__name__)

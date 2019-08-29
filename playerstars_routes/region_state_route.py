@@ -6,7 +6,7 @@ from playerstars_interactors import (
     GetRegionStateInteractor, SaveRegionStateException,
     PutRegionStateInteractor, UpdateRegionStateException,
     PutRegionStateRequestModel)
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 
 bp_region_state = Blueprint(__name__)
 

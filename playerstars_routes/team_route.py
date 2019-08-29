@@ -16,7 +16,7 @@ from playerstars_interactors import (
     SaveTeamException,
     UpdateTeamException
 )
-from playerstars_routes.basic_route import BasicChaliceRoute
+from playerstars_routes.basic_chalice_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import (
     success,
     not_found

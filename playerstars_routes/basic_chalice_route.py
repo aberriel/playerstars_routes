@@ -1,7 +1,10 @@
 from abc import abstractmethod
+
 from chalice import Blueprint
-from playerstars_routes.chalice_support import success, \
-    not_found, server_error, created
+
+from playerstars_routes.chalice_support import (success, not_found,
+                                                server_error, created)
+
 
 root = Blueprint(__name__)
 
