@@ -16,7 +16,7 @@ from playerstars_interactors import (
     SaveTeamException,
     UpdateTeamException
 )
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import (
     success,
     not_found
@@ -27,21 +27,21 @@ bp_console = Blueprint(__name__)
 
 @bp_console.route('/team', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_teams():
-    return TeamRoute().get_all()
+    return TeamChaliceRoute().get_all()
 
 
 @bp_console.route('/team/{entity_id}',
                   methods=['GET'],
                   cors=cors, authorizer=cupauth)
 def get_team_by_id(entity_id):
-    return TeamRoute().get_by_id(entity_id)
+    return TeamChaliceRoute().get_by_id(entity_id)
 
 
 @bp_console.route('/team/byuser/{player_id}',
                   methods=['GET'],
                   cors=cors, authorizer=cupauth)
 def get_all_teams_by_user(player_id):
-    return TeamRoute().get_by_user(player_id)
+    return TeamChaliceRoute().get_by_user(player_id)
 
 
 @bp_console.route('/team',
@@ -51,7 +51,7 @@ def get_all_teams_by_user(player_id):
 def post_team():
     from app import app
     data = app.current_request.json_body
-    return TeamRoute().post(data)
+    return TeamChaliceRoute().post(data)
 
 
 @bp_console.route('/team/{entity_id}',
@@ -61,10 +61,10 @@ def post_team():
 def put_team(entity_id):
     from app import app
     data = app.current_request.json_body
-    return TeamRoute().put(data)
+    return TeamChaliceRoute().put(data)
 
 
-class TeamRoute(BasicRoute):
+class TeamChaliceRoute(BasicChaliceRoute):
     def make_game_model(self, game_list_data):
         game_model_list = list()
         for game_data in game_list_data:

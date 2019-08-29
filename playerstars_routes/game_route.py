@@ -6,7 +6,7 @@ from playerstars_interactors import (
     GetAllGamesRequestModel, PutGameRequestModel,
     PutGameInteractor, DeleteGameInteractor,
     DeleteGameRequestModel, UpdateGameException)
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import success, not_found
 
 bp_game = Blueprint(__name__)
@@ -15,20 +15,20 @@ bp_game = Blueprint(__name__)
 @bp_game.route(
     '/game/{console_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_all_games(console_id):
-    return GameRoute().get_all_by_console_id(console_id)
+    return GameChaliceRoute().get_all_by_console_id(console_id)
 
 
 @bp_game.route(
     '/game/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_game_by_id(entity_id):
-    return GameRoute().get_by_id(entity_id)
+    return GameChaliceRoute().get_by_id(entity_id)
 
 
 @bp_game.route('/game/', methods=['POST'], cors=cors, authorizer=cupauth)
 def post_game():
     from app import app
     data = app.current_request.json_body
-    return GameRoute().post(data)
+    return GameChaliceRoute().post(data)
 
 
 @bp_game.route(
@@ -36,16 +36,16 @@ def post_game():
 def put_game(entity_id):
     from app import app
     data = app.current_request.json_body
-    return GameRoute().put(data)
+    return GameChaliceRoute().put(data)
 
 
 @bp_game.route(
     '/game/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
 def delete_game(entity_id):
-    return GameRoute().delete(entity_id)
+    return GameChaliceRoute().delete(entity_id)
 
 
-class GameRoute(BasicRoute):
+class GameChaliceRoute(BasicChaliceRoute):
 
     def get_all_by_console_id(self, entity_id):
         request = GetAllGamesRequestModel(entity_id)

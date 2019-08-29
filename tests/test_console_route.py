@@ -36,7 +36,7 @@ def test_get_all_consoles_not_found():
 # noinspection PyUnusedLocal
 @patch('playerstars_routes.console_route.GetConsoleInteractor.run')
 def test_get_console(mock):
-    # result = ConsoleRoute().get_console('id1')
+    # result = ConsoleChaliceRoute().get_console('id1')
     result = get_console_by_id('id1')
     mock.assert_called_once()
     assert result.body['status'] == 'success'

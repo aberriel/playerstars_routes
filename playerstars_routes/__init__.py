@@ -7,7 +7,7 @@ __email__ = 'playerstars@stormsec.com.br'
 __version__ = '0.1.0'
 
 from .console_route import (
-    ConsoleRoute,
+    ConsoleChaliceRoute,
     delete_console,
     get_all_console,
     get_console_by_id,
@@ -16,7 +16,7 @@ from .console_route import (
 )
 from .game_route import (
     delete_game,
-    GameRoute,
+    GameChaliceRoute,
     get_all_games,
     get_game_by_id,
     post_game,
@@ -25,7 +25,7 @@ from .game_route import (
 from .player_route import (
     get_all_player,
     get_player_by_id,
-    PlayerRoute,
+    PlayerChaliceRoute,
     post_player,
 )
 from .region_country_route import (
@@ -33,14 +33,14 @@ from .region_country_route import (
     get_region_country_by_id,
     post_region_country,
     put_region_country,
-    RegionCountryRoute
+    RegionCountryChaliceRoute
 )
 from .region_state_route import (
     get_all_region_state,
     get_region_state_by_id,
     post_region_state,
     put_region_state,
-    RegionStateRoute,
+    RegionStateChaliceRoute,
 )
 from .routes import root
 from .team_route import (
@@ -49,34 +49,34 @@ from .team_route import (
     get_team_by_id,
     post_team,
     put_team,
-    TeamRoute
+    TeamChaliceRoute
 )
 from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
     put_user_admin,
-    UserAdminRoute
+    UserAdminChaliceRoute
 )
 from .duel_route import (
     post_duel,
     get_match_list,
-    MatchListRoute,
+    MatchListChaliceRoute,
     enter_duel
 )
 
 __all__ = [
-    'ConsoleRoute',
-    'UserAdminRoute',
-    'RegionStateRoute',
-    'RegionCountryRoute',
-    'GameRoute',
+    'ConsoleChaliceRoute',
+    'UserAdminChaliceRoute',
+    'RegionStateChaliceRoute',
+    'RegionCountryChaliceRoute',
+    'GameChaliceRoute',
     'post_player',
     'post_game',
     'post_region_state',
     'post_console',
     'post_region_country',
-    'PlayerRoute',
+    'PlayerChaliceRoute',
     'get_all_player',
     'get_all_games',
     'get_game_by_id',
@@ -103,9 +103,9 @@ __all__ = [
     'get_team_by_id',
     'post_team',
     'put_team',
-    'TeamRoute',
+    'TeamChaliceRoute',
     'post_duel',
     'get_match_list',
-    'MatchListRoute',
+    'MatchListChaliceRoute',
     'enter_duel'
 ]

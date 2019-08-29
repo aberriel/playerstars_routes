@@ -4,7 +4,7 @@ from playerstars_interactors import GetMatchListRequestModel, \
     GetMatchListInteractor, CreateDuelException, CreateDuelInteractor, \
     CreateDuelRequestModel, EnterDuelRequestModel, \
     EnterDuelInteractor, EnterDuelException
-from playerstars_routes.basic_route import BasicRoute
+from playerstars_routes.basic_route import BasicChaliceRoute
 from playerstars_routes.chalice_support import server_error, success
 bp_duel = Blueprint(__name__)
 
@@ -12,7 +12,7 @@ bp_duel = Blueprint(__name__)
 @bp_duel.route(
     '/match-list/{user_id}', methods=['GET'], cors=cors, authorizer=cupauth)
 def get_match_list(user_id):
-    return MatchListRoute().get_by_id(user_id)
+    return MatchListChaliceRoute().get_by_id(user_id)
 
 
 @bp_duel.route(
@@ -20,7 +20,7 @@ def get_match_list(user_id):
 def post_duel():
     from app import app
     data = app.current_request.json_body
-    return MatchListRoute().post(data)
+    return MatchListChaliceRoute().post(data)
 
 
 @bp_duel.route(
@@ -28,10 +28,10 @@ def post_duel():
 def enter_duel():
     from app import app
     data = app.current_request.json_body
-    return MatchListRoute().enter_duel(data)
+    return MatchListChaliceRoute().enter_duel(data)
 
 
-class MatchListRoute(BasicRoute):
+class MatchListChaliceRoute(BasicChaliceRoute):
 
     @staticmethod
     def enter_duel(data):

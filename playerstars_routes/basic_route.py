@@ -6,7 +6,7 @@ from playerstars_routes.chalice_support import success, \
 root = Blueprint(__name__)
 
 
-class BasicRoute:
+class BasicChaliceRoute:
 
     def get_all(self):
         response = self.get_all_interactor().run()
