@@ -43,14 +43,6 @@ class BasicChaliceRoute:
             return server_error(str(e))
         return success(response)
 
-    def delete(self, entity_id):
-        request = self.delete_request_model()(entity_id)
-        interactor = self.delete_interactor()(request)
-        response = interactor.run()
-        if not response:
-            return not_found(self.delete_not_found())
-        return success(response)
-
     @abstractmethod
     def make_post_request(self, data):
         raise NotImplementedError('Não foi implementado')

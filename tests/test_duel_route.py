@@ -1,28 +1,29 @@
 import json
-import pytest
 from unittest.mock import MagicMock, patch
-from playerstars_routes import get_match_list, post_duel, \
-    MatchListChaliceRoute, enter_duel
-from playerstars_interactors import CreateDuelException, EnterDuelException
+from playerstars_routes import get_match_list, post_duel, enter_duel
+from playerstars_interactors import SaveEntityException
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.GetMatchListInteractor.run')
-def test_get_match_list(mock):
-    # result = ConsoleChaliceRoute().get_console('id1')
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_match_list(client, resource, run):
     result = get_match_list('id1')
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.GetMatchListInteractor.run',
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
-def test_get_match_list_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_match_list_not_found(client, resource):
     result = get_match_list('id1')
 
-    assert result.body['message'] == 'Nenhum match encontrado'
+    assert result.body['message'] == 'Player não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -35,21 +36,26 @@ def make_post_mock_data():
     return MagicMock(current_request=MagicMock(json_body=data))
 
 
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.duel_route.CreateDuelInteractor.run')
-def test_create_duel(mock):
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.duel_route.bp_create_duel', make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_create_duel(client, resourcem, run):
     result = post_duel()
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.duel_route.CreateDuelInteractor.run',
-       MagicMock(side_effect=CreateDuelException('oops')))
-def test_create_duel_raises():
+@patch('playerstars_routes.duel_route.bp_create_duel', make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_create_duel_raises(client, resource):
     result = post_duel()
 
     assert result.body['message'] == 'oops'
@@ -66,49 +72,29 @@ def make_enter_duel_mock_data():
     return MagicMock(current_request=MagicMock(json_body=data))
 
 
-@patch('app.app', make_enter_duel_mock_data())
-@patch('playerstars_routes.duel_route.EnterDuelInteractor.run')
-def test_enter_duel(mock):
+# noinspection PyUnusedLocal
+@patch('playerstars_routes.duel_route.bp_enter_duel',
+       make_enter_duel_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_enter_duel(client, resource, run):
     result = enter_duel()
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_enter_duel_mock_data())
-@patch('playerstars_routes.duel_route.EnterDuelInteractor.run',
-       MagicMock(side_effect=EnterDuelException('oops')))
-def test_enter_duel_raises():
+@patch('playerstars_routes.duel_route.bp_enter_duel', make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_enter_duel_raises(client, resource):
     result = enter_duel()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
-
-
-def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().delete_request_model()
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().delete_interactor()
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().delete_not_found()
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().make_put_request({})
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().get_all_interactor()
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().put_interactor()
-    assert str(exc.value) == 'Não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        MatchListChaliceRoute().update_exception()
-    assert str(exc.value) == 'Não implementado'
-    assert MatchListChaliceRoute().not_found_all_message() == \
-        'Não implementado'

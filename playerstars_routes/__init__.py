@@ -8,7 +8,6 @@ __version__ = '0.1.0'
 
 from .game_route import (
     delete_game,
-    GameChaliceRoute,
     get_all_games,
     get_game_by_id,
     post_game,
@@ -50,14 +49,12 @@ from .user_admin_route import (
 from .duel_route import (
     post_duel,
     get_match_list,
-    MatchListChaliceRoute,
     enter_duel
 )
 from .basic_entity_route import BasicEntityRoute
 
 __all__ = [
     'BasicEntityRoute',
-    'GameChaliceRoute',
     'post_player',
     'post_game',
     'post_region_state',
