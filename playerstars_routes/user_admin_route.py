@@ -1,92 +1,37 @@
-from .auth import cors, cupauth
 from chalice import Blueprint
-from playerstars_interactors import \
-    PostUserAdminInteractor, PostUserAdminRequestModel,\
-    GetUserAdminRequestModel, GetUserAdminInteractor, \
-    GetAllUsersAdminsInteractor, \
-    SaveUserAdminException, UpdateUserAdminException, \
-    PutUserAdminInteractor, PutUserAdminRequestModel
-from playerstars_routes.basic_chalice_route import BasicChaliceRoute
+from playerstars_adapters import UserAdminAdapter
+from playerstars_domain import UserAdmin
+from playerstars_routes.chalice_support import (
+    private_get, private_put, private_post)
+
+from .basic_entity_route import BasicEntityRoute
+from playerstars_routes.settings import Settings
 
 bp_user_admin = Blueprint(__name__)
 
 
-@bp_user_admin.route(
-    '/user-admin/', methods=['POST'], cors=cors, authorizer=cupauth)
-def post_user_admin():
-    from app import app
-    data = app.current_request.json_body
-    return UserAdminChaliceRoute().post(data)
+def get_router():
+    adapter = UserAdminAdapter(Settings.CONSOLE_TABLE_NAME)
+    return BasicEntityRoute(adapter, UserAdmin, 'user-admin')
 
 
-@bp_user_admin.route(
-    '/user-admin/{entity_id}', methods=['GET'], cors=cors, authorizer=cupauth)
-def get_user_admin_by_id(entity_id):
-    return UserAdminChaliceRoute().get_by_id(entity_id)
-
-
-@bp_user_admin.route(
-    '/user-admin/', methods=['GET'], cors=cors, authorizer=cupauth)
+@bp_user_admin.route('/', **private_get())
 def get_all_user_admin():
-    return UserAdminChaliceRoute().get_all()
+    return get_router().get_all()
 
 
-@bp_user_admin.route(
-    '/user-admin/{entity_id}', methods=['PUT'], cors=cors, authorizer=cupauth)
+@bp_user_admin.route('/{entity_id}', **private_get())
+def get_user_admin_by_id(region_id):
+    return get_router().get_by_id(region_id)
+
+
+@bp_user_admin.route('/', **private_post())
+def post_user_admin():
+    data = bp_user_admin.current_request.json_body
+    return get_router().post(data)
+
+
+@bp_user_admin.route('/{entity_id}', **private_put())
 def put_user_admin(entity_id):
-    from app import app
-    data = app.current_request.json_body
-    return UserAdminChaliceRoute().put(data)
-
-
-class UserAdminChaliceRoute(BasicChaliceRoute):
-
-    def make_post_request(self, data):
-
-        return PostUserAdminRequestModel(
-            name=data['name'],
-            email=data['email']
-        )
-
-    def make_put_request(self, data):
-        return PutUserAdminRequestModel(
-            user_id=data['entity_id'],
-            name=data['name'],
-            email=data['email']
-        )
-
-    def get_all_interactor(self):
-        return GetAllUsersAdminsInteractor
-
-    def not_found_message(self):
-        return 'User Admin não encontrado'
-
-    def not_found_all_message(self):
-        return 'Nenhum user admin encontrado'
-
-    def get_request_model(self):
-        return GetUserAdminRequestModel
-
-    def get_interactor(self):
-        return GetUserAdminInteractor
-
-    def save_exception(self):
-        return SaveUserAdminException
-
-    def post_interactor(self):
-        return PostUserAdminInteractor
-
-    def update_exception(self):
-        return UpdateUserAdminException
-
-    def put_interactor(self):
-        return PutUserAdminInteractor
-
-    def delete_request_model(self):
-        raise NotImplementedError('Não implementado no interactor')
-
-    def delete_interactor(self):
-        raise NotImplementedError('Não implementado no interactor')
-
-    def delete_not_found(self):
-        return 'Player não encontrado para ser deletado'
+    data = bp_user_admin.current_request.json_body
+    return get_router().put(data)

@@ -1,5 +1,5 @@
 from chalice import Blueprint
-from .auth import cors, cupauth
+from playerstars_routes.chalice_support.auth import cors, cupauth
 from playerstars_routes.chalice_support import not_found
 root = Blueprint(__name__)
 

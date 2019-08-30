@@ -136,5 +136,5 @@ def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
         PlayerChaliceRoute().put_interactor()
     assert str(exc.value) == 'Não implementado no interactor'
-    assert PlayerChaliceRoute().delete_not_found() == 'Player não encontrado para' \
-                                               ' ser deletado'
+    assert PlayerChaliceRoute().delete_not_found() == \
+        'Player não encontrado para ser deletado'

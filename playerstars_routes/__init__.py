@@ -8,7 +8,6 @@ __version__ = '0.1.0'
 
 from .game_route import (
     delete_game,
-    GameChaliceRoute,
     get_all_games,
     get_game_by_id,
     post_game,
@@ -24,15 +23,13 @@ from .region_country_route import (
     get_all_region_country,
     get_region_country_by_id,
     post_region_country,
-    put_region_country,
-    RegionCountryChaliceRoute
+    put_region_country
 )
 from .region_state_route import (
     get_all_region_state,
     get_region_state_by_id,
     post_region_state,
-    put_region_state,
-    RegionStateChaliceRoute,
+    put_region_state
 )
 from .routes import root
 from .team_route import (
@@ -47,23 +44,17 @@ from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
-    put_user_admin,
-    UserAdminChaliceRoute
+    put_user_admin
 )
 from .duel_route import (
     post_duel,
     get_match_list,
-    MatchListChaliceRoute,
     enter_duel
 )
 from .basic_entity_route import BasicEntityRoute
 
 __all__ = [
     'BasicEntityRoute',
-    'UserAdminChaliceRoute',
-    'RegionStateChaliceRoute',
-    'RegionCountryChaliceRoute',
-    'GameChaliceRoute',
     'post_player',
     'post_game',
     'post_region_state',
