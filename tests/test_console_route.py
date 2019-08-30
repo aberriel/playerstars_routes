@@ -5,9 +5,7 @@ from playerstars_routes.console_route import (
     post_console,
     put_console
 )
-from playerstars_interactors import (
-    SaveConsoleException,
-    UpdateConsoleException, SaveEntityException, UpdateEntityException)
+from playerstars_interactors import SaveEntityException, UpdateEntityException
 from unittest.mock import MagicMock, patch
 
 import json
@@ -41,10 +39,9 @@ def test_get_all_consoles_not_found(client, resource):
 @patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_console(client, resource, mock):
-    # result = ConsoleChaliceRoute().get_console('id1')
+def test_get_console(client, resource, run):
     result = get_console_by_id('id1')
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
@@ -90,10 +87,10 @@ def make_put_mock_data():
 @patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_console(client, resource, mock):
+def test_post_console(client, resource, run):
     result = post_console()
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 

@@ -24,15 +24,13 @@ from .region_country_route import (
     get_all_region_country,
     get_region_country_by_id,
     post_region_country,
-    put_region_country,
-    RegionCountryChaliceRoute
+    put_region_country
 )
 from .region_state_route import (
     get_all_region_state,
     get_region_state_by_id,
     post_region_state,
-    put_region_state,
-    RegionStateChaliceRoute,
+    put_region_state
 )
 from .routes import root
 from .team_route import (
@@ -61,8 +59,6 @@ from .basic_entity_route import BasicEntityRoute
 __all__ = [
     'BasicEntityRoute',
     'UserAdminChaliceRoute',
-    'RegionStateChaliceRoute',
-    'RegionCountryChaliceRoute',
     'GameChaliceRoute',
     'post_player',
     'post_game',

@@ -1,95 +1,37 @@
 from chalice import Blueprint
-from .auth import cors, cupauth
-from playerstars_interactors import (
-    GetAllRegionStatesInteractor, GetRegionStateRequestModel,
-    PostRegionStateRequestModel, PostRegionStateInteractor,
-    GetRegionStateInteractor, SaveRegionStateException,
-    PutRegionStateInteractor, UpdateRegionStateException,
-    PutRegionStateRequestModel)
-from playerstars_routes.basic_chalice_route import BasicChaliceRoute
+from playerstars_adapters import StateRegionAdapter
+from playerstars_domain import StateRegion
+from playerstars_routes.chalice_support import (
+    private_get, private_put, private_post)
+
+from .basic_entity_route import BasicEntityRoute
+from playerstars_routes.settings import Settings
 
 bp_region_state = Blueprint(__name__)
 
 
-@bp_region_state.route(
-    '/region-state/', methods=['GET'], cors=cors, authorizer=cupauth)
+def get_router():
+    adapter = StateRegionAdapter(Settings.CONSOLE_TABLE_NAME)
+    return BasicEntityRoute(adapter, StateRegion, 'region-state')
+
+
+@bp_region_state.route('/', **private_get())
 def get_all_region_state():
-    return RegionStateChaliceRoute().get_all()
+    return get_router().get_all()
 
 
-@bp_region_state.route(
-    '/region-state/{entity_id}', methods=['GET'],
-    cors=cors, authorizer=cupauth)
+@bp_region_state.route('/{entity_id}', **private_get())
 def get_region_state_by_id(region_id):
-    return RegionStateChaliceRoute().get_by_id(region_id)
+    return get_router().get_by_id(region_id)
 
 
-@bp_region_state.route(
-    '/region-state/', methods=['POST'],
-    cors=cors, authorizer=cupauth)
+@bp_region_state.route('/', **private_post())
 def post_region_state():
-    from app import app
-    data = app.current_request.json_body
-    return RegionStateChaliceRoute().post(data)
+    data = bp_region_state.current_request.json_body
+    return get_router().post(data)
 
 
-@bp_region_state.route(
-    '/region-state/{entity_id}', methods=['PUT'],
-    cors=cors, authorizer=cupauth)
+@bp_region_state.route('/{entity_id}', **private_put())
 def put_region_state(entity_id):
-    from app import app
-    data = app.current_request.json_body
-    return RegionStateChaliceRoute().put(data)
-
-
-class RegionStateChaliceRoute(BasicChaliceRoute):
-
-    def make_post_request(self, data):
-        return PostRegionStateRequestModel(
-            name=data['name'],
-            minimum_bet=data['minimum_bet'],
-            states=data['states'])
-
-    def make_put_request(self, data):
-        return PutRegionStateRequestModel(
-            entity_id=data['entity_id'],
-            name=data['name'],
-            minimum_bet=data['minimum_bet'],
-            states=data['states']
-        )
-
-    def get_all_interactor(self):
-        return GetAllRegionStatesInteractor
-
-    def not_found_message(self):
-        return 'Região Estado não encontrada'
-
-    def not_found_all_message(self):
-        return 'Nenhuma Região Estado encontrada'
-
-    def get_request_model(self):
-        return GetRegionStateRequestModel
-
-    def get_interactor(self):
-        return GetRegionStateInteractor
-
-    def save_exception(self):
-        return SaveRegionStateException
-
-    def post_interactor(self):
-        return PostRegionStateInteractor
-
-    def update_exception(self):
-        return UpdateRegionStateException
-
-    def put_interactor(self):
-        return PutRegionStateInteractor
-
-    def delete_request_model(self):
-        raise NotImplementedError('Delete não implementado')
-
-    def delete_interactor(self):
-        raise NotImplementedError('Delete não implementado')
-
-    def delete_not_found(self):
-        raise NotImplementedError('Delete não implementado')
+    data = bp_region_state.current_request.json_body
+    return get_router().put(data)

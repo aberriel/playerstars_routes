@@ -110,4 +110,5 @@ def test_not_implemented():
     with pytest.raises(NotImplementedError) as exc:
         MatchListChaliceRoute().update_exception()
     assert str(exc.value) == 'Não implementado'
-    assert MatchListChaliceRoute().not_found_all_message() == 'Não implementado'
+    assert MatchListChaliceRoute().not_found_all_message() == \
+        'Não implementado'

@@ -1,4 +1,4 @@
-from .auth import cors, cupauth
+from playerstars_routes.chalice_support.auth import cors, cupauth
 from chalice import Blueprint
 from playerstars_interactors import \
     PostUserAdminInteractor, PostUserAdminRequestModel,\
