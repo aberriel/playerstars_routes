@@ -23,7 +23,7 @@ def test_get_all_region_country(client, resource, run):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def teste_get_all_region_country_not_found(clien, resource):
+def teste_get_all_region_country_not_found(client, resource):
     result = get_all_region_country()
 
     assert result.body['message'] == 'Nenhum region-country encontrado'

@@ -16,7 +16,7 @@ app.experimental_feature_flags.update([
 
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_console, url_prefix='/console')
-app.register_blueprint(bp_user_admin, url_prefix='/')
+app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_game, url_prefix='/')
 app.register_blueprint(bp_player, url_prefix='/')
 app.register_blueprint(bp_region_country, url_prefix='/region-country')

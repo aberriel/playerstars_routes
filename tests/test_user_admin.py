@@ -1,12 +1,9 @@
 from unittest.mock import MagicMock, patch
 from playerstars_routes import \
-    post_user_admin, get_user_admin_by_id, get_all_user_admin, \
-    UserAdminChaliceRoute, put_user_admin
-from playerstars_interactors import \
-    SaveUserAdminException, UpdateUserAdminException
+    post_user_admin, get_user_admin_by_id, get_all_user_admin, put_user_admin
+from playerstars_interactors import SaveEntityException, UpdateEntityException
 
 import json
-import pytest
 
 
 def make_post_mock_data():
@@ -19,73 +16,80 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.PostUserAdminInteractor.run')
-def test_post_user_admin(mock):
+@patch('playerstars_routes.user_admin_route.bp_user_admin',
+       make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_user_admin(client, resource, run):
     result = post_user_admin()
-    mock.assert_called_once()
 
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.PostUserAdminInteractor.run',
-       MagicMock(side_effect=SaveUserAdminException('oops')))
-def test_post_user_admin_raises():
+@patch('playerstars_routes.user_admin_route.bp_user_admin',
+       make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_user_admin_raises(client, resource):
     result = post_user_admin()
+
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.GetUserAdminInteractor.run')
-def test_get_user_admin(mock):
-    result = get_user_admin_by_id('id1')
-    mock.assert_called_once()
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_user_admin(client, resource, run):
+    result = get_user_admin_by_id('1d001')
 
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.GetUserAdminInteractor.run',
-       return_value=None)
-def test_get_user_admin_raises(mock):
-    result = get_user_admin_by_id('id1')
-    mock.assert_called_once()
-    assert result.body['message'] == "User Admin não encontrado"
-    assert result.body['status'] == "error"
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_user_admin_not_found(client, resource):
+    result = get_user_admin_by_id('id001')
+
+    assert result.body['message'] == 'User-admin não encontrado'
+    assert result.body['status'] == 'error'
     assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.GetAllUsersAdminsInteractor.run')
-def test_get_all_users_admins(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_user_admin(client, resource, run):
     result = get_all_user_admin()
-
-    mock.assert_called_once()
-
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.user_admin_route.GetAllUsersAdminsInteractor.run',
-       return_value=None)
-def test_get_all_users_admins_raises(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def teste_get_all_user_admin_not_found(client, resource):
     result = get_all_user_admin()
 
-    mock.assert_called_once()
-
-    assert result.body['message'] == "Nenhum user admin encontrado"
-    assert result.body['status'] == "error"
+    assert result.body['message'] == 'Nenhum user-admin encontrado'
+    assert result.body['status'] == 'error'
     assert result.status_code == 404
 
 
@@ -100,34 +104,29 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.user_admin_route.PutUserAdminInteractor.run')
-def test_put_console(mock):
-    result = put_user_admin('1212354')
+@patch('playerstars_routes.user_admin_route.bp_user_admin',
+       make_put_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_user_admin(client, resource, run):
+    result = put_user_admin("id123")
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['data']
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
-# noinspection PyUnusedLocal
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.user_admin_route.PutUserAdminInteractor.run',
-       MagicMock(side_effect=UpdateUserAdminException('oops')))
-def test_put_user_admin_raises():
-    result = put_user_admin('1212354')
+@patch('playerstars_routes.user_admin_route.bp_user_admin',
+       make_put_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_region_raises(client, resource):
+    result = put_user_admin("14")
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
-
-
-def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        UserAdminChaliceRoute().delete_request_model()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        UserAdminChaliceRoute().delete_interactor()
-    assert UserAdminChaliceRoute().delete_not_found() == \
-        'Player não encontrado para ser deletado'

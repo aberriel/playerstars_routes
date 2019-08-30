@@ -45,8 +45,7 @@ from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
-    put_user_admin,
-    UserAdminChaliceRoute
+    put_user_admin
 )
 from .duel_route import (
     post_duel,
@@ -58,7 +57,6 @@ from .basic_entity_route import BasicEntityRoute
 
 __all__ = [
     'BasicEntityRoute',
-    'UserAdminChaliceRoute',
     'GameChaliceRoute',
     'post_player',
     'post_game',
