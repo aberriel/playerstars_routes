@@ -1,7 +1,7 @@
 DEVPI_URL ?= https://devpi.qa.stormsec.com.br/deploy/dev/+simple
 CI_ENVIRONMENT_NAME ?= dev
 
-.PHONY: clean clean-test clean-pyc clean-build docs help tests
+.PHONY: clean clean-test clean-pyc clean-build docs help tests uninstall_all
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -17,6 +17,19 @@ export PRINT_HELP_PYSCRIPT
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+define UNINSTALL_ALL_PYSCRIPT
+import os
+req = 'requirements.txt'
+for package in [x.split('==')[0] for x in open(req).read().split('\n')]:
+	if package.strip():
+		os.system('pip uninstall --yes %s' % package)
+
+endef
+export UNINSTALL_ALL_PYSCRIPT
+
+uninstall_all:
+	@python -c "$$UNINSTALL_ALL_PYSCRIPT"
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -59,7 +72,7 @@ servedocs: docs ## compile the docs watching for changes
 install_dev: clean install ## instala as dependências de desenvolvimento
 	pip install -r requirements_dev.txt
 
-install: clean ## instala as dependências do projeto
+install: clean uninstall_all ## instala as dependências do projeto
 	pip install devpi-client
 	devpi use $(DEVPI_URL) --always-set-cfg=yes
 	pip install -r requirements.txt
