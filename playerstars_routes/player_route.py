@@ -1,10 +1,13 @@
-from playerstars_routes.chalice_support.auth import cors, cupauth
 from chalice import Blueprint
-from playerstars_interactors import \
-    PostPlayerRequestModel, PostPlayerInteractor, SavePlayerException, \
-    GetPlayerInteractor, GetPlayerRequestModel, \
-    GetAllPlayersInteractor
+from playerstars_interactors import (PostPlayerRequestModel,
+                                     PostPlayerInteractor,
+                                     SavePlayerException,
+                                     GetPlayerInteractor,
+                                     GetPlayerRequestModel,
+                                     GetAllPlayersInteractor)
+
 from playerstars_routes.basic_chalice_route import BasicChaliceRoute
+from playerstars_routes.chalice_support.auth import cors, cupauth
 
 bp_player = Blueprint(__name__)
 
@@ -32,7 +35,6 @@ def get_all_player():
 class PlayerChaliceRoute(BasicChaliceRoute):
 
     def make_post_request(self, data):
-
         return PostPlayerRequestModel(
             name=data['name'],
             nickname=data['nickname'],
