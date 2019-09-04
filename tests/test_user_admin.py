@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
-from playerstars_routes import \
-    post_user_admin, get_user_admin_by_id, get_all_user_admin, put_user_admin
+from playerstars_routes import (
+    post_user_admin, get_user_admin_by_id, get_all_user_admin, put_user_admin)
 from playerstars_interactors import SaveEntityException, UpdateEntityException
 
 import json

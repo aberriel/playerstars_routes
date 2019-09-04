@@ -7,6 +7,7 @@ from playerstars_routes.player_route import bp_player
 from playerstars_routes.region_country_route import bp_region_country
 from playerstars_routes.region_state_route import bp_region_state
 from playerstars_routes.user_admin_route import bp_user_admin
+from playerstars_routes.team_route import bp_team
 from playerstars_routes.duel_route import (
     bp_match_list, bp_create_duel, bp_enter_duel)
 
@@ -20,12 +21,13 @@ app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_game, url_prefix='/game')
-app.register_blueprint(bp_player, url_prefix='/')
+app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_region_country, url_prefix='/region-country')
 app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
 app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
+app.register_blueprint(bp_team, url_prefix='/team')
 
 
 @app.route('/check', methods=['POST', 'GET'])

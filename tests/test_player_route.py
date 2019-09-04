@@ -1,37 +1,36 @@
-from playerstars_interactors import SavePlayerException
-from playerstars_routes import (
+from playerstars_interactors import SaveEntityException
+from playerstars_routes.player_route import (
     get_all_player,
     get_player_by_id,
-    PlayerChaliceRoute,
     post_player
 )
 from unittest.mock import MagicMock, patch
-
 import json
-import pytest
 
 
 def make_post_mock_data():
     payload = """{
-        "name": "Anselmo Lira",
-        "nickname": "anselmo.lira",
-        "birth_date": "16/12/1986",
-        "cpf": "123.456.789-00",
-        "email": "playerstars@playerstars.com.br",
-        "phone_number": "(21) 99663-6963",
-        "street": "Rua José de Figueiredo",
-        "street_number": "192",
-        "street_complement": "Blocos 29, 30",
-        "neighborhood": "Barra da Tijuca",
-        "city": "Rio de Janeiro",
-        "state": "Rio de Janeiro",
-        "country": "Brasil",
-        "postal_code": "22333-000",
+        "user":{
+            "name": "Anselmo Lira",
+            "email": "playerstars@playerstars.com.br",
+            "birth_date": "16/12/1986",
+            "street": "Rua José de Figueiredo",
+            "street_number": "192",
+            "street_complement": "Blocos 29, 30",
+            "neighborhood": "Barra da Tijuca",
+            "city": "Rio de Janeiro",
+            "state": "Rio de Janeiro",
+            "country": "Brasil",
+            "postal_code": "22333-000",
+            "phone_number": "(21) 99663-6963",
+            "cpf": "123.456.789-00",
+            "nickname": "anselmo.lira",
+            "profile_image": "ACCBB4762CF23AA35690CC"
+        },
         "promo_code": "ABC123",
-        "profile_image": "ACCBB4762CF23AA35690CC",
-        "favorites":[],
-        "blue_star_balance":123,
-        "golden_star_balance":  4321,
+        "favorites": [],
+        "blue_star_balance": 123,
+        "golden_star_balance": 4321,
         "consoles": [
             {
                 "entity_id": "1",
@@ -46,28 +45,34 @@ def make_post_mock_data():
                 "tag_name": "mario",
                 "games": []
             }
-        ]
+        ],
+        "states_regions": [],
+        "countries_regions": []
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.PostPlayerInteractor.run')
-def test_post_player(mock):
+@patch('playerstars_routes.player_route.bp_player', make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_player(client, resource, run):
     result = post_player()
-    mock.assert_called_once()
+    run.assert_called_once()
 
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.PostPlayerInteractor.run',
-       MagicMock(side_effect=SavePlayerException('oops')))
-def test_post_player_raises():
+@patch('playerstars_routes.player_route.bp_player', make_post_mock_data())
+@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_player_raises(client, resource):
     result = post_player()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -75,66 +80,50 @@ def test_post_player_raises():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.GetPlayerInteractor.run')
-def test_get_player(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player(client, resource, run):
     result = get_player_by_id('id1')
-    mock.assert_called_once()
+
+    run.assert_called_once()
 
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.GetPlayerInteractor.run',
-       return_value=None)
-def test_get_player_raises(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_raises(client, resource):
     result = get_player_by_id('id1')
-    mock.assert_called_once()
     assert result.body['message'] == "Player não encontrado"
     assert result.body['status'] == "error"
     assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.GetAllPlayersInteractor.run')
-def test_get_all_player(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player(client, resource, run):
     result = get_all_player()
-    mock.assert_called_once()
+    run.assert_called_once()
 
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.player_route.GetAllPlayersInteractor.run',
-       return_value=None)
-def test_get_all_player_raises(mock):
+@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_raises(client, resource):
     result = get_all_player()
-    mock.assert_called_once()
+
     assert result.body['message'] == "Nenhum player encontrado"
     assert result.body['status'] == "error"
     assert result.status_code == 404
-
-
-def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        PlayerChaliceRoute().make_put_request({})
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        PlayerChaliceRoute().update_exception()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        PlayerChaliceRoute().delete_request_model()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        PlayerChaliceRoute().delete_interactor()
-    assert str(exc.value) == 'Não implementado no interactor'
-    with pytest.raises(NotImplementedError) as exc:
-        PlayerChaliceRoute().put_interactor()
-    assert str(exc.value) == 'Não implementado no interactor'
-    assert PlayerChaliceRoute().delete_not_found() == \
-        'Player não encontrado para ser deletado'

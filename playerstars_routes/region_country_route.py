@@ -11,7 +11,7 @@ bp_region_country = Blueprint(__name__)
 
 
 def get_router():
-    adapter = CountryRegionAdapter(Settings.CONSOLE_TABLE_NAME)
+    adapter = CountryRegionAdapter(Settings.REGION_COUNTRY_TABLE_NAME)
     return BasicEntityRoute(adapter, CountryRegion, 'region-country')
 
 

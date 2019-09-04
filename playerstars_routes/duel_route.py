@@ -12,7 +12,7 @@ bp_enter_duel = Blueprint(__name__)
 
 
 def get_router_match_list():
-    adapter = PlayerAdapter(Settings.CONSOLE_TABLE_NAME)
+    adapter = PlayerAdapter(Settings.DUEL_TABLE_NAME)
     return BasicEntityRoute(adapter, Player, 'player')
 
 
