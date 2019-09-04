@@ -16,7 +16,6 @@ from .game_route import (
 from .player_route import (
     get_all_player,
     get_player_by_id,
-    PlayerChaliceRoute,
     post_player,
 )
 from .region_country_route import (
@@ -37,8 +36,7 @@ from .team_route import (
     get_all_teams_by_user,
     get_team_by_id,
     post_team,
-    put_team,
-    TeamChaliceRoute
+    put_team
 )
 from .user_admin_route import (
     get_all_user_admin,
@@ -55,19 +53,18 @@ from .basic_entity_route import BasicEntityRoute
 
 __all__ = [
     'BasicEntityRoute',
-    'post_player',
     'post_game',
     'post_region_state',
     'post_region_country',
-    'PlayerChaliceRoute',
+    'post_player',
     'get_all_player',
+    'get_player_by_id',
     'get_all_games',
     'get_game_by_id',
     'get_region_state_by_id',
     'get_all_region_state',
     'get_region_country_by_id',
     'get_all_region_country',
-    'get_player_by_id',
     'root',
     'put_region_country',
     'put_region_state',
@@ -82,9 +79,7 @@ __all__ = [
     'get_team_by_id',
     'post_team',
     'put_team',
-    'TeamChaliceRoute',
     'post_duel',
     'get_match_list',
-    'MatchListChaliceRoute',
     'enter_duel'
 ]

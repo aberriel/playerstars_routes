@@ -4,7 +4,7 @@ from playerstars_domain import Console
 from playerstars_routes.chalice_support import (
     private_get, private_put, private_post, private_delete)
 
-from .basic_entity_route import BasicEntityRoute
+from playerstars_routes.basic_entity_route import BasicEntityRoute
 from playerstars_routes.settings import Settings
 
 bp_game = Blueprint(__name__)
