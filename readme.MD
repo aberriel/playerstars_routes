@@ -1,7 +1,7 @@
 Player Stars 
 ============
 
-##Formato de JSON para rotas
+##Formato de JSON para rota
 =======================
 # # PLAYER ROUTE ## 
 =======================
@@ -177,3 +177,124 @@ Player Stars
          
          }]
     }
+
+
+##Formato de JSON para rota
+=======================
+# # CONSOLE ROUTE ## 
+=======================
+
+
+## POST 
+# ROTA: "/console/"
+
+#### Request Model:
+    {
+        "name": "Super Selminho",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1",
+        "games" : []
+    }
+    
+
+#### Response Model:
+====================
+## Status Code : 201
+====================
+
+    {
+        "status": "success",
+        "data": "id0001"
+    }
+
+## GET
+# ROTA: "/console/{entity_id}"
+#### Request Model:
+    {}
+    
+#### Response Model:
+====================
+## Status Code : 200
+====================
+
+    {
+        "status": "success",
+        "entity_id": "id123",
+        "name": "Super Selminho",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1",
+        "games" : []
+    }
+
+## GET All 
+# ROTA : "/console/'
+
+#### Request Model:
+    {}
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":[{
+                  
+            "entity_id": "id123",
+            "name": "Super Selminho",
+            "logo_path": "/images/ss.png",
+            "tag_name": "nick#1",
+            "games" : []
+         }]
+    }
+
+
+## PUT
+# ROTA : "/console/{entity_id}"
+
+## DADO O SEGUINTE CONSOLE SALVO:
+
+    {              
+        "entity_id": "id123",
+        "name": "Super Selminho",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1",
+        "games" : []
+    }
+
+
+#### Request Model:
+    {
+        "entity_id": "id123",
+        "name": "XBOX", 
+        "logo_path": "/images/xb.png",
+        "tag_name": "nick#1",
+        "games" : []
+    }
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":"id123"
+         
+    }
+    
+## DELETE
+# ROTA : "/console/{entity_id}" 
+
+#### Request Model:
+    { }
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+
+    {
+         "status": "success",
+         "data":"id123"  
+    }   
+    
