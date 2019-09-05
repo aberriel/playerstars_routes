@@ -11,7 +11,8 @@ bp_player = Blueprint(__name__)
 
 
 def get_router():
-    adapter = PlayerAdapter(Settings.PLAYER_TABLE_NAME)
+    adapter = PlayerAdapter(
+        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
 
 

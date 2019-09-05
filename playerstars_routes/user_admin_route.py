@@ -11,7 +11,8 @@ bp_user_admin = Blueprint(__name__)
 
 
 def get_router():
-    adapter = UserAdminAdapter(Settings.USER_ADMIN_TABLE_NAME)
+    adapter = UserAdminAdapter(
+        Settings.USER_ADMIN_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, UserAdmin, 'user-admin')
 
 

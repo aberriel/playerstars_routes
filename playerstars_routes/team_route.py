@@ -14,7 +14,7 @@ bp_team = Blueprint(__name__)
 
 
 def get_adapter():
-    return TeamAdapter(Settings.TEAM_TABLE_NAME)
+    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_router():

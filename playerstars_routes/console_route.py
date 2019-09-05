@@ -11,7 +11,8 @@ bp_console = Blueprint(__name__)
 
 
 def get_router():
-    adapter = ConsoleAdapter(Settings.CONSOLE_TABLE_NAME)
+    adapter = ConsoleAdapter(
+        Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Console, 'console')
 
 

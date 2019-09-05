@@ -52,6 +52,9 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
+local:
+	DYNAMODB_URL="http://localhost:8000" chalice local --port 8002
+
 tests:
 	python3 -m pytest -s -v --cov=tests --cov=playerstars_routes -W ignore::DeprecationWarning --cov-report term-missing:skip-covered
 	@echo "Linting..."
