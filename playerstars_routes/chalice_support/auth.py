@@ -1,9 +1,9 @@
 from chalice import CognitoUserPoolAuthorizer, CORSConfig
 
 cupauth = CognitoUserPoolAuthorizer(
-    'aunelive',
-    provider_arns=['arn:aws:cognito-idp:us-east-1:778654367758:'
-                   'userpool/us-east-1_WRpRjf9tI'])
+    'playerstars',
+    provider_arns=['arn:aws:cognito-idp:us-east-1:230639242520:'
+                   'userpool/us-east-1_kOuqOxe1b'])
 
 cors = CORSConfig(allow_origin='*',
                   allow_headers=['Content-Type', 'X-Amz-Date', 'Authorization',
