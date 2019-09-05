@@ -15,3 +15,4 @@ class Settings:
     TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team')
     USER_TABLE_NAME = config('USER_TABLE_NAME', 'user')
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin')
+    DYNAMODB_URL = config('DYNAMODB_URL', None)

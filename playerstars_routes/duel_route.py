@@ -12,7 +12,7 @@ bp_enter_duel = Blueprint(__name__)
 
 
 def get_router_match_list():
-    adapter = PlayerAdapter(Settings.DUEL_TABLE_NAME)
+    adapter = PlayerAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
 
 
@@ -22,7 +22,7 @@ def get_match_list(user_id):
 
 
 def get_router_duel():
-    adapter = DuelAdapter(Settings.CONSOLE_TABLE_NAME)
+    adapter = DuelAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Duel, 'duel')
 
 

@@ -11,7 +11,8 @@ bp_region_country = Blueprint(__name__)
 
 
 def get_router():
-    adapter = CountryRegionAdapter(Settings.REGION_COUNTRY_TABLE_NAME)
+    adapter = CountryRegionAdapter(
+        Settings.REGION_COUNTRY_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, CountryRegion, 'region-country')
 
 
