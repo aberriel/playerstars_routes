@@ -1,4 +1,4 @@
-from playerstars_routes.console_route import (
+from chalicelib.console_route import (
     delete_console,
     get_all_console,
     get_console_by_id,
@@ -12,7 +12,7 @@ import json
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_consoles(client, resource, run):
@@ -23,7 +23,7 @@ def test_get_all_consoles(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -36,7 +36,7 @@ def test_get_all_consoles_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_console(client, resource, run):
@@ -47,7 +47,7 @@ def test_get_console(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -83,8 +83,8 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.bp_console', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.console_route.bp_console', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_console(client, resource, run):
@@ -96,8 +96,8 @@ def test_post_console(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.bp_console', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.console_route.bp_console', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -110,8 +110,8 @@ def test_post_console_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.bp_console', make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run')
+@patch('chalicelib.console_route.bp_console', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_console(client, resource, mock):
@@ -124,8 +124,8 @@ def test_put_console(client, resource, mock):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.bp_console', make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run',
+@patch('chalicelib.console_route.bp_console', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -138,7 +138,7 @@ def test_put_console_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicDeleteInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_delete_console(client, resource, mock):
@@ -150,7 +150,7 @@ def test_delete_console(client, resource, mock):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicDeleteInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')

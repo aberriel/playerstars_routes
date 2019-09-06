@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock, patch
-from playerstars_routes import (
+from chalicelib import (
     get_all_region_state,
     get_region_state_by_id,
     put_region_state,
@@ -8,7 +8,7 @@ import json
 from playerstars_interactors import SaveEntityException, UpdateEntityException
 
 
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_region_state(client, resource, run):
@@ -19,7 +19,7 @@ def test_get_all_region_state(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -32,7 +32,7 @@ def teste_get_all_region_state_not_found(clien, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_region_state(client, resource, run):
@@ -44,7 +44,7 @@ def test_get_region_state(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -67,9 +67,9 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.region_state_route.bp_region_state',
+@patch('chalicelib.region_state_route.bp_region_state',
        make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_region_country(client, resource, run):
@@ -80,9 +80,9 @@ def test_post_region_country(client, resource, run):
     assert result.status_code == 201
 
 
-@patch('playerstars_routes.region_state_route.bp_region_state',
+@patch('chalicelib.region_state_route.bp_region_state',
        make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -106,9 +106,9 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.region_state_route.bp_region_state',
+@patch('chalicelib.region_state_route.bp_region_state',
        make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_region_country(client, resource, run):
@@ -120,9 +120,9 @@ def test_put_region_country(client, resource, run):
     assert result.status_code == 200
 
 
-@patch('playerstars_routes.region_state_route.bp_region_state',
+@patch('chalicelib.region_state_route.bp_region_state',
        make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')

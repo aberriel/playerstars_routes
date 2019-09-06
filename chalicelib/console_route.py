@@ -1,11 +1,11 @@
 from chalice import Blueprint
 from playerstars_adapters import ConsoleAdapter
 from playerstars_domain import Console
-from playerstars_routes.chalice_support import (
+from chalicelib.chalice_support import (
     private_get, private_delete, private_put, private_post)
 
-from playerstars_routes import BasicEntityRoute
-from playerstars_routes.settings import Settings
+from chalicelib import BasicEntityRoute
+from chalicelib.settings import Settings
 
 bp_console = Blueprint(__name__)
 

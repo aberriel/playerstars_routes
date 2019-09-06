@@ -1,5 +1,5 @@
 from playerstars_interactors import SaveEntityException
-from playerstars_routes.player_route import (
+from chalicelib.player_route import (
     get_all_player,
     get_player_by_id,
     post_player
@@ -54,8 +54,8 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.player_route.bp_player', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.player_route.bp_player', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_player(client, resource, run):
@@ -67,8 +67,8 @@ def test_post_player(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.player_route.bp_player', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.player_route.bp_player', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -80,7 +80,7 @@ def test_post_player_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player(client, resource, run):
@@ -93,7 +93,7 @@ def test_get_player(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -105,7 +105,7 @@ def test_get_player_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player(client, resource, run):
@@ -117,7 +117,7 @@ def test_get_all_player(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')

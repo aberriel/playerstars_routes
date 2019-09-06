@@ -2,9 +2,9 @@ from chalice import Blueprint
 
 from playerstars_adapters import DuelAdapter, PlayerAdapter
 from .basic_entity_route import BasicEntityRoute
-from playerstars_routes.settings import Settings
+from chalicelib.settings import Settings
 from playerstars_domain import Player, Duel
-from playerstars_routes.chalice_support import private_get, private_post
+from chalicelib.chalice_support import private_get, private_post
 
 bp_match_list = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)

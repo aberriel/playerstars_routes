@@ -6,7 +6,7 @@ from playerstars_interactors import (
     UpdateEntityException
 )
 
-from playerstars_routes import (
+from chalicelib import (
     get_all_teams,
     get_team_by_id,
     get_all_teams_by_user,
@@ -136,7 +136,7 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_teams(client, resource, run):
@@ -147,7 +147,7 @@ def test_get_all_teams(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -159,7 +159,7 @@ def test_get_all_teams_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team(client, resource, run):
@@ -170,7 +170,7 @@ def test_get_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -182,7 +182,7 @@ def test_get_team_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.GetTeamByUserInteractor.run')
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team_by_user(client, resource, run):
@@ -193,7 +193,7 @@ def test_get_team_by_user(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.GetTeamByUserInteractor.run',
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -206,8 +206,8 @@ def test_get_teams_by_user_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.bp_team', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.team_route.bp_team', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_team(client, resource, run):
@@ -218,8 +218,8 @@ def test_post_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.bp_team', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.team_route.bp_team', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -231,8 +231,8 @@ def test_post_team_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.bp_team', make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run')
+@patch('chalicelib.team_route.bp_team', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_team(client, resource, run):
@@ -244,8 +244,8 @@ def test_put_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.team_route.bp_team', make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run',
+@patch('chalicelib.team_route.bp_team', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')

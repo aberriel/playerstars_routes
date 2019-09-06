@@ -4,11 +4,11 @@ from playerstars_domain import Team
 from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType)
 
-from playerstars_routes.chalice_support import (
+from chalicelib.chalice_support import (
     private_get, private_put, private_post)
-from playerstars_routes.basic_entity_route import BasicEntityRoute
-from playerstars_routes.settings import Settings
-from playerstars_routes.chalice_support import success, not_found
+from chalicelib.basic_entity_route import BasicEntityRoute
+from chalicelib.settings import Settings
+from chalicelib.chalice_support import success, not_found
 
 bp_team = Blueprint(__name__)
 

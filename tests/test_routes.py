@@ -2,10 +2,10 @@
 import json
 import logging
 from app import index
-from playerstars_routes.routes import home
+from chalicelib.routes import home
 from .test_utils import FakeDomain, FakeAdapter
 from unittest.mock import MagicMock, patch
-from playerstars_routes.chalice_support import success
+from chalicelib.chalice_support import success
 
 
 class FakePostRequestModel:
