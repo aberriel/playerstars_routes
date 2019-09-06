@@ -18,6 +18,7 @@ stages:
   artifacts:
     paths:
       - deploy.log
+      - .chalice/deployed
 
 .test:
   extends: .utf8-env
