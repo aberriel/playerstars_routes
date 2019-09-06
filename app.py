@@ -1,14 +1,14 @@
 from chalice import Chalice
 
-from playerstars_routes import root
-from playerstars_routes.console_route import bp_console
-from playerstars_routes.game_route import bp_game
-from playerstars_routes.player_route import bp_player
-from playerstars_routes.region_country_route import bp_region_country
-from playerstars_routes.region_state_route import bp_region_state
-from playerstars_routes.user_admin_route import bp_user_admin
-from playerstars_routes.team_route import bp_team
-from playerstars_routes.duel_route import (
+from chalicelib import root
+from chalicelib.console_route import bp_console
+from chalicelib.game_route import bp_game
+from chalicelib.player_route import bp_player
+from chalicelib.region_country_route import bp_region_country
+from chalicelib.region_state_route import bp_region_state
+from chalicelib.user_admin_route import bp_user_admin
+from chalicelib.team_route import bp_team
+from chalicelib.duel_route import (
     bp_match_list, bp_create_duel, bp_enter_duel)
 
 app = Chalice(app_name='playerstars')

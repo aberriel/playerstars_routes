@@ -1,11 +1,11 @@
 import json
 from unittest.mock import MagicMock, patch
-from playerstars_routes import get_match_list, post_duel, enter_duel
+from chalicelib import get_match_list, post_duel, enter_duel
 from playerstars_interactors import SaveEntityException
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_match_list(client, resource, run):
@@ -16,7 +16,7 @@ def test_get_match_list(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -37,8 +37,8 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.bp_create_duel', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.duel_route.bp_create_duel', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_create_duel(client, resourcem, run):
@@ -50,8 +50,8 @@ def test_create_duel(client, resourcem, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.bp_create_duel', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.duel_route.bp_create_duel', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -73,9 +73,9 @@ def make_enter_duel_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.bp_enter_duel',
+@patch('chalicelib.duel_route.bp_enter_duel',
        make_enter_duel_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_enter_duel(client, resource, run):
@@ -87,8 +87,8 @@ def test_enter_duel(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.duel_route.bp_enter_duel', make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.duel_route.bp_enter_duel', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')

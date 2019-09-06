@@ -7,10 +7,10 @@ from playerstars_interactors import (BasicPutRequestModel, BasicPutInteractor,
 from playerstars_interactors import (BasicDeleteInteractor,
                                      BasicDeleteRequestModel)
 
-from playerstars_routes.chalice_support.api_responses import (success,
-                                                              not_found,
-                                                              server_error,
-                                                              created)
+from chalicelib.chalice_support.api_responses import (success,
+                                                      not_found,
+                                                      server_error,
+                                                      created)
 
 
 class BasicEntityRoute:

@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock, patch
-from playerstars_routes import (
+from chalicelib import (
     post_user_admin, get_user_admin_by_id, get_all_user_admin, put_user_admin)
 from playerstars_interactors import SaveEntityException, UpdateEntityException
 
@@ -16,9 +16,9 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.user_admin_route.bp_user_admin',
+@patch('chalicelib.user_admin_route.bp_user_admin',
        make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_user_admin(client, resource, run):
@@ -30,9 +30,9 @@ def test_post_user_admin(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.user_admin_route.bp_user_admin',
+@patch('chalicelib.user_admin_route.bp_user_admin',
        make_post_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -45,7 +45,7 @@ def test_post_user_admin_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_user_admin(client, resource, run):
@@ -57,7 +57,7 @@ def test_get_user_admin(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -70,7 +70,7 @@ def test_get_user_admin_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_user_admin(client, resource, run):
@@ -81,7 +81,7 @@ def test_get_all_user_admin(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -104,9 +104,9 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.user_admin_route.bp_user_admin',
+@patch('chalicelib.user_admin_route.bp_user_admin',
        make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_user_admin(client, resource, run):
@@ -118,9 +118,9 @@ def test_put_user_admin(client, resource, run):
     assert result.status_code == 200
 
 
-@patch('playerstars_routes.user_admin_route.bp_user_admin',
+@patch('chalicelib.user_admin_route.bp_user_admin',
        make_put_mock_data())
-@patch('playerstars_routes.basic_entity_route.BasicPutInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')

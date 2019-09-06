@@ -1,11 +1,11 @@
 from chalice import Blueprint
 from playerstars_adapters import UserAdminAdapter
 from playerstars_domain import UserAdmin
-from playerstars_routes.chalice_support import (
+from chalicelib.chalice_support import (
     private_get, private_put, private_post)
 
 from .basic_entity_route import BasicEntityRoute
-from playerstars_routes.settings import Settings
+from chalicelib.settings import Settings
 
 bp_user_admin = Blueprint(__name__)
 

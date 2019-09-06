@@ -1,5 +1,5 @@
 import pytest
-from playerstars_routes.basic_chalice_route import BasicChaliceRoute
+from chalicelib.basic_chalice_route import BasicChaliceRoute
 
 
 def test_abstract_methods():

@@ -2,7 +2,7 @@
 
 from chalice import Response
 
-from playerstars_routes.chalice_support.api_responses import (
+from chalicelib.chalice_support.api_responses import (
     success, created, redirect, bad_request, not_found, server_error)
 
 
