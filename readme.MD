@@ -11,46 +11,44 @@ Player Stars
 # ROTA: "/player/"
 
 #### Request Model:
-    {
-        "user":{
-            "name": "Anselmo Lira",
-            "email": "playerstars@playerstars.com.br",
-            "birth_date": "16/12/1986",
-            "street": "Rua José de Figueiredo",
-            "street_number": "192",
-            "street_complement": "Blocos 29, 30",
-            "neighborhood": "Barra da Tijuca",
-            "city": "Rio de Janeiro",
-            "state": "Rio de Janeiro",
-            "country": "Brasil",
-            "postal_code": "22333-000",
-            "phone_number": "(21) 99663-6963",
-            "cpf": "123.456.789-00",
-            "nickname": "anselmo.lira",
-            "profile_image": "ACCBB4762CF23AA35690CC",
-        }
-        "promo_code": "ABC123",
-        "favorites": [],
-        "blue_star_balance": 123,
-        "golden_star_balance": 4321,
-        "consoles": [
-            {
-                "entity_id": "1",
-                "name": "PS 4",
-                "logo_path": "/images/ps4.png",
-                "tag_name": "007"
-            },
-            {
-                "entity_id": "11",
-                "name": "Xbox",
-                "logo_path": "/images/xbox.png",
-                "tag_name": "mario",
-                "games": []
-            }
-        ],
-        "states_regions": [],
-        "countries_regions": []
-    }
+   {
+	"user": {
+		"name": "Anselmo Lira",
+		"email": "playerstars@playerstars.com.br",
+		"birth_date": "16/12/1986",
+		"street": "Rua José de Figueiredo",
+		"street_number": "192",
+		"street_complement": "Blocos 29, 30",
+		"neighborhood": "Barra da Tijuca",
+		"city": "Rio de Janeiro",
+		"state": "Rio de Janeiro",
+		"country": "Brasil",
+		"postal_code": "22333-000",
+		"phone_number": "(21) 99663-6963",
+		"cpf": "123.456.789-00",
+		"nickname": "anselmo.lira",
+		"profile_image": "ACCBB4762CF23AA35690CC"
+	},
+	"favorites": [],
+	"blue_star_balance": 123,
+	"golden_star_balance": 4321,
+	"consoles": [{
+			"entity_id": "1",
+			"name": "PS 4",
+			"logo_path": "/images/ps4.png",
+			"tag_name": "007"
+		},
+		{
+			"entity_id": "11",
+			"name": "Xbox",
+			"logo_path": "/images/xbox.png",
+			"tag_name": "mario",
+			"games": []
+		}
+	],
+	"states_regions": [],
+	"countries_regions": []
+}
     
 
 #### Response Model:
@@ -59,8 +57,8 @@ Player Stars
 ====================
 
     {
-        "status": "success",
-        "data": "id0001"
+	    "status": "success",
+	    "data": "id0001"
     }
 
 ## GET
@@ -83,7 +81,6 @@ Player Stars
             "golden_star_balance": 4321,
             "states_regions": [],
             "user": {
-                "group": "player",
                 "country": "Brasil",
                 "nickname": "anselmo.lira",
                 "postal_code": "22333-000",
@@ -131,9 +128,9 @@ Player Stars
 ## Status Code : 200
 ===================
     {
-         "status": "success",
-         "data": [{
-
+        "status": "success",
+        "data": [{
+    
             "entity_id": "id0001",
             "favorites": [],
             "blue_star_balance": 123,
@@ -158,8 +155,7 @@ Player Stars
             "countries_regions": [],
             "games": [],
             "player_status": "PlayerStatus.OFFLINE",
-            "consoles": [
-                {
+            "consoles": [{
                     "entity_id": "1",
                     "logo_path": "/images/ps4.png",
                     "name": "PS 4",
@@ -174,8 +170,8 @@ Player Stars
                     "games": []
                 }
             ]
-         
-         }]
+    
+        }]
     }
 
 
@@ -219,12 +215,12 @@ Player Stars
 
     {
         "status": "success",
-        "data":{
-            entity_id": "id123",
+        "data": {
+            "entity_id ": "id123 ",
             "name": "Super Selminho",
             "logo_path": "/images/ss.png",
             "tag_name": "nick#1",
-            "games" : []
+            "games": []
         }
     }
 
@@ -540,10 +536,10 @@ Player Stars
     {
             "name": "Gold",
             "minimum_bet" : 1234,
-            "countries":[
-                "Brasil",
-                "Venezuela",
-                "Cuba"
+            "states":[
+                "RJ",
+                "ES",
+                "SP"
                 ]
     }
     
@@ -575,10 +571,11 @@ Player Stars
          "status": "success",
          "data": {
             "name": "Gold",
-            "countries": [
-                    "Brasil",
-                    "Venezuela",
-                    "Cuba"
+            "states":[
+                "RJ",
+                "ES",
+                "SP"
+                ]
             ],
             "entity_id": "id0001",
             "minimum_bet": 1234
@@ -600,10 +597,11 @@ Player Stars
          "status": "success",
          "data":[{
             "name": "Gold",
-            "countries": [
-                    "Brasil",
-                    "Venezuela",
-                    "Cuba"
+            "states":[
+                "RJ",
+                "ES",
+                "SP"
+                ]
             ],
             "entity_id": "id0001",
             "minimum_bet": 1234
@@ -618,10 +616,11 @@ Player Stars
 
     {
          "name": "Silver",
-         "countries": [
-                "Equador",
-                "Chile",
-                "Argentina"
+         "states":[
+                "RJ",
+                "ES",
+                "SP"
+                ]
          ],
          "entity_id": "id0001",
          "minimum_bet": 1234
@@ -631,10 +630,11 @@ Player Stars
 #### Request Model:
     {
         "name": "nome_alterado",
-         "countries": [
-                "Equador",
-                "Chile",
-                "Argentina"
+         "states":[
+                "RJ",
+                "ES",
+                "SP"
+                ]
          ],
          "entity_id": "id0001",
          "minimum_bet": 1234
