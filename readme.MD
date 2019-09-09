@@ -298,3 +298,101 @@ Player Stars
          "data":"id123"  
     }   
     
+##Formato de JSON para rota
+=======================
+# # USER ROUTE ## 
+=======================
+
+
+## POST 
+# ROTA: "/user-admin/"
+
+#### Request Model:
+    {
+     
+        "name": "Anselmo Lira",
+        "email": "playerstars@playerstars.com.br"
+    
+    }
+    
+
+#### Response Model:
+====================
+## Status Code : 201
+====================
+
+    {
+        "status": "success",
+        "data": "id0001"
+    }
+
+
+## GET
+# ROTA: "/user-admin/{entity_id}"
+#### Request Model:
+    {}
+    
+#### Response Model:
+====================
+## Status Code : 200
+====================
+
+    {
+        "status": "success",
+        "id123":{
+            "name": "Duarte",
+            "email": "dudu_jpa@playerstars.com.br",
+            "entity_id": "id123"
+        }
+    }
+
+## GET All 
+# ROTA : "/user-admin/'
+
+#### Request Model:
+    {}
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":[{
+            "entity_id": "id123",
+            "name": "Duarte",
+            "email": "dudu_jpa@playerstars.com.br"
+         }]
+    }
+
+
+## PUT
+# ROTA : "/user-admin/{entity_id}"
+
+## DADO O SEGUINTE CONSOLE SALVO:
+
+    {
+        "name": "Duarte",
+        "email": "dudu_jpa@playerstars.com.br",
+        "entity_id": "id123"
+    }
+
+
+#### Request Model:
+    {
+        "entity_id": "id123",
+        "name": "name_alterado",
+        "email": "email_alterado_put@playerstars.com.br"
+    }
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":"id123"   
+    }
+
+
+## DELETE
