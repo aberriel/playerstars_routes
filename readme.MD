@@ -396,3 +396,128 @@ Player Stars
 
 
 ## DELETE
+
+##Formato de JSON para rota
+=======================
+# # REGION COUNTRY ROUTE ## 
+=======================
+
+
+## POST 
+# ROTA: "/region-country/"
+
+#### Request Model:
+    {
+            "name": "Gold",
+            "minimum_bet" : 1234,
+            "countries":[
+                "Brasil",
+                "Venezuela",
+                "Cuba"
+                ]
+    }
+    
+
+#### Response Model:
+====================
+## Status Code : 201
+====================
+
+    {
+        "status": "success",
+        "data": "id0001"
+    }
+
+    
+
+
+## GET
+# ROTA: "/region-country/{entity_id}"
+#### Request Model:
+    {}
+    
+#### Response Model:
+====================
+## Status Code : 200
+====================
+
+    {
+         "status": "success",
+         "data": {
+            "name": "Gold",
+            "countries": [
+                    "Brasil",
+                    "Venezuela",
+                    "Cuba"
+            ],
+            "entity_id": "id0001",
+            "minimum_bet": 1234
+         }
+    }
+
+
+## GET All 
+# ROTA : "/region-country/'
+
+#### Request Model:
+    {}
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":[{
+            "name": "Gold",
+            "countries": [
+                    "Brasil",
+                    "Venezuela",
+                    "Cuba"
+            ],
+            "entity_id": "id0001",
+            "minimum_bet": 1234
+        }]
+    }
+
+
+## PUT
+# ROTA : "/region-country/{entity_id}"
+
+## DADO O SEGUINTE CONSOLE SALVO:
+
+    {
+         "name": "Silver",
+         "countries": [
+                "Equador",
+                "Chile",
+                "Argentina"
+         ],
+         "entity_id": "id0001",
+         "minimum_bet": 1234
+    }
+
+
+#### Request Model:
+    {
+        "name": "nome_alterado",
+         "countries": [
+                "Equador",
+                "Chile",
+                "Argentina"
+         ],
+         "entity_id": "id0001",
+         "minimum_bet": 1234
+    }
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":"id0001"   
+    }
+    
+    
+## DELETE    
