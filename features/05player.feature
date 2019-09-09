@@ -1,28 +1,31 @@
 Feature: Player integrations tests
     Scenario: Creating a new player
+        Given I set DYNAMODB_URL as http://localhost:8000
         Given I set table name and the adapter class as Player
         Given The request has json body
         """
         {
-            "name": "Anselmo Lira",
-            "nickname": "anselmo.lira",
-            "birth_date": "16/12/1986",
-            "cpf": "123.456.789-00",
-            "email": "playerstars@playerstars.com.br",
-            "phone_number": "(21) 99663-6963",
-            "street": "Rua José de Figueiredo",
-            "street_number": "192",
-            "street_complement": "Blocos 29, 30",
-            "neighborhood": "Barra da Tijuca",
-            "city": "Rio de Janeiro",
-            "state": "Rio de Janeiro",
-            "country": "Brasil",
-            "postal_code": "22333-000",
-            "promo_code": "ABC123",
-            "profile_image": "ACCBB4762CF23AA35690CC",
-            "favorites":[],
-            "blue_star_balance":123,
-            "golden_star_balance":  4321,
+            "user":{
+                "entity_id": "id0123",
+                "name": "Anselmo Lira",
+                "email": "playerstars@playerstars.com.br",
+                "date_birth": "16/12/1986",
+                "street": "Rua José de Figueiredo",
+                "street_number": "192",
+                "street_complement": "Blocos 29, 30",
+                "neighborhood": "Barra da Tijuca",
+                "city": "Rio de Janeiro",
+                "state": "Rio de Janeiro",
+                "country": "Brasil",
+                "postal_code": "22333-000",
+                "phone_number": "(21) 99663-6963",
+                "cpf": "123.456.789-00",
+                "nickname": "anselmo.lira",
+                "profile_image": "ACCBB4762CF23AA35690CC"
+            },
+            "favorites": [],
+            "blue_star_balance": 123,
+            "golden_star_balance": 4321,
             "consoles": [
                 {
                     "entity_id": "1",
