@@ -219,11 +219,13 @@ Player Stars
 
     {
         "status": "success",
-        "entity_id": "id123",
-        "name": "Super Selminho",
-        "logo_path": "/images/ss.png",
-        "tag_name": "nick#1",
-        "games" : []
+        "data":{
+            entity_id": "id123",
+            "name": "Super Selminho",
+            "logo_path": "/images/ss.png",
+            "tag_name": "nick#1",
+            "games" : []
+        }
     }
 
 ## GET All 
@@ -339,10 +341,12 @@ Player Stars
 
     {
         "status": "success",
-        "id123":{
+        "data":{
+            
             "name": "Duarte",
             "email": "dudu_jpa@playerstars.com.br",
             "entity_id": "id123"
+               
         }
     }
 
@@ -521,3 +525,129 @@ Player Stars
     
     
 ## DELETE    
+
+
+##Formato de JSON para rota
+=======================
+# # REGION STATE ROUTE ## 
+=======================
+
+
+## POST 
+# ROTA: "/region-state/"
+
+#### Request Model:
+    {
+            "name": "Gold",
+            "minimum_bet" : 1234,
+            "countries":[
+                "Brasil",
+                "Venezuela",
+                "Cuba"
+                ]
+    }
+    
+
+#### Response Model:
+====================
+## Status Code : 201
+====================
+
+    {
+        "status": "success",
+        "data": "id0001"
+    }
+
+    
+
+
+## GET
+# ROTA: "/region-state/{entity_id}"
+#### Request Model:
+    {}
+    
+#### Response Model:
+====================
+## Status Code : 200
+====================
+
+    {
+         "status": "success",
+         "data": {
+            "name": "Gold",
+            "countries": [
+                    "Brasil",
+                    "Venezuela",
+                    "Cuba"
+            ],
+            "entity_id": "id0001",
+            "minimum_bet": 1234
+         }
+    }
+
+
+## GET All 
+# ROTA : "/region-state/'
+
+#### Request Model:
+    {}
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":[{
+            "name": "Gold",
+            "countries": [
+                    "Brasil",
+                    "Venezuela",
+                    "Cuba"
+            ],
+            "entity_id": "id0001",
+            "minimum_bet": 1234
+        }]
+    }
+
+
+## PUT
+# ROTA : "/region-state/{entity_id}"
+
+## DADO O SEGUINTE CONSOLE SALVO:
+
+    {
+         "name": "Silver",
+         "countries": [
+                "Equador",
+                "Chile",
+                "Argentina"
+         ],
+         "entity_id": "id0001",
+         "minimum_bet": 1234
+    }
+
+
+#### Request Model:
+    {
+        "name": "nome_alterado",
+         "countries": [
+                "Equador",
+                "Chile",
+                "Argentina"
+         ],
+         "entity_id": "id0001",
+         "minimum_bet": 1234
+    }
+
+#### Response Model:
+===================
+## Status Code : 200
+===================
+    {
+         "status": "success",
+         "data":"id0001"   
+    }
+    
+    
+## DELETE
