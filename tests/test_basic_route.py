@@ -1,47 +1,47 @@
 import pytest
-from playerstars_routes.basic_route import BasicRoute
+from chalicelib.basic_chalice_route import BasicChaliceRoute
 
 
 def test_abstract_methods():
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().make_post_request('data')
+        BasicChaliceRoute().make_post_request('data')
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().get_all_interactor()
+        BasicChaliceRoute().get_all_interactor()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().not_found_message()
+        BasicChaliceRoute().not_found_message()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().not_found_all_message()
+        BasicChaliceRoute().not_found_all_message()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().get_request_model()
+        BasicChaliceRoute().get_request_model()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().get_interactor()
+        BasicChaliceRoute().get_interactor()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().save_exception()
+        BasicChaliceRoute().save_exception()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().post_interactor()
+        BasicChaliceRoute().post_interactor()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().make_put_request('data')
+        BasicChaliceRoute().make_put_request('data')
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().update_exception()
+        BasicChaliceRoute().update_exception()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().put_interactor()
+        BasicChaliceRoute().put_interactor()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().delete_request_model()
+        BasicChaliceRoute().delete_request_model()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().delete_interactor()
+        BasicChaliceRoute().delete_interactor()
     assert str(exc.value) == 'Não foi implementado'
     with pytest.raises(NotImplementedError) as exc:
-        BasicRoute().delete_not_found()
+        BasicChaliceRoute().delete_not_found()
     assert str(exc.value) == 'Não foi implementado'

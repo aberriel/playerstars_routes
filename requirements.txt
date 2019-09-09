@@ -1,17 +1,7 @@
-bumpversion==0.5.3
-enum34==1.1.6
-flake8==3.7.7
-flake8-bandit==2.1.1
-pip==18.1
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
--e git+git@gitlab.com:stormsecurity/internos/playerstars/domain.git#egg=playerstars_domain
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-dynamodb-adapters.git#egg=playerstars_adapter
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-interactors.git#egg=playerstars_interactors
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
-pytest==5.0.0
-pytest-cov==2.7.1
-Sphinx==2.1.2
-watchdog==0.9.0
-wheel==0.33.4
-pytest-cov==2.7.1
-chalice==1.9.1
+chalice==1.11.0
+playerstars_mail==0.1.1
+playerstars_domain==0.1.2
+playerstars_adapters==0.1.2
+playerstars_interactors==0.1.0
+playerstars_mail==0.1.1
+python-decouple==3.1

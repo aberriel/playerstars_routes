@@ -3,17 +3,14 @@ from playerstars_adapters import PlayerAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
     private_get, private_post)
-from playerstars_interactors import (
-    BasicPostRequestModel, SaveEntityException, PostPlayerInteractor)
+
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from chalicelib.chalice_support.api_responses import (server_error,
-                                                      created)
+
 bp_player = Blueprint(__name__)
 
 
 def get_router():
-    print("###############: ", Settings.DYNAMODB_URL)
     adapter = PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')

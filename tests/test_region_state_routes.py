@@ -1,52 +1,57 @@
 from unittest.mock import MagicMock, patch
-from playerstars_routes import (
+from chalicelib import (
     get_all_region_state,
-    get_region_state_by_id, put_region_state,
-    post_region_state, RegionStateRoute)
+    get_region_state_by_id,
+    put_region_state,
+    post_region_state)
 import json
-import pytest
-from playerstars_interactors import SaveRegionStateException, \
-    UpdateRegionStateException
+from playerstars_interactors import SaveEntityException, UpdateEntityException
 
 
-@patch('playerstars_routes.region_state_route.'
-       'GetAllRegionStatesInteractor.run',
-       MagicMock(return_value='ok'))
-def test_get_all_region_state():
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_region_state(client, resource, run):
     result = get_all_region_state()
-
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.region_state_route.'
-       'GetAllRegionStatesInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
-def teste_get_all_region_state_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def teste_get_all_region_state_not_found(clien, resource):
     result = get_all_region_state()
 
+    assert result.body['message'] == 'Nenhum region-state encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run')
-def test_get_region_state(mock):
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_region_state(client, resource, run):
     result = get_region_state_by_id('1d001')
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.region_state_route.GetRegionStateInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
-def test_get_region_state_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_region_state_not_found(client, resource):
     result = get_region_state_by_id('id001')
 
-    assert result.body['message'] == 'Região Estado não encontrada'
+    assert result.body['message'] == 'Region-state não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -62,23 +67,29 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.region_state_route.'
-       'PostRegionStateInteractor.run')
-def test_post_region_country(mock):
+@patch('chalicelib.region_state_route.bp_region_state',
+       make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_region_country(client, resource, run):
     result = post_region_state()
 
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.region_state_route.'
-       'PostRegionStateInteractor.run',
-       MagicMock(side_effect=SaveRegionStateException('oops')))
-def test_post_region_raises():
+@patch('chalicelib.region_state_route.bp_region_state',
+       make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_region_raises(client, resource):
     result = post_region_state()
 
+    assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
 
@@ -95,35 +106,29 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.region_state_route.'
-       'PutRegionStateInteractor.run')
-def test_put_region_country(mock):
+@patch('chalicelib.region_state_route.bp_region_state',
+       make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_region_country(client, resource, run):
     result = put_region_state("id123")
 
-    mock.assert_called_once()
+    run.assert_called_once()
+    assert result.body['data']
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.region_state_route.'
-       'PutRegionStateInteractor.run',
-       MagicMock(side_effect=UpdateRegionStateException('oops')))
-def test_put_region_raises():
+@patch('chalicelib.region_state_route.bp_region_state',
+       make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_region_raises(client, resource):
     result = put_region_state("14")
 
+    assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
-
-
-def test_not_implemented():
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_request_model()
-    assert str(exc.value) == 'Delete não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_interactor()
-    assert str(exc.value) == 'Delete não implementado'
-    with pytest.raises(NotImplementedError) as exc:
-        RegionStateRoute().delete_not_found()
-    assert str(exc.value) == 'Delete não implementado'

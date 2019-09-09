@@ -1,9 +1,55 @@
 {
-  "version": "2.0",
-  "app_name": "playerstars_routes",
-  "stages": {
-    "dev": {
-      "api_gateway_stage": "api"
+    "version": "2.0",
+    "app_name": "PlayerStars",
+    "autogen_policy": false,
+    "tags": {
+        "CentroCusto": "PlayerStars"
+    },
+    "environment_variables": {
+        "LOG_LEVEL": "INFO",
+        "CONSOLE_TABLE_NAME": "console",
+        "DUEL_TABLE_NAME": "duel",
+        "PLAYER_TABLE_NAME": "player",
+        "PURCHASE_HISTORY_TABLE_NAME": "purchase",
+        "REGION_COUNTRY_TABLE_NAME": "region_country",
+        "REGION_STATE_TABLE_NAME": "region_state",
+        "TEAM_TABLE_NAME": "team",
+        "USER_TABLE_NAME": "user",
+        "USER_ADMIN_TABLE_NAME": "user_admin"
+    },
+    "stages": {
+        "dev": {
+            "api_gateway_stage": "dev",
+            "environment_variables": {
+                "LOG_LEVEL": "DEBUG",
+                "CONSOLE_TABLE_NAME": "console_dev",
+                "DUEL_TABLE_NAME": "duel_dev",
+                "PLAYER_TABLE_NAME": "player_dev",
+                "PURCHASE_HISTORY_TABLE_NAME": "purchase_dev",
+                "REGION_COUNTRY_TABLE_NAME": "region_country_dev",
+                "REGION_STATE_TABLE_NAME": "region_state_dev",
+                "TEAM_TABLE_NAME": "team_dev",
+                "USER_TABLE_NAME": "user_dev",
+                "USER_ADMIN_TABLE_NAME": "user_admin_dev"
+            }
+        },
+        "stg": {
+            "api_gateway_stage": "stg",
+            "environment_variables": {
+                "LOG_LEVEL": "DEBUG",
+                "CONSOLE_TABLE_NAME": "console_stg",
+                "DUEL_TABLE_NAME": "duel_stg",
+                "PLAYER_TABLE_NAME": "player_stg",
+                "PURCHASE_HISTORY_TABLE_NAME": "purchase_stg",
+                "REGION_COUNTRY_TABLE_NAME": "region_country_stg",
+                "REGION_STATE_TABLE_NAME": "region_state_stg",
+                "TEAM_TABLE_NAME": "team_stg",
+                "USER_TABLE_NAME": "user_stg",
+                "USER_ADMIN_TABLE_NAME": "user_admin_stg"
+            }
+        },
+        "prd": {
+            "api_gateway_stage": "api"
+        }
     }
-  }
 }

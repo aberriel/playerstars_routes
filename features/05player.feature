@@ -39,10 +39,11 @@ Feature: Player integrations tests
                     "logo_path": "/images/xbox.png",
                     "tag_name": "mario",
                     "games": []
-            }
-            ]
-        }
-        """
+                }
+            ],
+            "states_regions": [],
+            "countries_regions": []
+        }"""
         When post request is made to /player
         Then The response should have status success
         Then The response should have status_code 201

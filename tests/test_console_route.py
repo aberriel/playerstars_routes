@@ -1,34 +1,33 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from playerstars_routes import (
+from chalicelib.console_route import (
     delete_console,
     get_all_console,
     get_console_by_id,
     post_console,
     put_console
 )
-from playerstars_interactors import (
-    SaveConsoleException,
-    UpdateConsoleException)
+from playerstars_interactors import SaveEntityException, UpdateEntityException
 from unittest.mock import MagicMock, patch
 
 import json
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.GetAllConsolesInteractor.run')
-def test_get_all_consoles(mock):
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_consoles(client, resource, run):
     result = get_all_console()
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.GetAllConsolesInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
        MagicMock(return_value=None))
-def test_get_all_consoles_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_consoles_not_found(client, resource):
     result = get_all_console()
 
     assert result.body['message'] == 'Nenhum console encontrado'
@@ -37,19 +36,22 @@ def test_get_all_consoles_not_found():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.GetConsoleInteractor.run')
-def test_get_console(mock):
-    # result = ConsoleRoute().get_console('id1')
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_console(client, resource, run):
     result = get_console_by_id('id1')
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.GetConsoleInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
        MagicMock(return_value=None))
-def test_get_console_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_console_not_found(client, resource):
     result = get_console_by_id('id1')
 
     assert result.body['message'] == 'Console não encontrado'
@@ -81,21 +83,25 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.console_route.PostConsoleInteractor.run')
-def test_post_console(mock):
+@patch('chalicelib.console_route.bp_console', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_console(client, resource, run):
     result = post_console()
 
-    mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_post_mock_data())
-@patch('playerstars_routes.console_route.PostConsoleInteractor.run',
-       MagicMock(side_effect=SaveConsoleException('oops')))
-def test_post_console_raises():
+@patch('chalicelib.console_route.bp_console', make_post_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_console_raises(client, resource):
     result = post_console()
 
     assert result.body['message'] == 'oops'
@@ -104,9 +110,11 @@ def test_post_console_raises():
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.console_route.PutConsoleInteractor.run')
-def test_put_console(mock):
+@patch('chalicelib.console_route.bp_console', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console(client, resource, mock):
     result = put_console('id1')
 
     mock.assert_called_once()
@@ -116,10 +124,12 @@ def test_put_console(mock):
 
 
 # noinspection PyUnusedLocal
-@patch('app.app', make_put_mock_data())
-@patch('playerstars_routes.console_route.PutConsoleInteractor.run',
-       MagicMock(side_effect=UpdateConsoleException('oops')))
-def test_put_console_raises():
+@patch('chalicelib.console_route.bp_console', make_put_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console_raises(client, resource):
     result = put_console('id1')
 
     assert result.body['message'] == 'oops'
@@ -128,8 +138,10 @@ def test_put_console_raises():
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.DeleteConsoleInteractor.run')
-def test_delete_console(mock):
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_console(client, resource, mock):
     result = delete_console('id1')
 
     mock.assert_called_once()
@@ -138,9 +150,11 @@ def test_delete_console(mock):
 
 
 # noinspection PyUnusedLocal
-@patch('playerstars_routes.console_route.DeleteConsoleInteractor.run',
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run',
        MagicMock(return_value=None))
-def test_delete_console_not_found():
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_console_not_found(client, resource):
     result = delete_console('id1')
 
     assert result.body['message'] == 'Console não encontrado para ser deletado'

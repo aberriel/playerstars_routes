@@ -1,17 +1,7 @@
-bumpversion==0.5.3
-enum34==1.1.6
 flake8==3.7.7
 flake8-bandit==2.1.1
-pip==18.1
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
--e git+git@gitlab.com:stormsecurity/internos/playerstars/domain.git#egg=playerstars_domain
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-dynamodb-adapters.git#egg=playerstars_adapters
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars-interactors.git@develop#egg=playerstars_interactors
--e git+git@gitlab.com:stormsecurity/internos/playerstars/playerstars_mail.git#egg=playerstars_mail
 pytest==5.0.0
 pytest-cov==2.7.1
 Sphinx==2.1.2
 watchdog==0.9.0
 wheel==0.33.4
-pytest-cov==2.7.1
-chalice==1.9.1

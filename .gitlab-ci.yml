@@ -1,0 +1,78 @@
+image: foodsby/python-pip-awscli:3.7
+
+stages:
+  - test
+  - deploy
+
+.utf8-env:
+  variables:
+    LC_ALL: C.UTF-8
+    LANG: C.UTF-8
+
+.deploy:
+  extends: .utf8-env
+  stage: deploy
+  script:
+    - make install
+    - make deploy
+  artifacts:
+    paths:
+      - deploy.log
+      - .chalice/deployed
+
+.test:
+  extends: .utf8-env
+  stage: test
+  script:
+    - make install_dev
+    - make tests
+  coverage: /\d+\%\s*$/
+
+test_dev:
+  extends: .test
+  environment:
+    name: dev
+  except:
+    - master
+    - tags
+
+test_stg:
+  extends: .test
+  environment:
+    name: stg
+  only:
+    - master
+
+test_prd:
+  extends: .test
+  environment:
+    name: prd
+  only:
+    - tags
+
+deploy to dev:
+  extends: .deploy
+  dependencies:
+    - test_dev
+  environment:
+    name: dev
+  only:
+    - develop
+
+deploy to stg:
+  extends: .deploy
+  dependencies:
+    - test_stg
+  environment:
+    name: stg
+  only:
+    - master
+
+deploy to prod:
+  extends: .deploy
+  dependencies:
+    - test_prd
+  environment:
+    name: prd
+  only:
+    - tags
