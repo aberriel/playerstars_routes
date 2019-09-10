@@ -14,7 +14,7 @@ class Object(object):
 convert_string_to_adapter = {
     'console': ConsoleAdapter,
     'regioncountry': CountryRegionAdapter,
-    'regionstate': StateRegionAdapter,
+    'region_state': StateRegionAdapter,
     'user_admin': UserAdminAdapter,
     'player': PlayerAdapter
 }
