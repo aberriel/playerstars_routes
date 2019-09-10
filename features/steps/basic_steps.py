@@ -15,7 +15,7 @@ convert_string_to_adapter = {
     'console': ConsoleAdapter,
     'regioncountry': CountryRegionAdapter,
     'regionstate': StateRegionAdapter,
-    'useradmin': UserAdminAdapter,
+    'user_admin': UserAdminAdapter,
     'player': PlayerAdapter
 }
 
@@ -121,6 +121,9 @@ def json_body(context):
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
+    print("context-Json-----", context.item_id)
+    print("context-Json-----", context.table_name)
+
     adapter = context.adapter(context.table_name, context.dynamo_url)
     response = adapter.get_by_id(context.item_id).to_json()
 
@@ -131,8 +134,6 @@ def saved_json(context):
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    # print('RESPONSE: ', response_string_json)
-    # print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -162,8 +163,6 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('RESPONSE: ', response_string_json)
-    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 

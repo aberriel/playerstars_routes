@@ -1,6 +1,7 @@
 Feature: Console integrations tests
     Scenario: Creating a new user admin
-        Given I set table name and the adapter class as UserAdmin
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as User_Admin
         Given The request has json body
         """
         {
@@ -21,7 +22,8 @@ Feature: Console integrations tests
         Then I delete the test entry
 
     Scenario: Getting a user-admin from the database
-        Given I set table name and the adapter class as UserAdmin
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as User_Admin
         Given I save a new entry to the database with json body
         """
         {
@@ -44,7 +46,8 @@ Feature: Console integrations tests
         Then  I delete the test entry
 
     Scenario: Recovering all users admin from the database
-        Given I set table name and the adapter class as UserAdmin
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as User_Admin
         Given I emptied the database
         Given I save a new entry to the database with json body
         """
@@ -66,24 +69,23 @@ Feature: Console integrations tests
         Then The response should have status success
         Then The retrived json has body
         """
-        {
-                "id123": {
+        [{
                 "name": "Duarte",
                 "email": "dudu_jpa@playerstars.com.br",
                 "entity_id": "id123"
-            },
-                "id12345": {
+	        },{
                 "name": "Anselmo",
                 "email": "barriel_jpa@playerstars.com.br",
                 "entity_id": "id12345"
-            }
+	        }
 
-        }
+        ]
         """
         Then I delete the test entry
 
     Scenario: Updating a user admin in database
-        Given I set table name and the adapter class as UserAdmin
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as User_Admin
         Given I save a new entry to the database with json body
         """
         {
