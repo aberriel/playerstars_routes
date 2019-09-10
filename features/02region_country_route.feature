@@ -1,5 +1,6 @@
 Feature: Region Country integrations tests
     Scenario: Creating a new region country
+        Given I set DYNAMODB_URL as http://localhost:8000
         Given I set table name and the adapter class as RegionCountry
         Given The request has json body
         """

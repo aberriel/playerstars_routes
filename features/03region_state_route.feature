@@ -1,5 +1,6 @@
 Feature: Region State integrations tests
     Scenario: Creating a new region state
+        Given I set DYNAMODB_URL as http://localhost:8000
         Given I set table name and the adapter class as RegionState
         Given The request has json body
         """
