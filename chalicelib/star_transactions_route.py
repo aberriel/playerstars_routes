@@ -27,6 +27,7 @@ from playerstars_interactors import (
     GetStarTransactionHistoryResponseModel
 )
 
+import dateutil.parser
 import json
 
 
@@ -38,7 +39,7 @@ def get_filter_param(filters, parameter_name, parameter_type=None):
         if parameter_type and isinstance(parameter_type, EnumMeta):
             return parameter_type(filters[parameter_name])
         elif parameter_type and parameter_type == datetime:
-            return datetime.fromisoformat(filters[parameter_name])
+            return dateutil.parser.parse(filters[parameter_name])
         else:
             return filters[parameter_name]
     return None
