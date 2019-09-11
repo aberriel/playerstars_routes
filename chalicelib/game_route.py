@@ -85,9 +85,7 @@ def post_game():
 
 def post(json_data):
     request = PostGameRequestModel(json_data)
-    interactor = BasicPostInteractor(request,
-                                     get_adapter(),
-                                     Console)
+    interactor = PostGameInteractor(request, get_adapter(), Console)
     try:
         response = interactor.run()
     except SaveEntityException as e:
