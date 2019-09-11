@@ -21,9 +21,7 @@ def get_router():
 def post_player():
     data = bp_player.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_player)
-    print("ENTITY_ID: ", entity_id)
     data.update({'entity_id': entity_id})
-    print("DATA: ", data)
     return get_router().post(data)
 
 
