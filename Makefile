@@ -76,9 +76,9 @@ install_dev: clean install ## instala as dependências de desenvolvimento
 	pip install -r requirements_dev.txt
 
 install: clean uninstall_all ## instala as dependências do projeto
-	pip install devpi-client
+	pip install -U devpi-client
 	devpi use $(DEVPI_URL) --always-set-cfg=yes
-	pip install -r requirements.txt
+	pip --no-cache-dir install -r requirements.txt
 
 deploy: clean install ## Executa o chalice deploy.
 	chalice deploy --stage $(CI_ENVIRONMENT_NAME) | tee deploy.log
