@@ -1,17 +1,13 @@
 Feature: Region Country integrations tests
     Scenario: Creating a new region country
         Given I set DYNAMODB_URL as http://localhost:8000
-        Given I set table name and the adapter class as RegionCountry
+        Given I set table name and the adapter class as Region_Country
         Given The request has json body
         """
         {
             "name": "Gold",
-            "minimum_bet" : 1234,
-            "countries":[
-                "Brasil",
-                "Venezuela",
-                "Cuba"
-                ]
+            "countries": ["Brasil", "Venezuela", "Cuba"],
+            "minimum_bet": 1234
         }
         """
         When post request is made to /region-country
@@ -21,29 +17,22 @@ Feature: Region Country integrations tests
         """
         {
             "name": "Gold",
-            "countries": [
-                      "Brasil",
-                      "Venezuela",
-                      "Cuba"
-            ],
+            "countries": ["Brasil", "Venezuela", "Cuba"],
             "minimum_bet": 1234
         }
         """
         Then I delete the test entry
 
     Scenario: Getting a region country from the database
-        Given I set table name and the adapter class as RegionCountry
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Region_Country
         Given I save a new entry to the database with json body
         """
         {
-             "name": "Gold",
-             "countries": [
-                    "Brasil",
-                    "Venezuela",
-                    "Cuba"
-             ],
-             "entity_id": "id123",
-             "minimum_bet": 1234
+            "name": "Gold",
+            "countries": ["Brasil", "Venezuela", "Cuba"],
+            "entity_id": "id123",
+            "minimum_bet": 1234
         }
         """
         When get request is made with id id123 to /region-country
@@ -53,11 +42,7 @@ Feature: Region Country integrations tests
         """
         {
             "name": "Gold",
-            "countries": [
-                    "Brasil",
-                    "Venezuela",
-                    "Cuba"
-            ],
+            "countries": ["Brasil","Venezuela","Cuba"],
             "entity_id": "id123",
             "minimum_bet": 1234
         }
@@ -65,89 +50,66 @@ Feature: Region Country integrations tests
         Then I delete the test entry
 
     Scenario: Recovering all regions country from the database
-        Given I set table name and the adapter class as RegionCountry
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Region_Country
         Given I emptied the database
         Given I save a new entry to the database with json body
         """
         {
-             "name": "Gold",
-             "countries": [
-                    "Brasil",
-                    "Venezuela",
-                    "Cuba"
-             ],
-             "entity_id": "9e29",
-             "minimum_bet": 1234
+             "name": "BRONZE",
+             "minimum_bet" : 1234,
+             "countries":["brazil", "mexico", "canada"],
+             "entity_id":"id123"
         }
         """
         Given I save a new entry to the database with json body
         """
         {
-             "name": "Silver",
-             "countries": [
-                    "Equador",
-                    "Chile",
-                    "Argentina"
-             ],
-             "entity_id": "946b",
-             "minimum_bet": 12345
+             "name": "SILVER",
+             "minimum_bet" : 1234,
+             "countries":["japan", "argentina", "venezuela"],
+             "entity_id":"id12345"
         }
         """
         When get request is made to /region-country
         Then The response should have status success
         Then The retrived json has body
         """
-        {
-            "946b": {
-            "minimum_bet": 12345,
-            "entity_id": "946b",
-            "countries": [
-                "Equador",
-                "Chile",
-                "Argentina"
-            ],
-            "name": "Silver"
-        },
-        "9e29": {
-            "minimum_bet": 1234,
-            "entity_id": "9e29",
-            "countries": [
-                "Brasil",
-                "Venezuela",
-                "Cuba"
-            ],
-            "name": "Gold"
-        }
-        }
+        [{
+             "name": "BRONZE",
+             "minimum_bet" : 1234,
+             "countries":["brazil", "mexico", "canada"],
+             "entity_id":"id123"
+          },{
+
+             "name": "SILVER",
+             "minimum_bet" : 1234,
+             "countries":["japan", "argentina", "venezuela"],
+             "entity_id":"id12345"
+            }
+        ]
         """
         Then I delete the test entry
 
     Scenario: Updating a region country in database
-        Given I set table name and the adapter class as RegionCountry
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Region_Country
         Given I save a new entry to the database with json body
          """
          {
-             "name": "Silver",
-             "countries": [
-                    "Equador",
-                    "Chile",
-                    "Argentina"
-             ],
-             "entity_id": "946b",
-             "minimum_bet": 12345
+             "name": "BRONZE",
+             "minimum_bet" : 1234,
+             "countries":["brazil", "mexico", "canada"],
+             "entity_id":"id123"
          }
          """
         Given The request has json body
          """
          {
-             "name": "Bronze",
-             "countries": [
-                    "Equador",
-                    "Mexico",
-                    "Argentina"
-             ],
-             "entity_id": "946b",
-             "minimum_bet": 12345
+            "name": "ALTEREI_NOME",
+             "minimum_bet" : 1234,
+             "countries":["brazil", "mexico", "canada"],
+             "entity_id":"id123"
          }
          """
         When put request is made with id 946b to /region-country
@@ -156,17 +118,13 @@ Feature: Region Country integrations tests
         Then The updated entry json has body
         """
         {
-            "name": "Bronze",
-             "countries": [
-                    "Equador",
-                    "Mexico",
-                    "Argentina"
-             ],
-             "entity_id": "946b",
-             "minimum_bet": 12345
+            "name": "ALTEREI_NOME",
+             "minimum_bet" : 1234,
+             "countries":["brazil", "mexico", "canada"],
+             "entity_id":"id123"
         }
         """
         Then I delete the test entry
 
 
-## FICA FALTANDO O DELETE
+### FICA FALTANDO O DELETE

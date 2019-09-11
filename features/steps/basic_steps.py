@@ -13,7 +13,7 @@ class Object(object):
 
 convert_string_to_adapter = {
     'console': ConsoleAdapter,
-    'regioncountry': CountryRegionAdapter,
+    'region_country': CountryRegionAdapter,
     'region_state': StateRegionAdapter,
     'user_admin': UserAdminAdapter,
     'player': PlayerAdapter
@@ -121,8 +121,6 @@ def json_body(context):
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
-    print("context-Json-----", context.item_id)
-    print("context-Json-----", context.table_name)
 
     adapter = context.adapter(context.table_name, context.dynamo_url)
     response = adapter.get_by_id(context.item_id).to_json()
@@ -152,8 +150,6 @@ def saved_jsons(context):
         #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    # print('RESPONSE: ', response_string_json)
-    # print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -171,14 +167,12 @@ def deleted(context):
     adapter = context.adapter(context.table_name, context.dynamo_url)
 
     if hasattr(context, 'list_deleted_id'):
-        print("SE EU ENTREI AQUI< TEM ALGUMA COISA MUITO ERRADA")
         list_all = [x.entity_id for x in adapter.list_all()]
         for deleted_id in context.list_deleted_id:
             if deleted_id in list_all:
                 found = True
     else:
         for item in adapter.list_all():
-            print("$$$$$$$$: ", item)
             if context.deleted_id == item.entity_id:
                 found = True
     return True if not found else False
@@ -187,13 +181,11 @@ def deleted(context):
 @then('I delete the test entry')
 def check_delete_test_entry(context):
     adapter = context.adapter(context.table_name, context.dynamo_url)
+    print('CONTEXT ITEM ---->', context.item_id)
     if hasattr(context, 'dict_list_get_all'):
         context.list_deleted_id = []
-        print("DICT LIST GET ALL: ", context.dict_list_get_all)
         for dict in context.dict_list_get_all:
-            print("DICT PARA DELETAR: ", dict)
             context.list_deleted_id.append(adapter.delete(dict['entity_id']))
-        print("DELETADOS: ", context.list_deleted_id)
         assert deleted(context)
     else:
         print(context.item_id)
