@@ -6,6 +6,7 @@ from chalicelib.chalice_support import (
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_player = Blueprint(__name__)
 
@@ -19,6 +20,8 @@ def get_router():
 @bp_player.route('/', **private_post())
 def post_player():
     data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    data.update({'entity_id': entity_id})
     return get_router().post(data)
 
 
