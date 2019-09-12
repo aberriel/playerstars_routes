@@ -103,10 +103,20 @@ def put_game(entity_id):
 
 
 @bp_game.route(
-    '/game/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
+    '/{entity_id}', methods=['DELETE'], cors=cors, authorizer=cupauth)
 def delete_game(entity_id):
-    pass
-    # return GameChaliceRoute().delete(entity_id)
+    print(" A D A P T E R ------>", get_adapter().list_all())
+    return delete(entity_id)
+
+
+def delete(entity_id):
+    request = DeleteGameRequestModel(entity_id)
+    interactor = DeleteGameInteractor(request, get_adapter())
+    response = interactor.run()
+    if not response:
+        return not_found('Game não encontrado')
+    return success(response)
+
 
 #
 # class GameChaliceRoute(BasicChaliceRoute):
