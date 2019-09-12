@@ -2,7 +2,7 @@ from chalice import Chalice
 
 from chalicelib import root
 from chalicelib.console_route import bp_console
-from chalicelib.game_route import bp_game
+from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.player_route import bp_player
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
@@ -21,6 +21,7 @@ app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_game, url_prefix='/game')
+app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_region_country, url_prefix='/region-country')
 app.register_blueprint(bp_region_state, url_prefix='/region-state')

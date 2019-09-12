@@ -81,3 +81,46 @@ Feature: Game integrations tests
         """
         Then I delete the test game entry
 
+    Scenario: Getting all games from one console from the database
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Console
+        Given I save a new entry to the database with json body
+        """
+        {
+            "name": "Super Nintendo",
+            "games": [
+                {
+                    "name": "ZELDA",
+                    "entity_id": "0123456",
+                    "logo_path": "images/zelda.jpg"
+                },
+                {
+                    "name": "fifa",
+                    "entity_id": "0123",
+                    "logo_path": "images/fifa.jpg"
+                }
+            ],
+            "entity_id": "789",
+            "logo_path": "/images/sn.png",
+            "tag_name": "nick#1"
+        }
+        """
+        When get request is made with id 789 to /game/console
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The retrived json has body
+        """
+        [
+                {
+                    "name": "ZELDA",
+                    "entity_id": "0123456",
+                    "logo_path": "images/zelda.jpg"
+                },
+                {
+                    "name": "fifa",
+                    "entity_id": "0123",
+                    "logo_path": "images/fifa.jpg"
+                }
+        ]
+        """
+        Then I delete the test game entry

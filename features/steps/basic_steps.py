@@ -95,7 +95,10 @@ def json_request_with_id(context, method, entity_id, url):
     response = url_method.view_function(entity_id)
     context.response = response
     if method.upper() in ['GET']:
-        context.item_id = context.response.body['data']['entity_id']
+        if url == '/game/console' and isinstance(context.response.body['data'], list):
+            context.list_get_game = context.response.body['data']
+        else:
+            context.item_id = context.response.body['data']['entity_id']
     else:
         context.item_id = context.response.body['data']
     try:
@@ -200,8 +203,12 @@ def check_delete_test_entry(context):
 @then('I delete the test game entry')
 def delete_game(context):
     adapter = context.adapter(context.table_name, context. dynamo_url)
-    print(context.item_id)
-    if isinstance(context.item_id, list):
+    if hasattr(context, 'list_get_game'):
+        print(context.list_get_game)
+        consoles = adapter.list_all()
+        for console in consoles:
+            adapter.delete(console.entity_id)
+    if hasattr(context, 'item_id') and isinstance(context.item_id, list):
         for x in context.item_id:
             adapter.delete(x)
     else:

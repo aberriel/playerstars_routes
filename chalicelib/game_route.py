@@ -16,6 +16,7 @@ from chalicelib.chalice_support import (
         created, server_error)
 
 bp_game = Blueprint(__name__)
+bp_game_by_console = Blueprint(__name__)
 
 
 def get_adapter():
@@ -23,8 +24,8 @@ def get_adapter():
         Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@bp_game.route(
-    '/console_id={console_id}', **private_get())
+@bp_game_by_console.route(
+    '/{entity_id}', **private_get())
 def get_all_games(console_id):
     return get_all_by_console_id(console_id)
 
@@ -53,7 +54,6 @@ def put_game(entity_id):
 @bp_game.route(
     '/{entity_id}', **private_delete())
 def delete_game(entity_id):
-    print(" A D A P T E R ------>", get_adapter().list_all())
     return delete(entity_id)
 
 
