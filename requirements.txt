@@ -1,7 +1,6 @@
 chalice==1.11.0
-playerstars_mail==0.1.1
-playerstars_domain==0.1.2
-playerstars_adapters==0.1.2
-playerstars_interactors==0.1.2
-playerstars_mail==0.1.1
+playerstars_mail
+playerstars_domain
+playerstars_adapters
+playerstars_interactors
 python-decouple==3.1
