@@ -5,6 +5,7 @@ from chalicelib.settings import Settings
 from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
                                   StateRegionAdapter, UserAdminAdapter,
                                   PlayerAdapter)
+from tests.test_utils import jwt
 
 
 class Object(object):
@@ -69,6 +70,7 @@ def json_request(context, method, url):
     if 'json_body' in context:
         app.current_request = Object()
         app.current_request.json_body = context.json_body
+        app.current_request.headers = dict(AUTHORIZATION=jwt)
 
     url_method = app.routes.get(url)[method.upper()]
     response = url_method.view_function()
@@ -88,6 +90,7 @@ def json_request_with_id(context, method, entity_id, url):
     if 'json_body' in context:
         app.current_request = Object()
         app.current_request.json_body = context.json_body
+        app.current_request.headers = dict(AUTHORIZATION=jwt)
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
@@ -159,6 +162,8 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('RESPONSE: ', response_string_json)
+    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -181,17 +186,31 @@ def deleted(context):
 @then('I delete the test entry')
 def check_delete_test_entry(context):
     adapter = context.adapter(context.table_name, context.dynamo_url)
-    print('CONTEXT ITEM ---->', context.item_id)
     if hasattr(context, 'dict_list_get_all'):
         context.list_deleted_id = []
         for dict in context.dict_list_get_all:
             context.list_deleted_id.append(adapter.delete(dict['entity_id']))
         assert deleted(context)
     else:
-        print(context.item_id)
         context.deleted_id = adapter.delete(context.item_id)
         assert deleted(context)
     assert adapter.list_all() == []
+
+
+@then('I delete the test game entry')
+def delete_game(context):
+    adapter = context.adapter(context.table_name, context. dynamo_url)
+    print(context.item_id)
+    if isinstance(context.item_id, list):
+        for x in context.item_id:
+            adapter.delete(x)
+    else:
+        consoles = adapter.list_all()
+        for console in consoles:
+            games_id_list = [x.entity_id for x in console.games]
+            if context.item_id in games_id_list:
+                adapter.delete(console.entity_id)
+
 
 
 @then('The updated entry json has body')
