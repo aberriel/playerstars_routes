@@ -9,7 +9,7 @@ from playerstars_interactors import (
     GetAllGamesInteractor, PostGameRequestModel, PostGameInteractor,
     SaveGameException, GetGameInteractor, GetGameRequestModel,
     GetAllGamesRequestModel, PutGameRequestModel,
-    PutGameInteractor, DeleteGameInteractor,
+    PutGameInteractor, DeleteGameInteractor, UpdateEntityException,
     DeleteGameRequestModel, UpdateGameException)
 from chalicelib.chalice_support import (
         success, not_found,
@@ -86,10 +86,11 @@ def post(json_data):
 def put(json_data):
     request = PutGameRequestModel(json_data)
     interactor = PutGameInteractor(request, get_adapter(), Console)
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found("Game não atualizado")
+    try:
+        response = interactor.run()
+    except UpdateEntityException as ex:
+        return server_error(str(ex))
+    return success(response)
 
 
 def delete(entity_id):
@@ -99,54 +100,3 @@ def delete(entity_id):
     if not response:
         return not_found('Game não encontrado')
     return success(response)
-
-
-#     def make_post_request(self, data):
-#         return PostGameRequestModel(
-#             name=data['name'],
-#             logo_path=data['logo_path'],
-#             consoles=data['consoles'])
-#
-#     def get_all_interactor(self):
-#         return GetAllGamesInteractor
-#
-#     def not_found_message(self):
-#         return "Jogo não encontrado"
-#
-#     def not_found_all_message(self):
-#         return "Nenhum jogo encontrado"
-#
-#     def get_request_model(self):
-#         return GetGameRequestModel
-#
-#     def get_interactor(self):
-#         return GetGameInteractor
-#
-#     def save_exception(self):
-#         return SaveGameException
-#
-#     def post_interactor(self):
-#         return PostGameInteractor
-#
-#     def make_put_request(self, data):
-#         return PutGameRequestModel(
-#             entity_id=data['entity_id'],
-#             name=data['name'],
-#             logo_path=data['logo_path'],
-#             consoles=data['consoles']
-#         )
-#
-#     def update_exception(self):
-#         return UpdateGameException
-#
-#     def put_interactor(self):
-#         return PutGameInteractor
-#
-#     def delete_request_model(self):
-#         return DeleteGameRequestModel
-#
-#     def delete_interactor(self):
-#         return DeleteGameInteractor
-#
-#     def delete_not_found(self):
-#         return 'Game não encontrado para deletar'

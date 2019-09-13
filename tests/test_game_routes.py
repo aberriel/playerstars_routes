@@ -100,54 +100,54 @@ def test_post_console_raises(client, resource):
     assert result.status_code == 500
 
 
-# def make_put_mock_data():
-#     payload = """{
-#     "entity_id": "id1",
-#     "name": "Sonic",
-#     "logo_path": "images/sonic.jpg",
-#     "consoles": [{
-#                 "entity_id": "5",
-#                 "name": "Super Nintendo",
-#                 "logo_path": "/images/ss.png",
-#                 "tag_name": "nick#1"
-#                 },{
-#                 "entity_id": "4",
-#                 "name": "Atari",
-#                 "logo_path": "/images/aa.png",
-#                 "tag_name": "nick#2"
-#                 }]
-#     }"""
-#     data = json.loads(payload)
-#     return MagicMock(current_request=MagicMock(json_body=data))
-#
-#
-# # noinspection PyUnusedLocal
-# @patch('chalicelib.game_route.bp_game', make_put_mock_data())
-# @patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
-# @patch('boto3.resource')
-# @patch('boto3.client')
-# def test_put_console(client, resource, mock):
-#     result = put_game('id1')
-#
-#     mock.assert_called_once()
-#     assert result.body['data']
-#     assert result.body['status'] == 'success'
-#     assert result.status_code == 200
-#
-#
-# # noinspection PyUnusedLocal
-# @patch('chalicelib.game_route.bp_game', make_put_mock_data())
-# @patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
-#        MagicMock(side_effect=UpdateEntityException('oops')))
-# @patch('boto3.resource')
-# @patch('boto3.client')
-# def test_put_console_raises(client, resource):
-#     result = put_game('id1')
-#
-#     assert result.body['message'] == 'oops'
-#     assert result.body['status'] == 'error'
-#     assert result.status_code == 500
-#
+def make_put_mock_data():
+    payload = """{
+    "entity_id": "id1",
+    "name": "Sonic",
+    "logo_path": "images/sonic.jpg",
+    "consoles": [{
+        "entity_id": "5",
+        "name": "Super Nintendo",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1"
+        },{
+        "entity_id": "4",
+        "name": "Atari",
+        "logo_path": "/images/aa.png",
+        "tag_name": "nick#2"
+        }]
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(json_body=data))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.game_route.bp_game', make_put_mock_data())
+@patch('chalicelib.game_route.PutGameInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console(client, resource, mock):
+    result = put_game('id1')
+
+    mock.assert_called_once()
+    assert result.body['data']
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.game_route.bp_game', make_put_mock_data())
+@patch('chalicelib.game_route.PutGameInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console_raises(client, resource):
+    result = put_game('id1')
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.game_route.DeleteGameInteractor.run')

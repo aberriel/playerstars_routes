@@ -56,7 +56,7 @@ local:
 	DYNAMODB_URL="http://localhost:8000" chalice local --port 8002
 
 tests:
-	python3 -m pytest -s -v --cov=tests --cov=playerstars_routes -W ignore::DeprecationWarning --cov-report term-missing:skip-covered
+	python3 -m pytest -s -v --cov=tests --cov=chalicelib -W ignore::DeprecationWarning --cov-report term-missing:skip-covered
 	@echo "Linting..."
 	@flake8 playerstars_routes/ --max-complexity=5
 	@flake8 tests/ --ignore=S101,S311,F811
