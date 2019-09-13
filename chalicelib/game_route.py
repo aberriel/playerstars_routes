@@ -43,12 +43,10 @@ def post_game():
 
 
 @bp_game.route(
-    '/game/{entity_id}', **private_put())
+    '/{entity_id}', **private_put())
 def put_game(entity_id):
-    from app import app
-    data = app.current_request.json_body
-    pass
-    # return GameChaliceRoute().put(data)
+    data = bp_game.current_request.json_body
+    return put(data)
 
 
 @bp_game.route(
@@ -83,6 +81,15 @@ def post(json_data):
     except SaveEntityException as e:
         return server_error(str(e))
     return created(response)
+
+
+def put(json_data):
+    request = PutGameRequestModel(json_data)
+    interactor = PutGameInteractor(request, get_adapter(), Console)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found("Game não atualizado")
 
 
 def delete(entity_id):
