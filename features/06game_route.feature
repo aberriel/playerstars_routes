@@ -176,3 +176,28 @@ Feature: Game integrations tests
         }
         """
         Then I delete the test game entry
+
+    Scenario: Deleting a game in database
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Console
+        Given I save a new entry to the database with json body
+        """
+        {
+          "name": "XBOX",
+          "games": [{
+
+              "entity_id": "1e9ec",
+              "name": "NOME_ALTERADO",
+              "logo_path": "images/sonic.jpg"
+          }],
+          "entity_id": "403d8e91-8e4a-4833-bdf3-68aa105a99aa",
+          "logo_path": "/images/xb.png",
+          "tag_name": "nick#12"
+        }
+        """
+        When delete request is made with id 1e9ec to /game
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then I delete the test game entry
+
+
