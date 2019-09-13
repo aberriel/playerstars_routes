@@ -219,7 +219,6 @@ def delete_game(context):
                 adapter.delete(console.entity_id)
 
 
-
 @then('The updated entry json has body')
 def check_updated_json(context):
     body = context.text
