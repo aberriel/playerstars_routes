@@ -219,12 +219,19 @@ def delete_game(context):
                 adapter.delete(console.entity_id)
 
 
-
 @then('The updated entry json has body')
 def check_updated_json(context):
     body = context.text
     context.json_body = json.loads(body)
     adapter = context.adapter(context.table_name, context.dynamo_url)
-
     response = adapter.get_by_id(context.item_id).to_json()
+    assert context.json_body == response
+
+
+@then('The updated game entry json has body')
+def check_updated_json(context):
+    body = context.text
+    context.json_body = json.loads(body)
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id[0]).to_json()
     assert context.json_body == response

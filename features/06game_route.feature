@@ -124,3 +124,55 @@ Feature: Game integrations tests
         ]
         """
         Then I delete the test game entry
+
+    Scenario: Updating a game in database
+        Given I set DYNAMODB_URL as http://localhost:8000
+        Given I set table name and the adapter class as Console
+        Given I save a new entry to the database with json body
+        """
+        {
+          "name": "XBOX",
+          "games": [{
+
+              "entity_id": "1e9ec",
+              "name": "SONIC",
+              "logo_path": "images/sonic.jpg"
+          }],
+          "entity_id": "403d8e91-8e4a-4833-bdf3-68aa105a99aa",
+          "logo_path": "/images/xb.png",
+          "tag_name": "nick#12"
+        }
+        """
+        Given The request has json body
+        """
+        {
+	        "entity_id": "1e9ec",
+            "name": "NOME_ALTERADO",
+            "logo_path": "images/sonic.jpg",
+	        "consoles":[{
+		        "name": "XBOX",
+		        "entity_id": "403d8e91-8e4a-4833-bdf3-68aa105a99aa",
+		        "logo_path": "/images/xb.png",
+		        "tag_name": "nick#12"
+	        }]
+        }
+        """
+        When put request is made with id 1e9ec to /game
+        Then The response should have status success
+        Then The response should have status_code 200
+        Then The updated game entry json has body
+        """
+        {
+          "name": "XBOX",
+          "games": [{
+
+              "entity_id": "1e9ec",
+              "name": "NOME_ALTERADO",
+              "logo_path": "images/sonic.jpg"
+          }],
+          "entity_id": "403d8e91-8e4a-4833-bdf3-68aa105a99aa",
+          "logo_path": "/images/xb.png",
+          "tag_name": "nick#12"
+        }
+        """
+        Then I delete the test game entry
