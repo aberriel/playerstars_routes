@@ -39,14 +39,14 @@ class UserNotAdminAuthorized(BaseException):
     pass
 
 
-def check_admin_authorization():
-
-    user_id = get_user_id_from_jwt()
-
-    request = BasicGetRequestModel(user_id)
-    interactor = BasicGetInteractor(request)
-    user = interactor.run()
-
-    if not user["is_admin"]:
-        msg = "Usuário não autorizado como admin"
-        raise UserNotAdminAuthorized(msg)
+# def check_admin_authorization(blueprint):
+#
+#     user_id = get_user_id_from_jwt(blueprint)
+#
+#     request = BasicGetRequestModel(user_id)
+#     interactor = BasicGetInteractor(request)
+#     user = interactor.run()
+#
+#     if not user["is_admin"]:
+#         msg = "Usuário não autorizado como admin"
+#         raise UserNotAdminAuthorized(msg)

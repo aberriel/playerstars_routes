@@ -1,9 +1,11 @@
 from app import app
 from behave import *
 import json
+from chalicelib.settings import Settings
 from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
                                   StateRegionAdapter, UserAdminAdapter,
                                   PlayerAdapter)
+from tests.test_utils import jwt
 
 
 class Object(object):
@@ -11,59 +13,56 @@ class Object(object):
 
 
 convert_string_to_adapter = {
-    'Console': ConsoleAdapter,
-    'RegionCountry': CountryRegionAdapter,
-    'RegionState': StateRegionAdapter,
-    'UserAdmin': UserAdminAdapter,
-    'Player': PlayerAdapter
+    'console': ConsoleAdapter,
+    'region_country': CountryRegionAdapter,
+    'region_state': StateRegionAdapter,
+    'user_admin': UserAdminAdapter,
+    'player': PlayerAdapter
 }
 
 
 def saved(context):
     found = False
-    for item in context.adapter().list_all():
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+
+    for item in adapter.list_all():
         if context.saved_entity_id == item.entity_id:
             found = True
     return True if found else False
 
 
-def deleted(context):
-    found = False
-    for item in context.adapter().list_all():
-        if context.deleted_id == item.entity_id:
-            found = True
-    return True if not found else False
-
-
 @given('I set table name and the adapter class as {table_name}')
 def json_body(context, table_name):
-    context.table_name = table_name
+    context.table_name = table_name.lower()
     context.adapter = convert_string_to_adapter[context.table_name]
-
-
-@given('The request has json body')
-def json_body(context):
-    body = context.text
-    context.json_body = json.loads(body)
 
 
 @given('I save a new entry to the database with json body')
 def save_new_entry(context):
     body = context.text
     context.json_body = json.loads(body)
+    adapter = context.adapter(context.table_name, context.dynamo_url)
 
-    context.saved_entity_id = context.adapter().save(context.json_body)
+    context.saved_entity_id = adapter.save(context.json_body)
     assert saved(context)
 
 
 @given('I emptied the database')
 def data_base_is_empty(context):
-    get_all_consoles = context.adapter().list_all
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+
+    get_all_consoles = adapter.list_all
     if get_all_consoles():
         for item in get_all_consoles():
-            context.adapter().delete(item.entity_id)
+            adapter.delete(item.entity_id)
     database_after_delete = get_all_consoles()
     assert database_after_delete == []
+
+
+@given('I set {env} as {value}')
+def set_env_var(context, env, value):
+    Settings.DYNAMODB_URL = str(value)
+    context.dynamo_url = Settings.DYNAMODB_URL
 
 
 @when('{method} request is made to {url}')
@@ -71,6 +70,7 @@ def json_request(context, method, url):
     if 'json_body' in context:
         app.current_request = Object()
         app.current_request.json_body = context.json_body
+        app.current_request.headers = dict(AUTHORIZATION=jwt)
 
     url_method = app.routes.get(url)[method.upper()]
     response = url_method.view_function()
@@ -90,11 +90,15 @@ def json_request_with_id(context, method, entity_id, url):
     if 'json_body' in context:
         app.current_request = Object()
         app.current_request.json_body = context.json_body
+        app.current_request.headers = dict(AUTHORIZATION=jwt)
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
     if method.upper() in ['GET']:
-        context.item_id = context.response.body['data']['entity_id']
+        if url == '/game/console' and isinstance(context.response.body['data'], list):
+            context.list_get_game = context.response.body['data']
+        else:
+            context.item_id = context.response.body['data']['entity_id']
     else:
         context.item_id = context.response.body['data']
     try:
@@ -113,12 +117,19 @@ def json_response_status_code(context, status_code):
     assert context.response.status_code == int(status_code)
 
 
+@given('The request has json body')
+def json_body(context):
+    body = context.text
+    context.json_body = json.loads(body)
+
+
 @then('The saved json has body')
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
 
-    response = context.adapter().get_by_id(context.item_id).to_json()
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id).to_json()
 
     del response['entity_id']
     for key, value in response.items():
@@ -135,7 +146,8 @@ def saved_jsons(context):
     body = context.text
     context.expected_json = json.loads(body)
     for item in context.item_id:
-        response = context.adapter().get_by_id(item).to_json()
+        adapter = context.adapter(context.table_name, context.dynamo_url)
+        response = adapter.get_by_id(item).to_json()
         del response['entity_id']
         for game in response['games']:
             del game['entity_id']
@@ -153,21 +165,73 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('RESPONSE: ', response_string_json)
+    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
+
+
+def deleted(context):
+    found = False
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+
+    if hasattr(context, 'list_deleted_id'):
+        list_all = [x.entity_id for x in adapter.list_all()]
+        for deleted_id in context.list_deleted_id:
+            if deleted_id in list_all:
+                found = True
+    else:
+        for item in adapter.list_all():
+            if context.deleted_id == item.entity_id:
+                found = True
+    return True if not found else False
 
 
 @then('I delete the test entry')
 def check_delete_test_entry(context):
+    adapter = context.adapter(context.table_name, context.dynamo_url)
     if hasattr(context, 'dict_list_get_all'):
-        for key in context.dict_list_get_all.keys():
-            context.deleted_id = context.adapter().delete(key)
-    context.deleted_id = context.adapter().delete(context.item_id)
-    assert deleted(context)
+        context.list_deleted_id = []
+        for dict in context.dict_list_get_all:
+            context.list_deleted_id.append(adapter.delete(dict['entity_id']))
+        assert deleted(context)
+    else:
+        context.deleted_id = adapter.delete(context.item_id)
+        assert deleted(context)
+    assert adapter.list_all() == []
+
+
+@then('I delete the test game entry')
+def delete_game(context):
+    adapter = context.adapter(context.table_name, context. dynamo_url)
+    if hasattr(context, 'list_get_game'):
+        print(context.list_get_game)
+        consoles = adapter.list_all()
+        for console in consoles:
+            adapter.delete(console.entity_id)
+    if hasattr(context, 'item_id') and isinstance(context.item_id, list):
+        for x in context.item_id:
+            adapter.delete(x)
+    else:
+        consoles = adapter.list_all()
+        for console in consoles:
+            games_id_list = [x.entity_id for x in console.games]
+            if context.item_id in games_id_list:
+                adapter.delete(console.entity_id)
 
 
 @then('The updated entry json has body')
 def check_updated_json(context):
     body = context.text
     context.json_body = json.loads(body)
-    response = context.adapter().get_by_id(context.item_id).to_json()
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id).to_json()
+    assert context.json_body == response
+
+
+@then('The updated game entry json has body')
+def check_updated_json(context):
+    body = context.text
+    context.json_body = json.loads(body)
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id[0]).to_json()
     assert context.json_body == response
