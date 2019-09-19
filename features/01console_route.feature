@@ -97,7 +97,7 @@ Feature: Console integrations tests
         """
         Then I delete the test entry
 
-        
+
     Scenario: Updating a console in database
         Given I set DYNAMODB_URL as http://localhost:8000
         Given I set table name and the adapter class as Console
