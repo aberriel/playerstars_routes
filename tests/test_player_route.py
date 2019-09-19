@@ -2,7 +2,8 @@ from playerstars_interactors import SaveEntityException
 from chalicelib.player_route import (
     get_all_player,
     get_player_by_id,
-    post_player
+    post_player,
+    get_my_profile
 )
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -81,6 +82,38 @@ def test_post_player_raises(client, resource):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def make_get_profile_request():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_get_profile_request())
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_profile(client, resource, run):
+    result = get_my_profile()
+
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_get_profile_request())
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_profile_raises(client, resource):
+    result = get_my_profile()
+    assert result.body['message'] == "Player não encontrado"
+    assert result.body['status'] == "error"
+    assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
