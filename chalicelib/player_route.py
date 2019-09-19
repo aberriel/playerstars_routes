@@ -11,6 +11,7 @@ from chalicelib.utils import get_user_id_from_jwt
 from playerstars_interactors import \
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException
 from chalicelib.chalice_support import server_error, created
+
 bp_player = Blueprint(__name__)
 
 
@@ -48,3 +49,9 @@ def post(json_data):
     except SaveEntityException as e:
         return server_error(str(e))
     return created(response)
+
+
+@bp_player.route('/get-my-profile', **private_get())
+def get_my_profile():
+    entity_id = get_user_id_from_jwt(bp_player)
+    return get_router().get_by_id(entity_id)
