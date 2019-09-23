@@ -10,7 +10,7 @@ bp_email = Blueprint(__name__)
 
 
 @bp_email.route('/send', **private_post())
-def post_player():
+def post_email():
     data = bp_email.current_request.json_body
     return post(data)
 
