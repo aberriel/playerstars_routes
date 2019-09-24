@@ -21,7 +21,6 @@ def make_post_mock_data():
 
 
 player = {
-    "player_status": "OFFLINE",
     "golden_star_balance": 0,
     "purchases": [
         {
