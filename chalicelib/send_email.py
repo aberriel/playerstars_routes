@@ -6,6 +6,8 @@ from playerstars_interactors.mail import (
     SendMailRequestModel, SendMailInteractor
 )
 from chalicelib.chalice_support import server_error, success
+from playerstars_adapters import PlayerAdapter
+from chalicelib.settings import Settings
 
 bp_email = Blueprint(__name__)
 
@@ -18,13 +20,10 @@ def post_email():
 
 
 def post(json_data, entity_id):
-    response = get_player_by_id(entity_id)
-    print(dir(response))
-    print(response)
-    if response.body['status'] == 'error':
-        raise BaseException('Player não encontrado')
-    request = SendMailRequestModel(json_data, response.body)
-    interactor = SendMailInteractor(request)
+    adapter = PlayerAdapter(
+        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    request = SendMailRequestModel(json_data, entity_id)
+    interactor = SendMailInteractor(request, adapter)
     try:
         response = interactor.run()
     except BaseException as e:
