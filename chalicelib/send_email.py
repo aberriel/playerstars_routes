@@ -1,6 +1,7 @@
 from chalice import Blueprint
 from chalicelib.chalice_support import (private_post)
-
+from chalicelib.utils import get_user_id_from_jwt
+from chalicelib.player_route import get_player_by_id
 from playerstars_interactors.mail import (
     SendMailRequestModel, SendMailInteractor
 )
@@ -16,7 +17,11 @@ def post_email():
 
 
 def post(json_data):
-    request = SendMailRequestModel(json_data)
+    entity_id = get_user_id_from_jwt(bp_email)
+    response = get_player_by_id(entity_id)
+    if response.body['status'] == 'error':
+        raise BaseException('Player não encontrado')
+    request = SendMailRequestModel(json_data, response.body)
     interactor = SendMailInteractor(request)
     try:
         response = interactor.run()
