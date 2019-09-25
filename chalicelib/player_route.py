@@ -2,7 +2,7 @@ from chalice import Blueprint
 from playerstars_adapters import PlayerAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
-    private_get, private_post)
+    private_get, private_post, private_delete)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
@@ -10,8 +10,8 @@ from chalicelib.utils import get_user_id_from_jwt
 
 from playerstars_interactors import (
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
-    GetAllFriendsInteractor, GetAllFriendsRequestModel, PostFriendsInteractor,
-    PostFriendsRequestModel, SaveFriendsException
+    GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
+    AlterFriendsRequestModel, SaveFriendsException
 )
 
 from chalicelib.chalice_support import (
@@ -98,13 +98,19 @@ def get_friends(entity_id):
 @bp_player.route('/{entity_id}/friends', **private_post())
 def post_friend_route(entity_id):
     data = bp_player.current_request.json_body
-    return post_friend(entity_id, data)
+    return alter_friend_list(entity_id, data, 'add')
 
 
-def post_friend(entity_id, data):
+@bp_player.route('/{entity_id}/friends', **private_delete())
+def delete_friend_route(entity_id):
+    data = bp_player.current_request.json_body
+    return alter_friend_list(entity_id, data, 'delete')
+
+
+def alter_friend_list(entity_id, data, option):
     adapter = get_adapter()
-    request = PostFriendsRequestModel(player_id=entity_id, list_entity_id=data['friends'])
-    interactor = PostFriendsInteractor(request, adapter, Player)
+    request = AlterFriendsRequestModel(player_id=entity_id, list_entity_id=data['friends'])
+    interactor = AlterFriendsInteractor(request, adapter, option)
     try:
         response = interactor.run()
     except SaveFriendsException as e:
