@@ -8,17 +8,29 @@ from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 
-from playerstars_interactors import \
-    BasicPostRequestModel, PostPlayerInteractor, SaveEntityException
-from chalicelib.chalice_support import server_error, created
+from playerstars_interactors import (
+    BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
+    GetAllFriendsInteractor, GetAllFriendsRequestModel, PostFriendsInteractor,
+    PostFriendsRequestModel, SaveFriendsException
+)
 
-bp_player = Blueprint(__name__)
+from chalicelib.chalice_support import (
+    server_error, created, success, not_found)
+
+bp_player = Blueprint(__name__
+)
+
 
 
 def get_router():
     adapter = PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
+
+
+def get_adapter():
+    return PlayerAdapter(
+        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @bp_player.route('/', **private_post())
@@ -40,8 +52,7 @@ def get_all_player():
 
 
 def post(json_data):
-    adapter = PlayerAdapter(
-        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = get_adapter()
     request = BasicPostRequestModel(json_data)
     interactor = PostPlayerInteractor(request, adapter, Player)
     try:
@@ -55,3 +66,47 @@ def post(json_data):
 def get_my_profile():
     entity_id = get_user_id_from_jwt(bp_player)
     return get_router().get_by_id(entity_id)
+
+# player/<Id>/friends
+# POST
+# GET
+# player/<Id>/friend/<id>
+# PUT
+# DELETE
+#
+#
+# Talvez um meio termo seria ter um:
+# /player/<id>/friends POST/PUT
+# Recebendo uma lista
+
+
+@bp_player.route('/{entity_id}/friends', **private_get())
+def get_friends_route(entity_id):
+    return get_friends(entity_id)
+
+
+def get_friends(entity_id):
+    adapter = get_adapter()
+    request = GetAllFriendsRequestModel(entity_id)
+    interactor = GetAllFriendsInteractor(request, adapter)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found(f'Favoritos não enontrados')
+
+
+@bp_player.route('/{entity_id}/friends', **private_post())
+def post_friend_route(entity_id):
+    data = bp_player.current_request.json_body
+    return post_friend(entity_id, data)
+
+
+def post_friend(entity_id, data):
+    adapter = get_adapter()
+    request = PostFriendsRequestModel(player_id=entity_id, list_entity_id=data['friends'])
+    interactor = PostFriendsInteractor(request, adapter, Player)
+    try:
+        response = interactor.run()
+    except SaveFriendsException as e:
+        return server_error(str(e))
+    return created(response)
