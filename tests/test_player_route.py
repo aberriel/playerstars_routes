@@ -1,9 +1,11 @@
-from playerstars_interactors import SaveEntityException
+from playerstars_interactors import SaveEntityException, SaveFriendsException
 from chalicelib.player_route import (
     get_all_player,
     get_player_by_id,
     post_player,
-    get_my_profile
+    get_my_profile,
+    get_friends_route,
+    post_friend_route
 )
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -222,3 +224,62 @@ def test_post_player_no_authorization_raises(client, resource, run):
     with pytest.raises(TokenNotFoundException) as excinfo:
         post_player()
     assert str(excinfo.value) == 'Token não encontrado no JWT'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.GetAllFriendsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_friends(client, resource, run):
+    result = get_friends_route('123123')
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.GetAllFriendsInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_friends_raises(client, resource):
+    result = get_friends_route('123123')
+
+    assert result.body['message'] == "Favoritos não enontrados"
+    assert result.body['status'] == "error"
+    assert result.status_code == 404
+
+
+def make_post_friends_mock_data():
+    json = {
+        "friends": ['gluglu', 'yeahyeah']
+    }
+    return MagicMock(current_request=MagicMock(
+        json_body=json, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.PostFriendsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_friends(client, resource, run):
+    result = post_friend_route('12132123')
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.PostFriendsInteractor.run',
+       MagicMock(side_effect=SaveFriendsException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_friends_raises(client, resource):
+    result = post_friend_route('123123')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
