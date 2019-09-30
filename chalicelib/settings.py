@@ -22,7 +22,7 @@ class Settings:
     PAGSEGURO_EMAIL = config('PAGSEGURO_EMAIL', 'wanderley@stormsec.com.br')
     PAGSEGURO_TOKEN = config('PAGSEGURO_TOKEN', 'A0ABD34C342A474C8CEB112430FCCBD8')
     PAGSEGURO_SANDBOX_TOKEN = config('PAGSEGURO_SANDBOX_TOKEN', '8D0B7247DE3B4F22ABBCCCE6AD802C19')
-    RETURN_URL = config('RETURN_URL', 'www.globo.com')
+    RETURN_URL = config('RETURN_URL', 'http://playerstars-dev.s3-website-us-east-1.amazonaws.com')
 
     # "PAGSEGURO_NOTIFICATION_URL": "https://t3hahl6qek.execute-api.us-east-1.amazonaws.com/api/pagseguro/notificacao",
     # "PAGSEGURO_NOTIFICATIONS_URL": "https://ws.{sandbox}pagseguro.uol.com.br/v3/transactions/notifications/{codigo}?{credenciais}",
