@@ -17,9 +17,7 @@ from playerstars_interactors import (
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
 
-bp_player = Blueprint(__name__
-)
-
+bp_player = Blueprint(__name__)
 
 
 def get_router():

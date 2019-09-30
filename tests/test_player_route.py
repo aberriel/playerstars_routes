@@ -291,7 +291,7 @@ def test_post_friends_raises(client, resource):
 @patch('chalicelib.player_route.AlterFriendsInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_friends(client, resource, run):
+def test_delete_friends(client, resource, run):
     result = delete_friend_route('12132123')
     run.assert_called_once()
 
