@@ -15,6 +15,7 @@ class Settings:
     TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team')
     USER_TABLE_NAME = config('USER_TABLE_NAME', 'user')
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin')
+    PRODUCT_TABLE_NAME = config('PRODUCT_TABLE_NAME', 'product')
     DYNAMODB_URL = config('DYNAMODB_URL', None)
     PAGSEGURO_RETURN_URL = config('PAGSEGURO_RETURN_URL', 'www.google.com.br')
     PURCHASE_OPERATION_TIMEOUT = config('PURCHASE_OPERATION_TIMEOUT', 20)
