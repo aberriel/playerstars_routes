@@ -12,6 +12,7 @@ from chalicelib.duel_route import (
     bp_match_list, bp_create_duel, bp_enter_duel)
 from chalicelib.send_email import bp_email
 from chalicelib.purchase_route import bp_purchase
+from chalicelib.product_route import bp_product
 
 app = Chalice(app_name='playerstars')
 
@@ -33,6 +34,7 @@ app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_email, url_prefix='/email')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
+app.register_blueprint(bp_product, url_prefix='/product')
 
 
 @app.route('/check', methods=['POST', 'GET'])

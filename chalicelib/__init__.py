@@ -55,7 +55,7 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin
 )
-from .product_route import get_all_product
+from .product_route import get_all_product, post_product
 
 __all__ = [
     'BasicEntityRoute',
@@ -93,5 +93,6 @@ __all__ = [
     'get_filter_param',
     'mount_get_request_model',
 
-    'get_all_product'
+    'get_all_product',
+    'post_product'
 ]
