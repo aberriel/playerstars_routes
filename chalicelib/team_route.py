@@ -1,5 +1,5 @@
 from chalice import Blueprint
-from playerstars_adapters import TeamAdapter
+from playerstars_adapters import TeamAdapter, PlayerAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType,
@@ -15,12 +15,16 @@ from chalicelib.chalice_support import \
 bp_team = Blueprint(__name__)
 
 
-def get_adapter():
+def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
+def get_player_adapter():
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 def get_router():
-    return BasicEntityRoute(get_adapter(), Team, 'team')
+    return BasicEntityRoute(get_team_adapter(), Team, 'team')
 
 
 @bp_team.route('/', **private_get())
@@ -45,9 +49,10 @@ def post_team():
 
 
 def post(data):
-    adapter = get_adapter()
+    team_adapter = get_team_adapter()
+    player_adapter = get_player_adapter()
     request = PostTeamRequestModel(**data)
-    interactor = PostTeamInteractor(request, adapter, Team)
+    interactor = PostTeamInteractor(request, player_adapter, team_adapter)
     try:
         response = interactor.run()
     except SaveEntityException as e:
@@ -64,7 +69,7 @@ def put_team(entity_id):
 def get_by_user(player_id):
     request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
                                         player_id=player_id)
-    interactor = GetTeamByUserInteractor(request, get_adapter())
+    interactor = GetTeamByUserInteractor(request, get_team_adapter())
     response = interactor.run()
     if response:
         return success(response)
