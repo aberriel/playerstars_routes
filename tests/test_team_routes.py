@@ -19,56 +19,9 @@ def make_post_mock_data():
         "name": "brazucas",
         "captain": "1235",
         "members": ["pl11"],
-        "consoles": [
-            {
-                "console_id": "11",
-                "name": "Xbox One",
-                "logo_path": "/images/xbox_one.jpg",
-                "tag_name": "nick#1",
-                "games": [
-                    {
-                        "game_id": "01",
-                        "name": "Need for Speed",
-                        "logo_path": "/images/nfs.jpg"
-                    },
-                    {
-                        "game_id": "02",
-                        "name": "Fifa 19",
-                        "logo_path": "/images/fifa19.jpg"
-                    }
-                ]
-            },
-            {
-                "console_id": "12",
-                "name": "Nintendo Switch",
-                "logo_path": "/images/n_switch.jpg",
-                "tag_name": "nick#2",
-                "games": [
-                    {
-                        "game_id": "01",
-                        "name": "Need for Speed",
-                        "logo_path": "/images/nfs.jpg"
-                    },
-                    {
-                        "game_id": "02",
-                        "name": "Fifa 19",
-                        "logo_path": "/images/fifa19.jpg"
-                    }
-                ]
-            }
-        ],
-        "games": [
-            {
-                "game_id": "01",
-                "name": "Need for Speed",
-                "logo_path": "/images/nfs.jpg"
-            },
-            {
-                "game_id": "02",
-                "name": "Fifa 19",
-                "logo_path": "/images/fifa19.jpg"
-            }
-        ]
+        "consoles": [],
+        "games": [],
+        "description": ""
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
@@ -207,7 +160,7 @@ def test_get_teams_by_user_not_found(client, resource):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.team_route.bp_team', make_post_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.team_route.PostTeamInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_team(client, resource, run):
@@ -219,7 +172,7 @@ def test_post_team(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.team_route.bp_team', make_post_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+@patch('chalicelib.team_route.PostTeamInteractor.run',
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')

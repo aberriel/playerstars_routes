@@ -2,13 +2,15 @@ from chalice import Blueprint
 from playerstars_adapters import TeamAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
-    GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType)
+    GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType,
+    PostTeamRequestModel, PostTeamInteractor, SaveEntityException)
 
 from chalicelib.chalice_support import (
     private_get, private_put, private_post)
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from chalicelib.chalice_support import success, not_found
+from chalicelib.chalice_support import \
+    success, not_found, created, server_error
 
 bp_team = Blueprint(__name__)
 
@@ -39,7 +41,18 @@ def get_all_teams_by_user(player_id):
 @bp_team.route('/', **private_post())
 def post_team():
     data = bp_team.current_request.json_body
-    return get_router().post(data)
+    return post(data)
+
+
+def post(data):
+    adapter = get_adapter()
+    request = PostTeamRequestModel(**data)
+    interactor = PostTeamInteractor(request, adapter, Team)
+    try:
+        response = interactor.run()
+    except SaveEntityException as e:
+        return server_error(str(e))
+    return created(response)
 
 
 @bp_team.route('/{entity_id}', **private_put())
