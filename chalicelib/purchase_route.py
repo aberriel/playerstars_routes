@@ -36,7 +36,11 @@ def post_purchase():
 def post(json_data):
     adapter = get_adapter()
     request = PostPurchaseRequestModel(json_data)
-    interactor = PostPurchaseInteractor(request, adapter, Settings)
+    interactor = PostPurchaseInteractor(
+        request=request,
+        player_id=json_data['entity_id'],
+        adapter_class=adapter,
+        settings=Settings)
     try:
         response = interactor.run()
     except PostPurchaseException as e:
