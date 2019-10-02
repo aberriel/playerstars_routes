@@ -11,7 +11,8 @@ def make_post_mock_data():
     payload = """{
         "price" : "999",
         "description": "Teste playerstar",
-        "product_id": "id123"
+        "product_id": "id123",
+        "star_value": 5
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
