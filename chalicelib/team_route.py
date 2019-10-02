@@ -3,7 +3,8 @@ from playerstars_adapters import TeamAdapter, PlayerAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType,
-    PostTeamRequestModel, PostTeamInteractor, SaveEntityException)
+    PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
+    PutTeamInteractor, PutTeamRequestModel, UpdateEntityException)
 
 from chalicelib.chalice_support import (
     private_get, private_put, private_post)
@@ -42,6 +43,16 @@ def get_all_teams_by_user(player_id):
     return get_by_user(player_id)
 
 
+def get_by_user(player_id):
+    request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
+                                        player_id=player_id)
+    interactor = GetTeamByUserInteractor(request, get_team_adapter())
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found('Não foram encontradas teams para esse player')
+
+
 @bp_team.route('/', **private_post())
 def post_team():
     data = bp_team.current_request.json_body
@@ -49,10 +60,9 @@ def post_team():
 
 
 def post(data):
-    team_adapter = get_team_adapter()
-    player_adapter = get_player_adapter()
     request = PostTeamRequestModel(**data)
-    interactor = PostTeamInteractor(request, player_adapter, team_adapter)
+    interactor = PostTeamInteractor(
+        request, get_player_adapter(), get_team_adapter())
     try:
         response = interactor.run()
     except SaveEntityException as e:
@@ -63,14 +73,15 @@ def post(data):
 @bp_team.route('/{entity_id}', **private_put())
 def put_team(entity_id):
     data = bp_team.current_request.json_body
-    return get_router().put(data)
+    return put(data)
 
 
-def get_by_user(player_id):
-    request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
-                                        player_id=player_id)
-    interactor = GetTeamByUserInteractor(request, get_team_adapter())
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found('Não foram encontradas teams para esse player')
+def put(data):
+    request = PutTeamRequestModel(**data)
+    interactor = PutTeamInteractor(
+        request, get_player_adapter(), get_team_adapter())
+    try:
+        response = interactor.run()
+    except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)

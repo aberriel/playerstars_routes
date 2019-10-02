@@ -185,7 +185,7 @@ def test_post_team_raises(client, resource):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
+@patch('chalicelib.team_route.PutTeamInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_team(client, resource, run):
@@ -198,7 +198,7 @@ def test_put_team(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
+@patch('chalicelib.team_route.PutTeamInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
