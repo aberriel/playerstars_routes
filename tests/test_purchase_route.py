@@ -12,7 +12,8 @@ def make_post_mock_data():
         "price" : "999",
         "description": "Teste playerstar",
         "product_id": "id123",
-        "star_value": 5
+        "star_value": 5,
+        "star_type": "gold"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(

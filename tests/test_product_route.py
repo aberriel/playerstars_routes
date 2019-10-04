@@ -4,7 +4,7 @@ from chalicelib import get_all_product, post_product
 import json
 
 
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.product_route.GetAllProductsInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_product(client, resource, run):
@@ -15,7 +15,7 @@ def test_get_all_product(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+@patch('chalicelib.product_route.GetAllProductsInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -30,7 +30,9 @@ def teste_get_all_product_not_found(client, resource):
 def make_post_mock_data():
     payload = """{
     "price": 1290,
-    "description": "Teste Playerstars"
+    "description": "Teste Playerstars",
+    "star_value": 200,
+    "star_type": "gold"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
