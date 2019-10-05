@@ -1,5 +1,3 @@
-"""Top-level package for PlayerStars Adapters."""
-
 from .basic_entity_route import BasicEntityRoute
 from .duel_route import (
     post_duel,
