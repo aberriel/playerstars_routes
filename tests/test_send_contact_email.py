@@ -1,7 +1,8 @@
-from unittest.mock import patch, MagicMock
-from chalicelib.send_email import post_email
-import json
+from chalicelib.send_contact_email import post_contact_email
 from tests.test_utils import jwt
+from unittest.mock import patch, MagicMock
+
+import json
 
 
 def make_post_mock_data():
@@ -10,6 +11,7 @@ def make_post_mock_data():
         "template": "teste",
         "sender": "teste@teste.com.br",
         "subject": "testinho",
+        "contact_message": "Mensagem de teste",
         "data": ""
     }"""
     data = json.loads(payload)
@@ -102,15 +104,15 @@ player = {
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.send_email.bp_email', make_post_mock_data())
-@patch('chalicelib.send_email.get_player_by_id',
+@patch('chalicelib.send_contact_email.bp_contact_email', make_post_mock_data())
+@patch('chalicelib.send_contact_email.get_player_by_id',
        MagicMock(body=dict(status='success', data=player),
                  status_code=200))
-@patch('chalicelib.send_email.SendMailInteractor.run')
+@patch('chalicelib.send_contact_email.SendContactMailInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_email(client, resource, run):
-    result = post_email()
+    result = post_contact_email()
 
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -118,17 +120,18 @@ def test_post_email(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.send_email.bp_email', make_post_mock_data())
-@patch('chalicelib.send_email.get_player_by_id',
+@patch('chalicelib.send_contact_email.bp_contact_email', make_post_mock_data())
+@patch('chalicelib.send_contact_email.get_player_by_id',
        MagicMock(body=dict(status='success', data=player),
                  status_code=200))
-@patch('chalicelib.send_email.SendMailInteractor.run',
+@patch('chalicelib.send_contact_email.SendContactMailInteractor.run',
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_email_raises(client, resource):
-    result = post_email()
+    result = post_contact_email()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+

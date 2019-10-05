@@ -1,10 +1,4 @@
-
-
 """Top-level package for PlayerStars Adapters."""
-
-__author__ = """Storm Development Ltda"""
-__email__ = 'playerstars@stormsec.com.br'
-__version__ = '0.1.0'
 
 from .basic_entity_route import BasicEntityRoute
 from .duel_route import (
@@ -37,6 +31,9 @@ from .region_state_route import (
     put_region_state
 )
 from .routes import root
+from .send_contact_email import post_contact_email
+from .send_invitation_email import post_invitation_email
+from .send_welcome_email import post_welcome_email
 from .star_transactions_route import (
     get_all_star_transactions,
     get_filter_param,
@@ -94,5 +91,9 @@ __all__ = [
     'mount_get_request_model',
 
     'get_all_product',
-    'post_product'
+    'post_product',
+
+    'post_contact_email',
+    'post_invitation_email',
+    'post_welcome_email'
 ]
