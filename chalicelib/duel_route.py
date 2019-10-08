@@ -24,10 +24,6 @@ def get_match_list(user_id):
     return get_router_match_list().get_by_id(user_id)
 
 
-def get_router_duel():
-    return BasicEntityRoute(get_duel_adapter(), Duel, 'duel')
-
-
 def get_player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 

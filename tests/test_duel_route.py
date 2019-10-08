@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 from chalicelib import get_match_list, post_duel, enter_duel
-from playerstars_interactors import SaveEntityException, CreateDuelException
+from playerstars_interactors import EnterDuelException, CreateDuelException
 
 
 # noinspection PyUnusedLocal
@@ -30,7 +30,18 @@ def test_get_match_list_not_found(client, resource):
 
 def make_post_mock_data():
     payload = """{
-    "player_id": "userid#123"
+    "player_id": "userid#123",
+    "console": {
+        "name": "Super Nintendo",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1",
+        "games" : []
+        },
+    "game":{
+        "name": "Sonic",
+        "logo_path": "images/sonic.jpg",
+        "consoles": []
+        }
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
@@ -73,26 +84,35 @@ def make_enter_duel_mock_data():
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.EnterDuelInteractor._recover_duel',
+       return_value=MagicMock())
+@patch('chalicelib.duel_route.EnterDuelInteractor._recover_player',
+       return_value=MagicMock())
 @patch('chalicelib.duel_route.bp_enter_duel',
        make_enter_duel_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.duel_route.EnterDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_enter_duel(client, resource, run):
+def test_enter_duel(client, resource, run, player, duel):
     result = enter_duel()
 
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 201
+    assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.duel_route.bp_enter_duel', make_post_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
-       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('chalicelib.duel_route.EnterDuelInteractor._recover_duel',
+       return_value=MagicMock())
+@patch('chalicelib.duel_route.EnterDuelInteractor._recover_player',
+       return_value=MagicMock())
+@patch('chalicelib.duel_route.bp_enter_duel',
+       make_enter_duel_mock_data())
+@patch('chalicelib.duel_route.EnterDuelInteractor.run',
+       MagicMock(side_effect=EnterDuelException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_enter_duel_raises(client, resource):
+def test_enter_duel_raises(client, resource, player, duel):
     result = enter_duel()
 
     assert result.body['message'] == 'oops'
