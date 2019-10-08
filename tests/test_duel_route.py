@@ -41,7 +41,9 @@ def make_post_mock_data():
         "name": "Sonic",
         "logo_path": "images/sonic.jpg",
         "consoles": []
-        }
+        },
+    "maximum_time": "00:50:00",
+    "minimum_time": "00:10:00"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
