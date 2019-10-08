@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 from chalicelib import get_match_list, post_duel, enter_duel
-from playerstars_interactors import SaveEntityException
+from playerstars_interactors import SaveEntityException, CreateDuelException
 
 
 # noinspection PyUnusedLocal
@@ -38,7 +38,7 @@ def make_post_mock_data():
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_create_duel', make_post_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('chalicelib.duel_route.CreateDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_create_duel(client, resourcem, run):
@@ -51,8 +51,8 @@ def test_create_duel(client, resourcem, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_create_duel', make_post_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
-       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('chalicelib.duel_route.CreateDuelInteractor.run',
+       MagicMock(side_effect=CreateDuelException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_create_duel_raises(client, resource):
