@@ -36,7 +36,7 @@ app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
-app.register_blueprint(bp_welcome_email, url_prefix='welcome-email')
+app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
 app.register_blueprint(bp_product, url_prefix='/product')
 
