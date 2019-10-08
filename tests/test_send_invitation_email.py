@@ -1,7 +1,8 @@
-from unittest.mock import patch, MagicMock
-from chalicelib.send_email import post_email
-import json
+from chalicelib.send_invitation_email import post_invitation_email
 from tests.test_utils import jwt
+from unittest.mock import patch, MagicMock
+
+import json
 
 
 def make_post_mock_data():
@@ -102,15 +103,16 @@ player = {
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.send_email.bp_email', make_post_mock_data())
-@patch('chalicelib.send_email.get_player_by_id',
+@patch('chalicelib.send_invitation_email.bp_invitation_email',
+       make_post_mock_data())
+@patch('chalicelib.send_invitation_email.get_player_by_id',
        MagicMock(body=dict(status='success', data=player),
                  status_code=200))
-@patch('chalicelib.send_email.SendMailInteractor.run')
+@patch('chalicelib.send_invitation_email.SendInvitationMailInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_email(client, resource, run):
-    result = post_email()
+    result = post_invitation_email()
 
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -118,16 +120,17 @@ def test_post_email(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.send_email.bp_email', make_post_mock_data())
-@patch('chalicelib.send_email.get_player_by_id',
+@patch('chalicelib.send_invitation_email.bp_invitation_email',
+       make_post_mock_data())
+@patch('chalicelib.send_invitation_email.get_player_by_id',
        MagicMock(body=dict(status='success', data=player),
                  status_code=200))
-@patch('chalicelib.send_email.SendMailInteractor.run',
+@patch('chalicelib.send_invitation_email.SendInvitationMailInteractor.run',
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_email_raises(client, resource):
-    result = post_email()
+    result = post_invitation_email()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'

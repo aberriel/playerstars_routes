@@ -1,12 +1,11 @@
 from abc import abstractmethod
-
 from chalice import Blueprint
+
 
 root = Blueprint(__name__)
 
 
 class BasicChaliceRoute:
-
     @abstractmethod
     def make_post_request(self, data):
         raise NotImplementedError('Não foi implementado')
