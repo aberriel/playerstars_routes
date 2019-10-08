@@ -11,43 +11,67 @@ Player Stars
 # ROTA: "/player/"
 
 #### Request Model:
-   {
-	"user": {
-		"name": "Anselmo Lira",
-		"email": "playerstars@playerstars.com.br",
-		"birth_date": "16/12/1986",
-		"street": "Rua José de Figueiredo",
-		"street_number": "192",
-		"street_complement": "Blocos 29, 30",
-		"neighborhood": "Barra da Tijuca",
-		"city": "Rio de Janeiro",
-		"state": "Rio de Janeiro",
-		"country": "Brasil",
-		"postal_code": "22333-000",
-		"phone_number": "(21) 99663-6963",
-		"cpf": "123.456.789-00",
-		"nickname": "anselmo.lira",
-		"profile_image": "ACCBB4762CF23AA35690CC"
-	},
-	"favorites": [],
-	"blue_star_balance": 123,
-	"golden_star_balance": 4321,
+    {
+	"points": 200,
+	"blue_star_balance": 15,
 	"consoles": [{
-			"entity_id": "1",
-			"name": "PS 4",
-			"logo_path": "/images/ps4.png",
-			"tag_name": "007"
-		},
-		{
-			"entity_id": "11",
-			"name": "Xbox",
-			"logo_path": "/images/xbox.png",
-			"tag_name": "mario",
-			"games": []
+		"entity_id": "1",
+		"logo_path": "/images/ss.png",
+		"name": "Playstation 4",
+		"sync": true,
+		"tag_name": "Leoplay4"
+	}],
+	"countries_regions": [{
+        "name": "NA",
+        "minimum_bet" : 1234,
+        "countries":["EUA", "Mexico", "Canada"],
+        "entity_id":"id123"
+     }],
+	"states_regions": [{
+        "name": "Sudeste",
+        "minimum_bet" : 123,
+        "states":["RJ", "MG", "SP"],
+        "entity_id":"id123"
+     }],
+	"favorites": ["ght232141-3a12-5t67-19ehdufasuu"],
+	"golden_star_balance": 0,
+	"star_transactions": [{
+		"value": 2, 
+		"operation_date": "2019-08-21T13:11:07+00:00", 
+		"coin_type": "GOLDEN_STAR", 
+		"operation_type": "DEBIT", 
+		"source": "DUEL", 
+		"source_id": "68dc45c5-43eb-4351-bead-4319aba7af85"
+	}],
+	"purchases": [{
+		"value": "1050", 
+		"star_value": "3", 
+		"purchase_type": "GOLDEN_STAR_PURCHASE", 
+		"purchase_datetime": "2017-11-21T09:58:00+00:00", 
+		"payment": {
+			"code": "schrubles123", 
+			"payment_datetime": "2017-11-22T09:58:00+00:00",
+			"payment_type": "PAGSEGURO",
+			"transactions": []
 		}
-	],
-	"states_regions": [],
-	"countries_regions": []
+		}],
+	"user": {
+		"city": "Rio de Janeiro",
+		"country": "Brasil",
+		"cpf": "09022715043",
+		"date_birth": "13/09/2019",
+		"email": "wapilejig@mail-guru.net",
+		"name": "Dada",
+		"neighborhood": "Guaratiba",
+		"nickname": "leobarnaud",
+		"phone_number": "11111111111",
+		"postal_code": "23575275",
+		"profile_image": "",
+		"state": "RJ",
+		"street": "Rua pablin",
+		"street_complement": "Quadra 3",
+		"street_number": "2"
+	}
 }
     
 
@@ -70,52 +94,88 @@ Player Stars
 ====================
 ## Status Code : 200
 ====================
-
     {
-         "status": "success",
-         "data": {
-
-            "entity_id": "id0001",
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "user": {
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
-            },
-            "countries_regions": [],
-            "games": [],
-            "player_status": "PlayerStatus.OFFLINE",
+        "status": "success",
+        "data": {
+            "states_regions": [
+                {
+                    "name": "Sudeste",
+                    "minimum_bet": 123,
+                    "states": [
+                        "RJ",
+                        "MG",
+                        "SP"
+                    ],
+                    "entity_id": "id123"
+                }
+            ],
+            "countries_regions": [
+                {
+                    "name": "NA",
+                    "minimum_bet": 1234,
+                    "countries": [
+                        "EUA",
+                        "Mexico",
+                        "Canada"
+                    ],
+                    "entity_id": "id123"
+                }
+            ],
+            "points": 200,
+            "star_transactions": [
+                {
+                    "operation_date": "2019-08-21T13:11:07+00:00",
+                    "source": "DUEL",
+                    "coin_type": "GOLDEN_STAR",
+                    "operation_type": "DEBIT",
+                    "source_id": "68dc45c5-43eb-4351-bead-4319aba7af85",
+                    "value": 2
+                }
+            ],
+            "entity_id": "acbf5816-3a14-4bf1-a0d3-19efda0151d0",
+            "golden_star_balance": 0,
             "consoles": [
                 {
+                    "games": [],
                     "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
+                    "name": "Playstation 4",
+                    "logo_path": "/images/ss.png",
+                    "tag_name": "Leoplay4"
+                }
+            ],
+            "favorites": [
+                "ght232141-3a12-5t67-19ehdufasuu"
+            ],
+            "user": {
+                "email": "wapilejig@mail-guru.net",
+                "nickname": "leobarnaud",
+                "postal_code": "23575275",
+                "address": "Rua pablin 2, Quadra 3 - Guaratiba",
+                "country": "Brasil",
+                "cpf": "09022715043",
+                "name": "Dada",
+                "city": "Rio de Janeiro",
+                "phone_number": "11111111111",
+                "state": "RJ",
+                "date_birth": "2019-09-13",
+                "profile_image": null
+            },
+            "blue_star_balance": 15,
+            "player_status": "OFFLINE",
+            "purchases": [
                 {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
+                    "star_value": 3,
+                    "purchase_datetime": "2017-11-21T09:58:00+00:00",
+                    "payment": {
+                        "code": "schrubles123",
+                        "payment_type": "PAGSEGURO",
+                        "payment_datetime": "2017-11-22T09:58:00+00:00"
+                    },
+                    "purchase_type": "GOLDEN_STAR_PURCHASE",
+                    "value": 1050
                 }
             ]
-         
-         }
+        }
     }
 
 ## GET All 
@@ -127,50 +187,89 @@ Player Stars
 ===================
 ## Status Code : 200
 ===================
+
+
     {
         "status": "success",
         "data": [{
-    
-            "entity_id": "id0001",
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "user": {
-                "group": "player",
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
-            },
-            "countries_regions": [],
-            "games": [],
-            "player_status": "PlayerStatus.OFFLINE",
-            "consoles": [{
-                    "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
+            "states_regions": [
                 {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
+                    "name": "Sudeste",
+                    "minimum_bet": 123,
+                    "states": [
+                        "RJ",
+                        "MG",
+                        "SP"
+                    ],
+                    "entity_id": "id123"
+                }
+            ],
+            "countries_regions": [
+                {
+                    "name": "NA",
+                    "minimum_bet": 1234,
+                    "countries": [
+                        "EUA",
+                        "Mexico",
+                        "Canada"
+                    ],
+                    "entity_id": "id123"
+                }
+            ],
+            "points": 200,
+            "star_transactions": [
+                {
+                    "operation_date": "2019-08-21T13:11:07+00:00",
+                    "source": "DUEL",
+                    "coin_type": "GOLDEN_STAR",
+                    "operation_type": "DEBIT",
+                    "source_id": "68dc45c5-43eb-4351-bead-4319aba7af85",
+                    "value": 2
+                }
+            ],
+            "entity_id": "acbf5816-3a14-4bf1-a0d3-19efda0151d0",
+            "golden_star_balance": 0,
+            "consoles": [
+                {
+                    "games": [],
+                    "entity_id": "1",
+                    "name": "Playstation 4",
+                    "logo_path": "/images/ss.png",
+                    "tag_name": "Leoplay4"
+                }
+            ],
+            "favorites": [
+                "ght232141-3a12-5t67-19ehdufasuu"
+            ],
+            "user": {
+                "email": "wapilejig@mail-guru.net",
+                "nickname": "leobarnaud",
+                "postal_code": "23575275",
+                "address": "Rua pablin 2, Quadra 3 - Guaratiba",
+                "country": "Brasil",
+                "cpf": "09022715043",
+                "name": "Dada",
+                "city": "Rio de Janeiro",
+                "phone_number": "11111111111",
+                "state": "RJ",
+                "date_birth": "2019-09-13",
+                "profile_image": null
+            },
+            "blue_star_balance": 15,
+            "player_status": "OFFLINE",
+            "purchases": [
+                {
+                    "star_value": 3,
+                    "purchase_datetime": "2017-11-21T09:58:00+00:00",
+                    "payment": {
+                        "code": "schrubles123",
+                        "payment_type": "PAGSEGURO",
+                        "payment_datetime": "2017-11-22T09:58:00+00:00"
+                    },
+                    "purchase_type": "GOLDEN_STAR_PURCHASE",
+                    "value": 1050
                 }
             ]
-    
         }]
     }
 
@@ -185,6 +284,7 @@ Player Stars
 # ROTA: "/console/"
 
 #### Request Model:
+
     {
         "name": "Super Selminho",
         "logo_path": "/images/ss.png",
@@ -356,6 +456,7 @@ Player Stars
 ===================
 ## Status Code : 200
 ===================
+
     {
          "status": "success",
          "data":[{
@@ -407,6 +508,7 @@ Player Stars
 # ROTA: "/region-country/"
 
 #### Request Model:
+
     {
             "name": "Gold",
             "minimum_bet" : 1234,
@@ -466,6 +568,7 @@ Player Stars
 ===================
 ## Status Code : 200
 ===================
+
     {
          "status": "success",
          "data":[{
@@ -534,13 +637,13 @@ Player Stars
 
 #### Request Model:
     {
-            "name": "Gold",
-            "minimum_bet" : 1234,
-            "states":[
-                "RJ",
-                "ES",
-                "SP"
-                ]
+        "name": "Gold",
+        "minimum_bet" : 1234,
+        "states":[
+            "RJ",
+            "ES",
+            "SP"
+        ]
     }
     
 

@@ -1,24 +1,31 @@
 from chalice import Blueprint
-from playerstars_adapters import TeamAdapter
+from playerstars_adapters import TeamAdapter, PlayerAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
-    GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType)
+    GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType,
+    PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
+    PutTeamInteractor, PutTeamRequestModel, UpdateEntityException)
 
 from chalicelib.chalice_support import (
     private_get, private_put, private_post)
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from chalicelib.chalice_support import success, not_found
+from chalicelib.chalice_support import \
+    success, not_found, created, server_error
 
 bp_team = Blueprint(__name__)
 
 
-def get_adapter():
+def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
+def get_player_adapter():
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 def get_router():
-    return BasicEntityRoute(get_adapter(), Team, 'team')
+    return BasicEntityRoute(get_team_adapter(), Team, 'team')
 
 
 @bp_team.route('/', **private_get())
@@ -36,23 +43,45 @@ def get_all_teams_by_user(player_id):
     return get_by_user(player_id)
 
 
+def get_by_user(player_id):
+    request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
+                                        player_id=player_id)
+    interactor = GetTeamByUserInteractor(request, get_team_adapter())
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found('Não foram encontradas teams para esse player')
+
+
 @bp_team.route('/', **private_post())
 def post_team():
     data = bp_team.current_request.json_body
-    return get_router().post(data)
+    return post(data)
+
+
+def post(data):
+    request = PostTeamRequestModel(**data)
+    interactor = PostTeamInteractor(
+        request, get_player_adapter(), get_team_adapter())
+    try:
+        response = interactor.run()
+    except SaveEntityException as e:
+        return server_error(str(e))
+    return created(response)
 
 
 @bp_team.route('/{entity_id}', **private_put())
 def put_team(entity_id):
     data = bp_team.current_request.json_body
-    return get_router().put(data)
+    return put(data)
 
 
-def get_by_user(player_id):
-    request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
-                                        player_id=player_id)
-    interactor = GetTeamByUserInteractor(request, get_adapter())
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found('Não foram encontradas teams para esse player')
+def put(data):
+    request = PutTeamRequestModel(**data)
+    interactor = PutTeamInteractor(
+        request, get_player_adapter(), get_team_adapter())
+    try:
+        response = interactor.run()
+    except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)

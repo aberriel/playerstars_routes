@@ -1,11 +1,9 @@
-
-
-"""Top-level package for PlayerStars Adapters."""
-
-__author__ = """Storm Development Ltda"""
-__email__ = 'playerstars@stormsec.com.br'
-__version__ = '0.1.0'
-
+from .basic_entity_route import BasicEntityRoute
+from .duel_route import (
+    post_duel,
+    get_match_list,
+    enter_duel
+)
 from .game_route import (
     delete_game,
     get_all_games,
@@ -31,6 +29,9 @@ from .region_state_route import (
     put_region_state
 )
 from .routes import root
+from .send_contact_email import post_contact_email
+from .send_invitation_email import post_invitation_email
+from .send_welcome_email import post_welcome_email
 from .team_route import (
     get_all_teams,
     get_all_teams_by_user,
@@ -44,12 +45,7 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin
 )
-from .duel_route import (
-    post_duel,
-    get_match_list,
-    enter_duel
-)
-from .basic_entity_route import BasicEntityRoute
+from .product_route import get_all_product, post_product
 
 __all__ = [
     'BasicEntityRoute',
@@ -81,5 +77,12 @@ __all__ = [
     'put_team',
     'post_duel',
     'get_match_list',
-    'enter_duel'
+    'enter_duel',
+
+    'get_all_product',
+    'post_product',
+
+    'post_contact_email',
+    'post_invitation_email',
+    'post_welcome_email'
 ]
