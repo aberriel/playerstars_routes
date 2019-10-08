@@ -26,8 +26,8 @@ def get_adapter():
 
 @bp_game_by_console.route(
     '/{entity_id}', **private_get())
-def get_all_games(console_id):
-    return get_all_by_console_id(console_id)
+def get_all_games(entity_id):
+    return get_all_by_console_id(entity_id)
 
 
 @bp_game.route(
