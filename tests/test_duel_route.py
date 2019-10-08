@@ -1,6 +1,8 @@
 import json
 from unittest.mock import MagicMock, patch
-from chalicelib import get_match_list, post_duel, enter_duel
+from chalicelib import \
+    get_match_list, post_duel, enter_duel, \
+    get_all_player_duels, get_all_duel
 from playerstars_interactors import EnterDuelException, CreateDuelException
 
 
@@ -120,3 +122,51 @@ def test_enter_duel_raises(client, resource, player, duel):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_duel(client, resource, run):
+    result = get_all_player_duels('1')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_duel_not_found(client, resource):
+    result = get_all_player_duels('1')
+
+    assert result.body['message'] == \
+        'Nenhum duel não encontrado para o player'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_duel(client, resource, run):
+    result = get_all_duel()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def teste_get_all_duel(client, resource):
+    result = get_all_duel()
+
+    assert result.body['message'] == 'Nenhum duel encontrado'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404

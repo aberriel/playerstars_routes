@@ -5,14 +5,17 @@ from .basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 from playerstars_domain import Player, Duel
 from chalicelib.chalice_support import \
-    private_get, private_post, server_error, created, success
+    private_get, private_post, server_error, created, success, not_found
 from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
-    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel)
+    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
+    GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor)
+
 
 bp_match_list = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
 bp_enter_duel = Blueprint(__name__)
+bp_duel = Blueprint(__name__)
 
 
 def get_router_match_list():
@@ -69,3 +72,26 @@ def enter_duel_post(json_data):
     except EnterDuelException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_duel.route('/player/{entity_id}', **private_get())
+def get_all_player_duels(entity_id):
+    return get_player_duels(entity_id)
+
+
+def get_player_duels(player_id):
+    request = GetAllPlayerDuelRequestModel(player_id)
+    interactor = GetAllPlayerDuelInteractor(request, get_duel_adapter())
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found("Nenhum duel não encontrado para o player")
+
+
+def get_all_duel_router():
+    return BasicEntityRoute(get_duel_adapter(), Duel, 'duel')
+
+
+@bp_duel.route('/', **private_get())
+def get_all_duel():
+    return get_all_duel_router().get_all()
