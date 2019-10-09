@@ -45,7 +45,9 @@ def make_post_mock_data():
         "consoles": []
         },
     "maximum_time": "00:50:00",
-    "minimum_time": "00:10:00"
+    "minimum_time": "00:10:00",
+    "bet_size": 90,
+    "star_type" : "blue"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(json_body=data))
