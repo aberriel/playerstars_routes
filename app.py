@@ -9,7 +9,7 @@ from chalicelib.region_state_route import bp_region_state
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.team_route import bp_team
 from chalicelib.duel_route import (
-    bp_match_list, bp_create_duel, bp_enter_duel)
+    bp_match_list, bp_create_duel, bp_enter_duel, bp_duel)
 from chalicelib.send_contact_email import bp_contact_email
 from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
@@ -39,6 +39,7 @@ app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
 app.register_blueprint(bp_product, url_prefix='/product')
+app.register_blueprint(bp_duel, url_prefix='/duel')
 
 
 @app.route('/check', methods=['POST', 'GET'])

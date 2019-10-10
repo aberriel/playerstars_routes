@@ -2,7 +2,9 @@ from .basic_entity_route import BasicEntityRoute
 from .duel_route import (
     post_duel,
     get_match_list,
-    enter_duel
+    enter_duel,
+    get_all_player_duels,
+    get_all_duel
 )
 from .game_route import (
     delete_game,
@@ -75,9 +77,12 @@ __all__ = [
     'get_team_by_id',
     'post_team',
     'put_team',
+
     'post_duel',
     'get_match_list',
     'enter_duel',
+    'get_all_player_duels',
+    'get_all_duel',
 
     'get_all_product',
     'post_product',
