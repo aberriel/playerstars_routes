@@ -3,6 +3,7 @@ from decouple import config
 
 class Settings:
     LOG_LEVEL = config('LOG_LEVEL', 'DEBUG')
+    CONTACT_EMAIL_RECIPIENTS = config('CONTACT_EMAIL_RECIPIENTS', 'noreply@stormsec.com.br')
 
     CONSOLE_TABLE_NAME = config('CONSOLE_TABLE_NAME', 'console')
     DUEL_TABLE_NAME = config('DUEL_TABLE_NAME', 'duel')

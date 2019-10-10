@@ -17,6 +17,10 @@ from playerstars_interactors.send_mail import (
 bp_contact_email = Blueprint(__name__)
 
 
+def get_adapter():
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 @bp_contact_email.route('/send', **private_post())
 def post_contact_email():
     data = bp_contact_email.current_request.json_body
@@ -24,10 +28,9 @@ def post_contact_email():
     return post(data, entity_id)
 
 
-def post(json_data, entity_id):
-    adapter = PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
-    request = SendContactMailRequestModel(json_data, entity_id)
-    interactor = SendContactMailInteractor(request, adapter)
+def post(json_data, player_id):
+    request = SendContactMailRequestModel(json_data, player_id, Settings.CONTACT_EMAIL_RECIPIENTS)
+    interactor = SendContactMailInteractor(request, get_adapter())
     try:
         response = interactor.run()
     except BaseException as e:

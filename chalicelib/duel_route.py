@@ -10,6 +10,7 @@ from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
     GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor)
+from chalicelib.utils import get_user_id_from_jwt
 
 
 bp_match_list = Blueprint(__name__)
@@ -38,6 +39,8 @@ def get_duel_adapter():
 @bp_create_duel.route('/', **private_post())
 def post_duel():
     data = bp_create_duel.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_create_duel)
+    data.update({'player_id': entity_id})
     return create_duel(data)
 
 
