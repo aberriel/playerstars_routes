@@ -4,6 +4,7 @@ from chalicelib import \
     get_match_list, post_duel, enter_duel, \
     get_all_player_duels, get_all_duel
 from playerstars_interactors import EnterDuelException, CreateDuelException
+from tests.test_utils import jwt
 
 
 # noinspection PyUnusedLocal
@@ -32,7 +33,6 @@ def test_get_match_list_not_found(client, resource):
 
 def make_post_mock_data():
     payload = """{
-    "player_id": "userid#123",
     "console": {
         "name": "Super Nintendo",
         "logo_path": "/images/ss.png",
@@ -50,7 +50,8 @@ def make_post_mock_data():
     "star_type" : "blue"
     }"""
     data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(json_body=data))
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal
