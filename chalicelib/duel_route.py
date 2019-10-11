@@ -77,8 +77,9 @@ def enter_duel_post(json_data):
     return success(response)
 
 
-@bp_duel.route('/player/{entity_id}', **private_get())
-def get_all_player_duels(entity_id):
+@bp_duel.route('/get-my-duels', **private_get())
+def get_all_player_duels():
+    entity_id = get_user_id_from_jwt(bp_duel)
     return get_player_duels(entity_id)
 
 
