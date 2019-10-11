@@ -1,5 +1,5 @@
 from chalice import Blueprint
-from playerstars_adapters import PlayerAdapter
+from playerstars_adapters import PlayerAdapter, DuelAdapter, TeamAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete)
@@ -11,8 +11,8 @@ from chalicelib.utils import get_user_id_from_jwt
 from playerstars_interactors import (
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
     GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
-    AlterFriendsRequestModel, SaveFriendsException
-)
+    AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
+    GetProfileRequestModel)
 
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -63,7 +63,20 @@ def post(json_data):
 @bp_player.route('/get-my-profile', **private_get())
 def get_my_profile():
     entity_id = get_user_id_from_jwt(bp_player)
-    return get_router().get_by_id(entity_id)
+    return get_by_id(entity_id)
+
+
+def get_by_id(entity_id):
+    adapter = get_adapter()
+    duel_adapter = DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+    team_adapter = TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+    request = GetProfileRequestModel(entity_id)
+    interactor = GetProfileInteractor(
+        request, adapter, team_adapter, duel_adapter)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found(f'Player não encontrado')
 
 # player/<Id>/friends
 # POST
