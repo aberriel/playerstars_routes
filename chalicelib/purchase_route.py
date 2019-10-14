@@ -53,7 +53,7 @@ def post(json_data):
                    cors=cors)
 def post_notification():
     data = bp_purchase.current_request.raw_body
-    request = PostNotificationRequestModel(body)
+    request = PostNotificationRequestModel(data)
     interactor = PostNotificationInteractor(request)
     try:
         response = interactor.run()
