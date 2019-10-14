@@ -127,24 +127,31 @@ def test_enter_duel_raises(client, resource, player, duel):
     assert result.status_code == 500
 
 
+def make_get_profile_request():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
+
+
 # noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
 @patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_duel(client, resource, run):
-    result = get_all_player_duels('1')
+    result = get_all_player_duels()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
 @patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_duel_not_found(client, resource):
-    result = get_all_player_duels('1')
+    result = get_all_player_duels()
 
     assert result.body['message'] == \
         'Nenhum duel não encontrado para o player'

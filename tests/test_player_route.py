@@ -13,6 +13,7 @@ from unittest.mock import MagicMock, patch
 import json
 import pytest
 from chalicelib.utils import TokenNotFoundException
+from playerstars_adapters import PlayerAdapter
 
 
 def make_post_mock_data():
@@ -93,11 +94,12 @@ def make_get_profile_request():
 
 
 # noinspection PyUnusedLocal
+@patch.object(PlayerAdapter, 'get_by_id', return_value=MagicMock())
 @patch('chalicelib.player_route.bp_player', make_get_profile_request())
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.player_route.GetProfileInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_profile(client, resource, run):
+def test_get_profile(client, resource, run, get_by_id):
     result = get_my_profile()
 
     run.assert_called_once()
@@ -107,12 +109,13 @@ def test_get_profile(client, resource, run):
 
 
 # noinspection PyUnusedLocal
+@patch.object(PlayerAdapter, 'get_by_id', return_value=MagicMock())
 @patch('chalicelib.player_route.bp_player', make_get_profile_request())
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.player_route.GetProfileInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_profile_raises(client, resource):
+def test_get_profile_raises(client, resource, get_by_id):
     result = get_my_profile()
     assert result.body['message'] == "Player não encontrado"
     assert result.body['status'] == "error"
