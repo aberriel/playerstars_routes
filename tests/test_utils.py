@@ -14,7 +14,7 @@ class FakeDomain:
         self.adapter = adapter
 
     def to_json(self):
-        return self.Schema().dump(self)[0]
+        return self.Schema().dump(self)
 
     def save(self):
         my_id = self.adapter.save(self.to_json())

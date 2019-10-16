@@ -3,7 +3,7 @@ from playerstars_adapters import PlayerAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete)
-
+from chalicelib.chalice_support.auth import cors
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
@@ -11,7 +11,11 @@ from chalicelib.utils import get_user_id_from_jwt
 from playerstars_interactors import (
     PostPurchaseException,
     PostPurchaseInteractor,
-    PostPurchaseRequestModel
+    PostPurchaseRequestModel,
+
+    PostNotificationInteractor,
+    PostNotificationRequestModel,
+    PagSeguroException
 )
 
 from chalicelib.chalice_support import (
@@ -46,3 +50,18 @@ def post(json_data):
     except PostPurchaseException as e:
         return server_error(str(e))
     return created(response)
+
+
+@bp_purchase.route('/notification', methods=['POST'],
+                   content_types=['application/x-www-form-urlencoded'],
+                   cors=cors)
+def post_notification():
+    adapter = get_adapter()
+    data = bp_purchase.current_request.raw_body
+    request = PostNotificationRequestModel(data)
+    interactor = PostNotificationInteractor(request, Settings, adapter)
+    try:
+        response = interactor.run()
+    except PagSeguroException as e:
+        return server_error(str(e))
+    return success(response)

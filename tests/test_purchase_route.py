@@ -1,6 +1,6 @@
-from playerstars_interactors import PostPurchaseException
+from playerstars_interactors import PostPurchaseException, PagSeguroException
 from chalicelib.purchase_route import (
-    post_purchase
+    post_purchase, post_notification
 )
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -41,6 +41,37 @@ def test_post_purchase(client, resource, run):
 @patch('boto3.client')
 def test_post_purchase_raises(client, resource):
     result = post_purchase()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_post_noti_mock_data():
+    return MagicMock(current_request=MagicMock(
+        raw_body=b'notificationType=transaction&notificationCode=A2CDE'))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.purchase_route.bp_purchase', make_post_noti_mock_data())
+@patch('chalicelib.purchase_route.PostNotificationInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_notification(client, resource, run):
+    result = post_notification()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.purchase_route.bp_purchase', make_post_noti_mock_data())
+@patch('chalicelib.purchase_route.PostNotificationInteractor.run',
+       MagicMock(side_effect=PagSeguroException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_notification_raises(client, resource):
+    result = post_notification()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
