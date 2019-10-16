@@ -11,7 +11,11 @@ from chalicelib.utils import get_user_id_from_jwt
 from playerstars_interactors import (
     PostPurchaseException,
     PostPurchaseInteractor,
-    PostPurchaseRequestModel
+    PostPurchaseRequestModel,
+
+    PostNotificationInteractor,
+    PostNotificationRequestModel,
+    PagSeguroException
 )
 
 from chalicelib.chalice_support import (
@@ -52,11 +56,12 @@ def post(json_data):
                    content_types=['application/x-www-form-urlencoded'],
                    cors=cors)
 def post_notification():
+    adapter = get_adapter()
     data = bp_purchase.current_request.raw_body
     request = PostNotificationRequestModel(data)
-    interactor = PostNotificationInteractor(request)
+    interactor = PostNotificationInteractor(request, Settings, adapter)
     try:
         response = interactor.run()
-    except PagSeguroExeception as e:
+    except PagSeguroException as e:
         return server_error(str(e))
     return success(response)
