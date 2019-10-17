@@ -6,6 +6,7 @@ from chalicelib.chalice_support import (
 from chalicelib.chalice_support.auth import cors
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
+
 from chalicelib.utils import get_user_id_from_jwt
 
 from playerstars_interactors import (
