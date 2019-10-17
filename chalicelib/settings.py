@@ -28,8 +28,8 @@ class Settings:
     PAGSEGURO_TOKEN = config('PAGSEGURO_TOKEN', 'A0ABD34C342A474C8CEB112430FCCBD8')
     PAGSEGURO_SANDBOX_TOKEN = config('PAGSEGURO_SANDBOX_TOKEN', '8D0B7247DE3B4F22ABBCCCE6AD802C19')
     RETURN_URL = config('RETURN_URL', 'http://playerstars-dev.s3-website-us-east-1.amazonaws.com')
-    PAGSEGURO_NOTIFICATION_URL = config(
-        'PAGSEGURO_NOTIFICATION_URL',
+    PLAYERSTARS_NOTIFICATION_URL = config(
+        'PLAYERSTARS_NOTIFICATION_URL',
         'https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification')
     PAGSEGURO_UPDATE_NOTIFICATION_URL = config(
         "PAGSEGURO_UPDATE_NOTIFICATION_URL",

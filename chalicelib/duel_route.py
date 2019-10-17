@@ -9,7 +9,8 @@ from chalicelib.chalice_support import \
 from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
-    GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor)
+    GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
+    GetMatchListInteractor, GetMatchListRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -19,17 +20,23 @@ bp_enter_duel = Blueprint(__name__)
 bp_duel = Blueprint(__name__)
 
 
-def get_router_match_list():
-    return BasicEntityRoute(get_player_adapter(), Player, 'player')
-
-
-@bp_match_list.route('/{user_id}', **private_get())
-def get_match_list(user_id):
-    return get_router_match_list().get_by_id(user_id)
-
-
 def get_player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+@bp_match_list.route('/', **private_get())
+def get_match_list():
+    entity_id = get_user_id_from_jwt(bp_match_list)
+    return get_match_list_by_player(entity_id)
+
+
+def get_match_list_by_player(entity_id):
+    request = GetMatchListRequestModel(entity_id)
+    interactor = GetMatchListInteractor(request, get_player_adapter())
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found("Nenhum match encontrado para o player: " + entity_id)
 
 
 def get_duel_adapter():
