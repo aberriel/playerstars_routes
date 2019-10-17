@@ -8,10 +8,10 @@ from chalicelib.player_route import (
     post_friend_route,
     delete_friend_route
 )
-from tests.test_utils import jwt
-from unittest.mock import MagicMock, patch
 import json
 import pytest
+from tests.test_utils import jwt
+from unittest.mock import MagicMock, patch
 from chalicelib.utils import TokenNotFoundException
 from playerstars_adapters import PlayerAdapter
 
