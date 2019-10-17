@@ -9,6 +9,7 @@ from chalicelib.player_route import (
     delete_friend_route
 )
 import json
+
 import pytest
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
