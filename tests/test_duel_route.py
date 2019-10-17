@@ -7,26 +7,33 @@ from playerstars_interactors import EnterDuelException, CreateDuelException
 from tests.test_utils import jwt
 
 
+def make_get_match_list_mock():
+    return MagicMock(current_request=MagicMock(
+        json_body={}, headers=dict(AUTHORIZATION=jwt)))
+
+
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.duel_route.bp_match_list', make_get_match_list_mock())
+@patch('chalicelib.duel_route.GetMatchListInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_match_list(client, resource, run):
-    result = get_match_list('id1')
+    result = get_match_list()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.duel_route.bp_match_list', make_get_match_list_mock())
+@patch('chalicelib.duel_route.GetMatchListInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_match_list_not_found(client, resource):
-    result = get_match_list('id1')
+    result = get_match_list()
 
-    assert result.body['message'] == 'Player não encontrado'
+    assert 'Nenhum match encontrado para o player' in result.body['message']
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
