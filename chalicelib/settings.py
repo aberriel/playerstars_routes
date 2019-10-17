@@ -31,6 +31,9 @@ class Settings:
     PAGSEGURO_NOTIFICATION_URL = config(
         'PAGSEGURO_NOTIFICATION_URL',
         'https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification')
+    PAGSEGURO_UPDATE_NOTIFICATION_URL = config(
+        "PAGSEGURO_UPDATE_NOTIFICATION_URL",
+        "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}")
     # "PAGSEGURO_NOTIFICATION_URL": "https://t3hahl6qek.execute-api.us-east-1.amazonaws.com/api/pagseguro/notificacao",
     # "PAGSEGURO_NOTIFICATIONS_URL": "https://ws.{sandbox}pagseguro.uol.com.br/v3/transactions/notifications/{codigo}?{credenciais}",
     # "PAGSEGURO_TRANSACTION_URL": "https://ws.{sandbox}pagseguro.uol.com.br/v2/transactions"
