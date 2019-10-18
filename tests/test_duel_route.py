@@ -54,7 +54,8 @@ def make_post_mock_data():
     "maximum_time": "00:50:00",
     "minimum_time": "00:10:00",
     "bet_size": 90,
-    "star_type" : "blue"
+    "star_type" : "blue",
+    "challenged_id": "idahsiasia"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(

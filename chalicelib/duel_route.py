@@ -47,7 +47,7 @@ def get_duel_adapter():
 def post_duel():
     data = bp_create_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_create_duel)
-    data.update({'player_id': entity_id})
+    data.update({'challenger_id': entity_id})
     return create_duel(data)
 
 
