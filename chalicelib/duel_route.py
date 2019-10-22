@@ -110,7 +110,7 @@ def get_all_duel():
     return get_all_duel_router().get_all()
 
 
-@bp_duel.route('/get_my_duels/{status}', **private_get())
+@bp_duel.route('/get-my-duels/{status}', **private_get())
 def get_duels_by_status_route(status):
     entity_id = get_user_id_from_jwt(bp_duel)
     return get_duels_by_status(entity_id, status)
