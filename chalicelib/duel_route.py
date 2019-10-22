@@ -3,14 +3,16 @@ from chalice import Blueprint
 from playerstars_adapters import DuelAdapter, PlayerAdapter
 from .basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from playerstars_domain import Player, Duel
+from playerstars_domain import Duel
 from chalicelib.chalice_support import \
     private_get, private_post, server_error, created, success, not_found
 from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
     GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
-    GetMatchListInteractor, GetMatchListRequestModel)
+    GetMatchListInteractor, GetMatchListRequestModel,
+    GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
+    GetPlayerDuelByStatusError)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -96,7 +98,7 @@ def get_player_duels(player_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found("Nenhum duel não encontrado para o player")
+    return not_found(f"Nenhum duel encontrado para o player: {player_id}")
 
 
 def get_all_duel_router():
@@ -106,3 +108,23 @@ def get_all_duel_router():
 @bp_duel.route('/', **private_get())
 def get_all_duel():
     return get_all_duel_router().get_all()
+
+
+@bp_duel.route('/get_my_duels/{status}', **private_get())
+def get_duels_by_status_route(status):
+    entity_id = get_user_id_from_jwt(bp_duel)
+    return get_duels_by_status(entity_id, status)
+
+
+def get_duels_by_status(entity_id, status):
+    request = GetPlayerDuelByStatusRequestModel(entity_id, status)
+    interactor = GetPlayerDuelByStatusInteractor(request, get_duel_adapter())
+    try:
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(
+            f"Nenhum duelo com o status: {status} encontrado para"
+            f" o player: {entity_id}")
+    except GetPlayerDuelByStatusError as e:
+        return server_error(str(e))

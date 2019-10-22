@@ -2,8 +2,9 @@ import json
 from unittest.mock import MagicMock, patch
 from chalicelib import \
     get_match_list, post_duel, enter_duel, \
-    get_all_player_duels, get_all_duel
-from playerstars_interactors import EnterDuelException, CreateDuelException
+    get_all_player_duels, get_all_duel, get_duels_by_status_route
+from playerstars_interactors import \
+    EnterDuelException, CreateDuelException, GetPlayerDuelByStatusError
 from tests.test_utils import jwt
 
 
@@ -162,7 +163,8 @@ def test_get_all_player_duel_not_found(client, resource):
     result = get_all_player_duels()
 
     assert result.body['message'] == \
-        'Nenhum duel não encontrado para o player'
+        'Nenhum duel encontrado para o player: ' \
+        '8ad1635f-2263-4dda-879a-bd24b5d9732f'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -188,3 +190,45 @@ def teste_get_all_duel(client, resource):
     assert result.body['message'] == 'Nenhum duel encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
+@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_by_status(client, resource, run):
+    result = get_duels_by_status_route('lobby')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
+@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_by_status_not_found(client, resource):
+    result = get_duels_by_status_route('lobby')
+
+    assert result.body['message'] == \
+        "Nenhum duelo com o status: lobby encontrado para" \
+        " o player: 8ad1635f-2263-4dda-879a-bd24b5d9732f"
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
+@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run',
+       MagicMock(side_effect=GetPlayerDuelByStatusError('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_by_status_not_found_raises(client, resource):
+    result = get_duels_by_status_route('lobby')
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
