@@ -55,7 +55,7 @@ def post_duel():
 
 def create_duel(json_data):
     request = CreateDuelRequestModel(json_data)
-    
+
     interactor = CreateDuelInteractor(
         request=request,
         player_adapter=get_player_adapter(),
