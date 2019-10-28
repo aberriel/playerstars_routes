@@ -1,4 +1,5 @@
-from playerstars_interactors import SaveEntityException, SaveFriendsException
+from playerstars_interactors import \
+    SaveEntityException, SaveFriendsException, UpdateEntityException
 from chalicelib.player_route import (
     get_all_player,
     get_player_by_id,
@@ -6,7 +7,8 @@ from chalicelib.player_route import (
     get_my_profile,
     get_friends_route,
     post_friend_route,
-    delete_friend_route
+    delete_friend_route,
+    put_player
 )
 import json
 import pytest
@@ -83,6 +85,57 @@ def test_post_player(client, resource, run):
 @patch('boto3.client')
 def test_post_player_raises(client, resource):
     result = post_player()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_put_mock_data():
+    payload = """{
+        "user":{
+            "name": "Anselmo Lira",
+            "email": "playerstars@playerstars.com.br",
+            "birth_date": "16/12/1986",
+            "street": "Rua José de Figueiredo",
+            "street_number": "192",
+            "street_complement": "Blocos 29, 30",
+            "neighborhood": "Barra da Tijuca",
+            "city": "Rio de Janeiro",
+            "state": "Rio de Janeiro",
+            "country": "Brasil",
+            "postal_code": "22333-000",
+            "phone_number": "(21) 99663-6963",
+            "cpf": "123.456.789-00",
+            "nickname": "anselmo.lira",
+            "profile_image": "ACCBB4762CF23AA35690CC"
+        }
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_put_mock_data())
+@patch('chalicelib.player_route.UpdateProfileInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_player(client, resource, run):
+    result = put_player()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_put_mock_data())
+@patch('chalicelib.player_route.UpdateProfileInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_player_raises(client, resource):
+    result = put_player()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
