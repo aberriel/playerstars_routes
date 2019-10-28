@@ -2,7 +2,7 @@ from chalice import Blueprint
 from playerstars_adapters import PlayerAdapter, DuelAdapter, TeamAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
-    private_get, private_post, private_delete)
+    private_get, private_post, private_delete, private_put)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
@@ -12,7 +12,8 @@ from playerstars_interactors import (
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
     GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
     AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
-    GetProfileRequestModel)
+    GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
+    UpdateEntityException)
 
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -39,16 +40,6 @@ def post_player():
     return post(data)
 
 
-@bp_player.route('/{entity_id}', **private_get())
-def get_player_by_id(entity_id):
-    return get_router().get_by_id(entity_id)
-
-
-@bp_player.route('/', **private_get())
-def get_all_player():
-    return get_router().get_all()
-
-
 def post(json_data):
     adapter = get_adapter()
     request = BasicPostRequestModel(json_data)
@@ -58,6 +49,35 @@ def post(json_data):
     except SaveEntityException as e:
         return server_error(str(e))
     return created(response)
+
+
+@bp_player.route('/', **private_put())
+def put_player():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    data.update({'entity_id': entity_id})
+    return put(data)
+
+
+def put(json_data):
+    adapter = get_adapter()
+    request = UpdateProfileRequestModel(json_data)
+    interactor = UpdateProfileInteractor(request, adapter)
+    try:
+        response = interactor.run()
+    except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_player.route('/{entity_id}', **private_get())
+def get_player_by_id(entity_id):
+    return get_router().get_by_id(entity_id)
+
+
+@bp_player.route('/', **private_get())
+def get_all_player():
+    return get_router().get_all()
 
 
 @bp_player.route('/get-my-profile', **private_get())

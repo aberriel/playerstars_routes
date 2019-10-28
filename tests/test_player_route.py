@@ -1,4 +1,5 @@
-from playerstars_interactors import SaveEntityException, SaveFriendsException
+from playerstars_interactors import \
+    SaveEntityException, SaveFriendsException, UpdateEntityException
 from chalicelib.player_route import (
     get_all_player,
     get_player_by_id,
@@ -6,7 +7,8 @@ from chalicelib.player_route import (
     get_my_profile,
     get_friends_route,
     post_friend_route,
-    delete_friend_route
+    delete_friend_route,
+    put_player
 )
 import json
 import pytest
@@ -83,6 +85,32 @@ def test_post_player(client, resource, run):
 @patch('boto3.client')
 def test_post_player_raises(client, resource):
     result = post_player()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_mock_data())
+@patch('chalicelib.player_route.UpdateProfileInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_player(client, resource, run):
+    result = put_player()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_mock_data())
+@patch('chalicelib.player_route.UpdateProfileInteractor.run',
+       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_player_raises(client, resource):
+    result = put_player()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

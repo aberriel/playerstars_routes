@@ -18,6 +18,7 @@ from .player_route import (
     get_all_player,
     get_player_by_id,
     post_player,
+    put_player
 )
 from .region_country_route import (
     get_all_region_country,
