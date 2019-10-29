@@ -43,7 +43,7 @@ def post_player():
 def post(json_data):
     adapter = get_adapter()
     request = BasicPostRequestModel(json_data)
-    interactor = PostPlayerInteractor(request, adapter, Player)
+    interactor = PostPlayerInteractor(request, adapter, Player, Settings)
     try:
         response = interactor.run()
     except SaveEntityException as e:
@@ -62,7 +62,7 @@ def put_player():
 def put(json_data):
     adapter = get_adapter()
     request = UpdateProfileRequestModel(json_data)
-    interactor = UpdateProfileInteractor(request, adapter)
+    interactor = UpdateProfileInteractor(request, adapter, Settings)
     try:
         response = interactor.run()
     except UpdateEntityException as e:
