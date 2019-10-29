@@ -119,8 +119,8 @@
           "Effect": "Allow",
           "Action": "s3:*",
           "Resource": [
-            "arn:aws:s3:::bolao-abbr-images",
-            "arn:aws:s3:::bolao-abbr-images/*"
+            "arn:aws:s3:::playerstars-dev-photos",
+            "arn:aws:s3:::playerstars-dev-photos/*"
           ]
         }
     ]
