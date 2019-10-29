@@ -107,6 +107,21 @@
             "Resource": [
                 "arn:aws:logs:*:*:*"
             ]
+        },{
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListAllMyBuckets",
+            "s3:GetBucketLocation"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": "s3:*",
+          "Resource": [
+            "arn:aws:s3:::bolao-abbr-images",
+            "arn:aws:s3:::bolao-abbr-images/*"
+          ]
         }
     ]
 }
