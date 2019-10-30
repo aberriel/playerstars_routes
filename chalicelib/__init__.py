@@ -51,7 +51,8 @@ from .user_admin_route import (
 )
 from .product_route import get_all_product, post_product
 
-from .notification_route import post_app_notification
+from .notification_route import \
+    post_app_notification, get_app_notification
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -95,5 +96,6 @@ __all__ = [
     'post_invitation_email',
     'post_welcome_email',
 
-    'post_app_notification'
+    'post_app_notification',
+    'get_app_notification'
 ]
