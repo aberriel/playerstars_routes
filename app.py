@@ -15,6 +15,7 @@ from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
 from chalicelib.purchase_route import bp_purchase
 from chalicelib.product_route import bp_product
+from chalicelib.notification_route import bp_notification
 
 app = Chalice(app_name='playerstars')
 
@@ -40,6 +41,7 @@ app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
 app.register_blueprint(bp_product, url_prefix='/product')
 app.register_blueprint(bp_duel, url_prefix='/duel')
+app.register_blueprint(bp_notification, url_prefix='/notification')
 
 
 @app.route('/check', methods=['POST', 'GET'])
