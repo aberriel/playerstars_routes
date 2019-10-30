@@ -16,21 +16,6 @@ def get_notification_adapter():
     return NotificationAdapter(
         Settings.NOTIFICATION_TABLE_NAME, Settings.DYNAMODB_URL)
 
-#
-# def get_player_adapter():
-#     return NotificationAdapter(
-#         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
-#
-#
-# def get_duel_adapter():
-#     return NotificationAdapter(
-#         Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
-
-
-# def get_router():
-#     return BasicEntityRoute(
-#         get_notification_adapter(), Notification, 'notification')
-
 
 @bp_notification.route('/', **private_post())
 def post_app_notification():
