@@ -23,7 +23,7 @@ def get_notification_adapter():
 def post_app_notification():
     data = bp_notification.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_notification)
-    data.update({'entity_id': entity_id})
+    data.update({'player_id': entity_id})
     return post(data)
 
 
