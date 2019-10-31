@@ -2,7 +2,8 @@ from chalice import Chalice
 
 from chalicelib import root
 from chalicelib.championship_route import (
-    bp_accept_invitation
+    bp_accept_invitation,
+    bp_create_championship
 )
 from chalicelib.console_route import bp_console
 from chalicelib.duel_route import (
@@ -35,6 +36,7 @@ app.register_blueprint(bp_accept_invitation,
                        url_prefix='/championship/accept-invitation')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
+app.register_blueprint(bp_create_championship, url_prefix='/championship')
 app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
 app.register_blueprint(bp_duel, url_prefix='/duel')
 app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')

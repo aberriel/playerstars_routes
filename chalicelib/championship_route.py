@@ -16,11 +16,15 @@ from playerstars_interactors import (
     AcceptInvitationException,
     AcceptInvitationInteractor,
     AcceptInvitationRequestModel,
-    AcceptInvitationResponseModel
+
+    CreateChampionshipRequestModel,
+    CreateChampionshipInteractor,
+    CreateChampionshipException
 )
 
 
 bp_accept_invitation = Blueprint(__name__)
+bp_create_championship = Blueprint(__name__)
 
 
 def get_championship_adapter():
@@ -34,6 +38,31 @@ def get_player_adapter():
 
 def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+@bp_create_championship.route('/', **private_post())
+def post_create_championship():
+    data = bp_create_championship.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_create_championship)
+    data.update({'owner': entity_id})
+
+    player_adapter = get_player_adapter()
+    championship_adapter = get_championship_adapter()
+    team_adapter = get_team_adapter()
+
+    request = CreateChampionshipRequestModel(data)
+    interactor = CreateChampionshipInteractor(
+        request=request,
+        championship_adapter=championship_adapter,
+        player_adapter=player_adapter,
+        team_adapter=team_adapter
+    )
+
+    try:
+        response = interactor.run()
+    except CreateChampionshipException as exc:
+        return server_error(str(exc))
+    return success(response)
 
 
 @bp_accept_invitation.route('/', **private_post())
