@@ -1,6 +1,8 @@
 from playerstars_interactors import \
     SaveEntityException
-from chalicelib import post_app_notification, get_app_notification
+from chalicelib import (
+    post_app_notification, get_app_notification,
+    get_app_notification_by_status)
 import json
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -76,3 +78,19 @@ def test_get_app_notification_raises(client, resource, get_by_id):
     assert "Nenhuma notificação encontrada" in result.body['message']
     assert result.body['status'] == "error"
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch.object(NotificationAdapter, 'filter', return_value=MagicMock())
+@patch('chalicelib.notification_route.bp_notification',
+       make_get_app_notification_request())
+@patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_app_notification_by_status(client, resource, run, get_by_id):
+    result = get_app_notification_by_status('Closed')
+
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200

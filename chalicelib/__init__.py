@@ -19,7 +19,8 @@ from .game_route import (
 )
 from .notification_route import (
     get_app_notification,
-    post_app_notification
+    post_app_notification,
+    get_app_notification_by_status
 )
 from .player_route import (
     get_all_player,
@@ -105,5 +106,6 @@ __all__ = [
     'post_app_notification',
     'get_app_notification',
 
-    'post_accept_invitation'
+    'post_accept_invitation',
+    'get_app_notification_by_status'
 ]
