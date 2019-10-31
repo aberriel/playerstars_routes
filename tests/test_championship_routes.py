@@ -1,5 +1,5 @@
 from chalicelib import (
-    championship_route
+    post_accept_invitation
 )
 from playerstars_interactors import (
     AcceptInvitationException,
@@ -26,7 +26,7 @@ def make_accept_invitation_mock_data():
 def test_post_accept_invitation(boto_client,
                                 boto_resource,
                                 run):
-    result = accept_championship_invitation()
+    result = post_accept_invitation()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
@@ -39,7 +39,7 @@ def test_post_accept_invitation(boto_client,
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_accept_invitation_raises(client, resource):
-    result = accept_championship_invitation()
+    result = post_accept_invitation()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
