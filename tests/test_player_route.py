@@ -8,7 +8,8 @@ from chalicelib.player_route import (
     get_friends_route,
     post_friend_route,
     delete_friend_route,
-    put_player
+    put_player,
+    get_all_teams_from_player
 )
 import json
 import pytest
@@ -353,3 +354,17 @@ def test_delete_friends(client, resource, run):
 
     assert result.body['status'] == 'success'
     assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           json_body=json, headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_team_by_user(client, resource, run):
+    result = get_all_teams_from_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
