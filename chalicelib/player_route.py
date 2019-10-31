@@ -14,7 +14,7 @@ from playerstars_interactors import (
     AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
     GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
     UpdateEntityException)
-
+from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
 
@@ -147,3 +147,10 @@ def alter_friend_list(entity_id, data, option):
     except SaveFriendsException as e:
         return server_error(str(e))
     return created(response)
+
+
+@bp_player.route('/my-teams/', **private_get())
+def get_all_teams_from_player():
+    player_id = get_user_id_from_jwt(bp_player)
+    return get_by_user(player_id)
+
