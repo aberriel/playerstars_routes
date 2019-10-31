@@ -62,7 +62,7 @@ def post_team():
 def post(data):
     request = PostTeamRequestModel(**data)
     interactor = PostTeamInteractor(
-        request, get_player_adapter(), get_team_adapter())
+        request, get_player_adapter(), get_team_adapter(), Settings)
     try:
         response = interactor.run()
     except SaveEntityException as e:
@@ -79,7 +79,7 @@ def put_team(entity_id):
 def put(data):
     request = PutTeamRequestModel(**data)
     interactor = PutTeamInteractor(
-        request, get_player_adapter(), get_team_adapter())
+        request, get_player_adapter(), get_team_adapter(), Settings)
     try:
         response = interactor.run()
     except UpdateEntityException as e:

@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock, patch
 import json
-
 from playerstars_interactors import (
     SaveEntityException,
     UpdateEntityException
@@ -29,7 +28,7 @@ def make_post_mock_data():
 
 def make_put_mock_data():
     payload = """{
-        "team_id": "b1e9c0a7",
+        "entity_id": "b1e9c0a7",
         "name": "DoRio",
         "captain": "123",
         "members": ["pl11"],
