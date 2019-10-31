@@ -1,5 +1,5 @@
 from chalicelib import (
-    accept_championship_invitation
+    championship_route
 )
 from playerstars_interactors import (
     AcceptInvitationException,
