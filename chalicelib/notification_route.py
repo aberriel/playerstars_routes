@@ -41,15 +41,24 @@ def post(json_data):
 @bp_notification.route('/', **private_get())
 def get_app_notification():
     entity_id = get_user_id_from_jwt(bp_notification)
-    return get_by_user(entity_id)
+    return get_by_user_and_status(entity_id, None)
 
 
-def get_by_user(entity_id):
+@bp_notification.route('/{status}', **private_get())
+def get_app_notification_by_status(status):
+    entity_id = get_user_id_from_jwt(bp_notification)
+    return get_by_user_and_status(entity_id, status)
+
+
+def get_by_user_and_status(entity_id, status):
     adapter = get_notification_adapter()
-    request = GetAppNotificationByUserRequestModel(entity_id)
+    request = GetAppNotificationByUserRequestModel(entity_id, status)
     interactor = GetAppNotificationByUserInteractor(request, adapter)
     response = interactor.run()
     if response:
         return success(response)
     return not_found(f'Nenhuma notificação encontrada para o player id:'
                      f' {entity_id}')
+
+
+
