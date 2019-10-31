@@ -2,7 +2,10 @@ from chalicelib import (
     post_accept_invitation,
     post_create_championship
 )
-from playerstars_interactors import AcceptInvitationException
+from playerstars_interactors import (
+    AcceptInvitationException,
+    CreateChampionshipException
+)
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 
@@ -45,7 +48,7 @@ def make_create_championship_mock_data():
         "max_members": 4,
         "start_datetime": "2019-12-10T13:25:07+00:00"
     }"""
-    data = json.load(payload)
+    data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
         json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
@@ -91,10 +94,10 @@ def test_post_create_championship(boto_client,
     assert result.status_code == 200
 
 
-@patch('chalicelib.championship_route.bp_accept_invitation',
-       make_accept_invitation_mock_data())
-@patch('chalicelib.championship_route.AcceptInvitationInteractor.run',
-       MagicMock(side_effect=AcceptInvitationException('oops')))
+@patch('chalicelib.championship_route.bp_create_championship',
+       make_create_championship_mock_data())
+@patch('chalicelib.championship_route.CreateChampionshipInteractor.run',
+       MagicMock(side_effect=CreateChampionshipException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_create_championship_raises(boto_client,

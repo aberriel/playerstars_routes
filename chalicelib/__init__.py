@@ -1,6 +1,7 @@
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
-    post_accept_invitation
+    post_accept_invitation,
+    post_create_championship
 )
 from .duel_route import (
     post_duel,
@@ -105,5 +106,6 @@ __all__ = [
     'post_app_notification',
     'get_app_notification',
 
-    'post_accept_invitation'
+    'post_accept_invitation',
+    'post_create_championship'
 ]
