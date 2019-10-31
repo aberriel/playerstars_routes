@@ -1,4 +1,7 @@
 from .basic_entity_route import BasicEntityRoute
+from .championship_route import (
+    post_accept_invitation
+)
 from .duel_route import (
     post_duel,
     get_match_list,
@@ -14,12 +17,17 @@ from .game_route import (
     post_game,
     put_game,
 )
+from .notification_route import (
+    get_app_notification,
+    post_app_notification
+)
 from .player_route import (
     get_all_player,
     get_player_by_id,
     post_player,
     put_player
 )
+from .product_route import get_all_product, post_product
 from .region_country_route import (
     get_all_region_country,
     get_region_country_by_id,
@@ -49,10 +57,8 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin
 )
-from .product_route import get_all_product, post_product
 
-from .notification_route import \
-    post_app_notification, get_app_notification
+
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -97,5 +103,7 @@ __all__ = [
     'post_welcome_email',
 
     'post_app_notification',
-    'get_app_notification'
+    'get_app_notification',
+
+    'post_accept_invitation'
 ]
