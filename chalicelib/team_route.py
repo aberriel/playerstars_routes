@@ -2,7 +2,7 @@ from chalice import Blueprint
 from playerstars_adapters import TeamAdapter, PlayerAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
-    GetTeamByUserInteractor, GetTeamByUserRequestModel, MembershipType,
+    GetTeamByUserInteractor, GetTeamByUserRequestModel,
     PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
     PutTeamInteractor, PutTeamRequestModel, UpdateEntityException)
 
@@ -44,8 +44,7 @@ def get_all_teams_by_user(player_id):
 
 
 def get_by_user(player_id):
-    request = GetTeamByUserRequestModel(membership_type=MembershipType.ALL,
-                                        player_id=player_id)
+    request = GetTeamByUserRequestModel(player_id=player_id)
     interactor = GetTeamByUserInteractor(request, get_team_adapter())
     response = interactor.run()
     if response:
