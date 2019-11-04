@@ -57,9 +57,8 @@ def create_duel(json_data):
     request = CreateDuelRequestModel(json_data)
 
     interactor = CreateDuelInteractor(
-        request=request,
-        player_adapter=get_player_adapter(),
-        duel_adapter=get_duel_adapter())
+        request=request, player_adapter=get_player_adapter(),
+        duel_adapter=get_duel_adapter(), settings=Settings)
     try:
         response = interactor.run()
     except CreateDuelException as e:
@@ -76,8 +75,7 @@ def enter_duel():
 def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
-        request=request,
-        player_adapter=get_player_adapter(),
+        request=request, player_adapter=get_player_adapter(),
         duel_adapter=get_duel_adapter()
     )
     try:
