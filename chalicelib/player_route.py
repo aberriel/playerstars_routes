@@ -156,7 +156,7 @@ def get_all_teams_from_player():
     return get_by_user(player_id)
 
 
-@bp_player.route('/player-console-data/', **private_post())
+@bp_player.route('/console-data/', **private_post())
 def post_console_data_route():
     data = bp_player.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_player)
