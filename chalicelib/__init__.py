@@ -27,7 +27,9 @@ from .player_route import (
     get_all_player,
     get_player_by_id,
     post_player,
-    put_player
+    put_player,
+    post_accept_terms_route,
+    post_console_data_route
 )
 from .product_route import get_all_product, post_product
 from .region_country_route import (

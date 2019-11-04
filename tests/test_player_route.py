@@ -9,7 +9,9 @@ from chalicelib.player_route import (
     post_friend_route,
     delete_friend_route,
     put_player,
-    get_all_teams_from_player
+    get_all_teams_from_player,
+    post_console_data_route,
+    post_accept_terms_route
 )
 import json
 import pytest
@@ -368,3 +370,129 @@ def test_get_team_by_user(client, resource, run):
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
+
+
+def make_post_user_data_mock_data():
+    payload = """{
+        "user":{
+            "name": "Anselmo Lira",
+            "email": "playerstars@playerstars.com.br",
+            "birth_date": "16/12/1986",
+            "street": "Rua José de Figueiredo",
+            "street_number": "192",
+            "street_complement": "Blocos 29, 30",
+            "neighborhood": "Barra da Tijuca",
+            "city": "Rio de Janeiro",
+            "state": "Rio de Janeiro",
+            "country": "Brasil",
+            "postal_code": "22333-000",
+            "phone_number": "(21) 99663-6963",
+            "cpf": "123.456.789-00",
+            "nickname": "anselmo.lira",
+            "profile_image": "ACCBB4762CF23AA35690CC"
+        }
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_user_data_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_user_data_player(client, resource, run):
+    result = post_player()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+def make_post_console_mock_data():
+    payload = """{
+        "entity_id": "id13423",
+        "consoles": [
+            {
+                "entity_id": "1",
+                "name": "PS 4",
+                "logo_path": "/images/ps4.png",
+                "tag_name": "007"
+            },
+            {
+                "entity_id": "11",
+                "name": "Xbox",
+                "logo_path": "/images/xbox.png",
+                "tag_name": "mario",
+                "games": []
+            }
+        ]
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_user_data_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_console_data_route(client, resource, run):
+    result = post_console_data_route()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_console_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_console_data_route_raises(client, resource):
+    result = post_console_data_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_post_accept_terms_mock_data():
+    payload = """{
+        "entity_id": "id1234123",
+        "terms": true
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_terms_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_terms_player(client, resource, run):
+    result = post_accept_terms_route()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_terms_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=SaveEntityException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_terms_route_raises(client, resource):
+    result = post_accept_terms_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500

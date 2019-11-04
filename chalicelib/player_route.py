@@ -13,7 +13,8 @@ from playerstars_interactors import (
     GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
     AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
     GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
-    UpdateEntityException)
+    UpdateEntityException, PostPlayerAcceptTermsInteractor,
+    PostPlayerConsoleDataInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -154,3 +155,40 @@ def get_all_teams_from_player():
     player_id = get_user_id_from_jwt(bp_player)
     return get_by_user(player_id)
 
+
+@bp_player.route('/player-console-data/', **private_post())
+def post_console_data_route():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    data.update({'entity_id': entity_id})
+    return post_console_data(data)
+
+
+def post_console_data(json_data):
+    adapter = get_adapter()
+    request = BasicPostRequestModel(json_data)
+    interactor = PostPlayerConsoleDataInteractor(request, adapter, Player)
+    try:
+        response = interactor.run()
+    except SaveEntityException as e:
+        return server_error(str(e))
+    return created(response)
+
+
+@bp_player.route('/accept-terms/', **private_post())
+def post_accept_terms_route():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    data.update({'entity_id': entity_id})
+    return post_accept_terms(data)
+
+
+def post_accept_terms(json_data):
+    adapter = get_adapter()
+    request = BasicPostRequestModel(json_data)
+    interactor = PostPlayerAcceptTermsInteractor(request, adapter, Player)
+    try:
+        response = interactor.run()
+    except SaveEntityException as e:
+        return server_error(str(e))
+    return created(response)
