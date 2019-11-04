@@ -1,5 +1,6 @@
 from chalice import Blueprint
-from playerstars_adapters import PlayerAdapter, DuelAdapter, TeamAdapter
+from playerstars_adapters import \
+    PlayerAdapter, DuelAdapter, TeamAdapter, ConsoleAdapter
 from playerstars_domain import Player
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete, private_put)
@@ -166,8 +167,11 @@ def post_console_data_route():
 
 def post_console_data(json_data):
     adapter = get_adapter()
+    console_adapter = ConsoleAdapter(
+        Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
     request = BasicPostRequestModel(json_data)
-    interactor = PostPlayerConsoleDataInteractor(request, adapter, Player)
+    interactor = PostPlayerConsoleDataInteractor(
+        request, adapter, console_adapter, Player)
     try:
         response = interactor.run()
     except SaveEntityException as e:
