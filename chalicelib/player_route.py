@@ -15,7 +15,8 @@ from playerstars_interactors import (
     AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
     GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
     UpdateEntityException, PostPlayerAcceptTermsInteractor,
-    PostPlayerConsoleDataInteractor)
+    PostPlayerConsoleDataInteractor, AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationException, AcceptTeamInvitationRequestModel)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -27,6 +28,10 @@ def get_router():
     adapter = PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
+
+
+def get_team_adapter():
+    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_adapter():
@@ -91,7 +96,7 @@ def get_my_profile():
 def get_by_id(entity_id):
     adapter = get_adapter()
     duel_adapter = DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
-    team_adapter = TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+    team_adapter = get_team_adapter()
     request = GetProfileRequestModel(entity_id)
     interactor = GetProfileInteractor(
         request, adapter, team_adapter, duel_adapter)
@@ -196,3 +201,22 @@ def post_accept_terms(json_data):
     except SaveEntityException as e:
         return server_error(str(e))
     return created(response)
+
+
+@bp_player.route('/accept-team-invite', **private_post())
+def accept_team_invitation_route():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    data.update({'player_id': entity_id})
+    return accept_team_invitation(data)
+
+
+def accept_team_invitation(json_data):
+    request = AcceptTeamInvitationRequestModel(json_data)
+    interactor = AcceptTeamInvitationInteractor(
+        request=request, team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+    except AcceptTeamInvitationException as e:
+        return server_error(str(e))
+    return success(response)
