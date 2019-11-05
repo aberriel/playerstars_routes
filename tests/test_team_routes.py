@@ -1,16 +1,12 @@
 from unittest.mock import MagicMock, patch
 import json
 from playerstars_interactors import (
-    SaveEntityException,
-    UpdateEntityException
+    SaveEntityException, UpdateEntityException, EnterTeamException
 )
 
 from chalicelib import (
-    get_all_teams,
-    get_team_by_id,
-    get_all_teams_by_user,
-    post_team,
-    put_team)
+    get_all_teams, get_team_by_id, get_all_teams_by_user, post_team,
+    put_team, enter_team)
 
 
 def make_post_mock_data():
@@ -203,6 +199,52 @@ def test_put_team(client, resource, run):
 @patch('boto3.client')
 def test_put_team_raises(client, resource):
     result = put_team('id1')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_enter_team_mock_data():
+    payload = """{
+    "player_id": "userid#123",
+    "team_id": "duelid123"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(json_body=data))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.EnterTeamInteractor._recover_team',
+       return_value=MagicMock())
+@patch('chalicelib.team_route.EnterTeamInteractor._recover_player',
+       return_value=MagicMock())
+@patch('chalicelib.team_route.bp_enter_team',
+       make_enter_team_mock_data())
+@patch('chalicelib.team_route.EnterTeamInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_enter_team(client, resource, run, player, duel):
+    result = enter_team()
+
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.EnterTeamInteractor._recover_team',
+       return_value=MagicMock())
+@patch('chalicelib.team_route.EnterTeamInteractor._recover_player',
+       return_value=MagicMock())
+@patch('chalicelib.team_route.bp_enter_team',
+       make_enter_team_mock_data())
+@patch('chalicelib.team_route.EnterTeamInteractor.run',
+       MagicMock(side_effect=EnterTeamException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_enter_team_raises(client, resource, player, duel):
+    result = enter_team()
+
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
