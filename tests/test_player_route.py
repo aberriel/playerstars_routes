@@ -1,17 +1,11 @@
 from playerstars_interactors import \
-    SaveEntityException, SaveFriendsException, UpdateEntityException
+    SaveEntityException, SaveFriendsException, UpdateEntityException, \
+    AcceptTeamInvitationException
 from chalicelib.player_route import (
-    get_all_player,
-    get_player_by_id,
-    post_player,
-    get_my_profile,
-    get_friends_route,
-    post_friend_route,
-    delete_friend_route,
-    put_player,
-    get_all_teams_from_player,
-    post_console_data_route,
-    post_accept_terms_route
+    get_all_player, get_player_by_id, post_player, get_my_profile,
+    get_friends_route, post_friend_route, delete_friend_route,
+    put_player, get_all_teams_from_player, post_console_data_route,
+    post_accept_terms_route, accept_team_invitation_route
 )
 import json
 import pytest
@@ -493,6 +487,43 @@ def test_post_accept_terms_player(client, resource, run):
 @patch('boto3.client')
 def test_post_accept_terms_route_raises(client, resource):
     result = post_accept_terms_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_post_accept_invite_mock_data():
+    payload = """{
+        "team_id": "id1234123"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_invite_mock_data())
+@patch('chalicelib.player_route.AcceptTeamInvitationInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_team_invite_player(client, resource, run):
+    result = accept_team_invitation_route()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_invite_mock_data())
+@patch('chalicelib.player_route.AcceptTeamInvitationInteractor.run',
+       MagicMock(side_effect=AcceptTeamInvitationException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_team_invite_raises(client, resource):
+    result = accept_team_invitation_route()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
