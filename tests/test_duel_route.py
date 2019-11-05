@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 from chalicelib import \
-    get_match_list, post_duel, enter_duel, \
+    get_match_list, post_duel, enter_duel, get_duel, \
     get_all_player_duels, get_all_duel, get_duels_by_status_route
 from playerstars_interactors import \
     EnterDuelException, CreateDuelException, GetPlayerDuelByStatusError
@@ -188,6 +188,29 @@ def teste_get_all_duel(client, resource):
     result = get_all_duel()
 
     assert result.body['message'] == 'Nenhum duel encontrado'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel(client, resource, run):
+    result = get_duel('1234')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def teste_get_duel(client, resource):
+    result = get_duel('123123')
+
+    assert result.body['message'] == 'Duel não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

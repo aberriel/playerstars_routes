@@ -110,7 +110,7 @@ def get_all_duel():
 
 
 @bp_duel.route('/{entity_id}', **private_get())
-def get_all_duel(entity_id):
+def get_duel(entity_id):
     return get_duel_router().get_by_id(entity_id)
 
 

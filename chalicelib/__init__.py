@@ -9,7 +9,8 @@ from .duel_route import (
     enter_duel,
     get_all_player_duels,
     get_all_duel,
-    get_duels_by_status_route
+    get_duels_by_status_route,
+    get_duel
 )
 from .game_route import (
     delete_game,
@@ -99,6 +100,7 @@ __all__ = [
     'enter_duel',
     'get_all_player_duels',
     'get_all_duel',
+    'get_duel',
     'get_duels_by_status_route',
 
     'get_all_product',
