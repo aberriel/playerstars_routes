@@ -4,7 +4,8 @@ from playerstars_domain import Team
 from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel,
     PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
-    PutTeamInteractor, PutTeamRequestModel, UpdateEntityException)
+    PutTeamInteractor, PutTeamRequestModel, UpdateEntityException,
+    EnterTeamRequestModel, EnterTeamInteractor, EnterTeamException)
 
 from chalicelib.chalice_support import (
     private_get, private_put, private_post)
@@ -14,6 +15,7 @@ from chalicelib.chalice_support import \
     success, not_found, created, server_error
 
 bp_team = Blueprint(__name__)
+bp_enter_team = Blueprint(__name__)
 
 
 def get_team_adapter():
@@ -82,5 +84,24 @@ def put(data):
     try:
         response = interactor.run()
     except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_enter_team.route('/', **private_post())
+def enter_team():
+    data = bp_enter_team.current_request.json_body
+    return enter_team_post(data)
+
+
+def enter_team_post(json_data):
+    request = EnterTeamRequestModel(json_data)
+    interactor = EnterTeamInteractor(
+        request=request, player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter()
+    )
+    try:
+        response = interactor.run()
+    except EnterTeamException as e:
         return server_error(str(e))
     return success(response)

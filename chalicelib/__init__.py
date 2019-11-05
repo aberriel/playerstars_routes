@@ -53,7 +53,8 @@ from .team_route import (
     get_all_teams_by_user,
     get_team_by_id,
     post_team,
-    put_team
+    put_team,
+    enter_team
 )
 from .user_admin_route import (
     get_all_user_admin,
@@ -91,6 +92,7 @@ __all__ = [
     'get_team_by_id',
     'post_team',
     'put_team',
+    'enter_team',
 
     'post_duel',
     'get_match_list',
