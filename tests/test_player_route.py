@@ -494,7 +494,8 @@ def test_post_accept_terms_route_raises(client, resource):
 
 def make_post_accept_invite_mock_data():
     payload = """{
-        "team_id": "id1234123"
+        "team_id": "id1234123",
+        "accept_invite": true
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
