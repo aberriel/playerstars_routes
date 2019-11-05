@@ -100,13 +100,18 @@ def get_player_duels(player_id):
     return not_found(f"Nenhum duel encontrado para o player: {player_id}")
 
 
-def get_all_duel_router():
+def get_duel_router():
     return BasicEntityRoute(get_duel_adapter(), Duel, 'duel')
 
 
 @bp_duel.route('/', **private_get())
 def get_all_duel():
-    return get_all_duel_router().get_all()
+    return get_duel_router().get_all()
+
+
+@bp_duel.route('/{entity_id}', **private_get())
+def get_all_duel(entity_id):
+    return get_duel_router().get_by_id(entity_id)
 
 
 @bp_duel.route('/get-my-duels/{status}', **private_get())
