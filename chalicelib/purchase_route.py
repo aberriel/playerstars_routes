@@ -73,10 +73,8 @@ def post_notification():
 
 @bp_purchase.route('/history/', **private_get())
 def get_history_route():
-    data = bp_purchase.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_purchase)
-    data.update({'player_id': entity_id})
-    return get_history(data)
+    return get_history({'player_id': entity_id})
 
 
 def get_history(data):
