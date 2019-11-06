@@ -16,7 +16,10 @@ from playerstars_interactors import (
 
     PostNotificationInteractor,
     PostNotificationRequestModel,
-    PagSeguroException
+    PagSeguroException,
+
+    GetPurchaseHistoryInteractor,
+    GetPurchaseHistoryRequestModel
 )
 
 from chalicelib.chalice_support import (
@@ -66,3 +69,22 @@ def post_notification():
     except PagSeguroException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_purchase.route('/history/', **private_get())
+def get_history_route():
+    data = bp_purchase.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_purchase)
+    data.update({'player_id': entity_id})
+    return get_history(data)
+
+
+def get_history(data):
+    adapter = get_adapter()
+    request = GetPurchaseHistoryRequestModel(data)
+    interactor = GetPurchaseHistoryInteractor(request, adapter)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found(f'Histórico de compras do player {data["player_id"]}'
+                     f' não encontrado')

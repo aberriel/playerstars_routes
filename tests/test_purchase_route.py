@@ -1,6 +1,7 @@
-from playerstars_interactors import PostPurchaseException, PagSeguroException
+from playerstars_interactors import \
+    PostPurchaseException, PagSeguroException
 from chalicelib.purchase_route import (
-    post_purchase, post_notification
+    post_purchase, post_notification, get_history_route
 )
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -76,3 +77,31 @@ def test_post_notification_raises(client, resource):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def make_get_history_mock_data():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
+
+
+@patch('chalicelib.purchase_route.bp_purchase', make_get_history_mock_data())
+@patch('chalicelib.purchase_route.GetPurchaseHistoryInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_purchase_history_route(client, resource, run):
+    result = get_history_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.purchase_route.bp_purchase', make_get_history_mock_data())
+@patch('chalicelib.purchase_route.GetPurchaseHistoryInteractor.run',
+       return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_purchase_history_route_raises(client, resource, run):
+    result = get_history_route()
+    assert "Histórico de compras do player" in result.body['message']
+    assert result.body['status'] == "error"
+    assert result.status_code == 404

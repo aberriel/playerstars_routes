@@ -64,6 +64,9 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin
 )
+from .purchase_route import (
+    get_history_route
+)
 
 
 __all__ = [
@@ -117,5 +120,7 @@ __all__ = [
 
     'post_accept_invitation',
     'post_create_championship',
-    'get_app_notification_by_status'
+    'get_app_notification_by_status',
+
+    'get_history_route'
 ]
