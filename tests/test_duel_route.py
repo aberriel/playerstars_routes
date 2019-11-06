@@ -1,10 +1,11 @@
 import json
 from unittest.mock import MagicMock, patch
 from chalicelib import \
-    get_match_list, post_duel, enter_duel, get_duel, \
+    get_match_list, post_duel, enter_duel, get_duel, reject_duel_route, \
     get_all_player_duels, get_all_duel, get_duels_by_status_route
-from playerstars_interactors import \
-    EnterDuelException, CreateDuelException, GetPlayerDuelByStatusError
+from playerstars_interactors import (
+    EnterDuelException, CreateDuelException, GetPlayerDuelByStatusError,
+    RejectDuelException)
 from tests.test_utils import jwt
 
 
@@ -251,6 +252,29 @@ def test_get_duel_by_status_not_found(client, resource):
 @patch('boto3.client')
 def test_get_duel_by_status_not_found_raises(client, resource):
     result = get_duels_by_status_route('lobby')
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.duel_route.RejectDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_reject_duel(client, resource, run):
+    result = reject_duel_route('1234')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.RejectDuelInteractor.run',
+       MagicMock(side_effect=RejectDuelException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def teste_reject_duel_raises(client, resource):
+    result = reject_duel_route('123123')
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
