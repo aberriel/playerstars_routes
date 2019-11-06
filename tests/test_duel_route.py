@@ -93,11 +93,11 @@ def test_create_duel_raises(client, resource):
 
 def make_enter_duel_mock_data():
     payload = """{
-    "player_id": "userid#123",
-    "duel_id": "duelid123"
+        "duel_id": "duelid123"
     }"""
     data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(json_body=data))
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal

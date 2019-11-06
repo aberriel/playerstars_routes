@@ -70,6 +70,8 @@ def create_duel(json_data):
 @bp_enter_duel.route('/', **private_post())
 def enter_duel():
     data = bp_enter_duel.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_enter_duel)
+    data.update({'player_id': entity_id})
     return enter_duel_post(data)
 
 
