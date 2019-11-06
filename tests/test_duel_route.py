@@ -258,23 +258,34 @@ def test_get_duel_by_status_not_found_raises(client, resource):
     assert result.status_code == 500
 
 
+def make_post_reject_request():
+    payload = """{
+        "duel_id": "id1234"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+@patch('chalicelib.duel_route.bp_duel', make_post_reject_request())
 @patch('chalicelib.duel_route.RejectDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_reject_duel(client, resource, run):
-    result = reject_duel_route('1234')
+    result = reject_duel_route()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_post_reject_request())
 @patch('chalicelib.duel_route.RejectDuelInteractor.run',
        MagicMock(side_effect=RejectDuelException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def teste_reject_duel_raises(client, resource):
-    result = reject_duel_route('123123')
+    result = reject_duel_route()
 
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'

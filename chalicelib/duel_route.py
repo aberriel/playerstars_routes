@@ -135,13 +135,14 @@ def get_duels_by_status(entity_id, status):
         return server_error(str(e))
 
 
-@bp_duel.route('/reject-duel/{entity_id}', **private_post())
-def reject_duel_route(entity_id):
-    return reject_duel(entity_id)
+@bp_duel.route('/reject/', **private_post())
+def reject_duel_route():
+    data = bp_duel.current_request.json_body
+    return reject_duel(data)
 
 
-def reject_duel(entity_id):
-    request = RejectDuelRequestModel({"duel_id": entity_id})
+def reject_duel(data):
+    request = RejectDuelRequestModel(data)
     interactor = RejectDuelInteractor(request, get_duel_adapter())
     try:
         response = interactor.run()
