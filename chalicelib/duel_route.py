@@ -12,7 +12,8 @@ from playerstars_interactors import (
     GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
     GetMatchListInteractor, GetMatchListRequestModel,
     GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    GetPlayerDuelByStatusError)
+    GetPlayerDuelByStatusError, RejectDuelException, RejectDuelInteractor,
+    RejectDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -132,3 +133,18 @@ def get_duels_by_status(entity_id, status):
             f" o player: {entity_id}")
     except GetPlayerDuelByStatusError as e:
         return server_error(str(e))
+
+
+@bp_duel.route('/reject-duel/{entity_id}', **private_post())
+def reject_duel_route(entity_id):
+    return reject_duel(entity_id)
+
+
+def reject_duel(entity_id):
+    request = RejectDuelRequestModel({"duel_id": entity_id})
+    interactor = RejectDuelInteractor(request, get_duel_adapter())
+    try:
+        response = interactor.run()
+    except RejectDuelException as e:
+        return server_error(str(e))
+    return success(response)
