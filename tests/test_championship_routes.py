@@ -59,11 +59,11 @@ def make_join_open_championship_mock_data():
     payload = """{
         "member_id": "a1b2c3",
         "member_type": "Player",
-        "championship_id": 'qwe123'
+        "championship_id": "qwe123"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
-        json_body=data, header=dict(AUTHORIZATION=jwt)))
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
 @patch('chalicelib.championship_route.bp_accept_invitation',
@@ -129,7 +129,7 @@ def test_post_create_championship_raises(boto_client,
 def test_post_join_open_championship(boto_client,
                                      boto_resource,
                                      run):
-    result = post_join_open_championship
+    result = post_join_open_championship()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -139,6 +139,8 @@ def test_post_join_open_championship(boto_client,
        make_join_open_championship_mock_data())
 @patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run',
        MagicMock(side_effect=JoinOpenChampionshipException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
 def test_post_join_open_championship_raises(boto_client,
                                             boto_resource):
     result = post_join_open_championship()
