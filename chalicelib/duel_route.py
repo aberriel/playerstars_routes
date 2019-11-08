@@ -10,7 +10,7 @@ from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
     GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
-    GetMatchListInteractor, GetMatchListRequestModel,
+    GetMatchListInteractor, BasicGetRequestModel,
     GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
     GetPlayerDuelByStatusError, RejectDuelException, RejectDuelInteractor,
     RejectDuelRequestModel)
@@ -34,7 +34,7 @@ def get_match_list():
 
 
 def get_match_list_by_player(entity_id):
-    request = GetMatchListRequestModel(entity_id)
+    request = BasicGetRequestModel(entity_id)
     interactor = GetMatchListInteractor(request, get_player_adapter())
     response = interactor.run()
     if response:
