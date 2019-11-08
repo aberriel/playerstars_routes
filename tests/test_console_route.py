@@ -36,6 +36,19 @@ def test_get_all_consoles_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_consoles_raises(client, resource):
+    result = get_all_console()
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
 @patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -57,6 +70,19 @@ def test_get_console_not_found(client, resource):
     assert result.body['message'] == 'Console não encontrado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_console_raises(client, resource):
+    result = get_console_by_id('id1')
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
 
 
 def make_post_mock_data():
@@ -160,3 +186,16 @@ def test_delete_console_not_found(client, resource):
     assert result.body['message'] == 'Console não encontrado para ser deletado'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_console_raises(client, resource):
+    result = delete_console('id1')
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
