@@ -1,10 +1,12 @@
 from chalicelib import (
     post_accept_invitation,
-    post_create_championship
+    post_create_championship,
+    post_join_open_championship
 )
 from playerstars_interactors import (
     AcceptInvitationException,
-    CreateChampionshipException
+    CreateChampionshipException,
+    JoinOpenChampionshipException
 )
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -47,6 +49,17 @@ def make_create_championship_mock_data():
         "championship_type": "Player",
         "max_members": 4,
         "start_datetime": "2019-12-10T13:25:07+00:00"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+def make_join_open_championship_mock_data():
+    payload = """{
+        "member_id": "a1b2c3",
+        "member_type": "Player",
+        "championship_id": "qwe123"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
@@ -103,6 +116,34 @@ def test_post_create_championship(boto_client,
 def test_post_create_championship_raises(boto_client,
                                          boto_resource):
     result = post_create_championship()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.championship_route.bp_join_open_championship',
+       make_join_open_championship_mock_data())
+@patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_join_open_championship(boto_client,
+                                     boto_resource,
+                                     run):
+    result = post_join_open_championship()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.championship_route.bp_join_open_championship',
+       make_join_open_championship_mock_data())
+@patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run',
+       MagicMock(side_effect=JoinOpenChampionshipException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_join_open_championship_raises(boto_client,
+                                            boto_resource):
+    result = post_join_open_championship()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

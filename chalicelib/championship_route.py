@@ -1,6 +1,5 @@
 from chalice import Blueprint
 from chalicelib.chalice_support import (
-    private_get,
     private_post,
     server_error,
     success
@@ -17,14 +16,19 @@ from playerstars_interactors import (
     AcceptInvitationInteractor,
     AcceptInvitationRequestModel,
 
+    CreateChampionshipException,
     CreateChampionshipRequestModel,
     CreateChampionshipInteractor,
-    CreateChampionshipException
+
+    JoinOpenChampionshipException,
+    JoinOpenChampionshipInteractor,
+    JoinOpenChampionshipRequestModel
 )
 
 
 bp_accept_invitation = Blueprint(__name__)
 bp_create_championship = Blueprint(__name__)
+bp_join_open_championship = Blueprint(__name__)
 
 
 def get_championship_adapter():
@@ -89,6 +93,31 @@ def post_accept_invitation():
     try:
         response = interactor.run()
     except AcceptInvitationException as exc:
+        return server_error(str(exc))
+
+    return success(response)
+
+
+@bp_join_open_championship.route('/', **private_post())
+def post_join_open_championship():
+    data = bp_join_open_championship.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_join_open_championship)
+    data.update({'entity_id': entity_id})
+
+    championship_adapter = get_championship_adapter()
+    player_adapter = get_player_adapter()
+    team_adapter = get_team_adapter()
+
+    request = JoinOpenChampionshipRequestModel(data)
+    interactor = JoinOpenChampionshipInteractor(
+        request=request,
+        championship_adapter=championship_adapter,
+        player_adapter=player_adapter,
+        team_adapter=team_adapter)
+
+    try:
+        response = interactor.run()
+    except JoinOpenChampionshipException as exc:
         return server_error(str(exc))
 
     return success(response)
