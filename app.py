@@ -46,6 +46,7 @@ app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_join_open_championship,
                        url_prefix='/championship/join-open-championship')
+
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_player, url_prefix='/player')
