@@ -24,7 +24,7 @@ def test_get_all_games(client, resource, run):
 def test_get_all_consoles_not_found(client, resource):
     result = get_all_games('1')
 
-    assert result.body['message'] == 'Nenhum jogo encontrado'
+    assert result.body['message'] == 'No jogo found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -48,7 +48,7 @@ def test_get_console(client, resource, run):
 def test_get_console_not_found(client, resource):
     result = get_game_by_id('id1')
 
-    assert result.body['message'] == 'Game não encontrado'
+    assert result.body['message'] == 'Game not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -169,6 +169,6 @@ def test_delete_console(client, resource, mock):
 def test_delete_console_not_found(client, resource):
     result = delete_game('id1')
 
-    assert result.body['message'] == 'Game não encontrado'
+    assert result.body['message'] == 'Game not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404

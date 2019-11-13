@@ -23,7 +23,7 @@ class BasicEntityRoute:
             response = interactor.run()
             if response:
                 return success(response)
-            return not_found(f'Nenhum {self.entity_name} encontrado')
+            return not_found(f'No {self.entity_name} found')
         except BaseException as e:
             return server_error(str(e))
 
@@ -36,7 +36,7 @@ class BasicEntityRoute:
                 return success(response)
 
             objeto = self.entity_name.capitalize()
-            return not_found(f'{objeto} não encontrado')
+            return not_found(f'{objeto} not found')
         except BaseException as e:
             return server_error(str(e))
 
@@ -68,7 +68,7 @@ class BasicEntityRoute:
             if not response:
                 objeto = self.entity_name.capitalize()
                 return not_found(
-                    f'{objeto} não encontrado para ser deletado')
+                    f'{objeto} not found to be deleted')
             return success(response)
         except BaseException as e:
             return server_error(str(e))

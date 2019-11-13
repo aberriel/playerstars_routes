@@ -30,7 +30,7 @@ def test_get_all_consoles(client, resource, run):
 def test_get_all_consoles_not_found(client, resource):
     result = get_all_console()
 
-    assert result.body['message'] == 'Nenhum console encontrado'
+    assert result.body['message'] == 'No console found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -67,7 +67,7 @@ def test_get_console(client, resource, run):
 def test_get_console_not_found(client, resource):
     result = get_console_by_id('id1')
 
-    assert result.body['message'] == 'Console não encontrado'
+    assert result.body['message'] == 'Console not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -183,7 +183,7 @@ def test_delete_console(client, resource, mock):
 def test_delete_console_not_found(client, resource):
     result = delete_console('id1')
 
-    assert result.body['message'] == 'Console não encontrado para ser deletado'
+    assert result.body['message'] == 'Console not found to be deleted'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

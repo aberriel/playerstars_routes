@@ -100,7 +100,7 @@ def get_player_duels(player_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f"Nenhum duel encontrado para o player: {player_id}")
+    return not_found(f"No duel found for the player {player_id}")
 
 
 def get_duel_router():
@@ -131,8 +131,7 @@ def get_duels_by_status(entity_id, status):
         if response:
             return success(response)
         return not_found(
-            f"Nenhum duelo com o status: {status} encontrado para"
-            f" o player: {entity_id}")
+            f"No duel found with status {status} for the player {entity_id}")
     except GetPlayerDuelByStatusError as e:
         return server_error(str(e))
 

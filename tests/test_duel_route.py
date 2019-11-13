@@ -164,7 +164,7 @@ def test_get_all_player_duel_not_found(client, resource):
     result = get_all_player_duels()
 
     assert result.body['message'] == \
-        'Nenhum duel encontrado para o player: ' \
+        'No duel found for the player ' \
         '8ad1635f-2263-4dda-879a-bd24b5d9732f'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -188,7 +188,7 @@ def test_get_all_duel(client, resource, run):
 def teste_get_all_duel(client, resource):
     result = get_all_duel()
 
-    assert result.body['message'] == 'Nenhum duel encontrado'
+    assert result.body['message'] == 'No duel found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -211,7 +211,7 @@ def test_get_duel(client, resource, run):
 def teste_get_duel(client, resource):
     result = get_duel('123123')
 
-    assert result.body['message'] == 'Duel não encontrado'
+    assert result.body['message'] == 'Duel not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -238,8 +238,8 @@ def test_get_duel_by_status_not_found(client, resource):
     result = get_duels_by_status_route('lobby')
 
     assert result.body['message'] == \
-        "Nenhum duelo com o status: lobby encontrado para" \
-        " o player: 8ad1635f-2263-4dda-879a-bd24b5d9732f"
+        "No duel found with status lobby for the player" \
+        " 8ad1635f-2263-4dda-879a-bd24b5d9732f"
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

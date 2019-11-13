@@ -101,7 +101,7 @@ def test_get_all_teams(client, resource, run):
 @patch('boto3.client')
 def test_get_all_teams_not_found(client, resource):
     result = get_all_teams()
-    assert result.body['message'] == 'Nenhum team encontrado'
+    assert result.body['message'] == 'No team found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -124,7 +124,7 @@ def test_get_team(client, resource, run):
 @patch('boto3.client')
 def test_get_team_not_found(client, resource):
     result = get_team_by_id('team11')
-    assert result.body['message'] == 'Team não encontrado'
+    assert result.body['message'] == 'Team not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -147,8 +147,7 @@ def test_get_team_by_user(client, resource, run):
 @patch('boto3.client')
 def test_get_teams_by_user_not_found(client, resource):
     result = get_all_teams_by_user('pl11')
-    assert result.body['message'] == 'Não foram ' \
-                                     'encontradas teams para esse player'
+    assert result.body['message'] == 'No teams found for this player'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

@@ -51,7 +51,7 @@ def get_by_user(player_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found('Não foram encontradas teams para esse player')
+    return not_found('No teams found for this player')
 
 
 @bp_team.route('/', **private_post())

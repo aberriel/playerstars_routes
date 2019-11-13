@@ -1,10 +1,9 @@
 from chalice import Blueprint
 from playerstars_adapters import PlayerAdapter
-from playerstars_domain import Player
 from chalicelib.chalice_support import (
-    private_get, private_post, private_delete)
+    private_get,
+    private_post)
 from chalicelib.chalice_support.auth import cors
-from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 
 from chalicelib.utils import get_user_id_from_jwt
