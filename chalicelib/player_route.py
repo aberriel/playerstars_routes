@@ -89,12 +89,12 @@ def get_player_by_id(entity_id):
 
 @bp_player.route('/', **private_get())
 def get_all_player():
+    if bp_player.current_request and bp_player.current_request.query_params:
+        return get_player_by_console(bp_player.current_request.query_params)
     return get_router().get_all()
 
 
-@bp_player.route('/list', **private_get())
-def get_player_by_console():
-    query_params = bp_player.current_request.query_params
+def get_player_by_console(query_params):
     try:
         player_adapter = get_adapter()
         console_adapter = get_console_adapter()
