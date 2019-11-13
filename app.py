@@ -3,6 +3,7 @@ from chalice import Chalice
 from chalicelib import root
 from chalicelib.championship_route import (
     bp_accept_invitation,
+    bp_add_friend_to_championship,
     bp_create_championship,
     bp_join_open_championship
 )
@@ -33,19 +34,11 @@ app.experimental_feature_flags.update([
 ])
 
 app.register_blueprint(root, url_prefix='/')
-app.register_blueprint(bp_accept_invitation,
-                       url_prefix='/championship/accept-invitation')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
-app.register_blueprint(bp_create_championship, url_prefix='/championship')
-app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
-app.register_blueprint(bp_duel, url_prefix='/duel')
-app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_game, url_prefix='/game')
 app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
-app.register_blueprint(bp_join_open_championship,
-                       url_prefix='/championship/join-open-championship')
 
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
@@ -57,6 +50,18 @@ app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
+
+app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
+app.register_blueprint(bp_duel, url_prefix='/duel')
+app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
+
+app.register_blueprint(bp_accept_invitation,
+                       url_prefix='/championship/accept-invitation')
+app.register_blueprint(bp_add_friend_to_championship,
+                       url_prefix='championship/add-friend-to-championship')
+app.register_blueprint(bp_create_championship, url_prefix='/championship')
+app.register_blueprint(bp_join_open_championship,
+                       url_prefix='/championship/join-open-championship')
 
 
 @app.route('/check', methods=['POST', 'GET'])

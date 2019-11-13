@@ -16,6 +16,10 @@ from playerstars_interactors import (
     AcceptInvitationInteractor,
     AcceptInvitationRequestModel,
 
+    AddFriendToChampionshipException,
+    AddFriendToChampionshipInteractor,
+    AddFriendToChampionshipRequestModel,
+
     CreateChampionshipException,
     CreateChampionshipRequestModel,
     CreateChampionshipInteractor,
@@ -27,6 +31,7 @@ from playerstars_interactors import (
 
 
 bp_accept_invitation = Blueprint(__name__)
+bp_add_friend_to_championship = Blueprint(__name__)
 bp_create_championship = Blueprint(__name__)
 bp_join_open_championship = Blueprint(__name__)
 
@@ -118,6 +123,31 @@ def post_join_open_championship():
     try:
         response = interactor.run()
     except JoinOpenChampionshipException as exc:
+        return server_error(str(exc))
+
+    return success(response)
+
+
+@bp_add_friend_to_championship.route('/', **private_post())
+def post_add_friend_to_championship():
+    data = bp_add_friend_to_championship.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_add_friend_to_championship)
+    data.update({'entity_id': player_id})
+
+    championship_adapter = get_championship_adapter()
+    player_adapter = get_player_adapter()
+    team_adapter = get_team_adapter()
+
+    request = AddFriendToChampionshipRequestModel(data)
+    interactor = AddFriendToChampionshipInteractor(
+        request=request,
+        championship_adapter=championship_adapter,
+        player_adapter=player_adapter,
+        team_adapter=team_adapter)
+
+    try:
+        response = interactor.run()
+    except AddFriendToChampionshipException as exc:
         return server_error(str(exc))
 
     return success(response)
