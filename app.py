@@ -4,7 +4,7 @@ from chalicelib import root
 from chalicelib.championship_route import (
     bp_accept_invitation,
     bp_add_friend_to_championship,
-    bp_create_championship,
+    bp_championship,
     bp_join_open_championship
 )
 from chalicelib.console_route import bp_console
@@ -59,7 +59,7 @@ app.register_blueprint(bp_accept_invitation,
                        url_prefix='/championship/accept-invitation')
 app.register_blueprint(bp_add_friend_to_championship,
                        url_prefix='championship/add-friend-to-championship')
-app.register_blueprint(bp_create_championship, url_prefix='/championship')
+app.register_blueprint(bp_championship, url_prefix='/championship')
 app.register_blueprint(bp_join_open_championship,
                        url_prefix='/championship/join-open-championship')
 
