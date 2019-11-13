@@ -5,8 +5,7 @@ from chalicelib.player_route import (
     get_all_player, get_player_by_id, post_player, get_my_profile,
     get_friends_route, post_friend_route, delete_friend_route,
     put_player, get_all_teams_from_player, post_console_data_route,
-    post_accept_terms_route, accept_team_invitation_route,
-    get_player_by_console
+    post_accept_terms_route, accept_team_invitation_route
 )
 import json
 import pytest
@@ -545,7 +544,7 @@ def query_params():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console(client, resource, run):
-    result = get_player_by_console()
+    result = get_all_player()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -559,7 +558,7 @@ def test_get_player_by_console(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console_empty(client, resource, run):
-    result = get_player_by_console()
+    result = get_all_player()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -575,7 +574,7 @@ def test_get_player_by_console_empty(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console_raises(client, resource, run):
-    result = get_player_by_console()
+    result = get_all_player()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
