@@ -57,7 +57,7 @@ def get_by_user_and_status(entity_id, status):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f'Nenhuma notificação encontrada para o player id:'
+    return not_found(f'No notifications found for player id:'
                      f' {entity_id}')
 
 

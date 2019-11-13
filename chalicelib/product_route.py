@@ -35,4 +35,4 @@ def get_all():
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f'Nenhum product encontrado')
+    return not_found(f'No product found')

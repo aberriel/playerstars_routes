@@ -5,15 +5,23 @@ from chalicelib.chalice_support import (
 from chalicelib.settings import Settings
 from chalice import Blueprint
 from playerstars_interactors import (
-    BasicPostInteractor, SaveEntityException, PostGameRequestModel,
-    GetAllGamesInteractor, PostGameRequestModel, PostGameInteractor,
-    SaveGameException, GetGameInteractor, GetGameRequestModel,
-    GetAllGamesRequestModel, PutGameRequestModel,
-    PutGameInteractor, DeleteGameInteractor, UpdateEntityException,
-    DeleteGameRequestModel, UpdateGameException)
+    DeleteGameInteractor,
+    DeleteGameRequestModel,
+    GetAllGamesInteractor,
+    GetAllGamesRequestModel,
+    GetGameInteractor,
+    GetGameRequestModel,
+    PostGameInteractor,
+    PostGameRequestModel,
+    PutGameInteractor,
+    PutGameRequestModel,
+    SaveEntityException,
+    UpdateEntityException)
 from chalicelib.chalice_support import (
-        success, not_found,
-        created, server_error)
+    created,
+    not_found,
+    server_error,
+    success)
 
 bp_game = Blueprint(__name__)
 bp_game_by_console = Blueprint(__name__)
@@ -61,7 +69,7 @@ def get_all_by_console_id(entity_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found('Nenhum jogo encontrado')
+    return not_found('No jogo found')
 
 
 def get(game_id):
@@ -70,7 +78,7 @@ def get(game_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found("Game não encontrado")
+    return not_found("Game not found")
 
 
 def post(json_data):
@@ -98,5 +106,5 @@ def delete(entity_id):
     interactor = DeleteGameInteractor(request, get_adapter())
     response = interactor.run()
     if not response:
-        return not_found('Game não encontrado')
+        return not_found('Game not found')
     return success(response)

@@ -75,7 +75,7 @@ def test_get_app_notification(client, resource, run, get_by_id):
 @patch('boto3.client')
 def test_get_app_notification_raises(client, resource, get_by_id):
     result = get_app_notification()
-    assert "Nenhuma notificação encontrada" in result.body['message']
+    assert "No notifications found" in result.body['message']
     assert result.body['status'] == "error"
     assert result.status_code == 404
 

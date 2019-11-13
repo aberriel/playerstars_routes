@@ -64,7 +64,7 @@ def test_get_user_admin(client, resource, run):
 def test_get_user_admin_not_found(client, resource):
     result = get_user_admin_by_id('id001')
 
-    assert result.body['message'] == 'User-admin não encontrado'
+    assert result.body['message'] == 'User-admin not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -88,7 +88,7 @@ def test_get_all_user_admin(client, resource, run):
 def teste_get_all_user_admin_not_found(client, resource):
     result = get_all_user_admin()
 
-    assert result.body['message'] == 'Nenhum user-admin encontrado'
+    assert result.body['message'] == 'No user-admin found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

@@ -103,7 +103,7 @@ def get_by_id(entity_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f'Player não encontrado')
+    return not_found(f'Player not found')
 
 # player/<Id>/friends
 # POST
@@ -130,7 +130,7 @@ def get_friends(entity_id):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f'Favoritos não enontrados')
+    return not_found(f'Favorites not found')
 
 
 @bp_player.route('/{entity_id}/friends', **private_post())

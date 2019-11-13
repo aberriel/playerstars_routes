@@ -167,7 +167,7 @@ def test_get_profile(client, resource, run, get_by_id):
 @patch('boto3.client')
 def test_get_profile_raises(client, resource, get_by_id):
     result = get_my_profile()
-    assert result.body['message'] == "Player não encontrado"
+    assert result.body['message'] == "Player not found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
 
@@ -192,7 +192,7 @@ def test_get_player(client, resource, run):
 @patch('boto3.client')
 def test_get_player_raises(client, resource):
     result = get_player_by_id('id1')
-    assert result.body['message'] == "Player não encontrado"
+    assert result.body['message'] == "Player not found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
 
@@ -217,7 +217,7 @@ def test_get_all_player(client, resource, run):
 def test_get_all_player_raises(client, resource):
     result = get_all_player()
 
-    assert result.body['message'] == "Nenhum player encontrado"
+    assert result.body['message'] == "No player found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
 
@@ -277,7 +277,7 @@ def make_post_mock_data_without_authorization():
 def test_post_player_no_authorization_raises(client, resource, run):
     with pytest.raises(TokenNotFoundException) as excinfo:
         post_player()
-    assert str(excinfo.value) == 'Token não encontrado no JWT'
+    assert str(excinfo.value) == 'Token not found on JWT'
 
 
 # noinspection PyUnusedLocal
@@ -300,7 +300,7 @@ def test_get_all_friends(client, resource, run):
 def test_get_all_friends_raises(client, resource):
     result = get_friends_route('123123')
 
-    assert result.body['message'] == "Favoritos não enontrados"
+    assert result.body['message'] == "Favorites not found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
 

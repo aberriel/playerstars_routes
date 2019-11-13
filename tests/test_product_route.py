@@ -22,7 +22,7 @@ def test_get_all_product(client, resource, run):
 def teste_get_all_product_not_found(client, resource):
     result = get_all_product()
 
-    assert result.body['message'] == 'Nenhum product encontrado'
+    assert result.body['message'] == 'No product found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

@@ -4,42 +4,42 @@ from chalice import Response
 
 
 def success_dict(data):
-    """Retorna dict de sucesso com o data especificado."""
+    """Returns success dict with specified data."""
     return dict(status='success',
                 data=data)
 
 
 def error_dict(message):
-    """Retorna dict de erro com o message especificado."""
+    """Returns error dict with specified message."""
     return dict(status='error',
                 message=message)
 
 
 def success(data=None):
-    """Retorna sucesso com o data especificado."""
+    """Returns success response with specified data."""
     return Response(success_dict(data), status_code=200)
 
 
 def created(data=None):
-    """Retorna criado com o data especificado."""
+    """Returns 'Created with Success' response with created data."""
     return Response(success_dict(data), status_code=201)
 
 
 def redirect(url):
-    """Retorna redirect com o location especificado."""
+    """Returns redirect response with location to redirect."""
     return Response(body=None, headers=dict(Location=url), status_code=302)
 
 
 def bad_request(message):
-    """Retorna bad request com o message especificado."""
+    """Returns 'Bad Request' error with details on message."""
     return Response(body=error_dict(message), status_code=400)
 
 
 def not_found(message):
-    """Retorna not found com o message especificado."""
+    """Returns 'Not Found' error with details on message."""
     return Response(body=error_dict(message), status_code=404)
 
 
 def server_error(message):
-    """Retorna erro interno do servidor com o message especificado."""
+    """Returns internal server error with details on message."""
     return Response(body=error_dict(message), status_code=500)

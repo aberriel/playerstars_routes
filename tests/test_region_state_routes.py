@@ -26,7 +26,7 @@ def test_get_all_region_state(client, resource, run):
 def teste_get_all_region_state_not_found(clien, resource):
     result = get_all_region_state()
 
-    assert result.body['message'] == 'Nenhum region-state encontrado'
+    assert result.body['message'] == 'No region-state found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -51,7 +51,7 @@ def test_get_region_state(client, resource, run):
 def test_get_region_state_not_found(client, resource):
     result = get_region_state_by_id('id001')
 
-    assert result.body['message'] == 'Region-state não encontrado'
+    assert result.body['message'] == 'Region-state not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
