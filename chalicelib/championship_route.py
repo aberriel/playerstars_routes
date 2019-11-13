@@ -82,7 +82,7 @@ def get_all_championships():
         return server_error(str(exc))
 
 
-@bp_championship.route('/{championship_id', **private_get())
+@bp_championship.route('/{championship_id}', **private_get())
 def get_championship_by_id(championship_id):
     championship_adapter = get_championship_adapter()
     duel_adapter = get_duel_adapter()
@@ -104,6 +104,12 @@ def get_championship_by_id(championship_id):
         return not_found('Championship not found')
     except BaseException as exc:
         return server_error(str(exc))
+
+
+@bp_championship.route('/championships-by-member/{member_id}',
+                       **private_get())
+def get_championships_by_member(member_id):
+    pass
 
 
 @bp_championship.route('/', **private_post())

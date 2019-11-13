@@ -1,6 +1,7 @@
 from chalicelib import (
     get_all_championships,
     get_championship_by_id,
+    get_championships_by_member,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,
@@ -66,6 +67,16 @@ def make_create_championship_mock_data():
         "championship_type": "Player",
         "max_members": 4,
         "start_datetime": "2019-12-10T13:25:07+00:00"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+def make_get_championships_by_member_mock_data():
+    payload = """{
+        'member_id': 'a1s2d3',
+        'member_type': 'Player'
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
@@ -148,6 +159,43 @@ def test_get_championship_not_found(client, resource):
 @patch('boto3.client')
 def test_get_championship_raises(client, resource):
     response = get_championship_by_id('ch1')
+    assert response.body['message'] == 'oops'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.bp_championship',
+       make_get_championships_by_member_mock_data())
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_member(client, resource, run):
+    response = get_championships_by_member()
+    run.assert_called_once()
+    assert response.body['status'] == 'success'
+    assert response.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_member_empty(client, resource):
+    response = get_championships_by_member()
+    assert response.body['message'] == 'No championship found'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipsByMember.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_member_raises(client, resource):
+    response = get_championships_by_member()
     assert response.body['message'] == 'oops'
     assert response.body['status'] == 'error'
     assert response.status_code == 500
