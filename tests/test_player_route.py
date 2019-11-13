@@ -5,7 +5,8 @@ from chalicelib.player_route import (
     get_all_player, get_player_by_id, post_player, get_my_profile,
     get_friends_route, post_friend_route, delete_friend_route,
     put_player, get_all_teams_from_player, post_console_data_route,
-    post_accept_terms_route, accept_team_invitation_route
+    post_accept_terms_route, accept_team_invitation_route,
+    get_player_by_console
 )
 import json
 import pytest
@@ -528,3 +529,54 @@ def test_post_accept_team_invite_raises(client, resource):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+def query_params():
+    return {
+        'console_id': '123',
+        'game_id': 'id1234'
+    }
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(query_params=query_params())))
+@patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_by_console(client, resource, run):
+    result = get_player_by_console()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(query_params=query_params())))
+@patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run',
+       return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_by_console_empty(client, resource, run):
+    result = get_player_by_console()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == 'Nenhum player encontrado para o' \
+                                     ' console: 123 e o game:id1234'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(query_params=query_params())))
+@patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run',
+       side_effect=BaseException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_by_console_raises(client, resource, run):
+    result = get_player_by_console()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'

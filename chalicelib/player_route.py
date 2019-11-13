@@ -16,7 +16,8 @@ from playerstars_interactors import (
     GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
     UpdateEntityException, PostPlayerAcceptTermsInteractor,
     PostPlayerConsoleDataInteractor, AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationException, AcceptTeamInvitationRequestModel)
+    AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
+    GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -32,6 +33,10 @@ def get_router():
 
 def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def get_console_adapter():
+    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_adapter():
@@ -85,6 +90,25 @@ def get_player_by_id(entity_id):
 @bp_player.route('/', **private_get())
 def get_all_player():
     return get_router().get_all()
+
+
+@bp_player.route('/list', **private_get())
+def get_player_by_console():
+    query_params = bp_player.current_request.query_params
+    try:
+        player_adapter = get_adapter()
+        console_adapter = get_console_adapter()
+        request = GetPlayersByConsoleGameRequestModel(query_params)
+        interactor = GetPlayersByConsoleGameInteractor(
+            request, player_adapter, console_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f"Nenhum player encontrado para o console: "
+                         f"{query_params.get('console_id', None)} e o game:"
+                         f"{query_params.get('game_id', None)}")
+    except BaseException as exc:
+        return server_error(str(exc))
 
 
 @bp_player.route('/get-my-profile', **private_get())
@@ -172,8 +196,7 @@ def post_console_data_route():
 
 def post_console_data(json_data):
     adapter = get_adapter()
-    console_adapter = ConsoleAdapter(
-        Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
+    console_adapter = get_console_adapter()
     request = BasicPostRequestModel(json_data)
     interactor = PostPlayerConsoleDataInteractor(
         request, adapter, console_adapter, Player)
