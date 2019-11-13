@@ -82,7 +82,7 @@ def get_all_championships():
         return server_error(str(exc))
 
 
-@bp_championship.route('/{championship_id', **private_get())
+@bp_championship.route('/{championship_id}', **private_get())
 def get_championship_by_id(championship_id):
     championship_adapter = get_championship_adapter()
     duel_adapter = get_duel_adapter()
