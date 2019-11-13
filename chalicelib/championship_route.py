@@ -106,10 +106,12 @@ def get_championship_by_id(championship_id):
         return server_error(str(exc))
 
 
-@bp_championship.route('/championships-by-member/{member_id}',
+@bp_championship.route('/championships-by-member',
                        **private_get())
-def get_championships_by_member(member_id):
-    pass
+def get_championships_by_member():
+    data = bp_championship.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_championship)
+    data.update({''})
 
 
 @bp_championship.route('/', **private_post())
