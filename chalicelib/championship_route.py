@@ -28,6 +28,8 @@ from playerstars_interactors import (
     CreateChampionshipInteractor,
 
     GetAllChampionshipsInteractor,
+    GetChampionshipInteractor,
+    GetChampionshipRequestModel,
 
     JoinOpenChampionshipException,
     JoinOpenChampionshipInteractor,
@@ -76,6 +78,30 @@ def get_all_championships():
         if response:
             return success(response)
         return not_found('No championship found')
+    except BaseException as exc:
+        return server_error(str(exc))
+
+
+@bp_championship.route('/{championship_id', **private_get())
+def get_championship_by_id(championship_id):
+    championship_adapter = get_championship_adapter()
+    duel_adapter = get_duel_adapter()
+    player_adapter = get_player_adapter()
+    team_adapter = get_team_adapter()
+
+    try:
+        request = GetChampionshipRequestModel(championship_id)
+        interactor = GetChampionshipInteractor(
+            request=request,
+            championship_adapter=championship_adapter,
+            duel_adapter=duel_adapter,
+            player_adapter=player_adapter,
+            team_adapter=team_adapter)
+        response = interactor.run()
+
+        if response:
+            return success(response)
+        return not_found('Championship not found')
     except BaseException as exc:
         return server_error(str(exc))
 
