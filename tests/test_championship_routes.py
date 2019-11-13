@@ -1,4 +1,6 @@
 from chalicelib import (
+    get_all_championships,
+    get_championship_by_id,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,
@@ -81,6 +83,42 @@ def make_join_open_championship_mock_data():
         json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetAllChampionshipsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_championships(client, resource, run):
+    result = get_all_championships()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetAllChampionshipsInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_championships_empty(client, resource):
+    result = get_all_championships()
+    assert result.body['message'] == 'No championship found'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetAllChampionshipsInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_championship_raises(client, resource):
+    result = get_all_championships()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_accept_invitation',
        make_accept_invitation_mock_data())
 @patch('chalicelib.championship_route.AcceptInvitationInteractor.run')
@@ -95,6 +133,7 @@ def test_post_accept_invitation(boto_client,
     assert result.status_code == 200
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_accept_invitation',
        make_accept_invitation_mock_data())
 @patch('chalicelib.championship_route.AcceptInvitationInteractor.run',
@@ -108,6 +147,7 @@ def test_post_accept_invitation_raises(client, resource):
     assert result.status_code == 500
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_create_championship',
        make_create_championship_mock_data())
 @patch('chalicelib.championship_route.CreateChampionshipInteractor.run')
@@ -122,6 +162,7 @@ def test_post_create_championship(boto_client,
     assert result.status_code == 200
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_create_championship',
        make_create_championship_mock_data())
 @patch('chalicelib.championship_route.CreateChampionshipInteractor.run',
@@ -136,6 +177,7 @@ def test_post_create_championship_raises(boto_client,
     assert result.status_code == 500
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_join_open_championship',
        make_join_open_championship_mock_data())
 @patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run')
@@ -150,6 +192,7 @@ def test_post_join_open_championship(boto_client,
     assert result.status_code == 200
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_join_open_championship',
        make_join_open_championship_mock_data())
 @patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run',
@@ -164,6 +207,7 @@ def test_post_join_open_championship_raises(boto_client,
     assert result.status_code == 500
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_add_friend_to_championship',
        make_add_friend_to_championship_mock_data())
 @patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run')
@@ -178,6 +222,7 @@ def test_post_add_friend_to_championship(boto_client,
     assert result.status_code == 200
 
 
+# noinspection PyUnusedLocal
 @patch('chalicelib.championship_route.bp_add_friend_to_championship',
        make_add_friend_to_championship_mock_data())
 @patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run',
