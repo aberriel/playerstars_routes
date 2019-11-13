@@ -1,10 +1,12 @@
 from chalicelib import (
     post_accept_invitation,
+    post_add_friend_to_championship,
     post_create_championship,
     post_join_open_championship
 )
 from playerstars_interactors import (
     AcceptInvitationException,
+    AddFriendToChampionshipException,
     CreateChampionshipException,
     JoinOpenChampionshipException
 )
@@ -22,6 +24,19 @@ def make_accept_invitation_mock_data():
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(
         json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+def make_add_friend_to_championship_mock_data():
+    payload = """{
+        "request_member_id": "123",
+        "member_type": "Player",
+        "friend_id": "456",
+        "championship_id": "abc"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)
+    ))
 
 
 def make_create_championship_mock_data():
@@ -144,6 +159,34 @@ def test_post_join_open_championship(boto_client,
 def test_post_join_open_championship_raises(boto_client,
                                             boto_resource):
     result = post_join_open_championship()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.championship_route.bp_add_friend_to_championship',
+       make_add_friend_to_championship_mock_data())
+@patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_add_friend_to_championship(boto_client,
+                                         boto_resource,
+                                         run):
+    result = post_add_friend_to_championship()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.championship_route.bp_add_friend_to_championship',
+       make_add_friend_to_championship_mock_data())
+@patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run',
+       MagicMock(side_effect=AddFriendToChampionshipException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_add_friend_to_championship_raises(boto_client,
+                                                boto_resource):
+    result = post_add_friend_to_championship()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
