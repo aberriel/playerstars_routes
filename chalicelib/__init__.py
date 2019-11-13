@@ -1,6 +1,7 @@
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
     get_all_championships,
+    get_championship_by_id,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,
@@ -119,14 +120,16 @@ __all__ = [
     'post_invitation_email',
     'post_welcome_email',
 
+    'get_app_notification_by_status',
     'post_app_notification',
     'get_app_notification',
 
+    'get_all_championships',
+    'get_championship_by_id',
     'post_accept_invitation',
     'post_add_friend_to_championship',
     'post_create_championship',
     'post_join_open_championship',
-    'get_app_notification_by_status',
 
     'get_history_route',
 
