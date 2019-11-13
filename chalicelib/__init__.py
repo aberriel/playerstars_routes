@@ -32,7 +32,8 @@ from .player_route import (
     post_player,
     put_player,
     post_accept_terms_route,
-    post_console_data_route
+    post_console_data_route,
+    get_player_by_console
 )
 from .product_route import get_all_product, post_product
 from .region_country_route import (
@@ -124,5 +125,7 @@ __all__ = [
     'post_join_open_championship',
     'get_app_notification_by_status',
 
-    'get_history_route'
+    'get_history_route',
+
+    'get_player_by_console'
 ]
