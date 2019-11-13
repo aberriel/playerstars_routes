@@ -1,6 +1,5 @@
 from chalicelib import (
     get_all_championships,
-    get_championship_by_id,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,

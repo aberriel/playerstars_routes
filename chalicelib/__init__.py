@@ -1,5 +1,6 @@
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
+    get_all_championships,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,

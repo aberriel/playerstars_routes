@@ -1,5 +1,7 @@
 from chalice import Blueprint
 from chalicelib.chalice_support import (
+    not_found,
+    private_get,
     private_post,
     server_error,
     success
@@ -8,6 +10,7 @@ from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import (
     ChampionshipAdapter,
+    DuelAdapter,
     PlayerAdapter,
     TeamAdapter
 )
@@ -24,6 +27,8 @@ from playerstars_interactors import (
     CreateChampionshipRequestModel,
     CreateChampionshipInteractor,
 
+    GetAllChampionshipsInteractor,
+
     JoinOpenChampionshipException,
     JoinOpenChampionshipInteractor,
     JoinOpenChampionshipRequestModel
@@ -32,13 +37,18 @@ from playerstars_interactors import (
 
 bp_accept_invitation = Blueprint(__name__)
 bp_add_friend_to_championship = Blueprint(__name__)
-bp_create_championship = Blueprint(__name__)
+bp_championship = Blueprint(__name__)
 bp_join_open_championship = Blueprint(__name__)
 
 
 def get_championship_adapter():
     return ChampionshipAdapter(Settings.CHAMPIONSHIP_TABLE_NAME,
                                Settings.DYNAMODB_URL)
+
+
+def get_duel_adapter():
+    return DuelAdapter(Settings.DUEL_TABLE_NAME,
+                       Settings.DYNAMODB_URL)
 
 
 def get_player_adapter():
@@ -49,7 +59,28 @@ def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@bp_create_championship.route('/', **private_post())
+@bp_championship.route('/', **private_get())
+def get_all_championships():
+    championship_adapter = get_championship_adapter()
+    duel_adapter = get_duel_adapter()
+    player_adapter = get_player_adapter()
+    team_adapter = get_team_adapter()
+
+    try:
+        interactor = GetAllChampionshipsInteractor(
+            championship_adapter=championship_adapter,
+            duel_adapter=duel_adapter,
+            player_adapter=player_adapter,
+            team_adapter=team_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found('No championship found')
+    except BaseException as exc:
+        return server_error(str(exc))
+
+
+@bp_championship.route('/', **private_post())
 def post_create_championship():
     data = bp_create_championship.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_create_championship)
