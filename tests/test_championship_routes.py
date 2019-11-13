@@ -1,5 +1,6 @@
 from chalicelib import (
     get_all_championships,
+    get_championship_by_id,
     post_accept_invitation,
     post_add_friend_to_championship,
     post_create_championship,
@@ -115,6 +116,41 @@ def test_get_all_championship_raises(client, resource):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championship(client, resource, run):
+    response = get_championship_by_id('ch1')
+    run.assert_called_once()
+    assert response.body['status'] == 'success'
+    assert response.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championship_not_found(client, resource):
+    response = get_championship_by_id('ch1')
+    assert response.body['message'] == 'Championship not found'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championship_raises(client, resource):
+    response = get_championship_by_id('ch1')
+    assert response.body['message'] == 'oops'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 500
 
 
 # noinspection PyUnusedLocal
