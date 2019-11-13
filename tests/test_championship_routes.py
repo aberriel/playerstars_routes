@@ -147,7 +147,7 @@ def test_post_accept_invitation_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_create_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_create_championship_mock_data())
 @patch('chalicelib.championship_route.CreateChampionshipInteractor.run')
 @patch('boto3.resource')
@@ -162,7 +162,7 @@ def test_post_create_championship(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_create_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_create_championship_mock_data())
 @patch('chalicelib.championship_route.CreateChampionshipInteractor.run',
        MagicMock(side_effect=CreateChampionshipException('oops')))

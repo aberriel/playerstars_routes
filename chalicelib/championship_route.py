@@ -82,8 +82,8 @@ def get_all_championships():
 
 @bp_championship.route('/', **private_post())
 def post_create_championship():
-    data = bp_create_championship.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_create_championship)
+    data = bp_championship.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_championship)
     data.update({'owner': entity_id})
 
     player_adapter = get_player_adapter()
