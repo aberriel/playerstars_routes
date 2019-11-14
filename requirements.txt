@@ -1,4 +1,4 @@
-chalice==1.12.0
+chalice==1.11.0
 playerstars_mail
 playerstars_domain
 playerstars_adapters
