@@ -1,7 +1,8 @@
 from chalicelib import (
     get_all_championships,
     get_championship_by_id,
-    get_championships_by_member,
+    get_championships_by_player,
+    get_championships_by_team,
     get_open_championships,
     post_accept_invitation,
     post_add_friend_to_championship,
@@ -75,13 +76,8 @@ def make_create_championship_mock_data():
 
 
 def make_get_championships_by_member_mock_data():
-    payload = """{
-        'member_id': 'a1s2d3',
-        'member_type': 'Player'
-    }"""
-    data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(
-        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
 
 
 def make_join_open_championship_mock_data():
@@ -171,8 +167,49 @@ def test_get_championship_raises(client, resource):
 @patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_championships_by_member(client, resource, run):
-    response = get_championships_by_member()
+def test_get_championships_by_player(boto_client,
+                                     boto_resource,
+                                     run):
+    response = get_championships_by_player()
+    run.assert_called_once()
+    assert response.body['status'] == 'success'
+    assert response.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.bp_championship',
+       make_get_championships_by_member_mock_data())
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_player_empty(client, resource):
+    response = get_championships_by_player()
+    assert response.body['message'] == 'No championship found'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.bp_championship',
+       make_get_championships_by_member_mock_data())
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run',
+       MagicMock(side_effect=BaseException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_player_raises(client, resource):
+    response = get_championships_by_player()
+    assert response.body['message'] == 'oops'
+    assert response.body['status'] == 'error'
+    assert response.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_championships_by_team(client, resource, run):
+    response = get_championships_by_team('t01')
     run.assert_called_once()
     assert response.body['status'] == 'success'
     assert response.status_code == 200
@@ -183,20 +220,20 @@ def test_get_championships_by_member(client, resource, run):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_championships_by_member_empty(client, resource):
-    response = get_championships_by_member()
+def test_get_championships_by_team_empty(client, resource):
+    response = get_championships_by_team('t01')
     assert response.body['message'] == 'No championship found'
     assert response.body['status'] == 'error'
     assert response.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.GetChampionshipsByMember.run',
+@patch('chalicelib.championship_route.GetChampionshipsByMemberInteractor.run',
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_championships_by_member_raises(client, resource):
-    response = get_championships_by_member()
+def test_get_championships_by_team_raises(client, resource):
+    response = get_championships_by_team('t01')
     assert response.body['message'] == 'oops'
     assert response.body['status'] == 'error'
     assert response.status_code == 500

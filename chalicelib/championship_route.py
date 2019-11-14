@@ -110,20 +110,16 @@ def get_championship_by_id(championship_id):
         return server_error(str(exc))
 
 
-@bp_championship.route('/find-by-member',
-                       **private_get())
-def get_championships_by_member():
-    data = bp_championship.current_request.json_body
+@bp_championship.route('/find-by-player', **private_get())
+def get_championships_by_player():
     player_id = get_user_id_from_jwt(bp_championship)
-    data.update({'player_id': player_id})
-
     championship_adapter = get_championship_adapter()
     duel_adapter = get_duel_adapter()
     player_adapter = get_player_adapter()
     team_adapter = get_team_adapter()
 
     try:
-        request = GetChampionshipsByMemberRequestModel(data)
+        request = GetChampionshipsByMemberRequestModel(player_id, 'Player')
         interactor = GetChampionshipsByMemberInteractor(
             request=request,
             championship_adapter=championship_adapter,
@@ -139,11 +135,32 @@ def get_championships_by_member():
         return server_error(str(exc))
 
 
-@bp_championship.route('/find-open/{championship_type', **private_get())
-def get_open_championships(championship_type):
-    data = bp_championship.current_request.json_body
-    championship_type = data['championship_type']
+@bp_championship.route('/find-by-team/{team_id}', **private_get())
+def get_championships_by_team(team_id):
+    championship_adapter = get_championship_adapter()
+    duel_adapter = get_duel_adapter()
+    player_adapter = get_player_adapter()
+    team_adapter = get_team_adapter()
 
+    try:
+        request = GetChampionshipsByMemberRequestModel(team_id, 'Player')
+        interactor = GetChampionshipsByMemberInteractor(
+            request=request,
+            championship_adapter=championship_adapter,
+            duel_adapter=duel_adapter,
+            player_adapter=player_adapter,
+            team_adapter=team_adapter)
+        response = interactor.run()
+
+        if response:
+            return success(response)
+        return not_found('No championship found')
+    except BaseException as exc:
+        return server_error(str(exc))
+
+
+@bp_championship.route('/find-open/{championship_type}', **private_get())
+def get_open_championships(championship_type):
     championship_adapter = get_championship_adapter()
     duel_adapter = get_duel_adapter()
     player_adapter = get_player_adapter()
