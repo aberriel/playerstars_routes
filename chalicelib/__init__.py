@@ -76,6 +76,10 @@ from .purchase_route import (
     get_history_route
 )
 
+from .convert_star_rate_route import (
+    delete_convert_rate, get_all_convert_rate, get_convert_rate_by_id,
+    put_convert_rate, post_convert_rate
+)
 
 __all__ = [
     'BasicEntityRoute',
@@ -139,5 +143,11 @@ __all__ = [
 
     'get_history_route',
 
-    'get_player_by_console'
+    'get_player_by_console',
+
+    'get_convert_rate_by_id',
+    'get_all_convert_rate',
+    'post_convert_rate',
+    'put_convert_rate',
+    'delete_convert_rate'
 ]

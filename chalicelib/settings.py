@@ -23,7 +23,8 @@ class Settings:
     TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team')
     USER_TABLE_NAME = config('USER_TABLE_NAME', 'user')
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin')
-
+    CONVERT_STAR_TABLE_NAME = config('CONVERT_STAR_TABLE_NAME', 'convert_rate')
+    
     DYNAMODB_URL = config('DYNAMODB_URL', None)
     PURCHASE_OPERATION_TIMEOUT = config('PURCHASE_OPERATION_TIMEOUT', 20)
     PAGSEGURO_RETURN_URL = config('PAGSEGURO_RETURN_URL', 'www.google.com.br')

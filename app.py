@@ -26,6 +26,7 @@ from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
 from chalicelib.team_route import bp_team
 from chalicelib.user_admin_route import bp_user_admin
+from chalicelib.convert_star_rate_route import bp_convert
 
 app = Chalice(app_name='playerstars')
 
@@ -62,6 +63,7 @@ app.register_blueprint(bp_add_friend_to_championship,
 app.register_blueprint(bp_championship, url_prefix='/championship')
 app.register_blueprint(bp_join_open_championship,
                        url_prefix='/championship/join-open-championship')
+app.register_blueprint(bp_convert, url_prefix='/convert-rate')
 
 
 @app.route('/check', methods=['POST', 'GET'])
