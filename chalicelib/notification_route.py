@@ -6,7 +6,9 @@ from playerstars_domain import Notification
 from chalicelib.chalice_support import private_post, private_get
 from playerstars_interactors import (
     PostAppNotificationInteractor, BasicPostRequestModel, SaveEntityException,
-    GetAppNotificationByUserInteractor, GetAppNotificationByUserRequestModel)
+    GetAppNotificationByUserInteractor, GetAppNotificationByUserRequestModel,
+    PostNotificationReadRequestModel, PostNotificationReadInteractor,
+    PostNotificationReadException)
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
 from chalicelib.utils import get_user_id_from_jwt
@@ -61,4 +63,15 @@ def get_by_user_and_status(entity_id, status):
                      f' {entity_id}')
 
 
+@bp_notification.route('/read/{entity_id}', **private_post())
+def post_notification_as_read(entity_id):
+    try:
+        player_id = get_user_id_from_jwt(bp_notification)
+        adapter = get_notification_adapter()
+        request = PostNotificationReadRequestModel(player_id, entity_id)
+        interactor = PostNotificationReadInteractor(request, adapter)
+        response = interactor.run()
+    except PostNotificationReadException as e:
+        return server_error(str(e))
+    return success(response)
 

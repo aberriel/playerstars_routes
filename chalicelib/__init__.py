@@ -30,7 +30,8 @@ from .game_route import (
 from .notification_route import (
     get_app_notification,
     post_app_notification,
-    get_app_notification_by_status
+    get_app_notification_by_status,
+    post_notification_as_read
 )
 from .player_route import (
     get_all_player,
@@ -152,5 +153,6 @@ __all__ = [
     'put_convert_rate',
     'delete_convert_rate',
 
-    'convert_star_route'
+    'convert_star_route',
+    'post_notification_as_read'
 ]

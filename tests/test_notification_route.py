@@ -1,8 +1,8 @@
 from playerstars_interactors import \
-    SaveEntityException
+    SaveEntityException, PostNotificationReadException
 from chalicelib import (
     post_app_notification, get_app_notification,
-    get_app_notification_by_status)
+    get_app_notification_by_status, post_notification_as_read)
 import json
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
@@ -94,3 +94,28 @@ def test_get_app_notification_by_status(client, resource, run, get_by_id):
 
     assert result.body['status'] == 'success'
     assert result.status_code == 200
+
+
+@patch('chalicelib.notification_route.bp_notification',
+       make_get_app_notification_request())
+@patch('chalicelib.notification_route.PostNotificationReadInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_notification_as_read(client, resource, run):
+    result = post_notification_as_read('id1234')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.notification_route.bp_notification',
+       make_get_app_notification_request())
+@patch('chalicelib.notification_route.PostNotificationReadInteractor.run',
+       side_effect=PostNotificationReadException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_notification_as_read_raises(client, resource, run):
+    result = post_notification_as_read('id1234')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
