@@ -17,7 +17,9 @@ from playerstars_interactors import (
     UpdateEntityException, PostPlayerAcceptTermsInteractor,
     PostPlayerConsoleDataInteractor, AcceptTeamInvitationInteractor,
     AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
-    GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor)
+    GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor,
+    SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
+    SaveConvertedStarsException)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -241,5 +243,19 @@ def accept_team_invitation(json_data):
     try:
         response = interactor.run()
     except AcceptTeamInvitationException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_player.route('/convert-stars', **private_post())
+def convert_star_route():
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'player_id': entity_id})
+        request = SaveConvertedStarsRequestModel(data)
+        interactor = SaveConvertedStarsInteractor(request, get_adapter())
+        response = interactor.run()
+    except SaveConvertedStarsException as e:
         return server_error(str(e))
     return success(response)
