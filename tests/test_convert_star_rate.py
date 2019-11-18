@@ -15,7 +15,7 @@ import json
 @patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_consoles(client, resource, run):
+def test_get_all_convert_rate(client, resource, run):
     result = get_all_convert_rate()
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -27,10 +27,10 @@ def test_get_all_consoles(client, resource, run):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_consoles_not_found(client, resource):
+def test_get_all_convert_rate_not_found(client, resource):
     result = get_all_convert_rate()
 
-    assert result.body['message'] == 'No console found'
+    assert result.body['message'] == 'No convert-rate found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -40,7 +40,7 @@ def test_get_all_consoles_not_found(client, resource):
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_consoles_raises(client, resource):
+def test_get_all_convert_rate_raises(client, resource):
     result = get_all_convert_rate()
 
     assert result.body['message'] == 'oops'
@@ -52,7 +52,7 @@ def test_get_all_consoles_raises(client, resource):
 @patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_console(client, resource, run):
+def test_get_convert_rate(client, resource, run):
     result = get_convert_rate_by_id('id1')
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -64,10 +64,10 @@ def test_get_console(client, resource, run):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_console_not_found(client, resource):
+def test_get_convert_rate_not_found(client, resource):
     result = get_convert_rate_by_id('id1')
 
-    assert result.body['message'] == 'Console not found'
+    assert result.body['message'] == 'Convert-rate not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -77,7 +77,7 @@ def test_get_console_not_found(client, resource):
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_console_raises(client, resource):
+def test_get_convert_rate_raises(client, resource):
     result = get_convert_rate_by_id('id1')
 
     assert result.body['message'] == 'oops'
@@ -107,7 +107,7 @@ def make_put_mock_data():
 @patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_console(client, resource, run):
+def test_post_convert_rate(client, resource, run):
     result = post_convert_rate()
 
     run.assert_called_once()
@@ -121,7 +121,7 @@ def test_post_console(client, resource, run):
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_console_raises(client, resource):
+def test_post_convert_rate_raises(client, resource):
     result = post_convert_rate()
 
     assert result.body['message'] == 'oops'
@@ -134,7 +134,7 @@ def test_post_console_raises(client, resource):
 @patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_console(client, resource, mock):
+def test_put_convert_rate(client, resource, mock):
     result = put_convert_rate('id1')
 
     mock.assert_called_once()
@@ -149,7 +149,7 @@ def test_put_console(client, resource, mock):
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_console_raises(client, resource):
+def test_put_convert_rate_raises(client, resource):
     result = put_convert_rate('id1')
 
     assert result.body['message'] == 'oops'
@@ -161,7 +161,7 @@ def test_put_console_raises(client, resource):
 @patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_delete_console(client, resource, mock):
+def test_delete_convert_rate(client, resource, mock):
     result = delete_convert_rate('id1')
 
     mock.assert_called_once()
@@ -174,10 +174,10 @@ def test_delete_console(client, resource, mock):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_delete_console_not_found(client, resource):
+def test_delete_convert_rate_not_found(client, resource):
     result = delete_convert_rate('id1')
 
-    assert result.body['message'] == 'Console not found to be deleted'
+    assert result.body['message'] == 'Convert-rate not found to be deleted'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -187,7 +187,7 @@ def test_delete_console_not_found(client, resource):
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_delete_console_raises(client, resource):
+def test_delete_convert_rate_raises(client, resource):
     result = delete_convert_rate('id1')
 
     assert result.body['message'] == 'oops'

@@ -13,7 +13,7 @@ bp_convert = Blueprint(__name__)
 def get_router():
     adapter = ConvertStarRateAdapter(
         Settings.CONVERT_STAR_TABLE_NAME, Settings.DYNAMODB_URL)
-    return BasicEntityRoute(adapter, ConvertStarRate, 'console')
+    return BasicEntityRoute(adapter, ConvertStarRate, 'convert-rate')
 
 
 @bp_convert.route('/', **private_get())

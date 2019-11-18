@@ -1,11 +1,12 @@
 from playerstars_interactors import \
     SaveEntityException, SaveFriendsException, UpdateEntityException, \
-    AcceptTeamInvitationException
+    AcceptTeamInvitationException, SaveConvertedStarsException
 from chalicelib.player_route import (
     get_all_player, get_player_by_id, post_player, get_my_profile,
     get_friends_route, post_friend_route, delete_friend_route,
     put_player, get_all_teams_from_player, post_console_data_route,
-    post_accept_terms_route, accept_team_invitation_route
+    post_accept_terms_route, accept_team_invitation_route,
+    convert_star_route
 )
 import json
 import pytest
@@ -575,6 +576,42 @@ def test_get_player_by_console_empty(client, resource, run):
 @patch('boto3.client')
 def test_get_player_by_console_raises(client, resource, run):
     result = get_all_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+def convert_star_json():
+    payload = """{
+        "gold_stars": 3,
+        "blue_stars": 300
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', convert_star_json())
+@patch('chalicelib.player_route.SaveConvertedStarsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_converted_star(client, resource, run):
+    result = convert_star_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', convert_star_json())
+@patch('chalicelib.player_route.SaveConvertedStarsInteractor.run',
+       side_effect=SaveConvertedStarsException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_converted_star_raises(client, resource, run):
+    result = convert_star_route()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
