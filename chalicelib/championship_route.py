@@ -1,18 +1,12 @@
 from chalice import Blueprint
 from chalicelib.chalice_support import (
-    not_found,
-    private_get,
-    private_post,
-    server_error,
-    success
+    not_found, private_get, private_post, server_error, success
 )
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import (
-    ChampionshipAdapter,
-    DuelAdapter,
-    PlayerAdapter,
-    TeamAdapter
+    ChampionshipAdapter, DuelAdapter, PlayerAdapter, TeamAdapter,
+    NotificationAdapter
 )
 from playerstars_interactors import (
     AcceptInvitationException,
@@ -65,19 +59,19 @@ def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
+def get_notification_adapter():
+    return NotificationAdapter(
+        Settings.NOTIFICATION_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 @bp_championship.route('/', **private_get())
 def get_all_championships():
-    championship_adapter = get_championship_adapter()
-    duel_adapter = get_duel_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     try:
         interactor = GetAllChampionshipsInteractor(
-            championship_adapter=championship_adapter,
-            duel_adapter=duel_adapter,
-            player_adapter=player_adapter,
-            team_adapter=team_adapter)
+            championship_adapter=get_championship_adapter(),
+            duel_adapter=get_duel_adapter(),
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter())
         response = interactor.run()
         if response:
             return success(response)
@@ -88,19 +82,14 @@ def get_all_championships():
 
 @bp_championship.route('/{championship_id}', **private_get())
 def get_championship_by_id(championship_id):
-    championship_adapter = get_championship_adapter()
-    duel_adapter = get_duel_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     try:
         request = GetChampionshipRequestModel(championship_id)
         interactor = GetChampionshipInteractor(
             request=request,
-            championship_adapter=championship_adapter,
-            duel_adapter=duel_adapter,
-            player_adapter=player_adapter,
-            team_adapter=team_adapter)
+            championship_adapter=get_championship_adapter(),
+            duel_adapter=get_duel_adapter(),
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter())
         response = interactor.run()
 
         if response:
@@ -113,19 +102,14 @@ def get_championship_by_id(championship_id):
 @bp_championship.route('/find-by-player', **private_get())
 def get_championships_by_player():
     player_id = get_user_id_from_jwt(bp_championship)
-    championship_adapter = get_championship_adapter()
-    duel_adapter = get_duel_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     try:
         request = GetChampionshipsByMemberRequestModel(player_id, 'Player')
         interactor = GetChampionshipsByMemberInteractor(
             request=request,
-            championship_adapter=championship_adapter,
-            duel_adapter=duel_adapter,
-            player_adapter=player_adapter,
-            team_adapter=team_adapter)
+            championship_adapter=get_championship_adapter(),
+            duel_adapter=get_duel_adapter(),
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter())
         response = interactor.run()
 
         if response:
@@ -137,19 +121,14 @@ def get_championships_by_player():
 
 @bp_championship.route('/find-by-team/{team_id}', **private_get())
 def get_championships_by_team(team_id):
-    championship_adapter = get_championship_adapter()
-    duel_adapter = get_duel_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     try:
         request = GetChampionshipsByMemberRequestModel(team_id, 'Player')
         interactor = GetChampionshipsByMemberInteractor(
             request=request,
-            championship_adapter=championship_adapter,
-            duel_adapter=duel_adapter,
-            player_adapter=player_adapter,
-            team_adapter=team_adapter)
+            championship_adapter=get_championship_adapter(),
+            duel_adapter=get_duel_adapter(),
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter())
         response = interactor.run()
 
         if response:
@@ -189,16 +168,13 @@ def post_create_championship():
     entity_id = get_user_id_from_jwt(bp_championship)
     data.update({'owner': entity_id})
 
-    player_adapter = get_player_adapter()
-    championship_adapter = get_championship_adapter()
-    team_adapter = get_team_adapter()
-
     request = CreateChampionshipRequestModel(data)
     interactor = CreateChampionshipInteractor(
         request=request,
-        championship_adapter=championship_adapter,
-        player_adapter=player_adapter,
-        team_adapter=team_adapter
+        championship_adapter=get_championship_adapter(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        notification_adapter=get_notification_adapter()
     )
 
     try:
@@ -214,19 +190,15 @@ def post_accept_invitation():
     entity_id = get_user_id_from_jwt(bp_accept_invitation)
     data.update({'entity_id': entity_id})
 
-    player_adapter = get_player_adapter()
-    championship_adapter = get_championship_adapter()
-    team_adapter = get_team_adapter()
-
     request = AcceptInvitationRequestModel(
         invitation_code=data['invitation_code'],
         accepted=data['accepted']
     )
     interactor = AcceptInvitationInteractor(
         request=request,
-        player_adapter=player_adapter,
-        team_adapter=team_adapter,
-        championship_adapter=championship_adapter
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        championship_adapter=get_championship_adapter()
     )
 
     try:
@@ -243,16 +215,12 @@ def post_join_open_championship():
     entity_id = get_user_id_from_jwt(bp_join_open_championship)
     data.update({'entity_id': entity_id})
 
-    championship_adapter = get_championship_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     request = JoinOpenChampionshipRequestModel(data)
     interactor = JoinOpenChampionshipInteractor(
         request=request,
-        championship_adapter=championship_adapter,
-        player_adapter=player_adapter,
-        team_adapter=team_adapter)
+        championship_adapter=get_championship_adapter(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
 
     try:
         response = interactor.run()
@@ -268,16 +236,14 @@ def post_add_friend_to_championship():
     player_id = get_user_id_from_jwt(bp_add_friend_to_championship)
     data.update({'entity_id': player_id})
 
-    championship_adapter = get_championship_adapter()
-    player_adapter = get_player_adapter()
-    team_adapter = get_team_adapter()
-
     request = AddFriendToChampionshipRequestModel(data)
     interactor = AddFriendToChampionshipInteractor(
         request=request,
-        championship_adapter=championship_adapter,
-        player_adapter=player_adapter,
-        team_adapter=team_adapter)
+        championship_adapter=get_championship_adapter(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        notification_adapter=get_notification_adapter()
+    )
 
     try:
         response = interactor.run()
