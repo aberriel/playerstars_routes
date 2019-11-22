@@ -24,7 +24,8 @@ from chalicelib.region_state_route import bp_region_state
 from chalicelib.send_contact_email import bp_contact_email
 from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
-from chalicelib.team_route import bp_team
+from chalicelib.team_route import (
+    bp_team, bp_enter_team)
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
 
@@ -55,7 +56,7 @@ app.register_blueprint(bp_duel, url_prefix='/duel')
 app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_accept_invitation,
                        url_prefix='/championship/accept-invitation')
-
+app.register_blueprint(bp_enter_team, url_prefix='/enter')
 app.register_blueprint(bp_add_friend_to_championship,
                        url_prefix='/championship/add-friend-to-championship')
 app.register_blueprint(bp_championship, url_prefix='/championship')
