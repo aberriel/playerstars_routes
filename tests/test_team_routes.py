@@ -3,7 +3,7 @@ import json
 from playerstars_interactors import (
     SaveEntityException, UpdateEntityException, EnterTeamException
 )
-
+from tests.test_utils import jwt
 from chalicelib import (
     get_all_teams, get_team_by_id, get_all_teams_by_user, post_team,
     put_team, enter_team)
@@ -205,11 +205,11 @@ def test_put_team_raises(client, resource):
 
 def make_enter_team_mock_data():
     payload = """{
-    "player_id": "userid#123",
     "team_id": "duelid123"
     }"""
     data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(json_body=data))
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal
@@ -217,7 +217,7 @@ def make_enter_team_mock_data():
        return_value=MagicMock())
 @patch('chalicelib.team_route.EnterTeamInteractor._recover_player',
        return_value=MagicMock())
-@patch('chalicelib.team_route.bp_enter_team',
+@patch('chalicelib.team_route.bp_team',
        make_enter_team_mock_data())
 @patch('chalicelib.team_route.EnterTeamInteractor.run')
 @patch('boto3.resource')
@@ -235,7 +235,7 @@ def test_enter_team(client, resource, run, player, duel):
        return_value=MagicMock())
 @patch('chalicelib.team_route.EnterTeamInteractor._recover_player',
        return_value=MagicMock())
-@patch('chalicelib.team_route.bp_enter_team',
+@patch('chalicelib.team_route.bp_team',
        make_enter_team_mock_data())
 @patch('chalicelib.team_route.EnterTeamInteractor.run',
        MagicMock(side_effect=EnterTeamException('oops')))

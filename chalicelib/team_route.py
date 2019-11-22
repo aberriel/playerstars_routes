@@ -13,6 +13,7 @@ from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 from chalicelib.chalice_support import \
     success, not_found, created, server_error
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_team = Blueprint(__name__)
 bp_enter_team = Blueprint(__name__)
@@ -88,9 +89,11 @@ def put(data):
     return success(response)
 
 
-@bp_enter_team.route('/', **private_post())
+@bp_team.route('/enter', **private_post())
 def enter_team():
-    data = bp_enter_team.current_request.json_body
+    data = bp_team.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_team)
+    data.update({'player_id': entity_id})
     return enter_team_post(data)
 
 
