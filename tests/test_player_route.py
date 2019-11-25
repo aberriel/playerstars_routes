@@ -6,7 +6,8 @@ from chalicelib.player_route import (
     get_friends_route, post_friend_route, delete_friend_route,
     put_player, get_all_teams_from_player, post_console_data_route,
     post_accept_terms_route, accept_team_invitation_route,
-    convert_star_route
+    convert_star_route, post_friend_route_v2, get_friends_route_v2,
+    delete_friend_route_v2
 )
 import json
 import pytest
@@ -293,6 +294,24 @@ def test_get_all_friends(client, resource, run):
     assert result.status_code == 200
 
 
+def make_get_friends_mock_data():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_get_friends_mock_data())
+@patch('chalicelib.player_route.GetAllFriendsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_friends_v2(client, resource, run):
+    result = get_friends_route_v2()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.GetAllFriendsInteractor.run',
        MagicMock(return_value=None))
@@ -329,6 +348,19 @@ def test_post_friends(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_friends_v2(client, resource, run):
+    result = post_friend_route_v2()
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
 @patch('chalicelib.player_route.AlterFriendsInteractor.run',
        MagicMock(side_effect=SaveFriendsException('oops')))
 @patch('boto3.resource')
@@ -347,6 +379,19 @@ def test_post_friends_raises(client, resource):
 @patch('boto3.client')
 def test_delete_friends(client, resource, run):
     result = delete_friend_route('12132123')
+    run.assert_called_once()
+
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_friends_v2(client, resource, run):
+    result = delete_friend_route_v2()
     run.assert_called_once()
 
     assert result.body['status'] == 'success'

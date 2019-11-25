@@ -19,7 +19,7 @@ from playerstars_interactors import (
     AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
     GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor,
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
-    SaveConvertedStarsException)
+    SaveConvertedStarsException, GetRankingByConsoleGameRequestModel)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -149,6 +149,12 @@ def get_friends_route(entity_id):
     return get_friends(entity_id)
 
 
+@bp_player.route('/friends', **private_get())
+def get_friends_route_v2():
+    entity_id = get_user_id_from_jwt(bp_player)
+    return get_friends(entity_id)
+
+
 def get_friends(entity_id):
     adapter = get_adapter()
     request = GetAllFriendsRequestModel(entity_id)
@@ -165,9 +171,23 @@ def post_friend_route(entity_id):
     return alter_friend_list(entity_id, data, 'add')
 
 
+@bp_player.route('/friends', **private_post())
+def post_friend_route_v2():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    return alter_friend_list(entity_id, data, 'add')
+
+
 @bp_player.route('/{entity_id}/friends', **private_delete())
 def delete_friend_route(entity_id):
     data = bp_player.current_request.json_body
+    return alter_friend_list(entity_id, data, 'delete')
+
+
+@bp_player.route('/friends', **private_delete())
+def delete_friend_route_v2():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
     return alter_friend_list(entity_id, data, 'delete')
 
 
