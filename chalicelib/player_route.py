@@ -19,7 +19,8 @@ from playerstars_interactors import (
     AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
     GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor,
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
-    SaveConvertedStarsException, GetRankingByConsoleGameRequestModel)
+    SaveConvertedStarsException, GetRankingByConsoleGameRequestModel,
+    GetRankingByConsoleGameInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
@@ -279,3 +280,19 @@ def convert_star_route():
     except SaveConvertedStarsException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_player.route('/ranking', **private_get())
+def get_ranking_route():
+    try:
+        query_params = bp_player.current_request.query_params
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetRankingByConsoleGameRequestModel(query_params, entity_id)
+        interactor = GetRankingByConsoleGameInteractor(
+            request, get_adapter(), get_console_adapter())
+        response = interactor.run()
+        if response:
+            return success(response)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} ranking not found')
