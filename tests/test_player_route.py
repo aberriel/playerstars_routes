@@ -677,14 +677,15 @@ def query_params_ranking():
        MagicMock(current_request=MagicMock(
            query_params=query_params_ranking(),
            headers=dict(AUTHORIZATION=jwt))))
-@patch('chalicelib.player_route.GetRankingByConsoleGameInteractor.run')
+@patch('chalicelib.player_route.GetRankingByConsoleGameInteractor.run',
+       return_value=(MagicMock(), MagicMock()))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_ranking(client, resource, run):
     result = get_ranking_route()
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 206
 
 
 # noinspection PyUnusedLocal
@@ -710,7 +711,7 @@ def test_get_ranking_error(client, resource, run):
            query_params=query_params_ranking(),
            headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.player_route.GetRankingByConsoleGameInteractor.run',
-       return_value=None)
+       return_value=(None, None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_ranking_not_found(client, resource, run):
