@@ -23,7 +23,7 @@ from playerstars_interactors import (
     GetRankingByConsoleGameInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
-    server_error, created, success, not_found)
+    server_error, created, success, not_found, success_partial)
 
 bp_player = Blueprint(__name__)
 
@@ -290,9 +290,11 @@ def get_ranking_route():
         request = GetRankingByConsoleGameRequestModel(query_params, entity_id)
         interactor = GetRankingByConsoleGameInteractor(
             request, get_adapter(), get_console_adapter())
-        response = interactor.run()
+        response, range_data = interactor.run()
         if response:
-            return success(response)
+            return success_partial(
+                response, range_data.unit, range_data.initial,
+                range_data.final, range_data.total)
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} ranking not found')
