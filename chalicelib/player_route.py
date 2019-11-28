@@ -19,10 +19,11 @@ from playerstars_interactors import (
     AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
     GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor,
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
-    SaveConvertedStarsException)
+    SaveConvertedStarsException, GetRankingByConsoleGameRequestModel,
+    GetRankingByConsoleGameInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
-    server_error, created, success, not_found)
+    server_error, created, success, not_found, success_partial)
 
 bp_player = Blueprint(__name__)
 
@@ -149,6 +150,12 @@ def get_friends_route(entity_id):
     return get_friends(entity_id)
 
 
+@bp_player.route('/friends', **private_get())
+def get_friends_route_v2():
+    entity_id = get_user_id_from_jwt(bp_player)
+    return get_friends(entity_id)
+
+
 def get_friends(entity_id):
     adapter = get_adapter()
     request = GetAllFriendsRequestModel(entity_id)
@@ -165,9 +172,23 @@ def post_friend_route(entity_id):
     return alter_friend_list(entity_id, data, 'add')
 
 
+@bp_player.route('/friends', **private_post())
+def post_friend_route_v2():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
+    return alter_friend_list(entity_id, data, 'add')
+
+
 @bp_player.route('/{entity_id}/friends', **private_delete())
 def delete_friend_route(entity_id):
     data = bp_player.current_request.json_body
+    return alter_friend_list(entity_id, data, 'delete')
+
+
+@bp_player.route('/friends', **private_delete())
+def delete_friend_route_v2():
+    data = bp_player.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_player)
     return alter_friend_list(entity_id, data, 'delete')
 
 
@@ -259,3 +280,21 @@ def convert_star_route():
     except SaveConvertedStarsException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_player.route('/ranking', **private_get())
+def get_ranking_route():
+    try:
+        query_params = bp_player.current_request.query_params
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetRankingByConsoleGameRequestModel(query_params, entity_id)
+        interactor = GetRankingByConsoleGameInteractor(
+            request, get_adapter(), get_console_adapter())
+        response, range_data = interactor.run()
+        if response:
+            return success_partial(
+                response, range_data.unit, range_data.initial,
+                range_data.final, range_data.total)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} ranking not found')
