@@ -164,11 +164,15 @@ def get_open_championships(championship_type):
 
 @bp_championship.route('/', **private_post())
 def post_create_championship():
+    print('\nEntrei no post')
     data = bp_championship.current_request.json_body
+    print('post_create_championship -> request data: ' + str(data))
     entity_id = get_user_id_from_jwt(bp_championship)
+    print('entity_id: ' + entity_id)
     data.update({'owner': entity_id})
 
     request = CreateChampionshipRequestModel(data)
+    print('\npost_create_championship -> CreateChampionshipRequestModel: ' + str(request.to_json()))
     interactor = CreateChampionshipInteractor(
         request=request,
         championship_adapter=get_championship_adapter(),
@@ -181,7 +185,7 @@ def post_create_championship():
         response = interactor.run()
     except CreateChampionshipException as exc:
         return server_error(str(exc))
-    return success(response)
+    return success(response())
 
 
 @bp_accept_invitation.route('/', **private_post())

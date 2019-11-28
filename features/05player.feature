@@ -6,7 +6,6 @@ Feature: Player integrations tests
         """
         {
             "user":{
-                "entity_id": "id0123",
                 "name": "Anselmo Lira",
                 "email": "playerstars@playerstars.com.br",
                 "date_birth": "16/12/1986",
@@ -113,7 +112,6 @@ Feature: Player integrations tests
                 "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
                 "name": "Anselmo Lira",
                 "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
                 "cpf": "123.456.789-00",
                 "state": "Rio de Janeiro",
                 "date_birth": "1986-12-16",
@@ -161,7 +159,6 @@ Feature: Player integrations tests
                 "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
                 "name": "Anselmo Lira",
                 "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
                 "cpf": "123.456.789-00",
                 "state": "Rio de Janeiro",
                 "date_birth": "1986-12-16",
@@ -202,7 +199,6 @@ Feature: Player integrations tests
             "states_regions": [],
             "star_transactions": [],
             "user": {
-                "entity_id": "id2345",
                 "country": "Brasil",
                 "nickname": "anselmo.lira",
                 "postal_code": "22333-000",
@@ -247,7 +243,6 @@ Feature: Player integrations tests
             "states_regions": [],
             "star_transactions": [],
             "user": {
-                "entity_id": "it983",
                 "country": "Canada",
                 "nickname": "Dudu",
                 "postal_code": "22333-000",
@@ -302,7 +297,6 @@ Feature: Player integrations tests
                     "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
                     "name": "Anselmo Lira",
                     "phone_number": "(21) 99663-6963",
-                    "entity_id": "54321",
                     "cpf": "123.456.789-00",
                     "state": "Rio de Janeiro",
                     "date_birth": "1986-12-16",
@@ -342,7 +336,6 @@ Feature: Player integrations tests
                     "address": "Rua XV, Class A, 30 ",
                     "name": "Duarte",
                     "phone_number": "(21) 99663-6963",
-                    "entity_id": "54321234",
                     "cpf": "123.000.789-00",
                     "state": "CCAA",
                     "date_birth": "1986-12-16",
