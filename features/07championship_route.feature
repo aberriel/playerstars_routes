@@ -469,15 +469,15 @@ Feature: Championship integration tests
                 "member_category": "owner",
                 "member": "7a0cfd51-899d-4e29-b6fa-301be4397e6f",
                 "member_status": "Member",
-                "invitation_code": None,
+                "invitation_code": null,
                 "member_type": "Player",
                 "last_status_change_date": "2019-11-27T17:49:13.370766",
-                "current_or_last_duel": None,
+                "current_or_last_duel": null,
                 "member_name": "teste"
             },
             "duels": [],
-            "mounted_keys": False,
-            "finish_datetime": None,
+            "mounted_keys": false,
+            "finish_datetime": null,
             "entity_id": "9d085436-3c5e-47e1-b493-0e8a571f2aff",
             "members": [
                 {
@@ -487,24 +487,24 @@ Feature: Championship integration tests
                     "invitation_code": "1234",
                     "member_type": "Player",
                     "last_status_change_date": "2019-11-27T17:48:40.643826",
-                    "current_or_last_duel": None,
+                    "current_or_last_duel": null,
                     "member_name": "Arnaud"
                 },
                 {
                     "member_category": "owner",
                     "member": "7a0cfd51-899d-4e29-b6fa-301be4397e6f",
                     "member_status": "Member",
-                    "invitation_code": None,
+                    "invitation_code": null,
                     "member_type": "Player",
                     "last_status_change_date": "2019-11-27T17:49:13.370766",
-                    "current_or_last_duel": None,
+                    "current_or_last_duel": null,
                     "member_name": "teste"
                 }
             ],
             "championship_type": "Player",
             "console": {
                 "logo_path": "/images/ss.png",
-                "tag_name": None,
+                "tag_name": null,
                 "games": [
                     {
                         "logo_path": "/images/hearthstone.jpg",
@@ -531,7 +531,7 @@ Feature: Championship integration tests
             "start_datetime": "2019-11-30T19:30:35",
             "status": "Provisioning",
             "name": "Brazucas",
-            "is_open": True,
+            "is_open": true,
             "balance": 0,
             "max_members": 4,
             "game": {
@@ -543,6 +543,20 @@ Feature: Championship integration tests
             "price_to_enter": 2
         }
         """
-        Then I want to check notifications as type
-
-
+        Given I set table name and the adapter class as Notification
+        Then The saved json has body
+        """
+        {
+            "championship_id": "123",
+            "duel_id": null,
+            "notification_type": "CHAMPIONSHIP_INVITE_PLAYER",
+            "status": "CREATED",
+            "team_id": null,
+            "entity_id": "5f7e4875-9d08-411a-b8e0-3225e801e1e1",
+            "player_id": "ecc4a0c8-329a-41e9-a069-a76fc27abb69",
+            "creation_datetime": "2019-11-28T01:18:35.838175"
+        }
+        """
+        Then I delete the test entry
+        Given I set table name and the adapter class as Championship
+        Then I delete the test entry

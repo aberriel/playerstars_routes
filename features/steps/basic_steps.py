@@ -48,11 +48,6 @@ def json_body(context, table_name):
     context.adapter = convert_string_to_adapter[context.table_name]
 
 
-@given('I want to check notifications as type {notification_type}')
-def set_notification_type(context, notification_type):
-    context.notification_type = notification_type
-
-
 @given('I save a new entry to the database with json body')
 def save_new_entry(context):
     body = context.text
