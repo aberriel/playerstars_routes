@@ -1,11 +1,20 @@
 from app import app
 from behave import *
-import json
 from chalicelib.settings import Settings
-from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
-                                  StateRegionAdapter, UserAdminAdapter,
-                                  PlayerAdapter)
+from playerstars_adapters import (
+    ChampionshipAdapter,
+    ConsoleAdapter,
+    CountryRegionAdapter,
+    NotificationAdapter,
+    PlayerAdapter,
+    StateRegionAdapter,
+    UserAdminAdapter)
+from playerstars_domain import (
+    NotificationType
+)
 from tests.test_utils import jwt
+
+import json
 
 
 class Object(object):
@@ -13,11 +22,13 @@ class Object(object):
 
 
 convert_string_to_adapter = {
+    'championship': ChampionshipAdapter,
     'console': ConsoleAdapter,
+    'notification': NotificationAdapter,
+    'player': PlayerAdapter,
     'region_country': CountryRegionAdapter,
     'region_state': StateRegionAdapter,
-    'user_admin': UserAdminAdapter,
-    'player': PlayerAdapter
+    'user_admin': UserAdminAdapter
 }
 
 
@@ -35,6 +46,11 @@ def saved(context):
 def json_body(context, table_name):
     context.table_name = table_name.lower()
     context.adapter = convert_string_to_adapter[context.table_name]
+
+
+@given('I want to check notifications as type {notification_type}')
+def set_notification_type(context, notification_type):
+    context.notification_type = notification_type
 
 
 @given('I save a new entry to the database with json body')
@@ -135,6 +151,7 @@ def saved_json(context):
     for key, value in response.items():
         if isinstance(response[key], dict):
             del value['entity_id']
+            del value['last_status_change_date']
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
@@ -168,6 +185,11 @@ def check_retrieved_json(context):
     print('RESPONSE: ', response_string_json)
     print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
+
+
+@Then('The saved notifications has body')
+def check_championship_notifications(context):
+    pass
 
 
 def deleted(context):
