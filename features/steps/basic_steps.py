@@ -134,6 +134,24 @@ def json_body(context):
     context.json_body = json.loads(body)
 
 
+@then('The saved championship has body')
+def saved_championship(context):
+    body = context.text
+    context.expected_json = json.loads(body)
+
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id).to_json()
+
+    del response['entity_id']
+    for key, value in response.items():
+        if isinstance(response[key], dict):
+            del value['entity_id']
+
+    response_string_json = json.dumps(response, sort_keys=True)
+    expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    assert response_string_json == expected_string_json
+
+
 @then('The saved json has body')
 def saved_json(context):
     body = context.text

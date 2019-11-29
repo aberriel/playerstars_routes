@@ -465,7 +465,7 @@ Feature: Championship integration tests
         When post request is made to /championship
 #        Then The response should have status success
 #        Then The response should have status_code 201
-#        Then The saved json has body
+#        Then The saved championship has body
 #        """
 #        {
 #            "owner": {
