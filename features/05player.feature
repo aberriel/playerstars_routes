@@ -6,7 +6,6 @@ Feature: Player integrations tests
         """
         {
             "user":{
-                "entity_id": "id0123",
                 "name": "Anselmo Lira",
                 "email": "playerstars@playerstars.com.br",
                 "date_birth": "16/12/1986",
@@ -20,8 +19,7 @@ Feature: Player integrations tests
                 "postal_code": "22333-000",
                 "phone_number": "(21) 99663-6963",
                 "cpf": "123.456.789-00",
-                "nickname": "anselmo.lira",
-                "profile_image": "ACCBB4762CF23AA35690CC"
+                "nickname": "anselmo.lira"
             },
             "favorites": [],
             "blue_star_balance": 123,
@@ -51,44 +49,51 @@ Feature: Player integrations tests
         Then The saved json has body
         """
          {
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "user": {
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": "ACCBB4762CF23AA35690CC",
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
+          "terms": true,
+          "golden_star_balance": 300,
+          "player_status": "OFFLINE",
+          "consoles": [
+            {
+              "name": "PS 4",
+              "entity_id": "1",
+              "logo_path": "/images/ps4.png",
+              "tag_name": "007",
+              "games": []
             },
-            "countries_regions": [],
-            "player_status": "OFFLINE",
-            "star_transactions": [],
-            "consoles": [
-                {
-                    "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
-                {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
-                }
-            ]
-         }
+            {
+              "name": "Xbox",
+              "entity_id": "11",
+              "logo_path": "/images/xbox.png",
+              "tag_name": "mario",
+              "games": []
+            }
+          ],
+          "user": {
+            "date_birth": "1986-12-16",
+            "country": "Brasil",
+            "street_complement": "Blocos 29, 30",
+            "city": "Rio de Janeiro",
+            "street": "Rua José de Figueiredo",
+            "name": "Anselmo Lira",
+            "nickname": "anselmo.lira",
+            "cpf": "123.456.789-00",
+            "street_number": "192",
+            "phone_number": "(21) 99663-6963",
+            "state": "Rio de Janeiro",
+            "neighborhood": "Barra da Tijuca",
+            "postal_code": "22333-000",
+            "email": "playerstars@playerstars.com.br",
+            "profile_image": null
+          },
+          "points": 200,
+          "blue_star_balance": 200,
+          "purchases": [],
+          "star_reservations": [],
+          "star_transactions": [],
+          "states_regions": [],
+          "countries_regions": [],
+          "favorites": []
+        }
         """
         Then I delete the test entry
 
@@ -98,47 +103,52 @@ Feature: Player integrations tests
         Given I save a new entry to the database with json body
         """
         {
-            "entity_id": "id123",
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "star_transactions": [],
-            "user": {
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
+          "entity_id": "id123",
+          "terms": true,
+          "golden_star_balance": 300,
+          "player_status": "OFFLINE",
+          "consoles": [
+            {
+              "name": "PS 4",
+              "entity_id": "1",
+              "logo_path": "/images/ps4.png",
+              "tag_name": "007",
+              "games": []
             },
-            "countries_regions": [],
-            "games": [],
-            "player_status": "OFFLINE",
-            "consoles": [
-                {
-                    "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
-                {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
-                }
-            ]
-         }
+            {
+              "name": "Xbox",
+              "entity_id": "11",
+              "logo_path": "/images/xbox.png",
+              "tag_name": "mario",
+              "games": []
+            }
+          ],
+          "user": {
+            "date_birth": "1986-12-16",
+            "country": "Brasil",
+            "street_complement": "Blocos 29, 30",
+            "city": "Rio de Janeiro",
+            "street": "Rua José de Figueiredo",
+            "name": "Anselmo Lira",
+            "nickname": "anselmo.lira",
+            "cpf": "123.456.789-00",
+            "street_number": "192",
+            "phone_number": "(21) 99663-6963",
+            "state": "Rio de Janeiro",
+            "neighborhood": "Barra da Tijuca",
+            "postal_code": "22333-000",
+            "email": "playerstars@playerstars.com.br",
+            "profile_image": null
+          },
+          "points": 200,
+          "blue_star_balance": 200,
+          "purchases": [],
+          "star_reservations": [],
+          "star_transactions": [],
+          "states_regions": [],
+          "countries_regions": [],
+          "favorites": []
+        }
         """
         When get request is made with id id123 to /player
         Then The response should have status success
@@ -148,24 +158,30 @@ Feature: Player integrations tests
         {
             "entity_id": "id123",
             "favorites": [],
-            "blue_star_balance": 123,
+            "blue_star_balance": 200,
+            "points": 200,
+            "purchases": [],
+            "star_reservations": [],
             "star_transactions": [],
-            "golden_star_balance": 4321,
+            "golden_star_balance": 300,
             "states_regions": [],
+            "terms": true,
             "user": {
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
                 "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
+                "country": "Brasil",
+                "street_complement": "Blocos 29, 30",
+                "city": "Rio de Janeiro",
+                "street": "Rua José de Figueiredo",
+                "name": "Anselmo Lira",
+                "nickname": "anselmo.lira",
+                "cpf": "123.456.789-00",
+                "street_number": "192",
+                "phone_number": "(21) 99663-6963",
+                "state": "Rio de Janeiro",
+                "neighborhood": "Barra da Tijuca",
+                "postal_code": "22333-000",
+                "email": "playerstars@playerstars.com.br",
+                "profile_image": null
             },
             "countries_regions": [],
             "player_status": "OFFLINE",
@@ -195,92 +211,102 @@ Feature: Player integrations tests
         Given I save a new entry to the database with json body
         """
         {
-            "entity_id": "id123",
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "star_transactions": [],
-            "user": {
-                "entity_id": "id2345",
-                "country": "Brasil",
-                "nickname": "anselmo.lira",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Rio de Janeiro",
-                "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                "name": "Anselmo Lira",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321",
-                "cpf": "123.456.789-00",
-                "state": "Rio de Janeiro",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
+          "entity_id": "id123",
+          "terms": true,
+          "golden_star_balance": 300,
+          "player_status": "OFFLINE",
+          "consoles": [
+            {
+              "name": "PS 4",
+              "entity_id": "1",
+              "logo_path": "/images/ps4.png",
+              "tag_name": "007",
+              "games": []
             },
-            "countries_regions": [],
-            "player_status": "OFFLINE",
-            "consoles": [
-                {
-                    "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
-                {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
-                }
-            ]
-         }
+            {
+              "name": "Xbox",
+              "entity_id": "11",
+              "logo_path": "/images/xbox.png",
+              "tag_name": "mario",
+              "games": []
+            }
+          ],
+          "user": {
+            "date_birth": "1986-12-16",
+            "country": "Brasil",
+            "street_complement": "Blocos 29, 30",
+            "city": "Rio de Janeiro",
+            "street": "Rua José de Figueiredo",
+            "name": "Anselmo Lira",
+            "nickname": "anselmo.lira",
+            "cpf": "123.456.789-00",
+            "street_number": "192",
+            "phone_number": "(21) 99663-6963",
+            "state": "Rio de Janeiro",
+            "neighborhood": "Barra da Tijuca",
+            "postal_code": "22333-000",
+            "email": "playerstars@playerstars.com.br",
+            "profile_image": null
+          },
+          "points": 200,
+          "blue_star_balance": 200,
+          "purchases": [],
+          "star_reservations": [],
+          "star_transactions": [],
+          "states_regions": [],
+          "countries_regions": [],
+          "favorites": []
+        }
         """
         Given I save a new entry to the database with json body
         """
         {
-            "entity_id": "id123456",
-            "favorites": [],
-            "blue_star_balance": 123,
-            "golden_star_balance": 4321,
-            "states_regions": [],
-            "star_transactions": [],
-            "user": {
-                "entity_id": "it983",
-                "country": "Canada",
-                "nickname": "Dudu",
-                "postal_code": "22333-000",
-                "profile_image": null,
-                "city": "Toronto",
-                "address": "Rua XV, Class A, 30 ",
-                "name": "Duarte",
-                "phone_number": "(21) 99663-6963",
-                "entity_id": "54321234",
-                "cpf": "123.000.789-00",
-                "state": "CCAA",
-                "date_birth": "1986-12-16",
-                "email": "playerstars@playerstars.com.br"
+          "entity_id": "id1234",
+          "terms": true,
+          "golden_star_balance": 300,
+          "player_status": "OFFLINE",
+          "consoles": [
+            {
+              "name": "PS 4",
+              "entity_id": "1",
+              "logo_path": "/images/ps4.png",
+              "tag_name": "007",
+              "games": []
             },
-            "countries_regions": [],
-            "player_status": "OFFLINE",
-            "consoles": [
-                {
-                    "entity_id": "1",
-                    "logo_path": "/images/ps4.png",
-                    "name": "PS 4",
-                    "tag_name": "007",
-                    "games": []
-                },
-                {
-                    "entity_id": "11",
-                    "logo_path": "/images/xbox.png",
-                    "name": "Xbox",
-                    "tag_name": "mario",
-                    "games": []
-                }
-            ]
-         }
+            {
+              "name": "Xbox",
+              "entity_id": "11",
+              "logo_path": "/images/xbox.png",
+              "tag_name": "mario",
+              "games": []
+            }
+          ],
+          "user": {
+            "date_birth": "1986-12-16",
+            "country": "Brasil",
+            "street_complement": "Blocos 29, 30",
+            "city": "Rio de Janeiro",
+            "street": "Rua José de Figueiredo",
+            "name": "Anselmo Lira",
+            "nickname": "anselmo.lira",
+            "cpf": "123.456.789-00",
+            "street_number": "192",
+            "phone_number": "(21) 99663-6963",
+            "state": "Rio de Janeiro",
+            "neighborhood": "Barra da Tijuca",
+            "postal_code": "22333-000",
+            "email": "playerstars@playerstars.com.br",
+            "profile_image": null
+          },
+          "points": 200,
+          "blue_star_balance": 200,
+          "purchases": [],
+          "star_reservations": [],
+          "star_transactions": [],
+          "states_regions": [],
+          "countries_regions": [],
+          "favorites": []
+        }
         """
         When get request is made to /player
         Then The response should have status success
@@ -289,24 +315,30 @@ Feature: Player integrations tests
         [{
                 "entity_id": "id123",
                 "favorites": [],
-                "blue_star_balance": 123,
-                "golden_star_balance": 4321,
+                "blue_star_balance": 200,
+                "points": 200,
+                "purchases": [],
+                "star_reservations": [],
+                "golden_star_balance": 300,
                 "star_transactions": [],
                 "states_regions": [],
+                "terms": true,
                 "user": {
-                    "country": "Brasil",
-                    "nickname": "anselmo.lira",
-                    "postal_code": "22333-000",
-                    "profile_image": null,
-                    "city": "Rio de Janeiro",
-                    "address": "Rua José de Figueiredo 192, Blocos 29, 30 - Barra da Tijuca",
-                    "name": "Anselmo Lira",
-                    "phone_number": "(21) 99663-6963",
-                    "entity_id": "54321",
-                    "cpf": "123.456.789-00",
-                    "state": "Rio de Janeiro",
                     "date_birth": "1986-12-16",
-                    "email": "playerstars@playerstars.com.br"
+                    "country": "Brasil",
+                    "street_complement": "Blocos 29, 30",
+                    "city": "Rio de Janeiro",
+                    "street": "Rua José de Figueiredo",
+                    "name": "Anselmo Lira",
+                    "nickname": "anselmo.lira",
+                    "cpf": "123.456.789-00",
+                    "street_number": "192",
+                    "phone_number": "(21) 99663-6963",
+                    "state": "Rio de Janeiro",
+                    "neighborhood": "Barra da Tijuca",
+                    "postal_code": "22333-000",
+                    "email": "playerstars@playerstars.com.br",
+                    "profile_image": null
                 },
                 "countries_regions": [],
                 "player_status": "OFFLINE",
@@ -327,26 +359,32 @@ Feature: Player integrations tests
                 }
                 ]
             },{
-                "entity_id": "id123456",
+                "entity_id": "id1234",
+                "terms": true,
                 "favorites": [],
-                "blue_star_balance": 123,
-                "golden_star_balance": 4321,
+                "blue_star_balance": 200,
+                "points": 200,
+                "purchases": [],
+                "star_reservations": [],
+                "golden_star_balance": 300,
                 "states_regions": [],
                 "star_transactions": [],
                 "user": {
-                    "country": "Canada",
-                    "nickname": "Dudu",
-                    "postal_code": "22333-000",
-                    "profile_image": null,
-                    "city": "Toronto",
-                    "address": "Rua XV, Class A, 30 ",
-                    "name": "Duarte",
-                    "phone_number": "(21) 99663-6963",
-                    "entity_id": "54321234",
-                    "cpf": "123.000.789-00",
-                    "state": "CCAA",
                     "date_birth": "1986-12-16",
-                    "email": "playerstars@playerstars.com.br"
+                    "country": "Brasil",
+                    "street_complement": "Blocos 29, 30",
+                    "city": "Rio de Janeiro",
+                    "street": "Rua José de Figueiredo",
+                    "name": "Anselmo Lira",
+                    "nickname": "anselmo.lira",
+                    "cpf": "123.456.789-00",
+                    "street_number": "192",
+                    "phone_number": "(21) 99663-6963",
+                    "state": "Rio de Janeiro",
+                    "neighborhood": "Barra da Tijuca",
+                    "postal_code": "22333-000",
+                    "email": "playerstars@playerstars.com.br",
+                    "profile_image": null
                 },
                 "countries_regions": [],
                 "player_status": "OFFLINE",
@@ -371,4 +409,4 @@ Feature: Player integrations tests
         """
         Then I delete the test entry
 
-## Pendente PUT e DELETE
+### Pendente PUT e DELETE
