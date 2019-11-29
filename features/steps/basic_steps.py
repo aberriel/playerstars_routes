@@ -9,9 +9,6 @@ from playerstars_adapters import (
     PlayerAdapter,
     StateRegionAdapter,
     UserAdminAdapter)
-from playerstars_domain import (
-    NotificationType
-)
 from tests.test_utils import jwt
 
 import json
