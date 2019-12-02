@@ -57,7 +57,6 @@ app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_accept_invitation,
                        url_prefix='/championship/accept-invitation')
 app.register_blueprint(bp_enter_team, url_prefix='/enter')
-
 app.register_blueprint(bp_add_friend_to_championship,
                        url_prefix='/championship/add-friend-to-championship')
 app.register_blueprint(bp_championship, url_prefix='/championship')

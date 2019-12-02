@@ -1,17 +1,12 @@
 from app import app
 from behave import *
+import json
 from chalicelib.settings import Settings
 from playerstars_adapters import (
-    ChampionshipAdapter,
-    ConsoleAdapter,
-    CountryRegionAdapter,
-    NotificationAdapter,
-    PlayerAdapter,
-    StateRegionAdapter,
-    UserAdminAdapter)
+    ConsoleAdapter, CountryRegionAdapter, ChampionshipAdapter,
+    StateRegionAdapter, UserAdminAdapter, NotificationAdapter,
+    PlayerAdapter)
 from tests.test_utils import jwt
-
-import json
 
 
 class Object(object):
@@ -22,10 +17,10 @@ convert_string_to_adapter = {
     'championship': ChampionshipAdapter,
     'console': ConsoleAdapter,
     'notification': NotificationAdapter,
-    'player': PlayerAdapter,
     'region_country': CountryRegionAdapter,
     'region_state': StateRegionAdapter,
-    'user_admin': UserAdminAdapter
+    'user_admin': UserAdminAdapter,
+    'player': PlayerAdapter
 }
 
 
@@ -77,6 +72,7 @@ def set_env_var(context, env, value):
 def json_request(context, method, url):
     if 'json_body' in context:
         app.current_request = Object()
+        app.current_request.query_params = None
         app.current_request.json_body = context.json_body
         app.current_request.headers = dict(AUTHORIZATION=jwt)
 
@@ -97,6 +93,7 @@ def json_request(context, method, url):
 def json_request_with_id(context, method, entity_id, url):
     if 'json_body' in context:
         app.current_request = Object()
+        app.current_request.query_params = None
         app.current_request.json_body = context.json_body
         app.current_request.headers = dict(AUTHORIZATION=jwt)
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
@@ -160,11 +157,13 @@ def saved_json(context):
     del response['entity_id']
     for key, value in response.items():
         if isinstance(response[key], dict):
-            del value['entity_id']
-            del value['last_status_change_date']
+            if 'entity_id' in value.keys():
+                del value['entity_id']
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('response json: ', response_string_json)
+    print('expected json: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -183,6 +182,8 @@ def saved_jsons(context):
         #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('RESPONSE: ', response_string_json)
+    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -245,10 +246,16 @@ def delete_game(context):
             adapter.delete(x)
     else:
         consoles = adapter.list_all()
+        print('CONSOLES: ', consoles)
         for console in consoles:
             games_id_list = [x.entity_id for x in console.games]
+            print("game id list: ", games_id_list)
+            print('context item id: ', context.item_id)
             if context.item_id in games_id_list:
                 adapter.delete(console.entity_id)
+            elif not games_id_list:
+                adapter.delete(console.entity_id)
+    assert adapter.list_all() == []
 
 
 @then('The updated entry json has body')

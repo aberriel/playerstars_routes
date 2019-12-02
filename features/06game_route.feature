@@ -35,7 +35,8 @@ Feature: Game integrations tests
             "games": [
                 {
                 "logo_path": "images/sonic.jpg",
-                "name": "Sonic"
+                "name": "Sonic",
+                "points": 0
                 }
             ],
             "tag_name": "nick#1",
@@ -76,7 +77,8 @@ Feature: Game integrations tests
          {
            "name": "ZELDA",
            "logo_path": "images/zelda.jpg",
-           "entity_id": "0123456"
+           "entity_id": "0123456",
+           "points": 0
         }
         """
         Then I delete the test game entry
@@ -114,12 +116,14 @@ Feature: Game integrations tests
                 {
                     "name": "ZELDA",
                     "entity_id": "0123456",
-                    "logo_path": "images/zelda.jpg"
+                    "logo_path": "images/zelda.jpg",
+                    "points": 0
                 },
                 {
                     "name": "fifa",
                     "entity_id": "0123",
-                    "logo_path": "images/fifa.jpg"
+                    "logo_path": "images/fifa.jpg",
+                    "points": 0
                 }
         ]
         """
@@ -168,7 +172,8 @@ Feature: Game integrations tests
 
               "entity_id": "1e9ec",
               "name": "NOME_ALTERADO",
-              "logo_path": "images/sonic.jpg"
+              "logo_path": "images/sonic.jpg",
+              "points": 0
           }],
           "entity_id": "403d8e91-8e4a-4833-bdf3-68aa105a99aa",
           "logo_path": "/images/xb.png",
