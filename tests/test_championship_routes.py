@@ -318,7 +318,7 @@ def test_post_create_championship(boto_client,
     result = post_create_championship()
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal

@@ -2,9 +2,10 @@ from app import app
 from behave import *
 import json
 from chalicelib.settings import Settings
-from playerstars_adapters import (ConsoleAdapter, CountryRegionAdapter,
-                                  StateRegionAdapter, UserAdminAdapter,
-                                  PlayerAdapter)
+from playerstars_adapters import (
+    ConsoleAdapter, CountryRegionAdapter, ChampionshipAdapter,
+    StateRegionAdapter, UserAdminAdapter, NotificationAdapter,
+    PlayerAdapter)
 from tests.test_utils import jwt
 
 
@@ -13,7 +14,9 @@ class Object(object):
 
 
 convert_string_to_adapter = {
+    'championship': ChampionshipAdapter,
     'console': ConsoleAdapter,
+    'notification': NotificationAdapter,
     'region_country': CountryRegionAdapter,
     'region_state': StateRegionAdapter,
     'user_admin': UserAdminAdapter,
@@ -42,7 +45,6 @@ def save_new_entry(context):
     body = context.text
     context.json_body = json.loads(body)
     adapter = context.adapter(context.table_name, context.dynamo_url)
-
     context.saved_entity_id = adapter.save(context.json_body)
     assert saved(context)
 
@@ -72,7 +74,6 @@ def json_request(context, method, url):
         app.current_request.query_params = None
         app.current_request.json_body = context.json_body
         app.current_request.headers = dict(AUTHORIZATION=jwt)
-
     url_method = app.routes.get(url)[method.upper()]
     response = url_method.view_function()
     # response = app.routes.get(url)[method.upper()].view_function().body
@@ -116,6 +117,7 @@ def json_response_status(context, status):
 
 @then('The response should have status_code {status_code}')
 def json_response_status_code(context, status_code):
+    print(context.response.status_code)
     assert context.response.status_code == int(status_code)
 
 
@@ -125,12 +127,32 @@ def json_body(context):
     context.json_body = json.loads(body)
 
 
+@then('The saved championship has body')
+def saved_championship(context):
+    body = context.text
+    context.expected_json = json.loads(body)
+
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.get_by_id(context.item_id).to_json()
+
+    del response['entity_id']
+    for key, value in response.items():
+        if isinstance(response[key], dict):
+            del value['entity_id']
+
+    response_string_json = json.dumps(response, sort_keys=True)
+    expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    assert response_string_json == expected_string_json
+
+
 @then('The saved json has body')
 def saved_json(context):
     body = context.text
     context.expected_json = json.loads(body)
 
     adapter = context.adapter(context.table_name, context.dynamo_url)
+    print(adapter)
+    print(context.item_id)
     response = adapter.get_by_id(context.item_id).to_json()
 
     del response['entity_id']
@@ -175,6 +197,11 @@ def check_retrieved_json(context):
     print('RESPONSE: ', response_string_json)
     print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
+
+
+@Then('The saved notifications has body')
+def check_championship_notifications(context):
+    pass
 
 
 def deleted(context):
