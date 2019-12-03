@@ -1,6 +1,6 @@
 from chalice import Blueprint
 from chalicelib.chalice_support import (
-    not_found, private_get, private_post, server_error, success
+    not_found, private_get, private_post, server_error, success, created
 )
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
@@ -181,7 +181,7 @@ def post_create_championship():
         response = interactor.run()
     except CreateChampionshipException as exc:
         return server_error(str(exc))
-    return success(response())
+    return created(response())
 
 
 @bp_accept_invitation.route('/', **private_post())

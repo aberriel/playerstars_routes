@@ -45,7 +45,6 @@ def save_new_entry(context):
     body = context.text
     context.json_body = json.loads(body)
     adapter = context.adapter(context.table_name, context.dynamo_url)
-
     context.saved_entity_id = adapter.save(context.json_body)
     assert saved(context)
 
@@ -75,7 +74,6 @@ def json_request(context, method, url):
         app.current_request.query_params = None
         app.current_request.json_body = context.json_body
         app.current_request.headers = dict(AUTHORIZATION=jwt)
-
     url_method = app.routes.get(url)[method.upper()]
     response = url_method.view_function()
     # response = app.routes.get(url)[method.upper()].view_function().body
@@ -119,6 +117,7 @@ def json_response_status(context, status):
 
 @then('The response should have status_code {status_code}')
 def json_response_status_code(context, status_code):
+    print(context.response.status_code)
     assert context.response.status_code == int(status_code)
 
 
@@ -152,6 +151,8 @@ def saved_json(context):
     context.expected_json = json.loads(body)
 
     adapter = context.adapter(context.table_name, context.dynamo_url)
+    print(adapter)
+    print(context.item_id)
     response = adapter.get_by_id(context.item_id).to_json()
 
     del response['entity_id']

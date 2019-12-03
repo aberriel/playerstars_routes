@@ -20,7 +20,6 @@ def get_authorization_token(blueprint):
 
 def get_user_id_from_jwt(blueprint):
     authorization_token = get_authorization_token(blueprint)
-    print('get_user_id_from_jwt -> authorization_token: ' + authorization_token)
 
     if authorization_token is None:
         logger.debug('Token not found.')
