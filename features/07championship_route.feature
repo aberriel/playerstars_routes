@@ -221,7 +221,7 @@ Feature: Championship integration
         When post request is made to /championship
         Then The response should have status success
         Then The response should have status_code 201
-        Then The saved json has body
+        Then The saved championship has body
         """
         {
             "owner": {
@@ -237,7 +237,6 @@ Feature: Championship integration
             "duels": [],
             "mounted_keys": false,
             "finish_datetime": null,
-            "entity_id": "9d085436-3c5e-47e1-b493-0e8a571f2aff",
             "members": [
                 {
                     "member_category": "member",
@@ -264,6 +263,7 @@ Feature: Championship integration
             "console": {
                 "logo_path": "/images/ss.png",
                 "tag_name": null,
+                "entity_id" : "123",
                 "games": [
                     {
                         "logo_path": "/images/hearthstone.jpg",
@@ -284,38 +284,35 @@ Feature: Championship integration
                         "entity_id": "8b348817-8f75-4246-917c-48e0e433efda"
                     }
                 ],
-                "name": "Blizzard",
-                "entity_id": "2"
+                "name": "Blizzard"
             },
-            "start_datetime": "2019-11-30T19:30:35",
             "status": "Provisioning",
             "name": "Brazucas",
             "is_open": true,
             "balance": 0,
             "max_members": 4,
             "game": {
+                "entity_id": "123",
                 "logo_path": "/images/hearthstone.jpg",
                 "name": "Hearthstone",
-                "points": 0,
-                "entity_id": "a8b7c2e4-7d89-4a24-965b-7c201e4bbe37"
+                "points": 0
             },
-            "price_to_enter": 2
+            "price_to_enter": 3
         }
         """
-#        Given I set table name and the adapter class as Notification
-#        Then The saved json has body
-#        """
-#        {
-#            "championship_id": "123",
-#            "duel_id": null,
-#            "notification_type": "CHAMPIONSHIP_INVITE_PLAYER",
-#            "status": "CREATED",
-#            "team_id": null,
-#            "entity_id": "5f7e4875-9d08-411a-b8e0-3225e801e1e1",
-#            "player_id": "ecc4a0c8-329a-41e9-a069-a76fc27abb69",
-#            "creation_datetime": "2019-11-28T01:18:35.838175"
-#        }
-#        """
-#        Then I delete the test entry
-#        Given I set table name and the adapter class as Championship
-#        Then I delete the test entry
+        Then I clean the Championship table
+        Given I set table name and the adapter class as Notification
+        Then The follow notification is saved in the database
+        """
+        {
+            "championship_id": "schrubles",
+            "duel_id": null,
+            "notification_type": "CHAMPIONSHIP_INVITE_PLAYER",
+            "status": "CREATED",
+            "team_id": null,
+            "player_id": "ecc4a0c8-329a-41e9-a069-a76fc27abb69"
+        }
+        """
+        Then I clean the Notification table
+        Given I set table name and the adapter class as Player
+        Then I clean the Player table
