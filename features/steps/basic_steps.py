@@ -7,6 +7,7 @@ from playerstars_adapters import (
     StateRegionAdapter, UserAdminAdapter, NotificationAdapter,
     PlayerAdapter)
 from tests.test_utils import jwt
+import jsondiff
 
 
 class Object(object):
@@ -127,22 +128,57 @@ def json_body(context):
     context.json_body = json.loads(body)
 
 
-@then('The saved championship has body')
-def saved_championship(context):
+@then('The follow notification is saved in the database')
+def check_championship_notifications(context):
     body = context.text
     context.expected_json = json.loads(body)
+    adapter = context.adapter(context.table_name, context.dynamo_url)
+    response = adapter.list_all()
+    notification = get_notification_by_player_id(
+        response, context.expected_json['player_id'])
+    print("NOTIFICATION: ", notification.to_json())
+    res = jsondiff.diff(context.expected_json, notification.to_json())
+    print(res)
+    assert check_ignored_list(res)
 
+
+def get_notification_by_player_id(response, playerd_id):
+    for x in response:
+        if x.player_id == playerd_id:
+            return x
+
+
+@then('The saved championship has body')
+def check_keys(context):
+    body = context.text
+    context.expected_json = json.loads(body)
     adapter = context.adapter(context.table_name, context.dynamo_url)
     response = adapter.get_by_id(context.item_id).to_json()
+    res = jsondiff.diff(context.expected_json, response)
+    context.invited_players_id_list = get_invited_players_ids(response)
+    assert check_ignored_list(res)
 
-    del response['entity_id']
-    for key, value in response.items():
-        if isinstance(response[key], dict):
-            del value['entity_id']
 
-    response_string_json = json.dumps(response, sort_keys=True)
-    expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    assert response_string_json == expected_string_json
+def get_invited_players_ids(response):
+    invited_players_id_list = list()
+    for x in response['members']:
+        if x['member_category'] == 'member':
+            invited_players_id_list.append(x['member'])
+    return invited_players_id_list
+
+
+def check_ignored_list(a):
+    ignored_keys_list = [
+        'last_status_change_date', 'invitation_code', 'entity_id',
+        'start_datetime', 'creation_datetime', 'championship_id']
+    for key, value in a.items():
+        if isinstance(value, str) or isinstance(value, int):
+            if key not in ignored_keys_list:
+                print("KEY ACHADA QUE NAO EXISTE: ", key)
+                return False
+        if isinstance(value, dict):
+            check_ignored_list(value)
+    return True
 
 
 @then('The saved json has body')
@@ -199,11 +235,6 @@ def check_retrieved_json(context):
     assert response_string_json == expected_string_json
 
 
-@Then('The saved notifications has body')
-def check_championship_notifications(context):
-    pass
-
-
 def deleted(context):
     found = False
     adapter = context.adapter(context.table_name, context.dynamo_url)
@@ -234,11 +265,19 @@ def check_delete_test_entry(context):
     assert adapter.list_all() == []
 
 
+@then('I clean the {table_name} table')
+def clean_table(context, table_name):
+    adapter = context.adapter(table_name.lower(), context.dynamo_url)
+    id_list = [x.entity_id for x in adapter.list_all()]
+    for item in id_list:
+        adapter.delete(item)
+    assert adapter.list_all() == []
+
+
 @then('I delete the test game entry')
 def delete_game(context):
-    adapter = context.adapter(context.table_name, context. dynamo_url)
+    adapter = context.adapter(context.table_name, context.dynamo_url)
     if hasattr(context, 'list_get_game'):
-        print(context.list_get_game)
         consoles = adapter.list_all()
         for console in consoles:
             adapter.delete(console.entity_id)
@@ -247,11 +286,8 @@ def delete_game(context):
             adapter.delete(x)
     else:
         consoles = adapter.list_all()
-        print('CONSOLES: ', consoles)
         for console in consoles:
             games_id_list = [x.entity_id for x in console.games]
-            print("game id list: ", games_id_list)
-            print('context item id: ', context.item_id)
             if context.item_id in games_id_list:
                 adapter.delete(console.entity_id)
             elif not games_id_list:
