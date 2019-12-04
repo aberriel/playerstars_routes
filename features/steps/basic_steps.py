@@ -118,7 +118,6 @@ def json_response_status(context, status):
 
 @then('The response should have status_code {status_code}')
 def json_response_status_code(context, status_code):
-    print(context.response.status_code)
     assert context.response.status_code == int(status_code)
 
 
@@ -136,9 +135,7 @@ def check_championship_notifications(context):
     response = adapter.list_all()
     notification = get_notification_by_player_id(
         response, context.expected_json['player_id'])
-    print("NOTIFICATION: ", notification.to_json())
     res = jsondiff.diff(context.expected_json, notification.to_json())
-    print(res)
     assert check_ignored_list(res)
 
 
@@ -174,7 +171,6 @@ def check_ignored_list(a):
     for key, value in a.items():
         if isinstance(value, str) or isinstance(value, int):
             if key not in ignored_keys_list:
-                print("KEY ACHADA QUE NAO EXISTE: ", key)
                 return False
         if isinstance(value, dict):
             check_ignored_list(value)
@@ -187,8 +183,6 @@ def saved_json(context):
     context.expected_json = json.loads(body)
 
     adapter = context.adapter(context.table_name, context.dynamo_url)
-    print(adapter)
-    print(context.item_id)
     response = adapter.get_by_id(context.item_id).to_json()
 
     del response['entity_id']
@@ -199,8 +193,6 @@ def saved_json(context):
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('response json: ', response_string_json)
-    print('expected json: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -219,8 +211,6 @@ def saved_jsons(context):
         #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('RESPONSE: ', response_string_json)
-    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -230,8 +220,6 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('RESPONSE: ', response_string_json)
-    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
