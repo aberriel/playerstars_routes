@@ -1,14 +1,21 @@
 from chalice import Blueprint
 from playerstars_adapters import (
-    NotificationAdapter)
+    DuelAdapter,
+    NotificationAdapter
+)
 from chalicelib.settings import Settings
 from playerstars_domain import Notification
 from chalicelib.chalice_support import private_post, private_get
 from playerstars_interactors import (
-    PostAppNotificationInteractor, BasicPostRequestModel, SaveEntityException,
-    GetAppNotificationByUserInteractor, GetAppNotificationByUserRequestModel,
-    PostNotificationReadRequestModel, PostNotificationReadInteractor,
-    PostNotificationReadException)
+    BasicPostRequestModel,
+    GetAppNotificationByUserInteractor,
+    GetAppNotificationByUserRequestModel,
+    PostAppNotificationInteractor,
+    PostNotificationReadInteractor,
+    PostNotificationReadException,
+    PostNotificationReadRequestModel,
+    SaveEntityException
+)
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
 from chalicelib.utils import get_user_id_from_jwt
@@ -17,8 +24,13 @@ bp_notification = Blueprint(__name__)
 
 
 def get_notification_adapter():
-    return NotificationAdapter(
-        Settings.NOTIFICATION_TABLE_NAME, Settings.DYNAMODB_URL)
+    return NotificationAdapter(Settings.NOTIFICATION_TABLE_NAME,
+                               Settings.DYNAMODB_URL)
+
+
+def get_duel_adapter():
+    return DuelAdapter(Settings.DUEL_TABLE_NAME,
+                       Settings.DYNAMODB_URL)
 
 
 @bp_notification.route('/', **private_post())
@@ -53,9 +65,13 @@ def get_app_notification_by_status(status):
 
 
 def get_by_user_and_status(entity_id, status):
-    adapter = get_notification_adapter()
+    duel_adapter = get_duel_adapter()
+    notification_adapter = get_notification_adapter()
     request = GetAppNotificationByUserRequestModel(entity_id, status)
-    interactor = GetAppNotificationByUserInteractor(request, adapter)
+    interactor = GetAppNotificationByUserInteractor(
+        request=request,
+        notification_adapter=notification_adapter,
+        duel_adapter=duel_adapter)
     response = interactor.run()
     if response:
         return success(response)
