@@ -75,6 +75,36 @@ def make_create_championship_mock_data():
         json_body=data, headers=dict(AUTHORIZATION=jwt)))
 
 
+def make_create_championship_mock_without_owner_data():
+    payload = """{
+        "name": "Brazucas",
+        "game": {
+            "entity_id": "aq1w2e3",
+            "name": "Sonic",
+            "logo_path": "/images/sonic.jpg"
+        },
+        "console": {
+            "entity_id": "a1s2d3",
+            "name": "Master System",
+            "logo_path": "/images/master_system.jpg",
+            "games": {
+                "entity_id": "q1w2e3",
+                "name": "Sonic",
+                "logo_path": "/images/sonic.jpg"
+            }
+        },
+        "is_open": true,
+        "price_to_enter": 3,
+        "members": ["tuv76", "akk65"],
+        "championship_type": "Player",
+        "max_members": 4,
+        "start_datetime": "2019-12-10T13:25:07+00:00"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
 def make_get_championships_by_member_mock_data():
     return MagicMock(
         current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
@@ -312,9 +342,22 @@ def test_post_accept_invitation_raises(client, resource):
 @patch('chalicelib.championship_route.CreateChampionshipInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_create_championship(boto_client,
-                                  boto_resource,
-                                  run):
+def test_post_create_championship(
+        boto_client, boto_resource, run):
+    result = post_create_championship()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.championship_route.bp_championship',
+       make_create_championship_mock_without_owner_data())
+@patch('chalicelib.championship_route.CreateChampionshipInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_create_championship_without_owner(
+        boto_client, boto_resource, run):
     result = post_create_championship()
     run.assert_called_once()
     assert result.body['status'] == 'success'
