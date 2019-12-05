@@ -166,7 +166,8 @@ def get_open_championships(championship_type):
 def post_create_championship():
     data = bp_championship.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_championship)
-    data.update({'owner': entity_id})
+    if not data.get('owner', None):
+        data.update({'owner': entity_id})
 
     request = CreateChampionshipRequestModel(data)
     interactor = CreateChampionshipInteractor(

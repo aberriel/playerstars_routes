@@ -5,7 +5,7 @@ from chalicelib.settings import Settings
 from playerstars_adapters import (
     ConsoleAdapter, CountryRegionAdapter, ChampionshipAdapter,
     StateRegionAdapter, UserAdminAdapter, NotificationAdapter,
-    PlayerAdapter)
+    PlayerAdapter, TeamAdapter)
 from tests.test_utils import jwt
 import jsondiff
 
@@ -21,7 +21,8 @@ convert_string_to_adapter = {
     'region_country': CountryRegionAdapter,
     'region_state': StateRegionAdapter,
     'user_admin': UserAdminAdapter,
-    'player': PlayerAdapter
+    'player': PlayerAdapter,
+    'team': TeamAdapter
 }
 
 
@@ -70,22 +71,23 @@ def set_env_var(context, env, value):
 
 @when('{method} request is made to {url}')
 def json_request(context, method, url):
-    if 'json_body' in context:
-        app.current_request = Object()
-        app.current_request.query_params = None
-        app.current_request.json_body = context.json_body
-        app.current_request.headers = dict(AUTHORIZATION=jwt)
-    url_method = app.routes.get(url)[method.upper()]
-    response = url_method.view_function()
-    # response = app.routes.get(url)[method.upper()].view_function().body
-    context.response = response
-    if method.upper() == 'GET':
-        context.dict_list_get_all = context.response.body['data']
-    context.item_id = context.response.body['data']
     try:
+        if 'json_body' in context:
+            app.current_request = Object()
+            app.current_request.query_params = None
+            app.current_request.json_body = context.json_body
+            app.current_request.headers = dict(AUTHORIZATION=jwt)
+        url_method = app.routes.get(url)[method.upper()]
+        response = url_method.view_function()
+        # response = app.routes.get(url)[method.upper()].view_function().body
+        context.response = response
+        if method.upper() == 'GET':
+            context.dict_list_get_all = context.response.body['data']
+        context.item_id = context.response.body['data']
+        print("CONTEXT ITEM ID: ", context.item_id)
         context.response.json = json.loads(context.response)
-    except Exception:
-        pass
+    except BaseException as e:
+        print(str(e))
 
 
 @when('{method} request is made with id {entity_id} to {url}')
@@ -171,6 +173,7 @@ def check_ignored_list(a):
     for key, value in a.items():
         if isinstance(value, str) or isinstance(value, int):
             if key not in ignored_keys_list:
+                print("KEY NOT IN THE IGNORED LIST: ", key)
                 return False
         if isinstance(value, dict):
             check_ignored_list(value)
@@ -193,6 +196,8 @@ def saved_json(context):
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('response json: ', response_string_json)
+    print('expected json: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -211,6 +216,8 @@ def saved_jsons(context):
         #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('RESPONSE: ', response_string_json)
+    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -220,6 +227,8 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
+    print('RESPONSE: ', response_string_json)
+    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
