@@ -4,10 +4,7 @@ from chalicelib import (
     post_app_notification,
     post_notification_as_read
 )
-from playerstars_adapters import (
-    DuelAdapter,
-    NotificationAdapter
-)
+from playerstars_adapters import NotificationAdapter
 from playerstars_interactors import (
     PostNotificationReadException,
     SaveEntityException
@@ -60,7 +57,6 @@ def make_get_app_notification_request():
 
 # noinspection PyUnusedLocal
 @patch.object(NotificationAdapter, 'filter', return_value=MagicMock())
-@patch.object(DuelAdapter, '_create_table_if_dont_exists')
 @patch('chalicelib.notification_route.bp_notification',
        make_get_app_notification_request())
 @patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run')
@@ -69,19 +65,15 @@ def make_get_app_notification_request():
 def test_get_app_notification(client,
                               resource,
                               run,
-                              create_table_duel,
                               get_by_id):
     result = get_app_notification()
-
     run.assert_called_once()
-
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
 @patch.object(NotificationAdapter, 'filter', return_value=MagicMock())
-@patch.object(DuelAdapter, '_create_table_if_dont_exists')
 @patch('chalicelib.notification_route.bp_notification',
        make_get_app_notification_request())
 @patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run',
@@ -90,7 +82,6 @@ def test_get_app_notification(client,
 @patch('boto3.client')
 def test_get_app_notification_raises(client,
                                      resource,
-                                     create_table_duel,
                                      get_by_id):
     result = get_app_notification()
     assert "No notifications found" in result.body['message']
@@ -100,7 +91,6 @@ def test_get_app_notification_raises(client,
 
 # noinspection PyUnusedLocal
 @patch.object(NotificationAdapter, 'filter', return_value=MagicMock())
-@patch.object(DuelAdapter, '_create_table_if_dont_exists')
 @patch('chalicelib.notification_route.bp_notification',
        make_get_app_notification_request())
 @patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run')
@@ -109,7 +99,6 @@ def test_get_app_notification_raises(client,
 def test_get_app_notification_by_status(client,
                                         resource,
                                         run,
-                                        create_table_duel,
                                         get_by_id):
     result = get_app_notification_by_status('Closed')
     run.assert_called_once()
