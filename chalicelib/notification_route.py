@@ -1,8 +1,5 @@
 from chalice import Blueprint
-from playerstars_adapters import (
-    DuelAdapter,
-    NotificationAdapter
-)
+from playerstars_adapters import NotificationAdapter
 from chalicelib.settings import Settings
 from playerstars_domain import Notification
 from chalicelib.chalice_support import private_post, private_get
@@ -26,11 +23,6 @@ bp_notification = Blueprint(__name__)
 def get_notification_adapter():
     return NotificationAdapter(Settings.NOTIFICATION_TABLE_NAME,
                                Settings.DYNAMODB_URL)
-
-
-def get_duel_adapter():
-    return DuelAdapter(Settings.DUEL_TABLE_NAME,
-                       Settings.DYNAMODB_URL)
 
 
 @bp_notification.route('/', **private_post())
@@ -65,13 +57,11 @@ def get_app_notification_by_status(status):
 
 
 def get_by_user_and_status(entity_id, status):
-    duel_adapter = get_duel_adapter()
     notification_adapter = get_notification_adapter()
     request = GetAppNotificationByUserRequestModel(entity_id, status)
     interactor = GetAppNotificationByUserInteractor(
         request=request,
-        notification_adapter=notification_adapter,
-        duel_adapter=duel_adapter)
+        adapter_instance=notification_adapter)
     response = interactor.run()
     if response:
         return success(response)
