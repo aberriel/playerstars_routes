@@ -185,10 +185,10 @@ def post_create_championship():
     return created(response())
 
 
-@bp_accept_invitation.route('/', **private_post())
+@bp_championship.route('/accept-invitation', **private_post())
 def post_accept_invitation():
-    data = bp_accept_invitation.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_accept_invitation)
+    data = bp_championship.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_championship)
     data.update({'entity_id': entity_id})
 
     request = AcceptInvitationRequestModel(
@@ -210,10 +210,10 @@ def post_accept_invitation():
     return success(response)
 
 
-@bp_join_open_championship.route('/', **private_post())
+@bp_championship.route('/join-championship', **private_post())
 def post_join_open_championship():
-    data = bp_join_open_championship.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_join_open_championship)
+    data = bp_championship.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_championship)
     data.update({'entity_id': entity_id})
 
     request = JoinOpenChampionshipRequestModel(data)
@@ -231,10 +231,10 @@ def post_join_open_championship():
     return success(response)
 
 
-@bp_add_friend_to_championship.route('/', **private_post())
+@bp_championship.route('/add-friend', **private_post())
 def post_add_friend_to_championship():
-    data = bp_add_friend_to_championship.current_request.json_body
-    player_id = get_user_id_from_jwt(bp_add_friend_to_championship)
+    data = bp_championship.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_championship)
     data.update({'entity_id': player_id})
 
     request = AddFriendToChampionshipRequestModel(data)

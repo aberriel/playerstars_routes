@@ -54,15 +54,9 @@ app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
 app.register_blueprint(bp_duel, url_prefix='/duel')
 app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
-app.register_blueprint(bp_accept_invitation,
-                       url_prefix='/championship/accept-invitation')
 app.register_blueprint(bp_enter_team, url_prefix='/enter')
-app.register_blueprint(bp_add_friend_to_championship,
-                       url_prefix='/championship/add-friend-to-championship')
-app.register_blueprint(bp_championship, url_prefix='/championship')
-app.register_blueprint(bp_join_open_championship,
-                       url_prefix='/championship/join-open-championship')
 app.register_blueprint(bp_convert, url_prefix='/convert-rate')
+app.register_blueprint(bp_championship, url_prefix='/championship')
 
 
 @app.route('/check', methods=['POST', 'GET'])

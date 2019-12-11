@@ -308,14 +308,12 @@ def test_get_open_championships_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_accept_invitation',
+@patch('chalicelib.championship_route.bp_championship',
        make_accept_invitation_mock_data())
 @patch('chalicelib.championship_route.AcceptInvitationInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_accept_invitation(boto_client,
-                                boto_resource,
-                                run):
+def test_post_accept_invitation(boto_client, boto_resource, run):
     result = post_accept_invitation()
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -323,7 +321,7 @@ def test_post_accept_invitation(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_accept_invitation',
+@patch('chalicelib.championship_route.bp_championship',
        make_accept_invitation_mock_data())
 @patch('chalicelib.championship_route.AcceptInvitationInteractor.run',
        MagicMock(side_effect=AcceptInvitationException('oops')))
@@ -380,7 +378,7 @@ def test_post_create_championship_raises(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_join_open_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_join_open_championship_mock_data())
 @patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run')
 @patch('boto3.resource')
@@ -395,7 +393,7 @@ def test_post_join_open_championship(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_join_open_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_join_open_championship_mock_data())
 @patch('chalicelib.championship_route.JoinOpenChampionshipInteractor.run',
        MagicMock(side_effect=JoinOpenChampionshipException('oops')))
@@ -410,7 +408,7 @@ def test_post_join_open_championship_raises(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_add_friend_to_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_add_friend_to_championship_mock_data())
 @patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run')
 @patch('boto3.resource')
@@ -425,7 +423,7 @@ def test_post_add_friend_to_championship(boto_client,
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.championship_route.bp_add_friend_to_championship',
+@patch('chalicelib.championship_route.bp_championship',
        make_add_friend_to_championship_mock_data())
 @patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run',
        MagicMock(side_effect=AddFriendToChampionshipException('oops')))
