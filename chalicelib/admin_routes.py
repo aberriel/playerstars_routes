@@ -10,6 +10,9 @@ from chalicelib.utils import \
 from chalicelib.chalice_support import (
     unauthorized
 )
+from chalicelib.chalice_support import (
+    private_get
+)
 
 bp_admin = Blueprint(__name__)
 
@@ -20,7 +23,7 @@ def get_player_router():
     return BasicEntityRoute(adapter, Player, 'player')
 
 
-@bp_admin.route('/player')
+@bp_admin.route('/player', **private_get())
 def get_all_players_admin():
     user_id = get_user_id_from_jwt(bp_admin)
     try:
