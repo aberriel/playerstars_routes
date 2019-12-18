@@ -1,5 +1,73 @@
 from marshmallow import Schema, fields
 from uuid import uuid4
+from chalicelib.utils import check_admin_authorization, UserNotAdminAuthorized
+from unittest.mock import patch, MagicMock
+from playerstars_domain import Player
+import pytest
+
+
+@patch('chalicelib.utils.PlayerAdapter')
+def test_check_admin(adapter):
+    assert not check_admin_authorization('1234')
+
+
+player = Player.from_json({
+    'entity_id': 'af1bf976-b212-42a9-af2a-fc20ed4688de',
+    'user': {
+        'name': 'Luan Garcia',
+        'email': 'luan.garcia@stormsec.com.br',
+        'nickname': 'ddeeff',
+        'street': 'Rua Mandina',
+        'street_number': '35',
+        'street_complement': 'casa 1',
+        'neighborhood': 'Curicica',
+        'city': 'Rio de Janeiro',
+        'state': 'Rio de Janeiro',
+        'country': 'Brasil',
+        'postal_code': '23335-115',
+        'date_birth': '1988-12-25',
+        'phone_number': '(21) 99155-2323',
+        'cpf': '123.456.789-01',
+        'profile_image': None
+    },
+    'player_status': 'AVAILABLE',
+    'blue_star_balance': 0,
+    'golden_star_balance': 5,
+    'points': 500,
+    'terms': True,
+    "is_admin": False,
+    "is_blocked": False,
+    'consoles': [{
+        'entity_id': '531f6ee2-dfef-458e-b918-ebf12793fe37',
+        'name': 'Playstation 4',
+        'logo_path': '/images/ps4.png',
+        'tag_name': None,
+        'games': [{
+            'entity_id': '0e3bd0f7-e95c-4168-9083-f1859fa73902',
+            'name': 'Fifa 19',
+            'logo_path': '/images/fifa19.png',
+            'points': 0
+        }]
+    }],
+    'states_regions': [],
+    'countries_regions': [],
+    'favorites': [],
+    'star_transactions': [],
+    'star_reservations': [],
+    'purchases': []
+})
+
+
+def get_by_id(id):
+    return player
+
+
+@patch('chalicelib.utils.PlayerAdapter',
+       return_value=MagicMock(get_by_id=get_by_id))
+def test_check_admin_raises(adapter):
+    with pytest.raises(UserNotAdminAuthorized) as excinfo:
+        check_admin_authorization('1234')
+    assert 'Usuário não autorizado como admin' in str(excinfo.value)
 
 
 class FakeDomain:

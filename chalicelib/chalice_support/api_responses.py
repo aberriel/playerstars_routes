@@ -50,3 +50,8 @@ def success_partial(data, range_units, range_from, range_to, range_total):
     range_data = f"{range_units} {range_from}-{range_to}/{range_total}"
     headers = {"Content-Range": range_data}
     return Response(success_dict(data), status_code=206, headers=headers)
+
+
+def unauthorized(message):
+    """Retorna unauthorized com o message especificado."""
+    return Response(body=error_dict(message), status_code=401)
