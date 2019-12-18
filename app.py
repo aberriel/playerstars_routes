@@ -28,6 +28,7 @@ from chalicelib.team_route import (
     bp_team, bp_enter_team)
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
+from chalicelib.admin_routes import bp_admin
 
 app = Chalice(app_name='playerstars')
 
@@ -36,6 +37,7 @@ app.experimental_feature_flags.update([
 ])
 
 app.register_blueprint(root, url_prefix='/')
+app.register_blueprint(bp_admin, url_prefix='/admin')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
 app.register_blueprint(bp_game, url_prefix='/game')

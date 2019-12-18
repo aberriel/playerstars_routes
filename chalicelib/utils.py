@@ -1,5 +1,6 @@
+from playerstars_adapters import PlayerAdapter
 from base64 import b64decode
-
+from chalicelib.settings import Settings
 import json
 import logging
 
@@ -25,7 +26,8 @@ def get_user_id_from_jwt(blueprint):
         logger.debug('Token not found.')
         raise TokenNotFoundException("Token not found on JWT")
 
-    logger.debug("Extracting user name from token: {}".format(authorization_token))
+    logger.debug(
+        "Extracting user name from token: {}".format(authorization_token))
 
     entity_id_field = 'cognito:username'
     payload = authorization_token.split('.')[1]
@@ -38,3 +40,13 @@ def get_user_id_from_jwt(blueprint):
 
 class UserNotAdminAuthorized(BaseException):
     pass
+
+
+def check_admin_authorization(user_id):
+    user_adapter = PlayerAdapter(
+        db_endpoint=Settings.DYNAMODB_URL,
+        table_name=Settings.PLAYER_TABLE_NAME)
+    user = user_adapter.get_by_id(user_id)
+    if not user.is_admin:
+        msg = "Usuário não autorizado como admin"
+        raise UserNotAdminAuthorized(msg)

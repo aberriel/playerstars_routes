@@ -7,7 +7,8 @@ from chalicelib.chalice_support import (
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from chalicelib.utils import get_user_id_from_jwt
+from chalicelib.utils import \
+    get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
 
 from playerstars_interactors import (
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
@@ -23,7 +24,7 @@ from playerstars_interactors import (
     GetRankingByConsoleGameInteractor)
 from chalicelib.team_route import get_by_user
 from chalicelib.chalice_support import (
-    server_error, created, success, not_found, success_partial)
+    server_error, created, success, not_found, success_partial, unauthorized)
 
 bp_player = Blueprint(__name__)
 
