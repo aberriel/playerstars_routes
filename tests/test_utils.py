@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields
 from uuid import uuid4
-from chalicelib.utils import check_admin_authorization, UserNotAdminAuthorized
+from chalicelib.utils import \
+    check_admin_authorization, UserNotAdminAuthorized, UserNotFoundToAuthorize
 from unittest.mock import patch, MagicMock
 from playerstars_domain import Player
 import pytest
@@ -68,6 +69,18 @@ def test_check_admin_raises(adapter):
     with pytest.raises(UserNotAdminAuthorized) as excinfo:
         check_admin_authorization('1234')
     assert 'Usuário não autorizado como admin' in str(excinfo.value)
+
+
+def get_by_id2(id):
+    return None
+
+
+@patch('chalicelib.utils.PlayerAdapter',
+       return_value=MagicMock(get_by_id=get_by_id2))
+def test_check_admin_user_not_found(adapter):
+    with pytest.raises(UserNotFoundToAuthorize) as excinfo:
+        check_admin_authorization('1234')
+    assert 'Usuário não encontrado' in str(excinfo.value)
 
 
 class FakeDomain:

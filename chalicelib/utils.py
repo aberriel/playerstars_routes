@@ -42,11 +42,18 @@ class UserNotAdminAuthorized(BaseException):
     pass
 
 
+class UserNotFoundToAuthorize(BaseException):
+    pass
+
+
 def check_admin_authorization(user_id):
     user_adapter = PlayerAdapter(
         db_endpoint=Settings.DYNAMODB_URL,
         table_name=Settings.PLAYER_TABLE_NAME)
     user = user_adapter.get_by_id(user_id)
+    if not user:
+        msg = "Usuário não encontrado"
+        raise UserNotFoundToAuthorize(msg)
     if not user.is_admin:
         msg = "Usuário não autorizado como admin"
         raise UserNotAdminAuthorized(msg)
