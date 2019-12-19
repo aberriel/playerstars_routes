@@ -31,3 +31,13 @@ def get_all_players_admin():
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     return get_player_router().get_all()
+
+
+@bp_admin.route('/{entity_id}', **private_get())
+def get_player_by_id_admin(entity_id):
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    return get_player_router().get_by_id(entity_id)
