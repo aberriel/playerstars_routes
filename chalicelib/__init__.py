@@ -83,7 +83,7 @@ from .convert_star_rate_route import (
     put_convert_rate, post_convert_rate
 )
 from .admin_routes import (
-    get_all_players_admin, get_player_by_id_admin
+    get_all_players_admin, get_player_by_id_admin, put_player_admin
 )
 __all__ = [
     'BasicEntityRoute',
@@ -159,5 +159,6 @@ __all__ = [
     'post_notification_as_read',
 
     'get_all_players_admin',
-    'get_player_by_id_admin'
+    'get_player_by_id_admin',
+    'put_player_admin'
 ]
