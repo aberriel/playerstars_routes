@@ -36,7 +36,7 @@ def get_all_players_admin():
     query_params = None
     if bp_admin.current_request and bp_admin.current_request.query_params:
         query_params = bp_admin.current_request.query_params
-    return get_player_router().get_all(query_params, True)
+    return get_player_router().get_all(query_params, False)
 
 
 @bp_admin.route('/player/{entity_id}', **private_get())
