@@ -10,10 +10,10 @@ from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
     GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
-    GetMatchListInteractor, BasicGetRequestModel, EndDuelException,
+    GetMatchListInteractor, BasicGetRequestModel,
     GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
     GetPlayerDuelByStatusError, RejectDuelException, RejectDuelInteractor,
-    RejectDuelRequestModel, EndDuelRequestModel, EndDuelInteractor)
+    RejectDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -152,22 +152,22 @@ def reject_duel(data):
     return success(response)
 
 
-@bp_duel.route('/end-duel', **private_post())
-def end_duel():
-    data = bp_duel.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_duel)
-    data.update({'player_id': entity_id})
-    return end_duel_post(data)
+# @bp_duel.route('/end-duel', **private_post())
+# def end_duel():
+#     data = bp_duel.current_request.json_body
+#     entity_id = get_user_id_from_jwt(bp_duel)
+#     data.update({'player_id': entity_id})
+#     return end_duel_post(data)
 
 
-def end_duel_post(json_data):
-    request = EndDuelRequestModel(json_data)
-    interactor = EndDuelInteractor(
-        request=request, player_adapter=get_player_adapter(),
-        duel_adapter=get_duel_adapter()
-    )
-    try:
-        response = interactor.run()
-    except EndDuelException as e:
-        return server_error(str(e))
-    return success(response)
+# def end_duel_post(json_data):
+#     request = EndDuelRequestModel(json_data)
+#     interactor = EndDuelInteractor(
+#         request=request, player_adapter=get_player_adapter(),
+#         duel_adapter=get_duel_adapter()
+#     )
+#     try:
+#         response = interactor.run()
+#     except EndDuelException as e:
+#         return server_error(str(e))
+#     return success(response)
