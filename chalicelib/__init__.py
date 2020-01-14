@@ -18,7 +18,8 @@ from .duel_route import (
     get_all_duel,
     get_duels_by_status_route,
     get_duel,
-    reject_duel_route
+    reject_duel_route,
+    end_duel
 )
 from .game_route import (
     delete_game,
@@ -160,5 +161,7 @@ __all__ = [
 
     'get_all_players_admin',
     'get_player_by_id_admin',
-    'put_player_admin'
+    'put_player_admin',
+
+    'end_duel'
 ]

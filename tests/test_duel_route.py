@@ -2,10 +2,10 @@ import json
 from unittest.mock import MagicMock, patch
 from chalicelib import \
     get_match_list, post_duel, enter_duel, get_duel, reject_duel_route, \
-    get_all_player_duels, get_all_duel, get_duels_by_status_route
+    get_all_player_duels, get_all_duel, get_duels_by_status_route, end_duel
 from playerstars_interactors import (
     EnterDuelException, CreateDuelException, GetPlayerDuelByStatusError,
-    RejectDuelException)
+    RejectDuelException, EndDuelException)
 from tests.test_utils import jwt
 
 
@@ -287,6 +287,40 @@ def test_reject_duel(client, resource, run):
 def teste_reject_duel_raises(client, resource):
     result = reject_duel_route()
 
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_end_duel_request():
+    payload = """{
+        "duel_id": "id1234",
+        "result": "win",
+        "image_base64": "iuasdiuhafiasjdiyhviuasd"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+
+
+@patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
+@patch('chalicelib.duel_route.EndDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_end_duel(client, resource, run):
+    result = end_duel()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
+@patch('chalicelib.duel_route.EndDuelInteractor.run',
+       MagicMock(side_effect=EndDuelException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_end_duel_raises(client, resource):
+    result = end_duel()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
