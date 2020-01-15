@@ -1,6 +1,7 @@
 from chalice import Chalice
 
 from chalicelib import root
+from chalicelib.settings import Settings
 from chalicelib.championship_route import (
     bp_accept_invitation,
     bp_add_friend_to_championship,
@@ -14,6 +15,8 @@ from chalicelib.duel_route import (
     bp_enter_duel,
     bp_match_list
 )
+from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
+
 from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.notification_route import bp_notification
 from chalicelib.player_route import bp_player
@@ -65,3 +68,8 @@ app.register_blueprint(bp_championship, url_prefix='/championship')
 def index():
     return {'status': 'ok',
             'data': 'PlayerStars is alive!!'}
+
+
+@app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
+def duel_finish_handler(event, context):
+    return duel_scheduled_finisher(event['duel_id'])

@@ -3,6 +3,7 @@ playerstars_mail
 playerstars_domain
 playerstars_adapters
 playerstars_interactors
+playerstars_aws_lambda
 python-decouple==3.1
 defusedxml==0.6.0
 requests==2.22.0
