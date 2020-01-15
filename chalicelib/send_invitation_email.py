@@ -1,18 +1,17 @@
 from chalice import Blueprint
-from chalicelib.chalice_support import (
-    private_post,
-    server_error,
-    success
-)
-from chalicelib.player_route import get_player_by_id
-from chalicelib.settings import Settings
-from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import PlayerAdapter
 from playerstars_interactors.send_mail import (
     SendInvitationMailInteractor,
     SendInvitationMailRequestModel
 )
 
+from chalicelib.chalice_support import (
+    private_post,
+    server_error,
+    success
+)
+from chalicelib.settings import Settings
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_invitation_email = Blueprint(__name__)
 

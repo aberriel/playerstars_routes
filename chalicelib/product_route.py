@@ -1,11 +1,12 @@
 from chalice import Blueprint
 from playerstars_adapters import ProductAdapter
 from playerstars_domain import Product
-from chalicelib.settings import Settings
-from .basic_entity_route import BasicEntityRoute
-from chalicelib.chalice_support import private_get, private_post, success, not_found
 from playerstars_interactors import GetAllProductsInteractor
 
+from chalicelib.chalice_support import private_get, private_post, success, \
+    not_found
+from chalicelib.settings import Settings
+from .basic_entity_route import BasicEntityRoute
 
 bp_product = Blueprint(__name__)
 

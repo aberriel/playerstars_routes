@@ -1,8 +1,6 @@
 from chalice import Blueprint
 from playerstars_adapters import NotificationAdapter
-from chalicelib.settings import Settings
 from playerstars_domain import Notification
-from chalicelib.chalice_support import private_post, private_get
 from playerstars_interactors import (
     BasicPostRequestModel,
     GetAppNotificationByUserInteractor,
@@ -13,8 +11,11 @@ from playerstars_interactors import (
     PostNotificationReadRequestModel,
     SaveEntityException
 )
+
+from chalicelib.chalice_support import private_post, private_get
 from chalicelib.chalice_support import (
     server_error, created, success, not_found)
+from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 
 bp_notification = Blueprint(__name__)
@@ -80,4 +81,3 @@ def post_notification_as_read(entity_id):
     except PostNotificationReadException as e:
         return server_error(str(e))
     return success(response)
-

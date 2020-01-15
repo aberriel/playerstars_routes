@@ -2,14 +2,6 @@ from chalice import Blueprint
 from playerstars_adapters import \
     PlayerAdapter, DuelAdapter, TeamAdapter, ConsoleAdapter
 from playerstars_domain import Player
-from chalicelib.chalice_support import (
-    private_get, private_post, private_delete, private_put)
-
-from chalicelib.basic_entity_route import BasicEntityRoute
-from chalicelib.settings import Settings
-from chalicelib.utils import \
-    get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
-
 from playerstars_interactors import (
     BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
     GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
@@ -22,9 +14,16 @@ from playerstars_interactors import (
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
     SaveConvertedStarsException, GetRankingByConsoleGameRequestModel,
     GetRankingByConsoleGameInteractor)
-from chalicelib.team_route import get_by_user
+
+from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
-    server_error, created, success, not_found, success_partial, unauthorized)
+    private_get, private_post, private_delete, private_put)
+from chalicelib.chalice_support import (
+    server_error, created, success, not_found, success_partial)
+from chalicelib.settings import Settings
+from chalicelib.team_route import get_by_user
+from chalicelib.utils import \
+    get_user_id_from_jwt
 
 bp_player = Blueprint(__name__)
 
@@ -93,8 +92,7 @@ def get_player_by_id(entity_id):
 
 @bp_player.route('/', **private_get())
 def get_all_player():
-    if bp_player.current_request and \
-            bp_player.current_request.query_params:
+    if bp_player.current_request and bp_player.current_request.query_params:
         return get_player_by_console(bp_player.current_request.query_params)
     return get_router().get_all()
 
@@ -133,6 +131,7 @@ def get_by_id(entity_id):
     if response:
         return success(response)
     return not_found(f'Player not found')
+
 
 # player/<Id>/friends
 # POST
@@ -196,7 +195,8 @@ def delete_friend_route_v2():
 
 def alter_friend_list(entity_id, data, option):
     adapter = get_adapter()
-    request = AlterFriendsRequestModel(player_id=entity_id, list_entity_id=data['friends'])
+    request = AlterFriendsRequestModel(player_id=entity_id,
+                                       list_entity_id=data['friends'])
     interactor = AlterFriendsInteractor(request, adapter, option)
     try:
         response = interactor.run()

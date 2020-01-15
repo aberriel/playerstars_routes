@@ -1,18 +1,17 @@
 from chalice import Blueprint
-from chalicelib.chalice_support import (
-    private_post,
-    server_error,
-    success
-)
-from chalicelib.player_route import get_player_by_id
-from chalicelib.settings import Settings
-from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import PlayerAdapter
 from playerstars_interactors.send_mail import (
     SendContactMailInteractor,
     SendContactMailRequestModel
 )
 
+from chalicelib.chalice_support import (
+    private_post,
+    server_error,
+    success
+)
+from chalicelib.settings import Settings
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_contact_email = Blueprint(__name__)
 
@@ -29,7 +28,8 @@ def post_contact_email():
 
 
 def post(json_data, player_id):
-    request = SendContactMailRequestModel(json_data, player_id, Settings.CONTACT_EMAIL_RECIPIENTS)
+    request = SendContactMailRequestModel(json_data, player_id,
+                                          Settings.CONTACT_EMAIL_RECIPIENTS)
     interactor = SendContactMailInteractor(request, get_adapter())
     try:
         response = interactor.run()
