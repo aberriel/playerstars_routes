@@ -1,3 +1,6 @@
+from .admin_routes import (
+    get_all_players_admin, get_player_by_id_admin, put_player_admin
+)
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
     get_all_championships,
@@ -9,6 +12,10 @@ from .championship_route import (
     post_add_friend_to_championship,
     post_create_championship,
     post_join_open_championship
+)
+from .convert_star_rate_route import (
+    delete_convert_rate, get_all_convert_rate, get_convert_rate_by_id,
+    put_convert_rate, post_convert_rate
 )
 from .duel_route import (
     post_duel,
@@ -45,6 +52,9 @@ from .player_route import (
     convert_star_route
 )
 from .product_route import get_all_product, post_product
+from .purchase_route import (
+    get_history_route
+)
 from .region_country_route import (
     get_all_region_country,
     get_region_country_by_id,
@@ -75,17 +85,7 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin
 )
-from .purchase_route import (
-    get_history_route
-)
 
-from .convert_star_rate_route import (
-    delete_convert_rate, get_all_convert_rate, get_convert_rate_by_id,
-    put_convert_rate, post_convert_rate
-)
-from .admin_routes import (
-    get_all_players_admin, get_player_by_id_admin, put_player_admin
-)
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -163,5 +163,10 @@ __all__ = [
     'get_player_by_id_admin',
     'put_player_admin',
 
-    'end_duel'
+    'end_duel',
+
+    'put_player',
+    'post_accept_terms_route',
+    'post_console_data_route',
+
 ]

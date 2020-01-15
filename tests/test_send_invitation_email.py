@@ -105,9 +105,6 @@ player = {
 # noinspection PyUnusedLocal
 @patch('chalicelib.send_invitation_email.bp_invitation_email',
        make_post_mock_data())
-@patch('chalicelib.send_invitation_email.get_player_by_id',
-       MagicMock(body=dict(status='success', data=player),
-                 status_code=200))
 @patch('chalicelib.send_invitation_email.SendInvitationMailInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -122,9 +119,6 @@ def test_post_email(client, resource, run):
 # noinspection PyUnusedLocal
 @patch('chalicelib.send_invitation_email.bp_invitation_email',
        make_post_mock_data())
-@patch('chalicelib.send_invitation_email.get_player_by_id',
-       MagicMock(body=dict(status='success', data=player),
-                 status_code=200))
 @patch('chalicelib.send_invitation_email.SendInvitationMailInteractor.run',
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
