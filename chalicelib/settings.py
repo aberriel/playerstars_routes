@@ -55,6 +55,8 @@ class Settings:
         "S#_BUCKET_URL",
         "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com")
 
+    DUEL_SCHEDULED_FINISHER_NAME = config('DUEL_SCHEDULED_FINISHER_NAME',
+                                          'dshfn_test')
     # "PAGSEGURO_NOTIFICATION_URL":
     # "https://t3hahl6qek.execute-api.us-east-1.amazonaws.com/api/pagseguro
     # /notificacao",
