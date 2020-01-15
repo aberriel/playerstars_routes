@@ -5,7 +5,7 @@ from playerstars_interactors import (
     BasicDeleteInteractor, BasicDeleteRequestModel
 )
 
-from chalicelib.chalice_support.api_responses import (
+from chalice_support.api_responses import (
     created, not_found, server_error, success)
 
 

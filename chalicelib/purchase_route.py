@@ -21,8 +21,7 @@ from playerstars_interactors import (
     GetPurchaseHistoryRequestModel
 )
 
-from chalicelib.chalice_support import (
-    server_error, created, success, not_found)
+from chalice_support import (server_error, created, success, not_found)
 
 bp_purchase = Blueprint(__name__)
 

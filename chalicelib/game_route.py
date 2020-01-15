@@ -17,7 +17,7 @@ from playerstars_interactors import (
     PutGameRequestModel,
     SaveEntityException,
     UpdateEntityException)
-from chalicelib.chalice_support import (
+from chalice_support import (
     created,
     not_found,
     server_error,

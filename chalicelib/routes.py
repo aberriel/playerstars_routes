@@ -1,6 +1,6 @@
 from chalice import Blueprint
 from chalicelib.chalice_support.auth import cors, cupauth
-from chalicelib.chalice_support import not_found
+from chalice_support import not_found
 root = Blueprint(__name__)
 
 

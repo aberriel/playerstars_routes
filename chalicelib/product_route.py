@@ -3,8 +3,8 @@ from playerstars_adapters import ProductAdapter
 from playerstars_domain import Product
 from playerstars_interactors import GetAllProductsInteractor
 
-from chalicelib.chalice_support import private_get, private_post, success, \
-    not_found
+from chalicelib.chalice_support import private_get, private_post
+from chalice_support import success, not_found
 from chalicelib.settings import Settings
 from .basic_entity_route import BasicEntityRoute
 

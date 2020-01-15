@@ -11,8 +11,7 @@ from chalicelib.chalice_support import (
     private_get, private_put, private_post)
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
-from chalicelib.chalice_support import \
-    success, not_found, created, server_error
+from chalice_support import success, not_found, created, server_error
 from chalicelib.utils import get_user_id_from_jwt
 
 bp_team = Blueprint(__name__)

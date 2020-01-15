@@ -4,8 +4,8 @@ from playerstars_adapters import DuelAdapter, PlayerAdapter
 from .basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
 from playerstars_domain import Duel
-from chalicelib.chalice_support import \
-    private_get, private_post, server_error, created, success, not_found
+from chalicelib.chalice_support import private_get, private_post
+from chalice_support import server_error, created, success, not_found
 from playerstars_interactors import (
     CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
     EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
