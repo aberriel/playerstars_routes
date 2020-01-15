@@ -24,6 +24,10 @@ bp_enter_duel = Blueprint(__name__)
 bp_duel = Blueprint(__name__)
 
 
+def get_duel_adapter():
+    return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 def get_player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
@@ -41,10 +45,6 @@ def get_match_list_by_player(entity_id):
     if response:
         return success(response)
     return not_found("Nenhum match encontrado para o player: " + entity_id)
-
-
-def get_duel_adapter():
-    return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @bp_create_duel.route('/', **private_post())
@@ -72,7 +72,14 @@ def create_duel(json_data):
 def enter_duel():
     data = bp_enter_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_enter_duel)
+
     data.update({'player_id': entity_id})
+    data.update({
+        'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
+    })
+    data.update({'lambda_function_arn': Settings.DUEL_SCHEDULED_FINISHER_ARN})
+    data.update({'time_to_finish': Settings.TIME_TO_FINISH_DUEL})
+
     return enter_duel_post(data)
 
 
