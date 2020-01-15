@@ -5,7 +5,7 @@ from app import index
 from chalicelib.routes import home
 from .test_utils import FakeDomain, FakeAdapter
 from unittest.mock import MagicMock, patch
-from chalicelib.chalice_support import success
+from chalice_support import success
 
 
 class FakePostRequestModel:

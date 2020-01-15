@@ -1,4 +1,6 @@
 from chalice import Blueprint
+from chalice_support import (server_error, created, success, not_found,
+                             success_partial)
 from playerstars_adapters import \
     PlayerAdapter, DuelAdapter, TeamAdapter, ConsoleAdapter
 from playerstars_domain import Player
@@ -18,8 +20,6 @@ from playerstars_interactors import (
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete, private_put)
-from chalicelib.chalice_support import (
-    server_error, created, success, not_found, success_partial)
 from chalicelib.settings import Settings
 from chalicelib.team_route import get_by_user
 from chalicelib.utils import \

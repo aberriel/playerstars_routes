@@ -13,8 +13,7 @@ from playerstars_interactors import (
 )
 
 from chalicelib.chalice_support import private_post, private_get
-from chalicelib.chalice_support import (
-    server_error, created, success, not_found)
+from chalice_support import (server_error, created, success, not_found)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 

@@ -5,11 +5,8 @@ from playerstars_interactors.send_mail import (
     SendWelcomeMailRequestModel
 )
 
-from chalicelib.chalice_support import (
-    private_post,
-    server_error,
-    success
-)
+from chalicelib.chalice_support import private_post
+from chalice_support import (server_error, success)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 

@@ -1,7 +1,6 @@
 from chalice import Blueprint
-from chalicelib.chalice_support import (
-    not_found, private_get, private_post, server_error, success, created
-)
+from chalicelib.chalice_support import (private_get, private_post)
+from chalice_support import (not_found, server_error, success, created)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import (

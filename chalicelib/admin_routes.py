@@ -8,8 +8,8 @@ from playerstars_adapters import (
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
 from chalicelib.chalice_support import (
-    private_get, private_put, unauthorized, server_error, success
-)
+    private_get, private_put)
+from chalice_support import unauthorized, server_error, success
 from playerstars_interactors import (
     BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException
 )
