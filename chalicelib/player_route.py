@@ -1,21 +1,42 @@
 from chalice import Blueprint
-from chalice_support import (server_error, created, success, not_found,
-                             success_partial)
-from playerstars_adapters import \
-    PlayerAdapter, DuelAdapter, TeamAdapter, ConsoleAdapter
+from chalice_support import (
+    created,
+    not_found,
+    server_error,
+    success,
+    success_partial)
+from playerstars_adapters import (
+    ConsoleAdapter,
+    DuelAdapter,
+    PlayerAdapter,
+    TeamAdapter)
 from playerstars_domain import Player
 from playerstars_interactors import (
-    BasicPostRequestModel, PostPlayerInteractor, SaveEntityException,
-    GetAllFriendsInteractor, GetAllFriendsRequestModel, AlterFriendsInteractor,
-    AlterFriendsRequestModel, SaveFriendsException, GetProfileInteractor,
-    GetProfileRequestModel, UpdateProfileRequestModel, UpdateProfileInteractor,
-    UpdateEntityException, PostPlayerAcceptTermsInteractor,
-    PostPlayerConsoleDataInteractor, AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationException, AcceptTeamInvitationRequestModel,
-    GetPlayersByConsoleGameRequestModel, GetPlayersByConsoleGameInteractor,
-    SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
-    SaveConvertedStarsException, GetRankingByConsoleGameRequestModel,
-    GetRankingByConsoleGameInteractor)
+    AcceptTeamInvitationException,
+    AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel,
+    AlterFriendsInteractor,
+    AlterFriendsRequestModel,
+    BasicPostRequestModel,
+    GetAllFriendsInteractor,
+    GetAllFriendsRequestModel,
+    GetPlayersByConsoleGameInteractor,
+    GetPlayersByConsoleGameRequestModel,
+    GetProfileInteractor,
+    GetProfileRequestModel,
+    GetRankingByConsoleGameInteractor,
+    GetRankingByConsoleGameRequestModel,
+    PostPlayerAcceptTermsInteractor,
+    PostPlayerConsoleDataInteractor,
+    PostPlayerInteractor,
+    SaveConvertedStarsException,
+    SaveConvertedStarsInteractor,
+    SaveConvertedStarsRequestModel,
+    SaveEntityException,
+    SaveFriendsException,
+    UpdateEntityException,
+    UpdateProfileInteractor,
+    UpdateProfileRequestModel)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -59,7 +80,12 @@ def post(json_data):
     adapter = get_adapter()
     try:
         request = BasicPostRequestModel(json_data)
-        interactor = PostPlayerInteractor(request, adapter, Player, Settings)
+        interactor = PostPlayerInteractor(
+            request=request,
+            adapter_instance=adapter,
+            entity_class=Player,
+            s3_bucket_name=Settings.S3_BUCKET_NAME,
+            s3_bucket_url=Settings.S3_BUCKET_URL)
         response = interactor.run()
     except SaveEntityException as e:
         return server_error(str(e))
@@ -78,7 +104,11 @@ def put(json_data):
     try:
         adapter = get_adapter()
         request = UpdateProfileRequestModel(json_data)
-        interactor = UpdateProfileInteractor(request, adapter, Settings)
+        interactor = UpdateProfileInteractor(
+            request=request,
+            player_adapter=adapter,
+            s3_bucket_name=Settings.S3_BUCKET_NAME,
+            s3_bucket_url=Settings.S3_BUCKET_URL)
         response = interactor.run()
     except UpdateEntityException as e:
         return server_error(str(e))

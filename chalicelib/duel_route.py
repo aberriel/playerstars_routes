@@ -1,20 +1,33 @@
-from chalice import Blueprint
-
-from playerstars_adapters import DuelAdapter, PlayerAdapter
 from .basic_entity_route import BasicEntityRoute
-from chalicelib.settings import Settings
-from playerstars_domain import Duel
+from chalice import Blueprint
 from chalicelib.chalice_support import private_get, private_post
+from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
+from playerstars_adapters import (
+    DuelAdapter,
+    NotificationAdapter,
+    PlayerAdapter)
+from playerstars_domain import Duel
 from playerstars_interactors import (
-    CreateDuelInteractor, CreateDuelRequestModel, CreateDuelException,
-    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
-    GetAllPlayerDuelRequestModel, GetAllPlayerDuelInteractor,
-    GetMatchListInteractor, BasicGetRequestModel,
-    GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    GetPlayerDuelByStatusError, RejectDuelException, RejectDuelInteractor,
-    RejectDuelRequestModel, EndDuelException, EndDuelInteractor,
-    EndDuelRequestModel)
+    CreateDuelException,
+    CreateDuelInteractor,
+    CreateDuelRequestModel,
+    EndDuelException,
+    EndDuelInteractor,
+    EndDuelRequestModel,
+    EnterDuelException,
+    EnterDuelInteractor,
+    EnterDuelRequestModel,
+    GetAllPlayerDuelInteractor,
+    GetAllPlayerDuelRequestModel,
+    GetMatchListInteractor,
+    GetMatchListRequestModel,
+    GetPlayerDuelByStatusError,
+    GetPlayerDuelByStatusInteractor,
+    GetPlayerDuelByStatusRequestModel,
+    RejectDuelException,
+    RejectDuelInteractor,
+    RejectDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -25,11 +38,18 @@ bp_duel = Blueprint(__name__)
 
 
 def get_duel_adapter():
-    return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+    return DuelAdapter(Settings.DUEL_TABLE_NAME,
+                       Settings.DYNAMODB_URL)
+
+
+def get_notification_adapter():
+    return NotificationAdapter(Settings.NOTIFICATION_TABLE_NAME,
+                               Settings.DYNAMODB_URL)
 
 
 def get_player_adapter():
-    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME,
+                         Settings.DYNAMODB_URL)
 
 
 @bp_match_list.route('/', **private_get())
@@ -39,7 +59,7 @@ def get_match_list():
 
 
 def get_match_list_by_player(entity_id):
-    request = BasicGetRequestModel(entity_id)
+    request = GetMatchListRequestModel(entity_id)
     interactor = GetMatchListInteractor(request, get_player_adapter())
     response = interactor.run()
     if response:
@@ -171,7 +191,12 @@ def end_duel():
 def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
     interactor = EndDuelInteractor(
-        request=request, duel_adapter=get_duel_adapter())
+        request=request,
+        duel_adapter=get_duel_adapter(),
+        notification_adapter=get_notification_adapter(),
+        player_adapter=get_player_adapter(),
+        s3_bucket_name=Settings.S3_BUCKET_NAME,
+        s3_bucket_url=Settings.S3_BUCKET_URL)
     try:
         response = interactor.run()
     except EndDuelException as e:
