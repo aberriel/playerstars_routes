@@ -93,7 +93,10 @@ def test_create_duel_raises(client, resource):
 
 def make_enter_duel_mock_data():
     payload = """{
-        "duel_id": "duelid123"
+        "duel_id": "duelid123",
+        "lambda_function_name": "function1",
+        "time_to_finish": 18000,
+        "aws_region": "us-east-1"
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(

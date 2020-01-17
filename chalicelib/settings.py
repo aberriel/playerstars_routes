@@ -58,13 +58,10 @@ class Settings:
     DUEL_SCHEDULED_FINISHER_NAME = config(
         'DUEL_SCHEDULED_FINISHER_NAME',
         'PlayerStars-dev-duel_scheduled_finisher_dev')
-    DUEL_SCHEDULED_FINISHER_ARN = config(
-        'DUEL_SCHEDULED_FINISHER_ARN',
-        'arn:aws:lambda:us-east-1:230639242520:'
-        'function:PlayerStars-dev-duel_scheduled_finisher_dev')
     TIME_TO_FINISH_DUEL = config(
         'TIME_TO_FINISH_DUEL',
         18000)
+    AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
 
     # "PAGSEGURO_NOTIFICATION_URL":
     # "https://t3hahl6qek.execute-api.us-east-1.amazonaws.com/api/pagseguro

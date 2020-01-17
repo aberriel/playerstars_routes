@@ -97,7 +97,7 @@ def enter_duel():
     data.update({
         'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
     })
-    data.update({'lambda_function_arn': Settings.DUEL_SCHEDULED_FINISHER_ARN})
+    data.update({'aws_region': Settings.AWS_DEFAULT_REGION})
     data.update({'time_to_finish': Settings.TIME_TO_FINISH_DUEL})
 
     return enter_duel_post(data)
