@@ -104,16 +104,12 @@ def make_enter_duel_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.duel_route.EnterDuelInteractor._recover_duel',
-       return_value=MagicMock())
-@patch('chalicelib.duel_route.EnterDuelInteractor._recover_player',
-       return_value=MagicMock())
 @patch('chalicelib.duel_route.bp_enter_duel',
        make_enter_duel_mock_data())
 @patch('chalicelib.duel_route.EnterDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_enter_duel(client, resource, run, player, duel):
+def test_enter_duel(client, resource, run):
     result = enter_duel()
 
     run.assert_called_once()
@@ -122,17 +118,13 @@ def test_enter_duel(client, resource, run, player, duel):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.duel_route.EnterDuelInteractor._recover_duel',
-       return_value=MagicMock())
-@patch('chalicelib.duel_route.EnterDuelInteractor._recover_player',
-       return_value=MagicMock())
 @patch('chalicelib.duel_route.bp_enter_duel',
        make_enter_duel_mock_data())
 @patch('chalicelib.duel_route.EnterDuelInteractor.run',
        MagicMock(side_effect=EnterDuelException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_enter_duel_raises(client, resource, player, duel):
+def test_enter_duel_raises(client, resource):
     result = enter_duel()
 
     assert result.body['message'] == 'oops'
