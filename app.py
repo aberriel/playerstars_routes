@@ -67,8 +67,9 @@ app.register_blueprint(bp_championship, url_prefix='/championship')
 
 @app.route('/check', methods=['POST', 'GET'])
 def index():
-    return {'status': 'ok',
-            'data': 'PlayerStars is alive!!'}
+    return {
+        'status': 'ok',
+        'data': 'PlayerStars is alive!!'}
 
 
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
