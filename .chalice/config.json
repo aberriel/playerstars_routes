@@ -17,7 +17,7 @@
         "USER_TABLE_NAME": "user",
         "USER_ADMIN_TABLE_NAME": "user_admin",
         "TIME_TO_FINISH_DUEL": "300",
-        "DUEL_SCHEDULED_FINISHER_NAME": "PlayerStars-dev-duel_scheduled_finisher_dev"
+        "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev"
     },
     "stages": {
         "dev": {
@@ -33,7 +33,7 @@
                 "TEAM_TABLE_NAME": "team_dev",
                 "USER_TABLE_NAME": "user_dev",
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
-                "DUEL_SCHEDULED_FINISHER_NAME": "PlayerStars-dev-duel_scheduled_finisher_dev",
+                "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
                 "TIME_TO_FINISH_DUEL": "300"
             }
         },
@@ -50,13 +50,13 @@
                 "TEAM_TABLE_NAME": "team_stg",
                 "USER_TABLE_NAME": "user_stg",
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
-                "DUEL_SCHEDULED_FINISHER_NAME": "PlayerStars-dev-duel_scheduled_finisher_dev",
+                "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
                 "TIME_TO_FINISH_DUEL": "18000"
             }
         },
         "prd": {
             "api_gateway_stage": "api",
-            "DUEL_SCHEDULED_FINISHER_NAME": "PlayerStars-dev-duel_scheduled_finisher_dev",
+            "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
             "TIME_TO_FINISH_DUEL": "18000",
             "LOG_LEVEL": "INFO",
             "CONSOLE_TABLE_NAME": "console_prd",
