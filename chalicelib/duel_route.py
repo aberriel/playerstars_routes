@@ -94,11 +94,12 @@ def enter_duel():
     entity_id = get_user_id_from_jwt(bp_enter_duel)
 
     data.update({'player_id': entity_id})
+
     data.update({
         'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
     })
     data.update({'aws_region': Settings.AWS_DEFAULT_REGION})
-    data.update({'time_to_finish': Settings.TIME_TO_FINISH_DUEL})
+    data.update({'time_to_finish': int(Settings.TIME_TO_FINISH_DUEL)})
 
     return enter_duel_post(data)
 
@@ -106,7 +107,8 @@ def enter_duel():
 def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
-        request=request, player_adapter=get_player_adapter(),
+        request=request,
+        player_adapter=get_player_adapter(),
         duel_adapter=get_duel_adapter()
     )
     try:
