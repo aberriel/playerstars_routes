@@ -57,7 +57,7 @@ class Settings:
 
     DUEL_SCHEDULED_FINISHER_NAME = config(
         'DUEL_SCHEDULED_FINISHER_NAME',
-        'PlayerStars-dev-duel_scheduled_finisher_dev')
+        'duel_scheduled_finisher_dev')
     TIME_TO_FINISH_DUEL = config(
         'TIME_TO_FINISH_DUEL',
         18000)
