@@ -19,6 +19,8 @@
                 "dynamodb:Scan",
                 "dynamodb:UpdateItem",
                 "dynamodb:UpdateTable",
+                "lambda:ListFunctions",
+                "lambda:InvokeFunction",
                 "logs:CreateLogGroup",
                 "ses:CloneReceiptRuleSet",
                 "ses:CreateConfigurationSet",
