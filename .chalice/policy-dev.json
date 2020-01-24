@@ -19,6 +19,7 @@
                 "dynamodb:Scan",
                 "dynamodb:UpdateItem",
                 "dynamodb:UpdateTable",
+                "events:PutRule",
                 "lambda:ListFunctions",
                 "lambda:InvokeFunction",
                 "logs:CreateLogGroup",
