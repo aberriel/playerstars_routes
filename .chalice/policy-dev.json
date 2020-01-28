@@ -20,6 +20,8 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:UpdateTable",
                 "events:PutRule",
+                "events:PutTargets",
+                "lambda:AddPermission",
                 "lambda:ListFunctions",
                 "lambda:InvokeFunction",
                 "logs:CreateLogGroup",
