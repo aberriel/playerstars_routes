@@ -51,6 +51,7 @@ app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_product, url_prefix='/product')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
+
 app.register_blueprint(bp_region_country, url_prefix='/region-country')
 app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_team, url_prefix='/team')
