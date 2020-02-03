@@ -35,9 +35,7 @@ from chalicelib.admin_routes import bp_admin
 
 app = Chalice(app_name='playerstars')
 
-app.experimental_feature_flags.update([
-    'BLUEPRINTS'
-])
+app.experimental_feature_flags.update(['BLUEPRINTS'])
 
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_admin, url_prefix='/admin')
