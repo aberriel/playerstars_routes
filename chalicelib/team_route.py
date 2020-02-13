@@ -1,18 +1,30 @@
 from chalice import Blueprint
-from playerstars_adapters import TeamAdapter, PlayerAdapter
-from playerstars_domain import Team
-from playerstars_interactors import (
-    GetTeamByUserInteractor, GetTeamByUserRequestModel,
-    PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
-    PutTeamInteractor, PutTeamRequestModel, UpdateEntityException,
-    EnterTeamRequestModel, EnterTeamInteractor, EnterTeamException)
-
-from chalicelib.chalice_support import (
-    private_get, private_put, private_post)
 from chalicelib.basic_entity_route import BasicEntityRoute
+from chalicelib.chalice_support import (
+    private_get,
+    private_put,
+    private_post)
 from chalicelib.settings import Settings
 from chalice_support import success, not_found, created, server_error
 from chalicelib.utils import get_user_id_from_jwt
+from playerstars_adapters import (
+    PlayerAdapter,
+    TeamAdapter
+)
+from playerstars_domain import Team
+from playerstars_interactors import (
+    EnterTeamException,
+    EnterTeamInteractor,
+    EnterTeamRequestModel,
+    GetTeamByUserInteractor,
+    GetTeamByUserRequestModel,
+    PostTeamInteractor,
+    PostTeamRequestModel,
+    PutTeamInteractor,
+    PutTeamRequestModel,
+    SaveTeamException,
+    UpdateEntityException)
+
 
 bp_team = Blueprint(__name__)
 bp_enter_team = Blueprint(__name__)
@@ -57,16 +69,21 @@ def get_by_user(player_id):
 @bp_team.route('/', **private_post())
 def post_team():
     data = bp_team.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_team)
+    data.update({'captain_id': player_id})
     return post(data)
 
 
 def post(data):
-    request = PostTeamRequestModel(**data)
+    request = PostTeamRequestModel(data)
     interactor = PostTeamInteractor(
-        request, get_player_adapter(), get_team_adapter(), Settings)
+        request=request,
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        settings=Settings)
     try:
         response = interactor.run()
-    except SaveEntityException as e:
+    except SaveTeamException as e:
         return server_error(str(e))
     return created(response)
 

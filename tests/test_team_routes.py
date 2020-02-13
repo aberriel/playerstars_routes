@@ -1,86 +1,111 @@
-from unittest.mock import MagicMock, patch
-import json
+from chalicelib import (
+    enter_team,
+    get_all_teams,
+    get_all_teams_by_user,
+    get_team_by_id,
+    post_team,
+    put_team)
 from playerstars_interactors import (
-    SaveEntityException, UpdateEntityException, EnterTeamException
+    EnterTeamException,
+    SaveTeamException,
+    UpdateEntityException,
 )
 from tests.test_utils import jwt
-from chalicelib import (
-    get_all_teams, get_team_by_id, get_all_teams_by_user, post_team,
-    put_team, enter_team)
+from unittest.mock import MagicMock, patch
+
+import json
+
+
+team_image_base_64 = \
+    'data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1' \
+    'sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBpZD0iQ2FwYV8xIiBlbmFibGUtY' \
+    'mFja2dyb3VuZD0ibmV3IDAgMCA0NDMuMjk0IDQ0My4yOTQiIGhlaWdodD0iMTZweCIgdml' \
+    'ld0JveD0iMCAwIDQ0My4yOTQgNDQzLjI5NCIgd2lkdGg9IjE2cHgiPjxwYXRoIGQ9Im0yM' \
+    'jEuNjQ3IDBjLTEyMi4yMTQgMC0yMjEuNjQ3IDk5LjQzMy0yMjEuNjQ3IDIyMS42NDdzOTk' \
+    'uNDMzIDIyMS42NDcgMjIxLjY0NyAyMjEuNjQ3IDIyMS42NDctOTkuNDMzIDIyMS42NDctM' \
+    'jIxLjY0Ny05OS40MzMtMjIxLjY0Ny0yMjEuNjQ3LTIyMS42NDd6bTAgNDE1LjU4OGMtMTA' \
+    '2Ljk0MSAwLTE5My45NDEtODctMTkzLjk0MS0xOTMuOTQxczg3LTE5My45NDEgMTkzLjk0M' \
+    'S0xOTMuOTQxIDE5My45NDEgODcgMTkzLjk0MSAxOTMuOTQxLTg3IDE5My45NDEtMTkzLjk' \
+    '0MSAxOTMuOTQxeiIgZmlsbD0iIzAwMDAwMCIvPjxwYXRoIGQ9Im0yMzUuNSA4My4xMThoL' \
+    'TI3LjcwNnYxNDQuMjY1bDg3LjE3NiA4Ny4xNzYgMTkuNTg5LTE5LjU4OS03OS4wNTktNzk' \
+    'uMDU5eiIgZmlsbD0iIzAwMDAwMCIvPjwvc3ZnPgo='
 
 
 def make_post_mock_data():
-    payload = """{
-        "name": "brazucas",
-        "captain": "1235",
-        "members": ["pl11"],
-        "consoles": [],
-        "games": [],
-        "description": ""
-    }"""
-    data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(json_body=data))
+    payload = {
+        'name': 'brazucas',
+        'captain': '1235',
+        'members': ['pl11'],
+        'description': '',
+        'image_base64': team_image_base_64
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
 
 
 def make_put_mock_data():
-    payload = """{
-        "entity_id": "b1e9c0a7",
-        "name": "DoRio",
-        "captain": "123",
-        "members": ["pl11"],
-        "consoles": [
+    payload = {
+        'entity_id': 'b1e9c0a7',
+        'name': 'DoRio',
+        'captain': '123',
+        'members': ['pl11'],
+        'description': '',
+        'consoles': [
             {
-                "console_id": "11",
-                "name": "Xbox One",
-                "logo_path": "/images/xbox_one.jpg",
-                "tag_name": "nick#1",
-                "games": [
+                'console_id': '11',
+                'name': 'Xbox One',
+                'logo_path': '/images/xbox_one.jpg',
+                'tag_name': 'nick#1',
+                'games': [
                     {
-                        "game_id": "01",
-                        "name": "Need for Speed",
-                        "logo_path": "/images/nfs.jpg"
+                        'game_id': '01',
+                        'name': 'Need for Speed',
+                        'logo_path': '/images/nfs.jpg'
                     },
                     {
-                        "game_id": "02",
-                        "name": "Fifa 19",
-                        "logo_path": "/images/fifa19.jpg"
+                        'game_id': '02',
+                        'name': 'Fifa 19',
+                        'logo_path': '/images/fifa19.jpg'
                     }
                 ]
             },
             {
-                "console_id": "12",
-                "name": "Nintendo Switch",
-                "logo_path": "/images/n_switch.jpg",
-                "tag_name": "nick#2",
-                "games": [
+                'console_id': '12',
+                'name': 'Nintendo Switch',
+                'logo_path': '/images/n_switch.jpg',
+                'tag_name': 'nick#2',
+                'games': [
                     {
-                        "game_id": "01",
-                        "name": "Need for Speed",
-                        "logo_path": "/images/nfs.jpg"
+                        'game_id': '01',
+                        'name': 'Need for Speed',
+                        'logo_path': '/images/nfs.jpg'
                     },
                     {
-                        "game_id": "02",
-                        "name": "Fifa 19",
-                        "logo_path": "/images/fifa19.jpg"
+                        'game_id': '02',
+                        'name': 'Fifa 19',
+                        'logo_path': '/images/fifa19.jpg'
                     }
                 ]
             }
         ],
-        "games": [
+        'games': [
             {
-                "game_id": "01",
-                "name": "Need for Speed",
-                "logo_path": "/images/nfs.jpg"
+                'game_id': '01',
+                'name': 'Need for Speed',
+                'logo_path': '/images/nfs.jpg'
             },
             {
                 "game_id": "02",
                 "name": "Fifa 19",
                 "logo_path": "/images/fifa19.jpg"
             }
-        ]
-    }"""
-    data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(json_body=data))
+        ],
+        'image_base64': team_image_base_64
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal
@@ -167,7 +192,7 @@ def test_post_team(client, resource, run):
 # noinspection PyUnusedLocal
 @patch('chalicelib.team_route.bp_team', make_post_mock_data())
 @patch('chalicelib.team_route.PostTeamInteractor.run',
-       MagicMock(side_effect=SaveEntityException('oops')))
+       MagicMock(side_effect=SaveTeamException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_team_raises(client, resource):
@@ -208,8 +233,9 @@ def make_enter_team_mock_data():
     "team_id": "duelid123"
     }"""
     data = json.loads(payload)
-    return MagicMock(current_request=MagicMock(
-        json_body=data, headers=dict(AUTHORIZATION=jwt)))
+    return MagicMock(
+        current_request=MagicMock(json_body=data,
+                                  headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal

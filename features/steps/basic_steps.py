@@ -59,6 +59,7 @@ def data_base_is_empty(context):
     if get_all_consoles():
         for item in get_all_consoles():
             adapter.delete(item.entity_id)
+
     database_after_delete = get_all_consoles()
     assert database_after_delete == []
 
@@ -77,12 +78,13 @@ def json_request(context, method, url):
             app.current_request.query_params = None
             app.current_request.json_body = context.json_body
             app.current_request.headers = dict(AUTHORIZATION=jwt)
+
         url_method = app.routes.get(url)[method.upper()]
         response = url_method.view_function()
-        # response = app.routes.get(url)[method.upper()].view_function().body
         context.response = response
         if method.upper() == 'GET':
             context.dict_list_get_all = context.response.body['data']
+
         context.item_id = context.response.body['data']
         print("CONTEXT ITEM ID: ", context.item_id)
         context.response.json = json.loads(context.response)
@@ -97,11 +99,14 @@ def json_request_with_id(context, method, entity_id, url):
         app.current_request.query_params = None
         app.current_request.json_body = context.json_body
         app.current_request.headers = dict(AUTHORIZATION=jwt)
+
     url_method = app.routes.get(url+"/{entity_id}")[method.upper()]
     response = url_method.view_function(entity_id)
     context.response = response
+
     if method.upper() in ['GET']:
-        if url == '/game/console' and isinstance(context.response.body['data'], list):
+        if url == '/game/console' \
+            and isinstance(context.response.body['data'], list):
             context.list_get_game = context.response.body['data']
         else:
             context.item_id = context.response.body['data']['entity_id']
@@ -135,8 +140,10 @@ def check_championship_notifications(context):
     context.expected_json = json.loads(body)
     adapter = context.adapter(context.table_name, context.dynamo_url)
     response = adapter.list_all()
-    notification = get_notification_by_player_id(
-        response, context.expected_json['player_id'])
+    notification = \
+        get_notification_by_player_id(response,
+                                      context.expected_json['player_id'])
+
     res = jsondiff.diff(context.expected_json, notification.to_json())
     assert check_ignored_list(res)
 
@@ -167,9 +174,11 @@ def get_invited_players_ids(response):
 
 
 def check_ignored_list(a):
-    ignored_keys_list = [
-        'last_status_change_date', 'invitation_code', 'entity_id',
-        'start_datetime', 'creation_datetime', 'championship_id']
+    ignored_keys_list = ['last_status_change_date',
+                         'invitation_code',
+                         'entity_id',
+                         'start_datetime',
+                         'creation_datetime', 'championship_id']
     for key, value in a.items():
         if isinstance(value, str) or isinstance(value, int):
             if key not in ignored_keys_list:
