@@ -1,5 +1,9 @@
 from chalice import Blueprint
-from playerstars_adapters import TeamAdapter, PlayerAdapter
+from playerstars_adapters import (
+    NotificationAdapter,
+    PlayerAdapter,
+    TeamAdapter
+)
 from playerstars_domain import Team
 from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel,
@@ -57,13 +61,18 @@ def get_by_user(player_id):
 @bp_team.route('/', **private_post())
 def post_team():
     data = bp_team.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_team)
+    data.update({'captain_id': player_id})
     return post(data)
 
 
 def post(data):
-    request = PostTeamRequestModel(**data)
+    request = PostTeamRequestModel(data)
     interactor = PostTeamInteractor(
-        request, get_player_adapter(), get_team_adapter(), Settings)
+        request=request,
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        settings=Settings)
     try:
         response = interactor.run()
     except SaveEntityException as e:
