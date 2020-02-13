@@ -9,7 +9,8 @@ from playerstars_interactors import (
     GetTeamByUserInteractor, GetTeamByUserRequestModel,
     PostTeamRequestModel, PostTeamInteractor, SaveEntityException,
     PutTeamInteractor, PutTeamRequestModel, UpdateEntityException,
-    EnterTeamRequestModel, EnterTeamInteractor, EnterTeamException)
+    EnterTeamRequestModel, EnterTeamInteractor, EnterTeamException,
+    SaveTeamException)
 
 from chalicelib.chalice_support import (
     private_get, private_put, private_post)
@@ -75,7 +76,7 @@ def post(data):
         settings=Settings)
     try:
         response = interactor.run()
-    except SaveEntityException as e:
+    except SaveTeamException as e:
         return server_error(str(e))
     return created(response)
 
