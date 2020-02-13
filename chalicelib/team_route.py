@@ -1,6 +1,5 @@
 from chalice import Blueprint
 from playerstars_adapters import (
-    NotificationAdapter,
     PlayerAdapter,
     TeamAdapter
 )
