@@ -1,11 +1,12 @@
 # from unittest.mock import MagicMock, patch
+from .test_utils import FakeDomain, FakeAdapter
+from app import index
+from chalice_support import success
+from chalicelib.routes import home
+from unittest.mock import MagicMock, patch
+
 import json
 import logging
-from app import index
-from chalicelib.routes import home
-from .test_utils import FakeDomain, FakeAdapter
-from unittest.mock import MagicMock, patch
-from chalice_support import success
 
 
 class FakePostRequestModel:

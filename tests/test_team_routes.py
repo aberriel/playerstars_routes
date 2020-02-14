@@ -1,4 +1,5 @@
 from chalicelib import (
+    accept_invitation,
     enter_team,
     get_all_teams,
     get_all_teams_by_user,
@@ -6,6 +7,7 @@ from chalicelib import (
     post_team,
     put_team)
 from playerstars_interactors import (
+    AcceptTeamInvitationException,
     EnterTeamException,
     SaveTeamException,
     UpdateEntityException,
@@ -29,6 +31,16 @@ team_image_base_64 = \
     '0MSAxOTMuOTQxeiIgZmlsbD0iIzAwMDAwMCIvPjxwYXRoIGQ9Im0yMzUuNSA4My4xMThoL' \
     'TI3LjcwNnYxNDQuMjY1bDg3LjE3NiA4Ny4xNzYgMTkuNTg5LTE5LjU4OS03OS4wNTktNzk' \
     'uMDU5eiIgZmlsbD0iIzAwMDAwMCIvPjwvc3ZnPgo='
+
+
+def make_accept_invitation_post_mock_data():
+    payload = {
+        'team_id': '1aqswde1',
+        'accept_invite': True
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
 
 
 def make_post_mock_data():
@@ -203,11 +215,13 @@ def test_post_team_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
+@patch('playerstars_interactors.team.put_team.find_entity_by_id',
+       return_value=MagicMock())
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
 @patch('chalicelib.team_route.PutTeamInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_team(client, resource, run):
+def test_put_team(client, resource, run, find_entity_by_id):
     result = put_team('id1')
     run.assert_called_once()
     assert result.body['data']
@@ -216,12 +230,14 @@ def test_put_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
+@patch('playerstars_interactors.team.put_team.find_entity_by_id',
+       return_value=MagicMock())
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
 @patch('chalicelib.team_route.PutTeamInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_team_raises(client, resource):
+def test_put_team_raises(client, resource, find_entity_by_id):
     result = put_team('id1')
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -250,7 +266,6 @@ def make_enter_team_mock_data():
 @patch('boto3.client')
 def test_enter_team(client, resource, run, player, duel):
     result = enter_team()
-
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -269,7 +284,33 @@ def test_enter_team(client, resource, run, player, duel):
 @patch('boto3.client')
 def test_enter_team_raises(client, resource, player, duel):
     result = enter_team()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
 
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team',
+       make_accept_invitation_post_mock_data())
+@patch('chalicelib.team_route.AcceptTeamInvitationInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_accept_invitation(client, resource, run):
+    result = accept_invitation()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team',
+       make_accept_invitation_post_mock_data())
+@patch('chalicelib.team_route.AcceptTeamInvitationInteractor.run',
+       MagicMock(side_effect=AcceptTeamInvitationException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_accept_invitation_raises(boto_client, boto_resource):
+    result = accept_invitation()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
