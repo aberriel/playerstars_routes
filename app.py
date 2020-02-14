@@ -27,11 +27,7 @@ from chalicelib.region_state_route import bp_region_state
 from chalicelib.send_contact_email import bp_contact_email
 from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
-from chalicelib.team_route import (
-    bp_team,
-    bp_enter_team,
-    bp_team_accept_invitation
-)
+from chalicelib.team_route import bp_team, bp_enter_team
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin

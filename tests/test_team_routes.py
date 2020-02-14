@@ -215,11 +215,13 @@ def test_post_team_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
+@patch('playerstars_interactors.team.put_team.find_entity_by_id',
+       return_value=MagicMock())
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
 @patch('chalicelib.team_route.PutTeamInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_team(client, resource, run):
+def test_put_team(client, resource, run, find_entity_by_id):
     result = put_team('id1')
     run.assert_called_once()
     assert result.body['data']
@@ -228,12 +230,14 @@ def test_put_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
+@patch('playerstars_interactors.team.put_team.find_entity_by_id',
+       return_value=MagicMock())
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
 @patch('chalicelib.team_route.PutTeamInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_team_raises(client, resource):
+def test_put_team_raises(client, resource, find_entity_by_id):
     result = put_team('id1')
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -262,7 +266,6 @@ def make_enter_team_mock_data():
 @patch('boto3.client')
 def test_enter_team(client, resource, run, player, duel):
     result = enter_team()
-
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -281,7 +284,6 @@ def test_enter_team(client, resource, run, player, duel):
 @patch('boto3.client')
 def test_enter_team_raises(client, resource, player, duel):
     result = enter_team()
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -293,12 +295,9 @@ def test_enter_team_raises(client, resource, player, duel):
 @patch('chalicelib.team_route.AcceptTeamInvitationInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_accept_invitation(boto_client,
-                           boto_resource,
-                           run_mock,
-                           post_body):
+def test_accept_invitation(client, resource, run):
     result = accept_invitation()
-    run_mock.assert_called_once()
+    run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
@@ -310,10 +309,7 @@ def test_accept_invitation(boto_client,
        MagicMock(side_effect=AcceptTeamInvitationException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_accept_invitation_raises(boto_client,
-                                  boto_resource,
-                                  run_mock,
-                                  post_body):
+def test_accept_invitation_raises(boto_client, boto_resource):
     result = accept_invitation()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
