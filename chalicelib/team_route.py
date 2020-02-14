@@ -13,6 +13,9 @@ from playerstars_adapters import (
 )
 from playerstars_domain import Team
 from playerstars_interactors import (
+    AcceptTeamInvitationException,
+    AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel,
     EnterTeamException,
     EnterTeamInteractor,
     EnterTeamRequestModel,
@@ -116,11 +119,32 @@ def enter_team():
 def enter_team_post(json_data):
     request = EnterTeamRequestModel(json_data)
     interactor = EnterTeamInteractor(
-        request=request, player_adapter=get_player_adapter(),
+        request=request,
+        player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter()
     )
     try:
         response = interactor.run()
     except EnterTeamException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_team.route('/accept-invitation', **private_post())
+def accept_invitation():
+    data = bp_team.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_team)
+    data.update({'player_id': player_id})
+    return accept_invitation_post(data)
+
+
+def accept_invitation_post(json_data):
+    request = AcceptTeamInvitationRequestModel(json_data)
+    interactor = AcceptTeamInvitationInteractor(
+        request=request,
+        team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+    except AcceptTeamInvitationException as e:
         return server_error(str(e))
     return success(response)

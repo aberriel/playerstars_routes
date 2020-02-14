@@ -72,6 +72,7 @@ from .send_contact_email import post_contact_email
 from .send_invitation_email import post_invitation_email
 from .send_welcome_email import post_welcome_email
 from .team_route import (
+    accept_invitation,
     get_all_teams,
     get_all_teams_by_user,
     get_team_by_id,
@@ -115,6 +116,7 @@ __all__ = [
     'post_team',
     'put_team',
     'enter_team',
+    'accept_invitation',
 
     'post_duel',
     'get_match_list',
