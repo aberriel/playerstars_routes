@@ -21,6 +21,9 @@ from playerstars_interactors import (
     EnterTeamRequestModel,
     GetTeamByUserInteractor,
     GetTeamByUserRequestModel,
+    LeaveTeamException,
+    LeaveTeamInteractor,
+    LeaveTeamRequestModel,
     PostTeamInteractor,
     PostTeamRequestModel,
     PutTeamInteractor,
@@ -29,8 +32,9 @@ from playerstars_interactors import (
     UpdateEntityException)
 
 
-bp_team = Blueprint(__name__)
 bp_enter_team = Blueprint(__name__)
+bp_leave_team = Blueprint(__name__)
+bp_team = Blueprint(__name__)
 
 
 def get_team_adapter():
@@ -126,6 +130,26 @@ def enter_team_post(json_data):
     try:
         response = interactor.run()
     except EnterTeamException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_leave_team.route('/', **private_post())
+def leave_team():
+    data = bp_leave_team.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_leave_team)
+    data.update({'player_id': player_id})
+    return leave_team_post(data)
+
+
+def leave_team_post(json_data):
+    request = LeaveTeamRequestModel(json_data)
+    interactor = LeaveTeamInteractor(
+        request=request,
+        team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+    except LeaveTeamException as e:
         return server_error(str(e))
     return success(response)
 

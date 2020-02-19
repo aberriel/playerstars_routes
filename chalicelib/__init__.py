@@ -76,6 +76,7 @@ from .team_route import (
     get_all_teams,
     get_all_teams_by_user,
     get_team_by_id,
+    leave_team,
     post_team,
     put_team,
     enter_team
@@ -116,6 +117,7 @@ __all__ = [
     'post_team',
     'put_team',
     'enter_team',
+    'leave_team',
     'accept_invitation',
 
     'post_duel',
