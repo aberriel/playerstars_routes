@@ -73,6 +73,7 @@ from .send_invitation_email import post_invitation_email
 from .send_welcome_email import post_welcome_email
 from .team_route import (
     accept_invitation,
+    delete_team,
     get_all_teams,
     get_all_teams_by_user,
     get_team_by_id,
@@ -117,6 +118,7 @@ __all__ = [
     'post_team',
     'put_team',
     'enter_team',
+    'delete_team',
     'leave_team',
     'accept_invitation',
 
