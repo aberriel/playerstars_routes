@@ -1,5 +1,6 @@
 from chalicelib import (
     accept_invitation,
+    delete_team,
     enter_team,
     get_all_teams,
     get_all_teams_by_user,
@@ -9,6 +10,7 @@ from chalicelib import (
     put_team)
 from playerstars_interactors import (
     AcceptTeamInvitationException,
+    DeleteTeamException,
     EnterTeamException,
     LeaveTeamException,
     SaveTeamException,
@@ -46,6 +48,15 @@ def make_accept_invitation_post_mock_data():
 
 
 def make_leave_team_post_mock_data():
+    payload = {
+        'team_id': 'q1w2e3'
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+
+def make_delete_team_post_mock_data():
     payload = {
         'team_id': 'q1w2e3'
     }
@@ -349,6 +360,33 @@ def test_leave_team(boto_client, boto_resource, run):
 @patch('boto3.client')
 def test_leave_team_raises(boto_client, boto_resource):
     result = leave_team()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team',
+       make_delete_team_post_mock_data())
+@patch('chalicelib.team_route.DeleteTeamInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_team(boto_client, boto_resource, run):
+    result = delete_team()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team',
+       make_delete_team_post_mock_data())
+@patch('chalicelib.team_route.DeleteTeamInteractor.run',
+       MagicMock(side_effect=DeleteTeamException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_team_raises(boto_client, boto_resource):
+    result = delete_team()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

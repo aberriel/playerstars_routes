@@ -1,6 +1,7 @@
 from chalice import Blueprint
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
+    private_delete,
     private_get,
     private_put,
     private_post)
@@ -16,6 +17,9 @@ from playerstars_interactors import (
     AcceptTeamInvitationException,
     AcceptTeamInvitationInteractor,
     AcceptTeamInvitationRequestModel,
+    DeleteTeamException,
+    DeleteTeamInteractor,
+    DeleteTeamRequestModel,
     EnterTeamException,
     EnterTeamInteractor,
     EnterTeamRequestModel,
@@ -150,6 +154,26 @@ def leave_team_post(json_data):
     try:
         response = interactor.run()
     except LeaveTeamException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_team.route('/', **private_delete())
+def delete_team():
+    data = bp_team.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_team)
+    data.update({'player_id': player_id})
+    return delete_team_post(data)
+
+
+def delete_team_post(json_data):
+    request = DeleteTeamRequestModel(json_data)
+    interactor = DeleteTeamInteractor(
+        request=request,
+        team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+    except DeleteTeamException as e:
         return server_error(str(e))
     return success(response)
 
