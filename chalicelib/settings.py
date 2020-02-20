@@ -62,12 +62,3 @@ class Settings:
         'TIME_TO_FINISH_DUEL',
         18000)
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
-
-    # "PAGSEGURO_NOTIFICATION_URL":
-    # "https://t3hahl6qek.execute-api.us-east-1.amazonaws.com/api/pagseguro
-    # /notificacao",
-    # "PAGSEGURO_NOTIFICATIONS_URL": "https://ws.{
-    # sandbox}pagseguro.uol.com.br/v3/transactions/notifications/{codigo}?{
-    # credenciais}",
-    # "PAGSEGURO_TRANSACTION_URL": "https://ws.{
-    # sandbox}pagseguro.uol.com.br/v2/transactions"

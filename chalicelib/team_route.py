@@ -138,7 +138,7 @@ def enter_team_post(json_data):
     return success(response)
 
 
-@bp_leave_team.route('/', **private_post())
+@bp_leave_team.route('/', **private_put())
 def leave_team():
     data = bp_leave_team.current_request.json_body
     player_id = get_user_id_from_jwt(bp_leave_team)
