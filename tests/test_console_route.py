@@ -1,14 +1,31 @@
 from chalicelib.console_route import (
     delete_console,
     get_all_console,
+    get_all_consoles_admin,
     get_console_by_id,
     post_console,
     put_console
 )
-from playerstars_interactors import SaveEntityException, UpdateEntityException
+from playerstars_interactors import (
+    GetConsolesAdminException,
+    SaveEntityException,
+    UpdateEntityException
+)
 from unittest.mock import MagicMock, patch
 
 import json
+
+
+def test_get_all_consoles_admin():
+    pass
+
+
+def test_get_all_consoles_admin_not_found():
+    pass
+
+
+def test_get_all_consoles_admin_raises():
+    pass
 
 
 # noinspection PyUnusedLocal
