@@ -5,12 +5,14 @@ from chalicelib.console_route import (
     get_console_by_id,
     get_console_by_id_admin,
     post_console,
-    put_console
+    put_console,
+    put_console_admin
 )
 from playerstars_interactors import (
     AccessDeniedAdminException,
     GetConsoleByIdAdminException,
     GetConsolesAdminException,
+    PutConsoleAdminException,
     SaveEntityException,
     UpdateEntityException
 )
@@ -239,6 +241,20 @@ def make_put_mock_data():
     return MagicMock(current_request=MagicMock(json_body=data))
 
 
+def make_put_admin_mock_data():
+    payload = """{
+        "entity_id": "id1",
+        "name": "Super Nintendo",
+        "logo_path": "/images/ss.png",
+        "tag_name": "nick#1",
+        "games" : []
+        }"""
+    data = json.loads(payload)
+    return MagicMock(current_request=MagicMock(
+        json_body=data,
+        headers=dict(AUTHORIZATION=jwt)))
+
+
 # noinspection PyUnusedLocal
 @patch('chalicelib.console_route.bp_console', make_post_mock_data())
 @patch('chalicelib.basic_entity_route.BasicPostInteractor.run')
@@ -288,6 +304,46 @@ def test_put_console_raises(client, resource):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.console_route.bp_console_admin', make_put_admin_mock_data())
+@patch('chalicelib.console_route.PutConsoleAdminInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console_admin(client, resource, mock):
+    result = put_console_admin('id1')
+    mock.assert_called_once()
+    assert result.body['data']
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.console_route.bp_console_admin', make_put_admin_mock_data())
+@patch('chalicelib.console_route.PutConsoleAdminInteractor.run',
+       MagicMock(side_effect=PutConsoleAdminException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console_admin_raises(client, resource):
+    result = put_console_admin('id1')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.console_route.bp_console_admin',
+       make_put_admin_mock_data())
+@patch('chalicelib.console_route.PutConsoleAdminInteractor.run',
+       MagicMock(side_effect=AccessDeniedAdminException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_console_admin_access_denied(client, resource):
+    result = put_console_admin('id1')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 401
 
 
 # noinspection PyUnusedLocal
