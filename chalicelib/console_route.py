@@ -10,7 +10,10 @@ from playerstars_interactors import (
     GetConsoleByIdAdminRequestModel,
     GetConsolesAdminException,
     GetConsolesAdminInteractor,
-    GetConsolesAdminRequestModel)
+    GetConsolesAdminRequestModel,
+    PutConsoleAdminException,
+    PutConsoleAdminInteractor,
+    PutConsoleAdminRequestModel)
 from chalicelib.chalice_support import (
     private_get,
     private_delete,
@@ -105,6 +108,28 @@ def post_console():
 def put_console(entity_id):
     data = bp_console.current_request.json_body
     return get_router().put(data)
+
+
+@bp_console_admin.route('/{entity_id}', **private_put())
+def put_console_admin(entity_id):
+    player_id = get_user_id_from_jwt(bp_console_admin)
+    data = bp_console_admin.current_request.json_body
+    data.update({'player_id': player_id})
+    request = PutConsoleAdminRequestModel(data)
+    interactor = PutConsoleAdminInteractor(
+        request=request,
+        console_adapter=get_console_adapter(),
+        player_adapter=get_player_adapter(),
+        s3_bucket_name=Settings.S3_BUCKET_NAME,
+        s3_bucket_url=Settings.S3_BUCKET_URL)
+
+    try:
+        response = interactor.run()
+        return success(response)
+    except PutConsoleAdminException as pae:
+        return server_error(str(pae))
+    except AccessDeniedAdminException as ade:
+        return unauthorized(str(ade))
 
 
 @bp_console.route('/{entity_id}', **private_delete())
