@@ -15,7 +15,11 @@ from .championship_route import (
 )
 from .console_route import (
     get_all_consoles_admin,
-    get_console_by_id_admin
+    get_console_by_id_admin,
+    post_console_admin,
+    post_console,
+    put_console_admin,
+    put_console
 )
 from .convert_star_rate_route import (
     delete_convert_rate, get_all_convert_rate, get_convert_rate_by_id,
@@ -180,5 +184,9 @@ __all__ = [
     'post_console_data_route',
 
     'get_all_consoles_admin',
-    'get_console_by_id_admin'
+    'get_console_by_id_admin',
+    'post_console',
+    'post_console_admin',
+    'put_console',
+    'put_console_admin'
 ]
