@@ -142,6 +142,7 @@ def put_console_admin(entity_id):
     player_id = get_user_id_from_jwt(bp_console_admin)
     data = bp_console_admin.current_request.json_body
     data.update({'player_id': player_id})
+    data.update({'console_id': entity_id})
     request = PutConsoleAdminRequestModel(data)
     interactor = PutConsoleAdminInteractor(
         request=request,
