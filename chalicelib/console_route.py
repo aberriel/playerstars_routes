@@ -74,12 +74,14 @@ def get_all_consoles_admin():
         return unauthorized(str(ade))
 
 
-@bp_console_admin.route('/get-console', **private_get())
-def get_console_by_id_admin():
+@bp_console_admin.route('/{entity_id}', **private_get())
+def get_console_by_id_admin(entity_id):
     player_id = get_user_id_from_jwt(bp_console_admin)
-    data = bp_console_admin.current_request.json_body
-    data.update({'player_id': player_id})
-    request = GetConsoleByIdAdminRequestModel(data)
+    json_data = {
+        'console_id': entity_id,
+        'player_id': player_id
+    }
+    request = GetConsoleByIdAdminRequestModel(json_data)
     interactor = GetConsoleByIdAdminInteractor(
         request=request,
         player_adapter=get_player_adapter(),
