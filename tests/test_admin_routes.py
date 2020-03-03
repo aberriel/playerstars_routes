@@ -32,7 +32,8 @@ def query_params():
            query_params=query_params())))
 @patch('chalicelib.admin_routes.get_user_id_from_jwt')
 @patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+       return_value=(MagicMock(), MagicMock()))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_players_admin_with_queryparam(
@@ -41,7 +42,7 @@ def test_get_all_players_admin_with_queryparam(
     run.assert_called_once()
 
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 206
 
 
 # noinspection PyUnusedLocal

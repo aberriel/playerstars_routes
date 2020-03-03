@@ -6,7 +6,7 @@ from playerstars_interactors import (
 )
 
 from chalice_support.api_responses import (
-    created, not_found, server_error, success)
+    created, not_found, server_error, success, success_partial)
 
 
 class BasicEntityRoute:
@@ -17,12 +17,16 @@ class BasicEntityRoute:
 
     def get_all(self, query_params=None, paginate=False):
         try:
-            request = None
-            if paginate and query_params:
-                request = BasicGetAllRequestModel(query_params)
+            request = BasicGetAllRequestModel(query_params) if \
+                paginate and query_params else None
             interactor = BasicGetAllInteractor(
                 request=request, adapter_instance=self.adapter_instance,
                 paginate=paginate)
+            if request:
+                response, range_data = interactor.run()
+                return success_partial(
+                    response, range_data.unit, range_data.initial,
+                    range_data.final, range_data.total)
             response = interactor.run()
             if response:
                 return success(response)
