@@ -296,7 +296,8 @@ def test_post_console_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.console_route.bp_console_admin', make_post_admin_mock_data())
+@patch('chalicelib.console_route.bp_console_admin',
+       make_post_admin_mock_data())
 @patch('chalicelib.console_route.PostConsoleAdminInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -304,11 +305,12 @@ def test_post_console_admin(client, resource, run):
     result = post_console_admin()
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 201
+    assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.console_route.bp_console_admin', make_post_admin_mock_data())
+@patch('chalicelib.console_route.bp_console_admin',
+       make_post_admin_mock_data())
 @patch('chalicelib.console_route.PostConsoleAdminInteractor.run',
        MagicMock(side_effect=PostConsoleAdminException('oops')))
 @patch('boto3.resource')
@@ -321,7 +323,8 @@ def test_post_console_admin_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.console_route.bp_console_admin', make_post_admin_mock_data())
+@patch('chalicelib.console_route.bp_console_admin',
+       make_post_admin_mock_data())
 @patch('chalicelib.console_route.PostConsoleAdminInteractor.run',
        MagicMock(side_effect=AccessDeniedAdminException('oops')))
 @patch('boto3.resource')
@@ -360,7 +363,8 @@ def test_put_console_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.console_route.bp_console_admin', make_put_admin_mock_data())
+@patch('chalicelib.console_route.bp_console_admin',
+       make_put_admin_mock_data())
 @patch('chalicelib.console_route.PutConsoleAdminInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -373,7 +377,8 @@ def test_put_console_admin(client, resource, mock):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.console_route.bp_console_admin', make_put_admin_mock_data())
+@patch('chalicelib.console_route.bp_console_admin',
+       make_put_admin_mock_data())
 @patch('chalicelib.console_route.PutConsoleAdminInteractor.run',
        MagicMock(side_effect=PutConsoleAdminException('oops')))
 @patch('boto3.resource')
