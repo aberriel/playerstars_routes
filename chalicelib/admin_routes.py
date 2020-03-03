@@ -31,12 +31,12 @@ def get_all_players_admin():
     user_id = get_user_id_from_jwt(bp_admin)
     try:
         check_admin_authorization(user_id)
+        query_params = None
+        if bp_admin.current_request and bp_admin.current_request.query_params:
+            query_params = bp_admin.current_request.query_params
+        return get_player_router().get_all(query_params, True)
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
-    query_params = None
-    if bp_admin.current_request and bp_admin.current_request.query_params:
-        query_params = bp_admin.current_request.query_params
-    return get_player_router().get_all(query_params, False)
 
 
 @bp_admin.route('/player/{entity_id}', **private_get())

@@ -2,7 +2,7 @@ from playerstars_interactors import (
     BasicGetAllInteractor, BasicGetRequestModel, BasicGetInteractor,
     BasicPostRequestModel, BasicPostInteractor, SaveEntityException,
     BasicPutRequestModel, BasicPutInteractor, UpdateEntityException,
-    BasicDeleteInteractor, BasicDeleteRequestModel
+    BasicDeleteInteractor, BasicDeleteRequestModel, BasicGetAllRequestModel
 )
 
 from chalice_support.api_responses import (
@@ -18,8 +18,8 @@ class BasicEntityRoute:
     def get_all(self, query_params=None, paginate=False):
         try:
             request = None
-            # if paginate:
-            #       request = BasicGetAllRequestModel(query_params)
+            if paginate and query_params:
+                request = BasicGetAllRequestModel(query_params)
             interactor = BasicGetAllInteractor(
                 request=request, adapter_instance=self.adapter_instance,
                 paginate=paginate)
