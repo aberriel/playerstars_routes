@@ -24,15 +24,9 @@ from unittest.mock import MagicMock, patch
 import json
 
 
-def make_get_console_by_id_admin_json_body():
-    return {
-        'console_id': 'q1w2e3'}
-
-
 def make_get_console_by_id_admin_mock():
     return MagicMock(current_request=MagicMock(
-        json_body=make_get_console_by_id_admin_json_body(),
-        headers=dict(AUTHORIZATION=jwt)))
+        json_body={}, headers=dict(AUTHORIZATION=jwt)))
 
 
 def make_get_consoles_admin_mock():
@@ -102,7 +96,7 @@ def test_get_all_consoles_admin_access_denied(boto_client, boto_resource):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_console_by_id_admin(boto_client, boto_resource, run):
-    result = get_console_by_id_admin()
+    result = get_console_by_id_admin('q1w2e3')
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -116,7 +110,7 @@ def test_get_console_by_id_admin(boto_client, boto_resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_console_by_id_admin_empty(boto_client, boto_resource):
-    result = get_console_by_id_admin()
+    result = get_console_by_id_admin('q1w2e3')
     assert result.body['message'] == 'Console not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -130,7 +124,7 @@ def test_get_console_by_id_admin_empty(boto_client, boto_resource):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_console_by_id_admin_raises(boto_client, boto_resource):
-    result = get_console_by_id_admin()
+    result = get_console_by_id_admin('q1w2e3')
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -144,7 +138,7 @@ def test_get_console_by_id_admin_raises(boto_client, boto_resource):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_console_by_id_admin_access_denied(boto_client, boto_resource):
-    result = get_console_by_id_admin()
+    result = get_console_by_id_admin('q1w2e3')
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 401
