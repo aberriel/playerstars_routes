@@ -94,7 +94,7 @@ from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
-    put_user_admin
+    put_user_admin,
 )
 
 __all__ = [

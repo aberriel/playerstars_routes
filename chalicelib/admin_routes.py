@@ -1,9 +1,9 @@
 from chalice import Blueprint
 from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Player
+from playerstars_domain import Player, Console
 from playerstars_adapters import (
-    PlayerAdapter
+    PlayerAdapter, ConsoleAdapter
 )
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
@@ -20,6 +20,12 @@ def get_player_router():
     adapter = PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
+
+
+def get_console_router():
+    adapter = ConsoleAdapter(
+        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    return BasicEntityRoute(adapter, Console, 'console')
 
 
 def get_player_adapter():
@@ -39,6 +45,19 @@ def get_all_players_admin():
         return unauthorized(str(e))
 
 
+@bp_admin.route('/consolev2', **private_get())
+def get_all_consoles_admin():
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+        query_params = None
+        if bp_admin.current_request and bp_admin.current_request.query_params:
+            query_params = bp_admin.current_request.query_params
+        return get_console_router().get_all(query_params, True)
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+
+
 @bp_admin.route('/player/{entity_id}', **private_get())
 def get_player_by_id_admin(entity_id):
     user_id = get_user_id_from_jwt(bp_admin)
@@ -47,6 +66,16 @@ def get_player_by_id_admin(entity_id):
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     return get_player_router().get_by_id(entity_id)
+
+
+@bp_admin.route('/consolev2/{entity_id}', **private_get())
+def get_console_by_id_admin(entity_id):
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    return get_console_router().get_by_id(entity_id)
 
 
 @bp_admin.route('/player/{entity_id}', **private_put())
