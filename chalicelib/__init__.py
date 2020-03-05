@@ -1,5 +1,10 @@
 from .admin_routes import (
-    get_all_players_admin, get_player_by_id_admin, put_player_admin
+    get_all_players_admin,
+    get_player_by_id_admin,
+    put_player_admin,
+    post_console_admin,
+    put_console_admin,
+    delete_console_admin
 )
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
@@ -14,11 +19,7 @@ from .championship_route import (
     post_join_open_championship
 )
 from .console_route import (
-    get_all_consoles_admin,
-    get_console_by_id_admin,
-    post_console_admin,
     post_console,
-    put_console_admin,
     put_console
 )
 from .convert_star_rate_route import (
@@ -183,10 +184,10 @@ __all__ = [
     'post_accept_terms_route',
     'post_console_data_route',
 
-    'get_all_consoles_admin',
-    'get_console_by_id_admin',
     'post_console',
-    'post_console_admin',
     'put_console',
-    'put_console_admin'
+
+    'post_console_admin',
+    'put_console_admin',
+    'delete_console_admin'
 ]

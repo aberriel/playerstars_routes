@@ -8,7 +8,7 @@ from playerstars_adapters import (
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
 from chalicelib.chalice_support import (
-    private_get, private_put)
+    private_get, private_put, private_post, private_delete)
 from chalice_support import unauthorized, server_error, success
 from playerstars_interactors import (
     BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException
@@ -32,50 +32,77 @@ def get_player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@bp_admin.route('/player', **private_get())
-def get_all_players_admin():
-    user_id = get_user_id_from_jwt(bp_admin)
+def authorize(blueprint):
+    user_id = get_user_id_from_jwt(blueprint)
     try:
         check_admin_authorization(user_id)
+        return True, None
+    except UserNotAdminAuthorized as e:
+        return False, e
+
+
+@bp_admin.route('/player', **private_get())
+def get_all_players_admin():
+    auth, msg = authorize(bp_admin)
+    if auth:
         query_params = None
         if bp_admin.current_request and bp_admin.current_request.query_params:
             query_params = bp_admin.current_request.query_params
         return get_player_router().get_all(query_params, True)
-    except UserNotAdminAuthorized as e:
-        return unauthorized(str(e))
+    return unauthorized(str(msg))
 
 
-@bp_admin.route('/consolev2', **private_get())
+@bp_admin.route('/console', **private_get())
 def get_all_consoles_admin():
-    user_id = get_user_id_from_jwt(bp_admin)
-    try:
-        check_admin_authorization(user_id)
+    auth, msg = authorize(bp_admin)
+    if auth:
         query_params = None
         if bp_admin.current_request and bp_admin.current_request.query_params:
             query_params = bp_admin.current_request.query_params
         return get_console_router().get_all(query_params, True)
-    except UserNotAdminAuthorized as e:
-        return unauthorized(str(e))
+    return unauthorized(str(msg))
+
+
+@bp_admin.route('/console/{entity_id}', **private_get())
+def get_console_by_id_admin(entity_id):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        return get_console_router().get_by_id(entity_id)
+    return unauthorized(str(msg))
+
+
+@bp_admin.route('/console', **private_post())
+def post_console_admin(entity_id):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        data = bp_admin.current_request.json_body
+        return get_console_router().post(data)
+    return unauthorized(str(msg))
+
+
+@bp_admin.route('/console/{entity_id}', **private_put())
+def put_console_admin(entity_id):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        data = bp_admin.current_request.json_body
+        return get_console_router().put(data)
+    return unauthorized(str(msg))
+
+
+@bp_admin.route('/console/{entity_id}', **private_delete())
+def delete_console_admin(entity_id):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        return get_console_router().delete(entity_id)
+    return unauthorized(str(msg))
 
 
 @bp_admin.route('/player/{entity_id}', **private_get())
 def get_player_by_id_admin(entity_id):
-    user_id = get_user_id_from_jwt(bp_admin)
-    try:
-        check_admin_authorization(user_id)
-    except UserNotAdminAuthorized as e:
-        return unauthorized(str(e))
-    return get_player_router().get_by_id(entity_id)
-
-
-@bp_admin.route('/consolev2/{entity_id}', **private_get())
-def get_console_by_id_admin(entity_id):
-    user_id = get_user_id_from_jwt(bp_admin)
-    try:
-        check_admin_authorization(user_id)
-    except UserNotAdminAuthorized as e:
-        return unauthorized(str(e))
-    return get_console_router().get_by_id(entity_id)
+    auth, msg = authorize(bp_admin)
+    if auth:
+        return get_player_router().get_by_id(entity_id)
+    return unauthorized(str(msg))
 
 
 @bp_admin.route('/player/{entity_id}', **private_put())
