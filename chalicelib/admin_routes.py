@@ -24,7 +24,7 @@ def get_player_router():
 
 def get_console_router():
     adapter = ConsoleAdapter(
-        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+        Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Console, 'console')
 
 
