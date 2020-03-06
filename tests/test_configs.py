@@ -19,10 +19,10 @@ def read_config_json():
 
 def get_settings_attribute_list():
     all_attributes = inspect.getmembers(
-        Settings, lambda a:not(inspect.isroutine(a)))
-    public_attributes = [a[0] for a in all_attributes
-                         if not(a[0].startswith('__')
-                                and a[0].endswith('__'))]
+        Settings, lambda a: not(inspect.isroutine(a)))
+    public_attributes = \
+        [a[0] for a in all_attributes
+         if not(a[0].startswith('__') and a[0].endswith('__'))]
     return public_attributes
 
 
