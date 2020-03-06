@@ -94,6 +94,7 @@ def test_has_table_configs_on_dev():
     environment_variables = stage_dev['environment_variables']
     for table in tables:
         assert table in environment_variables
+        assert environment_variables[table]
         assert '_dev' in environment_variables[table]
 
 
@@ -103,6 +104,7 @@ def test_has_table_configs_on_stg():
     environment_variables = stage_stg['environment_variables']
     for table in tables:
         assert table in environment_variables
+        assert environment_variables[table]
         assert '_stg' in environment_variables[table]
 
 
@@ -111,6 +113,7 @@ def test_has_table_configs_on_prd():
     stage_prd = get_stage_from_config('prd')
     for table in tables:
         assert table in stage_prd
+        assert stage_prd[table]
         assert '_prd' in stage_prd[table]
 
 
@@ -121,6 +124,7 @@ def test_has_environment_variables_on_dev():
     for env in envs:
         if env not in exclusion_list:
             assert env in environment_variables
+            assert environment_variables[env]
 
 
 def test_has_environment_variables_on_stg():
@@ -130,6 +134,7 @@ def test_has_environment_variables_on_stg():
     for env in tables:
         if env not in exclusion_list:
             assert env in environment_variables
+            assert environment_variables[env]
 
 
 def test_has_environment_variables_on_prd():
@@ -138,6 +143,7 @@ def test_has_environment_variables_on_prd():
     for env in tables:
         if env not in exclusion_list:
             assert env in environment_variables
+            assert environment_variables[env]
 
 
 def test_check_log_level():
