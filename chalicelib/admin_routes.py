@@ -72,7 +72,7 @@ def get_console_by_id_admin(entity_id):
 
 
 @bp_admin.route('/console', **private_post())
-def post_console_admin(entity_id):
+def post_console_admin():
     auth, msg = authorize(bp_admin)
     if auth:
         data = bp_admin.current_request.json_body

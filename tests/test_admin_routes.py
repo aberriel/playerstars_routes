@@ -166,7 +166,7 @@ def make_post_mock_data():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_console_admin(client, resource, run, check, get):
-    result = post_console_admin('12344')
+    result = post_console_admin()
     run.assert_called_once()
 
     assert result.body['status'] == 'success'
@@ -239,7 +239,7 @@ def test_get_player_by_id_admin_unauthorized(client, resource, cehck, get):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_console_admin_unauthorized(client, resource, run, check, get):
-    result = post_console_admin('12344')
+    result = post_console_admin()
 
     assert result.body['message'] == "oops"
     assert result.body['status'] == "error"
