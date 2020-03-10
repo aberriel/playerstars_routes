@@ -1,0 +1,132 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:CreateTable",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
+                "dynamodb:GetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:ListTables",
+                "dynamodb:PutItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:UpdateItem",
+                "dynamodb:UpdateTable",
+                "events:PutRule",
+                "events:PutTargets",
+                "lambda:AddPermission",
+                "lambda:ListFunctions",
+                "lambda:InvokeFunction",
+                "logs:CreateLogGroup",
+                "ses:CloneReceiptRuleSet",
+                "ses:CreateConfigurationSet",
+                "ses:CreateConfigurationSetEventDestination",
+                "ses:CreateConfigurationSetTrackingOptions",
+                "ses:CreateCustomVerificationEmailTemplate",
+                "ses:CreateReceiptFilter",
+                "ses:CreateReceiptRule",
+                "ses:CreateReceiptRuleSet",
+                "ses:CreateTemplate",
+                "ses:DeleteConfigurationSet",
+                "ses:DeleteConfigurationSetEventDestination",
+                "ses:DeleteConfigurationSetTrackingOptions",
+                "ses:DeleteCustomVerificationEmailTemplate",
+                "ses:DeleteIdentity",
+                "ses:DeleteIdentityPolicy",
+                "ses:DeleteReceiptFilter",
+                "ses:DeleteReceiptRule",
+                "ses:DeleteReceiptRuleSet",
+                "ses:DeleteTemplate",
+                "ses:DeleteVerifiedEmailAddress",
+                "ses:DescribeActiveReceiptRuleSet",
+                "ses:DescribeConfigurationSet",
+                "ses:DescribeReceiptRule",
+                "ses:DescribeReceiptRuleSet",
+                "ses:GetAccountSendingEnabled",
+                "ses:GetCustomVerificationEmailTemplate",
+                "ses:GetIdentityDkimAttributes",
+                "ses:GetIdentityMailFromDomainAttributes",
+                "ses:GetIdentityNotificationAttributes",
+                "ses:GetIdentityPolicies",
+                "ses:GetIdentityVerificationAttributes",
+                "ses:GetSendQuota",
+                "ses:GetSendStatistics",
+                "ses:GetTemplate",
+                "ses:ListConfigurationSets",
+                "ses:ListCustomVerificationEmailTemplates",
+                "ses:ListIdentities",
+                "ses:ListIdentityPolicies",
+                "ses:ListReceiptFilters",
+                "ses:ListReceiptRuleSets",
+                "ses:ListTemplates",
+                "ses:ListVerifiedEmailAddresses",
+                "ses:PutIdentityPolicy",
+                "ses:ReorderReceiptRuleSet",
+                "ses:SendBounce",
+                "ses:SendBulkTemplatedEmail",
+                "ses:SendCustomVerificationEmail",
+                "ses:SendEmail",
+                "ses:SendRawEmail",
+                "ses:SendTemplatedEmail",
+                "ses:SetActiveReceiptRuleSet",
+                "ses:SetIdentityDkimEnabled",
+                "ses:SetIdentityFeedbackForwardingEnabled",
+                "ses:SetIdentityHeadersInNotificationsEnabled",
+                "ses:SetIdentityMailFromDomain",
+                "ses:SetIdentityNotificationTopic",
+                "ses:SetReceiptRulePosition",
+                "ses:TestRenderTemplate",
+                "ses:UpdateAccountSendingEnabled",
+                "ses:UpdateConfigurationSetEventDestination",
+                "ses:UpdateConfigurationSetReputationMetricsEnabled",
+                "ses:UpdateConfigurationSetSendingEnabled",
+                "ses:UpdateConfigurationSetTrackingOptions",
+                "ses:UpdateCustomVerificationEmailTemplate",
+                "ses:UpdateReceiptRule",
+                "ses:UpdateTemplate",
+                "ses:VerifyDomainDkim",
+                "ses:VerifyDomainIdentity",
+                "ses:VerifyEmailAddress",
+                "ses:VerifyEmailIdentity"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        },{
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListAllMyBuckets",
+            "s3:GetBucketLocation"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": "s3:*",
+          "Resource": [
+            "arn:aws:s3:::playerstars-stg-photos",
+            "arn:aws:s3:::playerstars-stg-photos/*"
+          ]
+        }
+    ]
+}
