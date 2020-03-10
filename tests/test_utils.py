@@ -32,7 +32,7 @@ player = Player.from_json({
         'profile_image': None
     },
     'player_status': 'AVAILABLE',
-    'blue_star_balance': 0,
+    'red_star_balance': 0,
     'golden_star_balance': 5,
     'points': 500,
     'terms': True,

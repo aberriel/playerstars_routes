@@ -38,7 +38,7 @@ def make_post_mock_data():
         },
         "promo_code": "ABC123",
         "favorites": [],
-        "blue_star_balance": 123,
+        "red_star_balance": 123,
         "golden_star_balance": 4321,
         "consoles": [
             {
@@ -245,7 +245,7 @@ def make_post_mock_data_without_authorization():
         },
         "promo_code": "ABC123",
         "favorites": [],
-        "blue_star_balance": 123,
+        "red_star_balance": 123,
         "golden_star_balance": 4321,
         "consoles": [
             {
@@ -630,7 +630,7 @@ def test_get_player_by_console_raises(client, resource, run):
 def convert_star_json():
     payload = """{
         "gold_stars": 3,
-        "blue_stars": 300
+        "red_stars": 300
     }"""
     data = json.loads(payload)
     return MagicMock(current_request=MagicMock(

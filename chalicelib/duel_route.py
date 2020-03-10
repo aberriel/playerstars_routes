@@ -6,7 +6,8 @@ from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter,
     NotificationAdapter,
-    PlayerAdapter)
+    PlayerAdapter,
+    TeamAdapter)
 from playerstars_domain import Duel
 from playerstars_interactors import (
     CreateDuelException,
@@ -52,6 +53,10 @@ def get_player_adapter():
                          Settings.DYNAMODB_URL)
 
 
+def get_team_adapter():
+    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 @bp_match_list.route('/', **private_get())
 def get_match_list():
     entity_id = get_user_id_from_jwt(bp_match_list)
@@ -71,7 +76,7 @@ def get_match_list_by_player(entity_id):
 def post_duel():
     data = bp_create_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_create_duel)
-    data.update({'challenger_id': entity_id})
+    data.update({'challenger': entity_id})
     return create_duel(data)
 
 
@@ -81,6 +86,7 @@ def create_duel(json_data):
 
         interactor = CreateDuelInteractor(
             request=request, player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter(), settings=Settings)
         response = interactor.run()
     except CreateDuelException as e:
