@@ -59,17 +59,23 @@ def get_team_adapter():
 
 @bp_match_list.route('/', **private_get())
 def get_match_list():
-    entity_id = get_user_id_from_jwt(bp_match_list)
-    return get_match_list_by_player(entity_id)
+    data = bp_match_list.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_match_list)
+    data.update({'player_id': player_id})
+    return get_match_list_by_player(data)
 
 
-def get_match_list_by_player(entity_id):
-    request = GetMatchListRequestModel(entity_id)
-    interactor = GetMatchListInteractor(request, get_player_adapter())
+def get_match_list_by_player(data):
+    request = GetMatchListRequestModel(data)
+    interactor = GetMatchListInteractor(
+        request=request,
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
     response = interactor.run()
     if response:
         return success(response)
-    return not_found("Nenhum match encontrado para o player: " + entity_id)
+    return not_found("Nenhum match encontrado para o player: {0}"
+                     .format(data['player_id']))
 
 
 @bp_create_duel.route('/', **private_post())

@@ -22,8 +22,13 @@ import json
 
 
 def make_get_match_list_mock():
+    payload = {
+        "player_id": "pl01",
+        "member_type": "PLAYER",
+        "console_id": "con02"
+    }
     return MagicMock(current_request=MagicMock(
-        json_body={}, headers=dict(AUTHORIZATION=jwt)))
+        json_body=payload, headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal
