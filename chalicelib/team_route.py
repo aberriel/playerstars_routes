@@ -76,22 +76,14 @@ def get_all_teams_by_user(player_id):
 
 
 def get_by_user(json_data):
-    print('get_by_user -> Entrando')
     request = GetTeamByUserRequestModel(json_data)
-    print('get_by_user -> Instanciei o request')
-    print('get_by_user -> request: ' + str(request))
     interactor = GetTeamByUserInteractor(
         request=request,
         team_adapter=get_team_adapter(),
         console_adapter=get_console_adapter())
-    print('get_by_user -> Instanciei o interactor')
     response = interactor.run()
-    print('get_by_user -> Recebi o response')
-    print('get_by_user -> response: ' + str(response))
     if response and len(response) > 0:
-        print('get_by_user -> Sucesso')
         return success(response)
-    print('get_by_user -> Erro')
     return not_found('No teams found for this player')
 
 

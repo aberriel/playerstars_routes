@@ -86,7 +86,6 @@ def json_request(context, method, url):
             context.dict_list_get_all = context.response.body['data']
 
         context.item_id = context.response.body['data']
-        print("CONTEXT ITEM ID: ", context.item_id)
         context.response.json = json.loads(context.response)
     except BaseException as e:
         print(str(e))
@@ -182,7 +181,6 @@ def check_ignored_list(a):
     for key, value in a.items():
         if isinstance(value, str) or isinstance(value, int):
             if key not in ignored_keys_list:
-                print("KEY NOT IN THE IGNORED LIST: ", key)
                 return False
         if isinstance(value, dict):
             check_ignored_list(value)
@@ -205,8 +203,6 @@ def saved_json(context):
 
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('response json: ', response_string_json)
-    print('expected json: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -225,8 +221,6 @@ def saved_jsons(context):
         #         del x['entity_id']
     response_string_json = json.dumps(response, sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('RESPONSE: ', response_string_json)
-    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 
@@ -236,8 +230,6 @@ def check_retrieved_json(context):
     context.expected_json = json.loads(body)
     response_string_json = json.dumps(context.response.body['data'], sort_keys=True)
     expected_string_json = json.dumps(context.expected_json, sort_keys=True)
-    print('RESPONSE: ', response_string_json)
-    print('EXPECTED: ', expected_string_json)
     assert response_string_json == expected_string_json
 
 

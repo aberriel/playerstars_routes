@@ -159,7 +159,6 @@ def make_get_by_user_mock_data():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team_by_user(client, resource, run):
-    print('test_get_team_by_user -> Entrando')
     result = get_all_teams_by_user('pl11')
     run.assert_called_once()
     assert result.body['status'] == 'success'
