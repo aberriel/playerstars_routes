@@ -398,11 +398,24 @@ def test_delete_friends_v2(client, resource, run):
     assert result.status_code == 201
 
 
+def make_get_teams_by_user_mock_data():
+    payload = {
+        'player_id': 'pl11',
+        'get_actives': True,
+        'get_inactives': True,
+        'get_i_invited': True,
+        'get_i_accepted': True
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player',
-       MagicMock(current_request=MagicMock(
-           json_body=json, headers=dict(AUTHORIZATION=jwt))))
-@patch('chalicelib.team_route.GetTeamByUserInteractor.run')
+       make_get_teams_by_user_mock_data())
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run',
+       return_value=[{'name': 'Stormianos'}])
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team_by_user(client, resource, run):
