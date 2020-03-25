@@ -121,8 +121,8 @@ def enter_duel_post(json_data):
     interactor = EnterDuelInteractor(
         request=request,
         player_adapter=get_player_adapter(),
-        duel_adapter=get_duel_adapter()
-    )
+        duel_adapter=get_duel_adapter(),
+        team_adapter=get_team_adapter())
     try:
         response = interactor.run()
     except EnterDuelException as e:
@@ -167,7 +167,10 @@ def get_duels_by_status_route(status):
 
 def get_duels_by_status(entity_id, status):
     request = GetPlayerDuelByStatusRequestModel(entity_id, status)
-    interactor = GetPlayerDuelByStatusInteractor(request, get_duel_adapter())
+    interactor = GetPlayerDuelByStatusInteractor(
+        request=request,
+        duel_adapter=get_duel_adapter(),
+        player_adapter=get_player_adapter())
     try:
         response = interactor.run()
         if response:
@@ -210,7 +213,8 @@ def end_duel_post(json_data):
         notification_adapter=get_notification_adapter(),
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
-        s3_bucket_url=Settings.S3_BUCKET_URL)
+        s3_bucket_url=Settings.S3_BUCKET_URL,
+        team_adapter=get_team_adapter())
     try:
         response = interactor.run()
     except EndDuelException as e:
