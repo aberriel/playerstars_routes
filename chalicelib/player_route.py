@@ -149,7 +149,8 @@ def get_my_profile():
     try:
         entity_id = get_user_id_from_jwt(bp_player)
         adapter = get_adapter()
-        duel_adapter = DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+        duel_adapter = DuelAdapter(
+            Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
         team_adapter = get_team_adapter()
         request = GetProfileRequestModel(entity_id)
         interactor = GetProfileInteractor(
@@ -248,6 +249,7 @@ def get_all_teams_from_player():
         return get_by_user(data)
     except BaseException as e:
         return server_error(str(e))
+
 
 @bp_player.route('/console-data/', **private_post())
 def post_console_data_route():
