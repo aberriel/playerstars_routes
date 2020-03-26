@@ -167,11 +167,25 @@ def test_get_profile(client, resource, run, get_by_id):
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_profile_raises(client, resource, get_by_id):
+def test_get_profile_player_not_found(client, resource, get_by_id):
     result = get_my_profile()
     assert result.body['message'] == "Player not found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch.object(PlayerAdapter, 'get_by_id', return_value=MagicMock())
+@patch('chalicelib.player_route.bp_player', make_get_profile_request())
+@patch('chalicelib.player_route.GetProfileInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_profile_player_raises(client, resource, get_by_id):
+    result = get_my_profile()
+    assert result.status_code == 500
+    assert result.body['message'] == "oops"
+    assert result.body['status'] == "error"
 
 
 # noinspection PyUnusedLocal
@@ -313,16 +327,41 @@ def test_get_all_friends_v2(client, resource, run):
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_get_friends_mock_data())
+@patch('chalicelib.player_route.GetAllFriendsInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_friends_v2_raises(client, resource):
+    result = get_friends_route_v2()
+    assert result.status_code == 500
+    assert result.body['message'] == "oops"
+    assert result.body['status'] == "error"
+
+
+# noinspection PyUnusedLocal
 @patch('chalicelib.player_route.GetAllFriendsInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_friends_raises(client, resource):
+def test_get_all_friends_not_found(client, resource):
     result = get_friends_route('123123')
 
     assert result.body['message'] == "Favorites not found"
     assert result.body['status'] == "error"
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.GetAllFriendsInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_friends_raises(client, resource):
+    result = get_friends_route('123123')
+    assert result.status_code == 500
+    assert result.body['message'] == "oops"
+    assert result.body['status'] == "error"
 
 
 def make_post_friends_mock_data():
@@ -348,6 +387,32 @@ def test_post_friends(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run',
+       MagicMock(side_effect=SaveFriendsException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_friends_raises(client, resource):
+    result = post_friend_route('123123')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_friends_raises2(client, resource):
+    result = post_friend_route('123123')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
 @patch('chalicelib.player_route.AlterFriendsInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -362,11 +427,13 @@ def test_post_friends_v2(client, resource, run):
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
 @patch('chalicelib.player_route.AlterFriendsInteractor.run',
-       MagicMock(side_effect=SaveFriendsException('oops')))
+       side_effect=Exception('oops'))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_friends_raises(client, resource):
-    result = post_friend_route('123123')
+def test_post_friends_v2_raises(client, resource, run):
+    result = post_friend_route_v2()
+    run.assert_called_once()
+
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -387,6 +454,21 @@ def test_delete_friends(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_friends_raises(client, resource, run):
+    result = delete_friend_route('12132123')
+    run.assert_called_once()
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
 @patch('chalicelib.player_route.AlterFriendsInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -396,6 +478,21 @@ def test_delete_friends_v2(client, resource, run):
 
     assert result.body['status'] == 'success'
     assert result.status_code == 201
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_friends_mock_data())
+@patch('chalicelib.player_route.AlterFriendsInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_friends_v2_raises(client, resource, run):
+    result = delete_friend_route_v2()
+    run.assert_called_once()
+
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
 
 
 def make_get_teams_by_user_mock_data():
@@ -423,6 +520,21 @@ def test_get_team_by_user(client, resource, run):
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_get_teams_by_user_mock_data())
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_team_by_user_raises(client, resource, run):
+    result = get_all_teams_from_player()
+    run.assert_called_once()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
 
 
 def make_post_user_data_mock_data():
@@ -513,6 +625,19 @@ def test_post_console_data_route_raises(client, resource):
     assert result.status_code == 500
 
 
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player', make_post_console_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_console_data_route_raises2(client, resource):
+    result = post_console_data_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
 def make_post_accept_terms_mock_data():
     payload = """{
         "entity_id": "id1234123",
@@ -551,6 +676,20 @@ def test_post_accept_terms_route_raises(client, resource):
     assert result.status_code == 500
 
 
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_terms_mock_data())
+@patch('chalicelib.basic_entity_route.BasicPostInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_terms_route_raises2(client, resource):
+    result = post_accept_terms_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
 def make_post_accept_invite_mock_data():
     payload = """{
         "team_id": "id1234123",
@@ -583,6 +722,20 @@ def test_post_accept_team_invite_player(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_accept_team_invite_raises(client, resource):
+    result = accept_team_invitation_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_post_accept_invite_mock_data())
+@patch('chalicelib.player_route.AcceptTeamInvitationInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_accept_team_invite_raises2(client, resource):
     result = accept_team_invitation_route()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'

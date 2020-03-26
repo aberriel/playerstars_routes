@@ -204,6 +204,19 @@ def test_post_team_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team', make_post_mock_data())
+@patch('chalicelib.team_route.PostTeamInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_team_raises2(client, resource):
+    result = post_team()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
 @patch('playerstars_interactors.team.put_team.find_entity_by_id',
        return_value=MagicMock())
 @patch('chalicelib.team_route.bp_team', make_put_mock_data())
