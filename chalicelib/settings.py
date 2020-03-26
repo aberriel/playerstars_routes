@@ -5,30 +5,24 @@ class Settings:
     LOG_LEVEL = config('LOG_LEVEL', 'DEBUG')
 
     CHAMPIONSHIP_TABLE_NAME = config(
-        'CHAMPIONSHIP_TABLE_NAME',
-        'championship')
-    CONSOLE_TABLE_NAME = config('CONSOLE_TABLE_NAME', 'console')
+        'CHAMPIONSHIP_TABLE_NAME', 'championship_dev')
+    CONSOLE_TABLE_NAME = config('CONSOLE_TABLE_NAME', 'console_dev')
     CONVERT_STAR_TABLE_NAME = config(
-        'CONVERT_STAR_TABLE_NAME',
-        'convert_rate')
-    DUEL_TABLE_NAME = config('DUEL_TABLE_NAME', 'duel')
+        'CONVERT_STAR_TABLE_NAME', 'convert_rate_dev')
+    DUEL_TABLE_NAME = config('DUEL_TABLE_NAME', 'duel_dev')
     NOTIFICATION_TABLE_NAME = config(
-        'NOTIFICATION_TABLE_NAME',
-        'notification')
-    PLAYER_TABLE_NAME = config('PLAYER_TABLE_NAME', 'player')
-    PRODUCT_TABLE_NAME = config('PRODUCT_TABLE_NAME', 'product')
+        'NOTIFICATION_TABLE_NAME', 'notification_dev')
+    PLAYER_TABLE_NAME = config('PLAYER_TABLE_NAME', 'player_dev')
+    PRODUCT_TABLE_NAME = config('PRODUCT_TABLE_NAME', 'product_dev')
     PURCHASE_HISTORY_TABLE_NAME = config(
-        'PURCHASE_HISTORY_TABLE_NAME',
-        'purchase')
+        'PURCHASE_HISTORY_TABLE_NAME', 'purchase_dev')
     REGION_COUNTRY_TABLE_NAME = config(
-        'REGION_COUNTRY_TABLE_NAME',
-        'region_country')
+        'REGION_COUNTRY_TABLE_NAME', 'region_country_dev')
     REGION_STATE_TABLE_NAME = config(
-        'REGION_STATE_TABLE_NAME',
-        'region_state')
-    TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team')
-    USER_TABLE_NAME = config('USER_TABLE_NAME', 'user')
-    USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin')
+        'REGION_STATE_TABLE_NAME', 'region_state_dev')
+    TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team_dev')
+    USER_TABLE_NAME = config('USER_TABLE_NAME', 'user_dev')
+    USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin_dev')
 
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
     CONTACT_EMAIL_RECIPIENTS = config(
@@ -48,11 +42,9 @@ class Settings:
         'PAGSEGURO_SANDBOX_HOST_URL',
         'https://ws.sandbox.pagseguro.uol.com.br')
     PAGSEGURO_SANDBOX_TOKEN = config(
-        'PAGSEGURO_SANDBOX_TOKEN',
-        '8D0B7247DE3B4F22ABBCCCE6AD802C19')
+        'PAGSEGURO_SANDBOX_TOKEN', '8D0B7247DE3B4F22ABBCCCE6AD802C19')
     PAGSEGURO_TOKEN = config(
-        'PAGSEGURO_TOKEN',
-        'A0ABD34C342A474C8CEB112430FCCBD8')
+        'PAGSEGURO_TOKEN', 'A0ABD34C342A474C8CEB112430FCCBD8')
     PAGSEGURO_UPDATE_NOTIFICATION_URL = config(
         'PAGSEGURO_UPDATE_NOTIFICATION_URL',
         '{host}/v3/transactions/notifications/{notification_code}'

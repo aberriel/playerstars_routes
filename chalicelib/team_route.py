@@ -79,10 +79,13 @@ def get_by_user(player_id):
 
 @bp_team.route('/', **private_post())
 def post_team():
-    data = bp_team.current_request.json_body
-    player_id = get_user_id_from_jwt(bp_team)
-    data.update({'captain_id': player_id})
-    return post(data)
+    try:
+        data = bp_team.current_request.json_body
+        player_id = get_user_id_from_jwt(bp_team)
+        data.update({'captain_id': player_id})
+        return post(data)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def post(data):
