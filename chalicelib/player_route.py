@@ -242,11 +242,12 @@ def alter_friend_list(entity_id, data, option):
 @bp_player.route('/my-teams/', **private_get())
 def get_all_teams_from_player():
     try:
+        data = bp_player.current_request.json_body
         player_id = get_user_id_from_jwt(bp_player)
-        return get_by_user(player_id)
+        data.update({'player_id': player_id})
+        return get_by_user(data)
     except BaseException as e:
         return server_error(str(e))
-
 
 @bp_player.route('/console-data/', **private_post())
 def post_console_data_route():

@@ -9,6 +9,7 @@ from chalicelib.settings import Settings
 from chalice_support import success, not_found, created, server_error
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import (
+    ConsoleAdapter,
     PlayerAdapter,
     TeamAdapter
 )
@@ -41,6 +42,10 @@ bp_leave_team = Blueprint(__name__)
 bp_team = Blueprint(__name__)
 
 
+def get_console_adapter():
+    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
@@ -65,14 +70,19 @@ def get_team_by_id(entity_id):
 
 @bp_team.route('/byuser/{player_id}', **private_get())
 def get_all_teams_by_user(player_id):
-    return get_by_user(player_id)
+    data = bp_team.current_request.json_body
+    data.update({'player_id': player_id})
+    return get_by_user(data)
 
 
-def get_by_user(player_id):
-    request = GetTeamByUserRequestModel(player_id=player_id)
-    interactor = GetTeamByUserInteractor(request, get_team_adapter())
+def get_by_user(json_data):
+    request = GetTeamByUserRequestModel(json_data)
+    interactor = GetTeamByUserInteractor(
+        request=request,
+        team_adapter=get_team_adapter(),
+        console_adapter=get_console_adapter())
     response = interactor.run()
-    if response:
+    if response and len(response) > 0:
         return success(response)
     return not_found('No teams found for this player')
 
