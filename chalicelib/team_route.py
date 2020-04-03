@@ -115,6 +115,7 @@ def post(data):
 @bp_team.route('/{entity_id}', **private_put())
 def put_team(entity_id):
     data = bp_team.current_request.json_body
+    data.update({'entity_id': entity_id})
     return put(data)
 
 
