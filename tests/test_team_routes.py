@@ -82,7 +82,6 @@ def make_put_mock_data():
     payload = {
         'entity_id': 'b1e9c0a7',
         'name': 'DoRio',
-        'captain': '123',
         'members': ['pl11'],
         'description': '',
         'console_id': '11',
