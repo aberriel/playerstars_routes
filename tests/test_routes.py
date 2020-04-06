@@ -1,4 +1,3 @@
-# from unittest.mock import MagicMock, patch
 from .test_utils import FakeDomain, FakeAdapter
 from app import index
 from chalice_support import success
