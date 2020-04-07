@@ -1,50 +1,30 @@
 from chalice import Blueprint
 from chalice_support import (
-    created,
-    not_found,
-    server_error,
-    success,
-    success_partial)
+    created, not_found, server_error, success, success_partial)
 from playerstars_adapters import (
-    ConsoleAdapter,
-    DuelAdapter,
-    PlayerAdapter,
-    TeamAdapter)
+    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter)
 from playerstars_domain import Player
 from playerstars_interactors import (
-    AcceptTeamInvitationException,
-    AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationRequestModel,
-    AlterFriendsInteractor,
-    AlterFriendsRequestModel,
-    BasicPostRequestModel,
-    GetAllFriendsInteractor,
-    GetAllFriendsRequestModel,
-    GetPlayersByConsoleGameInteractor,
-    GetPlayersByConsoleGameRequestModel,
-    GetProfileInteractor,
-    GetProfileRequestModel,
-    GetRankingByConsoleGameInteractor,
-    GetRankingByConsoleGameRequestModel,
-    PostPlayerAcceptTermsInteractor,
-    PostPlayerConsoleDataInteractor,
-    PostPlayerInteractor,
-    SaveConvertedStarsException,
-    SaveConvertedStarsInteractor,
-    SaveConvertedStarsRequestModel,
-    SaveEntityException,
-    SaveFriendsException,
-    UpdateEntityException,
-    UpdateProfileInteractor,
-    UpdateProfileRequestModel)
+    AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel, AlterFriendsInteractor,
+    AlterFriendsRequestModel, BasicPostRequestModel,
+    GetAllFriendsInteractor, GetAllFriendsRequestModel,
+    GetPlayersByConsoleGameInteractor, GetPlayersByConsoleGameRequestModel,
+    GetProfileInteractor, GetProfileRequestModel,
+    GetRankingByConsoleGameInteractor, GetRankingByConsoleGameRequestModel,
+    PostPlayerAcceptTermsInteractor, PostPlayerConsoleDataInteractor,
+    PostPlayerInteractor, SaveConvertedStarsException,
+    SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
+    SaveEntityException, SaveFriendsException, UpdateEntityException,
+    UpdateProfileInteractor, UpdateProfileRequestModel,
+    GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete, private_put)
 from chalicelib.settings import Settings
 from chalicelib.team_route import get_by_user
-from chalicelib.utils import \
-    get_user_id_from_jwt
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_player = Blueprint(__name__)
 
@@ -152,9 +132,10 @@ def get_my_profile():
         duel_adapter = DuelAdapter(
             Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
         team_adapter = get_team_adapter()
+        console_adapter = get_console_adapter()
         request = GetProfileRequestModel(entity_id)
         interactor = GetProfileInteractor(
-            request, adapter, team_adapter, duel_adapter)
+            request, adapter, team_adapter, duel_adapter, console_adapter)
         response = interactor.run()
         if response:
             return success(response)
@@ -349,3 +330,18 @@ def get_ranking_route():
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} ranking not found')
+
+
+@bp_player.route('/consoles', **private_get())
+def get_player_consoles():
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetPlayerConsolesRequestModel(entity_id)
+        interactor = GetPlayerConsolesInteractor(
+            request, get_adapter(), get_console_adapter())
+        response = interactor.run()
+        if response:
+            return success(response)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} consoles not found')

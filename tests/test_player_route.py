@@ -7,7 +7,7 @@ from chalicelib.player_route import (
     put_player, get_all_teams_from_player, post_console_data_route,
     post_accept_terms_route, accept_team_invitation_route,
     convert_star_route, post_friend_route_v2, get_friends_route_v2,
-    delete_friend_route_v2, get_ranking_route
+    delete_friend_route_v2, get_ranking_route, get_player_consoles
 )
 import json
 import pytest
@@ -887,3 +887,49 @@ def test_get_ranking_not_found(client, resource, run):
     assert result.status_code == 404
     assert result.body['message'] == \
         'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f ranking not found'
+
+
+####
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerConsolesInteractor.run',
+       return_value=(MagicMock()))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_consoles(client, resource, run):
+    result = get_player_consoles()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerConsolesInteractor.run',
+       side_effect=BaseException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_consoles_error(client, resource, run):
+    result = get_player_consoles()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerConsolesInteractor.run',
+       return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_consoles_not_found(client, resource, run):
+    result = get_player_consoles()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == \
+        'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f consoles not found'

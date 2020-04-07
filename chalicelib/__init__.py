@@ -58,7 +58,8 @@ from .player_route import (
     post_accept_terms_route,
     post_console_data_route,
     get_player_by_console,
-    convert_star_route
+    convert_star_route,
+    get_player_consoles
 )
 from .product_route import get_all_product, post_product
 from .purchase_route import (
@@ -189,5 +190,7 @@ __all__ = [
 
     'post_console_admin',
     'put_console_admin',
-    'delete_console_admin'
+    'delete_console_admin',
+
+    'get_player_consoles'
 ]
