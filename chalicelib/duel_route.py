@@ -108,9 +108,7 @@ def create_duel(json_data):
 def enter_duel():
     data = bp_enter_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_enter_duel)
-
     data.update({'player_id': entity_id})
-
     data.update({
         'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
     })
@@ -136,8 +134,8 @@ def enter_duel_post(json_data):
 
 @bp_inform_invite_timeout.route('/', **private_post())
 def inform_invitation_timeout():
-    data = bp_enter_duel.current_request.json_body
-    player_id = get_user_id_from_jwt(bp_enter_duel)
+    data = bp_inform_invite_timeout.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_inform_invite_timeout)
     data.update({'player_id': player_id})
     return inform_invitation_timeout_post(data)
 

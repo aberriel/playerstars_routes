@@ -27,15 +27,16 @@ from .convert_star_rate_route import (
     put_convert_rate, post_convert_rate
 )
 from .duel_route import (
-    post_duel,
-    get_match_list,
+    end_duel,
     enter_duel,
-    get_all_player_duels,
     get_all_duel,
-    get_duels_by_status_route,
+    get_all_player_duels,
     get_duel,
-    reject_duel_route,
-    end_duel
+    get_duels_by_status_route,
+    get_match_list,
+    inform_invitation_timeout,
+    post_duel,
+    reject_duel_route
 )
 from .game_route import (
     delete_game,
@@ -132,15 +133,6 @@ __all__ = [
     'leave_team',
     'accept_invitation',
 
-    'post_duel',
-    'get_match_list',
-    'enter_duel',
-    'get_all_player_duels',
-    'get_all_duel',
-    'get_duel',
-    'get_duels_by_status_route',
-    'reject_duel_route',
-
     'get_all_product',
     'post_product',
 
@@ -180,6 +172,15 @@ __all__ = [
     'put_player_admin',
 
     'end_duel',
+    'enter_duel',
+    'get_all_duel',
+    'get_all_player_duels',
+    'get_duel',
+    'get_duels_by_status_route',
+    'get_match_list',
+    'inform_invitation_timeout',
+    'post_duel',
+    'reject_duel_route',
 
     'put_player',
     'post_accept_terms_route',

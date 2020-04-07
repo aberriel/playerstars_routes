@@ -7,6 +7,7 @@ from chalicelib import (
     get_duel,
     get_duels_by_status_route,
     get_match_list,
+    inform_invitation_timeout,
     post_duel,
     reject_duel_route
 )
@@ -15,6 +16,7 @@ from playerstars_interactors import (
     EndDuelException,
     EnterDuelException,
     GetPlayerDuelByStatusError,
+    InformOpponentResponseTimeoutException,
     RejectDuelException)
 from tests.test_utils import jwt
 
@@ -105,6 +107,40 @@ def test_create_duel(client, resourcem, run):
 def test_create_duel_raises(client, resource):
     result = post_duel()
 
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_inform_invite_timeout_mock_data():
+    payload = """{
+        "duel_id": "duelid123"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(
+        current_request=MagicMock(json_body=data,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+@patch('chalicelib.duel_route.bp_inform_invite_timeout',
+       make_inform_invite_timeout_mock_data())
+@patch('chalicelib.duel_route.InformOpponentResponseTimeoutInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_inform_invite_timeout(client, resource, run):
+    result = inform_invitation_timeout()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.duel_route.bp_inform_invite_timeout',
+       make_inform_invite_timeout_mock_data())
+@patch('chalicelib.duel_route.InformOpponentResponseTimeoutInteractor.run',
+       MagicMock(side_effect=InformOpponentResponseTimeoutException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_inform_invite_timeout_raises(client, resource):
+    result = inform_invitation_timeout()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
