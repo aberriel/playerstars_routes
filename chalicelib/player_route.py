@@ -43,7 +43,7 @@ def get_console_adapter():
     return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-def get_player_adapter():
+def get_adapter():
     return PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
@@ -57,14 +57,13 @@ def post_player():
 
 
 def post(json_data):
-    console_adapter = get_console_adapter()
-    player_adapter = get_player_adapter()
+    adapter = get_adapter()
     try:
         request = BasicPostRequestModel(json_data)
         interactor = PostPlayerInteractor(
             request=request,
-            adapter_instance=player_adapter,
-            console_adapter=console_adapter,
+            adapter_instance=adapter,
+            console_adapter=get_console_adapter(),
             entity_class=Player,
             s3_bucket_name=Settings.S3_BUCKET_NAME,
             s3_bucket_url=Settings.S3_BUCKET_URL)
@@ -84,7 +83,7 @@ def put_player():
 
 def put(json_data):
     try:
-        adapter = get_player_adapter()
+        adapter = get_adapter()
         request = UpdateProfileRequestModel(json_data)
         interactor = UpdateProfileInteractor(
             request=request,
@@ -111,7 +110,7 @@ def get_all_player():
 
 def get_player_by_console(query_params):
     try:
-        player_adapter = get_player_adapter()
+        player_adapter = get_adapter()
         console_adapter = get_console_adapter()
         request = GetPlayersByConsoleGameRequestModel(query_params)
         interactor = GetPlayersByConsoleGameInteractor(
@@ -130,7 +129,7 @@ def get_player_by_console(query_params):
 def get_my_profile():
     try:
         entity_id = get_user_id_from_jwt(bp_player)
-        adapter = get_player_adapter()
+        adapter = get_adapter()
         duel_adapter = DuelAdapter(
             Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
         team_adapter = get_team_adapter()
@@ -164,7 +163,7 @@ def get_friends_route_v2():
 
 
 def get_friends(entity_id):
-    adapter = get_player_adapter()
+    adapter = get_adapter()
     request = GetAllFriendsRequestModel(entity_id)
     interactor = GetAllFriendsInteractor(request, adapter)
     response = interactor.run()
@@ -213,7 +212,7 @@ def delete_friend_route_v2():
 
 def alter_friend_list(entity_id, data, option):
     try:
-        adapter = get_player_adapter()
+        adapter = get_adapter()
         request = AlterFriendsRequestModel(player_id=entity_id,
                                            list_entity_id=data['friends'])
         interactor = AlterFriendsInteractor(request, adapter, option)
@@ -247,7 +246,7 @@ def post_console_data_route():
 
 def post_console_data(json_data):
     try:
-        adapter = get_player_adapter()
+        adapter = get_adapter()
         console_adapter = get_console_adapter()
         request = BasicPostRequestModel(json_data)
         interactor = PostPlayerConsoleDataInteractor(
@@ -271,7 +270,7 @@ def post_accept_terms_route():
 
 def post_accept_terms(json_data):
     try:
-        adapter = get_player_adapter()
+        adapter = get_adapter()
         request = BasicPostRequestModel(json_data)
         interactor = PostPlayerAcceptTermsInteractor(request, adapter, Player)
         response = interactor.run()
@@ -309,9 +308,7 @@ def convert_star_route():
         entity_id = get_user_id_from_jwt(bp_player)
         data.update({'player_id': entity_id})
         request = SaveConvertedStarsRequestModel(data)
-        interactor = SaveConvertedStarsInteractor(
-            request=request,
-            player_adapter=get_player_adapter())
+        interactor = SaveConvertedStarsInteractor(request, get_adapter())
         response = interactor.run()
     except SaveConvertedStarsException as e:
         return server_error(str(e))
@@ -325,7 +322,7 @@ def get_ranking_route():
         entity_id = get_user_id_from_jwt(bp_player)
         request = GetRankingByConsoleGameRequestModel(query_params, entity_id)
         interactor = GetRankingByConsoleGameInteractor(
-            request, get_player_adapter(), get_console_adapter())
+            request, get_adapter(), get_console_adapter())
         response, range_data = interactor.run()
         if response:
             return success_partial(
@@ -342,7 +339,7 @@ def get_player_consoles():
         entity_id = get_user_id_from_jwt(bp_player)
         request = GetPlayerConsolesRequestModel(entity_id)
         interactor = GetPlayerConsolesInteractor(
-            request, get_player_adapter(), get_console_adapter())
+            request, get_adapter(), get_console_adapter())
         response = interactor.run()
         if response:
             return success(response)
