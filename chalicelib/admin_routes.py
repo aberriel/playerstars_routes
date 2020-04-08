@@ -16,19 +16,19 @@ from playerstars_interactors import (
 bp_admin = Blueprint(__name__)
 
 
-def get_player_router():
+def player_router():
     adapter = PlayerAdapter(
         Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
 
 
-def get_console_router():
+def console_router():
     adapter = ConsoleAdapter(
         Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Console, 'console')
 
 
-def get_player_adapter():
+def player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
@@ -41,68 +41,79 @@ def authorize(blueprint):
         return False, e
 
 
+def get_all_admin(router):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        query_params = None
+        if bp_admin.current_request and bp_admin.current_request.query_params:
+            query_params = bp_admin.current_request.query_params
+        return router.get_all(query_params, True)
+    return unauthorized(str(msg))
+
+
+def get_by_id_admin(entity_id, router):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        return router.get_by_id(entity_id)
+    return unauthorized(str(msg))
+
+
+def post_admin(router):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        data = bp_admin.current_request.json_body
+        return router.post(data)
+    return unauthorized(str(msg))
+
+
+def put_admin(router):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        data = bp_admin.current_request.json_body
+        return router.put(data)
+    return unauthorized(str(msg))
+
+
+def delete_admin(entity_id, router):
+    auth, msg = authorize(bp_admin)
+    if auth:
+        return router.delete(entity_id)
+    return unauthorized(str(msg))
+
+
 @bp_admin.route('/player', **private_get())
 def get_all_players_admin():
-    auth, msg = authorize(bp_admin)
-    if auth:
-        query_params = None
-        if bp_admin.current_request and bp_admin.current_request.query_params:
-            query_params = bp_admin.current_request.query_params
-        return get_player_router().get_all(query_params, True)
-    return unauthorized(str(msg))
-
-
-@bp_admin.route('/console', **private_get())
-def get_all_consoles_admin():
-    auth, msg = authorize(bp_admin)
-    if auth:
-        query_params = None
-        if bp_admin.current_request and bp_admin.current_request.query_params:
-            query_params = bp_admin.current_request.query_params
-        return get_console_router().get_all(query_params, True)
-    return unauthorized(str(msg))
-
-
-@bp_admin.route('/console/{entity_id}', **private_get())
-def get_console_by_id_admin(entity_id):
-    auth, msg = authorize(bp_admin)
-    if auth:
-        return get_console_router().get_by_id(entity_id)
-    return unauthorized(str(msg))
-
-
-@bp_admin.route('/console', **private_post())
-def post_console_admin():
-    auth, msg = authorize(bp_admin)
-    if auth:
-        data = bp_admin.current_request.json_body
-        return get_console_router().post(data)
-    return unauthorized(str(msg))
-
-
-@bp_admin.route('/console/{entity_id}', **private_put())
-def put_console_admin(entity_id):
-    auth, msg = authorize(bp_admin)
-    if auth:
-        data = bp_admin.current_request.json_body
-        return get_console_router().put(data)
-    return unauthorized(str(msg))
-
-
-@bp_admin.route('/console/{entity_id}', **private_delete())
-def delete_console_admin(entity_id):
-    auth, msg = authorize(bp_admin)
-    if auth:
-        return get_console_router().delete(entity_id)
-    return unauthorized(str(msg))
+    return get_all_admin(player_router())
 
 
 @bp_admin.route('/player/{entity_id}', **private_get())
 def get_player_by_id_admin(entity_id):
-    auth, msg = authorize(bp_admin)
-    if auth:
-        return get_player_router().get_by_id(entity_id)
-    return unauthorized(str(msg))
+    return get_by_id_admin(entity_id, player_router())
+
+
+@bp_admin.route('/console', **private_get())
+def get_all_consoles_admin():
+    return get_all_admin(console_router())
+
+
+@bp_admin.route('/console/{entity_id}', **private_get())
+def get_console_by_id_admin(entity_id):
+    return get_by_id_admin(entity_id, console_router())
+
+
+@bp_admin.route('/console', **private_post())
+def post_console_admin():
+    return post_admin(player_router())
+
+
+@bp_admin.route('/console/{entity_id}', **private_put())
+def put_console_admin(entity_id):
+    return put_admin(console_router())
+
+
+@bp_admin.route('/console/{entity_id}', **private_delete())
+def delete_console_admin(entity_id):
+    return delete_admin(entity_id, console_router())
 
 
 @bp_admin.route('/player/{entity_id}', **private_put())
@@ -113,7 +124,7 @@ def put_player_admin(entity_id):
         json_data = bp_admin.current_request.json_body
         request = BasicPutRequestModel(json_data)
         interactor = PutPlayerIsAdminInteractor(
-            request, get_player_adapter(), Player)
+            request, player_adapter(), Player)
         response = interactor.run()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))

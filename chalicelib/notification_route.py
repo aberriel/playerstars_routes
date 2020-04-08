@@ -2,16 +2,11 @@ from chalice import Blueprint
 from playerstars_adapters import NotificationAdapter
 from playerstars_domain import Notification
 from playerstars_interactors import (
-    BasicPostRequestModel,
-    GetAppNotificationByUserInteractor,
-    GetAppNotificationByUserRequestModel,
-    PostAppNotificationInteractor,
-    PostNotificationReadInteractor,
-    PostNotificationReadException,
-    PostNotificationReadRequestModel,
-    SaveEntityException
+    BasicPostRequestModel, GetAppNotificationByUserInteractor,
+    GetAppNotificationByUserRequestModel, PostAppNotificationInteractor,
+    PostNotificationReadInteractor, PostNotificationReadException,
+    PostNotificationReadRequestModel, SaveEntityException
 )
-
 from chalicelib.chalice_support import private_post, private_get
 from chalice_support import (server_error, created, success, not_found)
 from chalicelib.settings import Settings

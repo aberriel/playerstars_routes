@@ -1,50 +1,30 @@
 from chalice import Blueprint
 from chalice_support import (
-    created,
-    not_found,
-    server_error,
-    success,
-    success_partial)
+    created, not_found, server_error, success, success_partial)
 from playerstars_adapters import (
-    ConsoleAdapter,
-    DuelAdapter,
-    PlayerAdapter,
-    TeamAdapter)
+    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter)
 from playerstars_domain import Player
 from playerstars_interactors import (
-    AcceptTeamInvitationException,
-    AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationRequestModel,
-    AlterFriendsInteractor,
-    AlterFriendsRequestModel,
-    BasicPostRequestModel,
-    GetAllFriendsInteractor,
-    GetAllFriendsRequestModel,
-    GetPlayersByConsoleGameInteractor,
-    GetPlayersByConsoleGameRequestModel,
-    GetProfileInteractor,
-    GetProfileRequestModel,
-    GetRankingByConsoleGameInteractor,
-    GetRankingByConsoleGameRequestModel,
-    PostPlayerAcceptTermsInteractor,
-    PostPlayerConsoleDataInteractor,
-    PostPlayerInteractor,
-    SaveConvertedStarsException,
-    SaveConvertedStarsInteractor,
-    SaveConvertedStarsRequestModel,
-    SaveEntityException,
-    SaveFriendsException,
-    UpdateEntityException,
-    UpdateProfileInteractor,
-    UpdateProfileRequestModel)
+    AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel, AlterFriendsInteractor,
+    AlterFriendsRequestModel, BasicPostRequestModel,
+    GetAllFriendsInteractor, GetAllFriendsRequestModel,
+    GetPlayersByConsoleGameInteractor, GetPlayersByConsoleGameRequestModel,
+    GetProfileInteractor, GetProfileRequestModel,
+    GetRankingByConsoleGameInteractor, GetRankingByConsoleGameRequestModel,
+    PostPlayerAcceptTermsInteractor, PostPlayerConsoleDataInteractor,
+    PostPlayerInteractor, SaveConvertedStarsException,
+    SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
+    SaveEntityException, SaveFriendsException, UpdateEntityException,
+    UpdateProfileInteractor, UpdateProfileRequestModel,
+    GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
     private_get, private_post, private_delete, private_put)
 from chalicelib.settings import Settings
 from chalicelib.team_route import get_by_user
-from chalicelib.utils import \
-    get_user_id_from_jwt
+from chalicelib.utils import get_user_id_from_jwt
 
 bp_player = Blueprint(__name__)
 
@@ -87,9 +67,9 @@ def post(json_data):
             s3_bucket_name=Settings.S3_BUCKET_NAME,
             s3_bucket_url=Settings.S3_BUCKET_URL)
         response = interactor.run()
+        return created(response)
     except SaveEntityException as e:
         return server_error(str(e))
-    return created(response)
 
 
 @bp_player.route('/', **private_put())
@@ -146,45 +126,39 @@ def get_player_by_console(query_params):
 
 @bp_player.route('/get-my-profile', **private_get())
 def get_my_profile():
-    entity_id = get_user_id_from_jwt(bp_player)
-    return get_by_id(entity_id)
-
-
-def get_by_id(entity_id):
-    adapter = get_adapter()
-    duel_adapter = DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
-    team_adapter = get_team_adapter()
-    request = GetProfileRequestModel(entity_id)
-    interactor = GetProfileInteractor(
-        request, adapter, team_adapter, duel_adapter)
-    response = interactor.run()
-    if response:
-        return success(response)
-    return not_found(f'Player not found')
-
-
-# player/<Id>/friends
-# POST
-# GET
-# player/<Id>/friend/<id>
-# PUT
-# DELETE
-#
-#
-# Talvez um meio termo seria ter um:
-# /player/<id>/friends POST/PUT
-# Recebendo uma lista
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        adapter = get_adapter()
+        duel_adapter = DuelAdapter(
+            Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+        team_adapter = get_team_adapter()
+        console_adapter = get_console_adapter()
+        request = GetProfileRequestModel(entity_id)
+        interactor = GetProfileInteractor(
+            request, adapter, team_adapter, duel_adapter, console_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f'Player not found')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/{entity_id}/friends', **private_get())
 def get_friends_route(entity_id):
-    return get_friends(entity_id)
+    try:
+        return get_friends(entity_id)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/friends', **private_get())
 def get_friends_route_v2():
-    entity_id = get_user_id_from_jwt(bp_player)
-    return get_friends(entity_id)
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        return get_friends(entity_id)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def get_friends(entity_id):
@@ -199,36 +173,48 @@ def get_friends(entity_id):
 
 @bp_player.route('/{entity_id}/friends', **private_post())
 def post_friend_route(entity_id):
-    data = bp_player.current_request.json_body
-    return alter_friend_list(entity_id, data, 'add')
+    try:
+        data = bp_player.current_request.json_body
+        return alter_friend_list(entity_id, data, 'add')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/friends', **private_post())
 def post_friend_route_v2():
-    data = bp_player.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_player)
-    return alter_friend_list(entity_id, data, 'add')
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        return alter_friend_list(entity_id, data, 'add')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/{entity_id}/friends', **private_delete())
 def delete_friend_route(entity_id):
-    data = bp_player.current_request.json_body
-    return alter_friend_list(entity_id, data, 'delete')
+    try:
+        data = bp_player.current_request.json_body
+        return alter_friend_list(entity_id, data, 'delete')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/friends', **private_delete())
 def delete_friend_route_v2():
-    data = bp_player.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_player)
-    return alter_friend_list(entity_id, data, 'delete')
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        return alter_friend_list(entity_id, data, 'delete')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def alter_friend_list(entity_id, data, option):
-    adapter = get_adapter()
-    request = AlterFriendsRequestModel(player_id=entity_id,
-                                       list_entity_id=data['friends'])
-    interactor = AlterFriendsInteractor(request, adapter, option)
     try:
+        adapter = get_adapter()
+        request = AlterFriendsRequestModel(player_id=entity_id,
+                                           list_entity_id=data['friends'])
+        interactor = AlterFriendsInteractor(request, adapter, option)
         response = interactor.run()
     except SaveFriendsException as e:
         return server_error(str(e))
@@ -237,67 +223,81 @@ def alter_friend_list(entity_id, data, option):
 
 @bp_player.route('/my-teams/', **private_get())
 def get_all_teams_from_player():
-    player_id = get_user_id_from_jwt(bp_player)
-    return get_by_user(player_id)
+    try:
+        data = bp_player.current_request.json_body
+        player_id = get_user_id_from_jwt(bp_player)
+        data.update({'player_id': player_id})
+        return get_by_user(data)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_player.route('/console-data/', **private_post())
 def post_console_data_route():
-    data = bp_player.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_player)
-    data.update({'entity_id': entity_id})
-    return post_console_data(data)
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'entity_id': entity_id})
+        return post_console_data(data)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def post_console_data(json_data):
-    adapter = get_adapter()
-    console_adapter = get_console_adapter()
-    request = BasicPostRequestModel(json_data)
-    interactor = PostPlayerConsoleDataInteractor(
-        request, adapter, console_adapter, Player)
     try:
+        adapter = get_adapter()
+        console_adapter = get_console_adapter()
+        request = BasicPostRequestModel(json_data)
+        interactor = PostPlayerConsoleDataInteractor(
+            request, adapter, console_adapter, Player)
         response = interactor.run()
+        return created(response)
     except SaveEntityException as e:
         return server_error(str(e))
-    return created(response)
 
 
 @bp_player.route('/accept-terms/', **private_post())
 def post_accept_terms_route():
-    data = bp_player.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_player)
-    data.update({'entity_id': entity_id})
-    return post_accept_terms(data)
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'entity_id': entity_id})
+        return post_accept_terms(data)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def post_accept_terms(json_data):
-    adapter = get_adapter()
-    request = BasicPostRequestModel(json_data)
-    interactor = PostPlayerAcceptTermsInteractor(request, adapter, Player)
     try:
+        adapter = get_adapter()
+        request = BasicPostRequestModel(json_data)
+        interactor = PostPlayerAcceptTermsInteractor(request, adapter, Player)
         response = interactor.run()
+        return created(response)
     except SaveEntityException as e:
         return server_error(str(e))
-    return created(response)
 
 
 @bp_player.route('/accept-team-invite', **private_post())
 def accept_team_invitation_route():
-    data = bp_player.current_request.json_body
-    entity_id = get_user_id_from_jwt(bp_player)
-    data.update({'player_id': entity_id})
-    return accept_team_invitation(data)
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'player_id': entity_id})
+        return accept_team_invitation(data)
+    except BaseException as e:
+        return server_error(str(e))
 
 
 def accept_team_invitation(json_data):
-    request = AcceptTeamInvitationRequestModel(json_data)
-    interactor = AcceptTeamInvitationInteractor(
-        request=request, team_adapter=get_team_adapter())
     try:
+        request = AcceptTeamInvitationRequestModel(json_data)
+        interactor = AcceptTeamInvitationInteractor(
+            request=request, team_adapter=get_team_adapter())
         response = interactor.run()
+        return success(response)
     except AcceptTeamInvitationException as e:
         return server_error(str(e))
-    return success(response)
 
 
 @bp_player.route('/convert-stars', **private_post())
@@ -330,3 +330,18 @@ def get_ranking_route():
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} ranking not found')
+
+
+@bp_player.route('/consoles', **private_get())
+def get_player_consoles():
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetPlayerConsolesRequestModel(entity_id)
+        interactor = GetPlayerConsolesInteractor(
+            request, get_adapter(), get_console_adapter())
+        response = interactor.run()
+        if response:
+            return success(response)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} consoles not found')

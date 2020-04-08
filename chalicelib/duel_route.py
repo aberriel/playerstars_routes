@@ -6,7 +6,8 @@ from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter,
     NotificationAdapter,
-    PlayerAdapter)
+    PlayerAdapter,
+    TeamAdapter)
 from playerstars_domain import Duel
 from playerstars_interactors import (
     CreateDuelException,
@@ -25,16 +26,20 @@ from playerstars_interactors import (
     GetPlayerDuelByStatusError,
     GetPlayerDuelByStatusInteractor,
     GetPlayerDuelByStatusRequestModel,
+    InformOpponentResponseTimeoutException,
+    InformOpponentResponseTimeoutInteractor,
+    InformOpponentResponseTimeoutRequestModel,
     RejectDuelException,
     RejectDuelInteractor,
     RejectDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
-bp_match_list = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
-bp_enter_duel = Blueprint(__name__)
 bp_duel = Blueprint(__name__)
+bp_enter_duel = Blueprint(__name__)
+bp_inform_invite_timeout = Blueprint(__name__)
+bp_match_list = Blueprint(__name__)
 
 
 def get_duel_adapter():
@@ -52,26 +57,36 @@ def get_player_adapter():
                          Settings.DYNAMODB_URL)
 
 
+def get_team_adapter():
+    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 @bp_match_list.route('/', **private_get())
 def get_match_list():
-    entity_id = get_user_id_from_jwt(bp_match_list)
-    return get_match_list_by_player(entity_id)
+    data = bp_match_list.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_match_list)
+    data.update({'player_id': player_id})
+    return get_match_list_by_player(data)
 
 
-def get_match_list_by_player(entity_id):
-    request = GetMatchListRequestModel(entity_id)
-    interactor = GetMatchListInteractor(request, get_player_adapter())
+def get_match_list_by_player(data):
+    request = GetMatchListRequestModel(data)
+    interactor = GetMatchListInteractor(
+        request=request,
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
     response = interactor.run()
     if response:
         return success(response)
-    return not_found("Nenhum match encontrado para o player: " + entity_id)
+    return not_found("Nenhum match encontrado para o player: {0}"
+                     .format(data['player_id']))
 
 
 @bp_create_duel.route('/', **private_post())
 def post_duel():
     data = bp_create_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_create_duel)
-    data.update({'challenger_id': entity_id})
+    data.update({'challenger': entity_id})
     return create_duel(data)
 
 
@@ -81,6 +96,7 @@ def create_duel(json_data):
 
         interactor = CreateDuelInteractor(
             request=request, player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter(), settings=Settings)
         response = interactor.run()
     except CreateDuelException as e:
@@ -92,9 +108,7 @@ def create_duel(json_data):
 def enter_duel():
     data = bp_enter_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_enter_duel)
-
     data.update({'player_id': entity_id})
-
     data.update({
         'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
     })
@@ -109,11 +123,34 @@ def enter_duel_post(json_data):
     interactor = EnterDuelInteractor(
         request=request,
         player_adapter=get_player_adapter(),
-        duel_adapter=get_duel_adapter()
-    )
+        duel_adapter=get_duel_adapter(),
+        team_adapter=get_team_adapter())
     try:
         response = interactor.run()
     except EnterDuelException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_inform_invite_timeout.route('/', **private_post())
+def inform_invitation_timeout():
+    data = bp_inform_invite_timeout.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_inform_invite_timeout)
+    data.update({'player_id': player_id})
+    return inform_invitation_timeout_post(data)
+
+
+def inform_invitation_timeout_post(json_data):
+    request = InformOpponentResponseTimeoutRequestModel(json_data)
+    interactor = InformOpponentResponseTimeoutInteractor(
+        request=request,
+        duel_adapter=get_duel_adapter(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
+
+    try:
+        response = interactor.run()
+    except InformOpponentResponseTimeoutException as e:
         return server_error(str(e))
     return success(response)
 
@@ -155,7 +192,10 @@ def get_duels_by_status_route(status):
 
 def get_duels_by_status(entity_id, status):
     request = GetPlayerDuelByStatusRequestModel(entity_id, status)
-    interactor = GetPlayerDuelByStatusInteractor(request, get_duel_adapter())
+    interactor = GetPlayerDuelByStatusInteractor(
+        request=request,
+        duel_adapter=get_duel_adapter(),
+        player_adapter=get_player_adapter())
     try:
         response = interactor.run()
         if response:
@@ -198,7 +238,8 @@ def end_duel_post(json_data):
         notification_adapter=get_notification_adapter(),
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
-        s3_bucket_url=Settings.S3_BUCKET_URL)
+        s3_bucket_url=Settings.S3_BUCKET_URL,
+        team_adapter=get_team_adapter())
     try:
         response = interactor.run()
     except EndDuelException as e:

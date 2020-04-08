@@ -43,7 +43,7 @@ def test_post_app_notification(client, resource, run):
        MagicMock(side_effect=SaveEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_post_player_raises(client, resource):
+def test_post_notification_raises(client, resource):
     result = post_app_notification()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
@@ -62,10 +62,7 @@ def make_get_app_notification_request():
 @patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_app_notification(client,
-                              resource,
-                              run,
-                              get_by_id):
+def test_get_app_notification(client, resource, run, get_by_id):
     result = get_app_notification()
     run.assert_called_once()
     assert result.body['status'] == 'success'
@@ -80,9 +77,7 @@ def test_get_app_notification(client,
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_app_notification_raises(client,
-                                     resource,
-                                     get_by_id):
+def test_get_app_notification_raises(client, resource, get_by_id):
     result = get_app_notification()
     assert "No notifications found" in result.body['message']
     assert result.body['status'] == "error"
@@ -96,10 +91,7 @@ def test_get_app_notification_raises(client,
 @patch('chalicelib.notification_route.GetAppNotificationByUserInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_app_notification_by_status(client,
-                                        resource,
-                                        run,
-                                        get_by_id):
+def test_get_app_notification_by_status(client, resource, run, get_by_id):
     result = get_app_notification_by_status('Closed')
     run.assert_called_once()
     assert result.body['status'] == 'success'

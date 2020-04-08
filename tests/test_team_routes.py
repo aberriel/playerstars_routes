@@ -82,59 +82,9 @@ def make_put_mock_data():
     payload = {
         'entity_id': 'b1e9c0a7',
         'name': 'DoRio',
-        'captain': '123',
         'members': ['pl11'],
         'description': '',
-        'consoles': [
-            {
-                'console_id': '11',
-                'name': 'Xbox One',
-                'logo_path': '/images/xbox_one.jpg',
-                'tag_name': 'nick#1',
-                'games': [
-                    {
-                        'game_id': '01',
-                        'name': 'Need for Speed',
-                        'logo_path': '/images/nfs.jpg'
-                    },
-                    {
-                        'game_id': '02',
-                        'name': 'Fifa 19',
-                        'logo_path': '/images/fifa19.jpg'
-                    }
-                ]
-            },
-            {
-                'console_id': '12',
-                'name': 'Nintendo Switch',
-                'logo_path': '/images/n_switch.jpg',
-                'tag_name': 'nick#2',
-                'games': [
-                    {
-                        'game_id': '01',
-                        'name': 'Need for Speed',
-                        'logo_path': '/images/nfs.jpg'
-                    },
-                    {
-                        'game_id': '02',
-                        'name': 'Fifa 19',
-                        'logo_path': '/images/fifa19.jpg'
-                    }
-                ]
-            }
-        ],
-        'games': [
-            {
-                'game_id': '01',
-                'name': 'Need for Speed',
-                'logo_path': '/images/nfs.jpg'
-            },
-            {
-                "game_id": "02",
-                "name": "Fifa 19",
-                "logo_path": "/images/fifa19.jpg"
-            }
-        ],
+        'console_id': '11',
         'image_base64': team_image_base_64
     }
     return MagicMock(
@@ -188,8 +138,23 @@ def test_get_team_not_found(client, resource):
     assert result.status_code == 404
 
 
+def make_get_by_user_mock_data():
+    payload = {
+        'player_id': 'pl11',
+        'get_actives': True,
+        'get_inactives': True,
+        'get_i_invited': True,
+        'get_i_accepted': True
+    }
+    return MagicMock(
+        current_request=MagicMock(json_body=payload,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+
 # noinspection PyUnusedLocal
-@patch('chalicelib.team_route.GetTeamByUserInteractor.run')
+@patch('chalicelib.team_route.bp_team', make_get_by_user_mock_data())
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run',
+       return_value=[{'name': 'Storm'}])
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team_by_user(client, resource, run):
@@ -200,8 +165,9 @@ def test_get_team_by_user(client, resource, run):
 
 
 # noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team', make_get_by_user_mock_data())
 @patch('chalicelib.team_route.GetTeamByUserInteractor.run',
-       MagicMock(return_value=None))
+       MagicMock(return_value=[]))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_teams_by_user_not_found(client, resource):
@@ -230,6 +196,19 @@ def test_post_team(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_team_raises(client, resource):
+    result = post_team()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.bp_team', make_post_mock_data())
+@patch('chalicelib.team_route.PostTeamInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_team_raises2(client, resource):
     result = post_team()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'

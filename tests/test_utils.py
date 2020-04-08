@@ -32,22 +32,18 @@ player = Player.from_json({
         'profile_image': None
     },
     'player_status': 'AVAILABLE',
-    'blue_star_balance': 0,
+    'red_star_balance': 0,
     'golden_star_balance': 5,
     'points': 500,
     'terms': True,
     "is_admin": False,
     "is_blocked": False,
     'consoles': [{
-        'entity_id': '531f6ee2-dfef-458e-b918-ebf12793fe37',
-        'name': 'Playstation 4',
-        'logo_path': '/images/ps4.png',
-        'tag_name': None,
-        'games': [{
-            'entity_id': '0e3bd0f7-e95c-4168-9083-f1859fa73902',
-            'name': 'Fifa 19',
-            'logo_path': '/images/fifa19.png',
-            'points': 0
+        'console_id': '531f6ee2-dfef-458e-b918-ebf12793fe37',
+        'tag_name': 'tag#1',
+        'game_points': [{
+            'game_id': '0e3bd0f7-e95c-4168-9083-f1859fa73902',
+            'victories': 0
         }]
     }],
     'states_regions': [],
