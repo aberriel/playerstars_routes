@@ -57,7 +57,6 @@ app.register_blueprint(bp_leave_team, url_prefix='/team/leave-team')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_player, url_prefix='/player')
-
 app.register_blueprint(bp_product, url_prefix='/product')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
 app.register_blueprint(bp_region_country, url_prefix='/region-country')
