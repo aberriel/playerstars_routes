@@ -26,16 +26,20 @@ from playerstars_interactors import (
     GetPlayerDuelByStatusError,
     GetPlayerDuelByStatusInteractor,
     GetPlayerDuelByStatusRequestModel,
+    InformOpponentResponseTimeoutException,
+    InformOpponentResponseTimeoutInteractor,
+    InformOpponentResponseTimeoutRequestModel,
     RejectDuelException,
     RejectDuelInteractor,
     RejectDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
-bp_match_list = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
-bp_enter_duel = Blueprint(__name__)
 bp_duel = Blueprint(__name__)
+bp_enter_duel = Blueprint(__name__)
+bp_inform_invite_timeout = Blueprint(__name__)
+bp_match_list = Blueprint(__name__)
 
 
 def get_duel_adapter():
@@ -104,9 +108,7 @@ def create_duel(json_data):
 def enter_duel():
     data = bp_enter_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_enter_duel)
-
     data.update({'player_id': entity_id})
-
     data.update({
         'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
     })
@@ -126,6 +128,29 @@ def enter_duel_post(json_data):
     try:
         response = interactor.run()
     except EnterDuelException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_inform_invite_timeout.route('/', **private_post())
+def inform_invitation_timeout():
+    data = bp_inform_invite_timeout.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_inform_invite_timeout)
+    data.update({'player_id': player_id})
+    return inform_invitation_timeout_post(data)
+
+
+def inform_invitation_timeout_post(json_data):
+    request = InformOpponentResponseTimeoutRequestModel(json_data)
+    interactor = InformOpponentResponseTimeoutInteractor(
+        request=request,
+        duel_adapter=get_duel_adapter(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
+
+    try:
+        response = interactor.run()
+    except InformOpponentResponseTimeoutException as e:
         return server_error(str(e))
     return success(response)
 
