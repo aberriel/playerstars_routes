@@ -63,6 +63,7 @@ def post(json_data):
         interactor = PostPlayerInteractor(
             request=request,
             adapter_instance=adapter,
+            console_adapter=get_console_adapter(),
             entity_class=Player,
             s3_bucket_name=Settings.S3_BUCKET_NAME,
             s3_bucket_url=Settings.S3_BUCKET_URL)
