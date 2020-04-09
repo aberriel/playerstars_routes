@@ -99,7 +99,13 @@ from .user_admin_route import (
     post_user_admin,
     put_user_admin,
 )
-
+from .values_route import (
+    get_all_values,
+    get_value_by_id,
+    post_value,
+    put_value,
+    delete_value
+)
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -193,5 +199,11 @@ __all__ = [
     'put_console_admin',
     'delete_console_admin',
 
-    'get_player_consoles'
+    'get_player_consoles',
+
+    'get_value_by_id',
+    'get_all_values',
+    'put_value',
+    'post_value',
+    'delete_value'
 ]
