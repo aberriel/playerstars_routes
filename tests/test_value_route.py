@@ -25,7 +25,7 @@ def test_get_all_convert_rate(client, resource, run):
 def test_get_all_convert_rate_not_found(client, resource):
     result = get_all_values()
 
-    assert result.body['message'] == 'No convert-rate found'
+    assert result.body['message'] == 'No values found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -62,7 +62,7 @@ def test_get_convert_rate(client, resource, run):
 def test_get_convert_rate_not_found(client, resource):
     result = get_value_by_id('id1')
 
-    assert result.body['message'] == 'Convert-rate not found'
+    assert result.body['message'] == 'Values not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
@@ -172,7 +172,7 @@ def test_delete_convert_rate(client, resource, mock):
 def test_delete_convert_rate_not_found(client, resource):
     result = delete_value('id1')
 
-    assert result.body['message'] == 'Convert-rate not found to be deleted'
+    assert result.body['message'] == 'Values not found to be deleted'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 

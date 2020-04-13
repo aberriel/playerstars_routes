@@ -37,7 +37,9 @@
         "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
         "S3_BUCKET_NAME": "playerstars-dev-photos",
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-        "TIME_TO_FINISH_DUEL": "300"
+        "TIME_TO_FINISH_DUEL": "300",
+        "RESPONSE_TIME": "120",
+        "RESULT_TIME": "30000"
     },
     "stages": {
         "dev": {
@@ -74,7 +76,9 @@
                 "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
                 "S3_BUCKET_NAME": "playerstars-dev-photos",
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-                "TIME_TO_FINISH_DUEL": "300"
+                "TIME_TO_FINISH_DUEL": "300",
+                "RESPONSE_TIME": "120",
+                "RESULT_TIME": "30000"
             }
         },
         "stg": {
@@ -111,7 +115,9 @@
                 "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
                 "S3_BUCKET_NAME": "playerstars-dev-photos",
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-                "TIME_TO_FINISH_DUEL": "18000"
+                "TIME_TO_FINISH_DUEL": "18000",
+                "RESPONSE_TIME": "120",
+                "RESULT_TIME": "30000"
             }
         },
         "prd": {
@@ -148,7 +154,9 @@
             "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
             "S3_BUCKET_NAME": "playerstars-dev-photos",
             "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-            "TIME_TO_FINISH_DUEL": "18000"
+            "TIME_TO_FINISH_DUEL": "18000",
+            "RESPONSE_TIME": "120",
+            "RESULT_TIME": "30000"
         }
     }
 }

@@ -63,3 +63,5 @@ class Settings:
         'S#_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 18000)
+    RESULT_TIME = config('RESULT_TIME', 30000)
+    RESPONSE_TIME = config('RESPONSE_TIME', 120)
