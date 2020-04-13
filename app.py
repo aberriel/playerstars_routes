@@ -28,14 +28,11 @@ from chalicelib.region_state_route import bp_region_state
 from chalicelib.send_contact_email import bp_contact_email
 from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
-from chalicelib.team_route import (
-    bp_enter_team,
-    bp_leave_team,
-    bp_team
-)
+from chalicelib.team_route import bp_enter_team, bp_leave_team, bp_team
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin
+from chalicelib.values_route import bp_value
 
 app = Chalice(app_name='playerstars')
 
@@ -67,6 +64,7 @@ app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
+app.register_blueprint(bp_value, url_prefix='/values')
 
 
 @app.route('/check', methods=['POST', 'GET'])
