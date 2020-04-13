@@ -34,6 +34,7 @@ from .duel_route import (
     get_duel,
     get_duels_by_status_route,
     get_match_list,
+    get_opponent_list_route,
     inform_invitation_timeout,
     post_duel,
     reject_duel_route
@@ -178,6 +179,7 @@ __all__ = [
     'get_duel',
     'get_duels_by_status_route',
     'get_match_list',
+    'get_opponent_list_route',
     'inform_invitation_timeout',
     'post_duel',
     'reject_duel_route',

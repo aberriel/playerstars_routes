@@ -7,6 +7,7 @@ from chalicelib import (
     get_duel,
     get_duels_by_status_route,
     get_match_list,
+    get_opponent_list_route,
     inform_invitation_timeout,
     post_duel,
     reject_duel_route
@@ -15,6 +16,7 @@ from playerstars_interactors import (
     CreateDuelException,
     EndDuelException,
     EnterDuelException,
+    GetOpponentCandidateListException,
     GetPlayerDuelByStatusError,
     InformOpponentResponseTimeoutException,
     RejectDuelException)
@@ -304,6 +306,56 @@ def test_get_duel_by_status_not_found(client, resource):
 def test_get_duel_by_status_not_found_raises(client, resource):
     result = get_duels_by_status_route('lobby')
 
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+def make_get_opponent_list_request():
+    payload = """{
+        "console_id": "consoleid123",
+        "game_id": "gameid123",
+        "duel_member_type": "player"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(
+        current_request=MagicMock(json_body=data,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_opponent_list_request())
+@patch('chalicelib.duel_route.GetOpponentCandidateListInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_opponent_list(client, resource, run):
+    result = get_opponent_list_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_opponent_list_request())
+@patch('chalicelib.duel_route.GetOpponentCandidateListInteractor.run',
+       MagicMock(return_value=None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_opponent_list_not_found(client, resource):
+    result = get_opponent_list_route()
+    assert result.body['message'] == "No opponent candidate found"
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel', make_get_opponent_list_request())
+@patch('chalicelib.duel_route.GetOpponentCandidateListInteractor.run',
+       MagicMock(side_effect=GetOpponentCandidateListException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_opponent_list_raises(client, resource):
+    result = get_opponent_list_route()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

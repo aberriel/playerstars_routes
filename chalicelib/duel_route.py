@@ -23,6 +23,9 @@ from playerstars_interactors import (
     GetAllPlayerDuelRequestModel,
     GetMatchListInteractor,
     GetMatchListRequestModel,
+    GetOpponentCandidateListException,
+    GetOpponentCandidateListInteractor,
+    GetOpponentCandidateListRequestModel,
     GetPlayerDuelByStatusError,
     GetPlayerDuelByStatusInteractor,
     GetPlayerDuelByStatusRequestModel,
@@ -203,6 +206,29 @@ def get_duels_by_status(entity_id, status):
         return not_found(
             f"No duel found with status {status} for the player {entity_id}")
     except GetPlayerDuelByStatusError as e:
+        return server_error(str(e))
+
+
+@bp_duel.route('/get-opponents', **private_get())
+def get_opponent_list_route():
+    data = bp_duel.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_duel)
+    data.update({'player_id': player_id})
+    return get_opponent_list(data)
+
+
+def get_opponent_list(data):
+    request = GetOpponentCandidateListRequestModel(data)
+    interactor = GetOpponentCandidateListInteractor(
+        request=request,
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f"No opponent candidate found")
+    except GetOpponentCandidateListException as e:
         return server_error(str(e))
 
 
