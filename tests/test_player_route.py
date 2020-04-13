@@ -497,15 +497,17 @@ def test_delete_friends_v2_raises(client, resource, run):
 
 def make_get_teams_by_user_mock_data():
     payload = {
-        'player_id': 'pl11',
-        'get_actives': True,
-        'get_inactives': True,
-        'get_i_invited': True,
-        'get_i_accepted': True
+        'player_id': 'pl11'
     }
     return MagicMock(
-        current_request=MagicMock(json_body=payload,
-                                  headers=dict(AUTHORIZATION=jwt)))
+        current_request=MagicMock(
+            json_body=payload,
+            headers=dict(
+                AUTHORIZATION=jwt,
+                get_actives=True,
+                get_inactives=True,
+                get_i_invited=True,
+                get_id_accepted=True)))
 
 
 # noinspection PyUnusedLocal
@@ -516,6 +518,26 @@ def make_get_teams_by_user_mock_data():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team_by_user(client, resource, run):
+    result = get_all_teams_from_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+def make_get_teams_by_user_mock_data2():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(
+            AUTHORIZATION=jwt), query_params=None))
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       make_get_teams_by_user_mock_data2())
+@patch('chalicelib.team_route.GetTeamByUserInteractor.run',
+       return_value=[{'name': 'Stormianos'}])
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_team_by_user2(client, resource, run):
     result = get_all_teams_from_player()
     run.assert_called_once()
     assert result.body['status'] == 'success'
