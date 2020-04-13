@@ -19,6 +19,7 @@
         "TEAM_TABLE_NAME": "team",
         "USER_TABLE_NAME": "user",
         "USER_ADMIN_TABLE_NAME": "user_admin",
+        "VALUES_TABLE_NAME": "values",
 
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
         "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
@@ -36,7 +37,9 @@
         "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
         "S3_BUCKET_NAME": "playerstars-dev-photos",
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-        "TIME_TO_FINISH_DUEL": "300"
+        "TIME_TO_FINISH_DUEL": "300",
+        "RESPONSE_TIME": "120",
+        "RESULT_TIME": "30000"
     },
     "stages": {
         "dev": {
@@ -55,6 +58,7 @@
                 "TEAM_TABLE_NAME": "team_dev",
                 "USER_TABLE_NAME": "user_dev",
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
+                "VALUES_TABLE_NAME": "values_dev",
 
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
@@ -72,7 +76,9 @@
                 "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
                 "S3_BUCKET_NAME": "playerstars-dev-photos",
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-                "TIME_TO_FINISH_DUEL": "300"
+                "TIME_TO_FINISH_DUEL": "300",
+                "RESPONSE_TIME": "120",
+                "RESULT_TIME": "30000"
             }
         },
         "stg": {
@@ -91,6 +97,7 @@
                 "TEAM_TABLE_NAME": "team_stg",
                 "USER_TABLE_NAME": "user_stg",
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
+                "VALUES_TABLE_NAME": "values_stg",
 
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
@@ -105,6 +112,12 @@
                 "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
                 "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification",
                 "PURCHASE_OPERATION_TIMEOUT": "20",
+                "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
+                "S3_BUCKET_NAME": "playerstars-dev-photos",
+                "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
+                "TIME_TO_FINISH_DUEL": "18000",
+                "RESPONSE_TIME": "120",
+                "RESULT_TIME": "30000"
                 "RETURN_URL": "http://playerstars-stg.s3-website-us-east-1.amazonaws.com",
                 "S3_BUCKET_NAME": "playerstars-stg-photos",
                 "S3_BUCKET_URL": "http://playerstars-stg-photos.s3-website-us-east-1.amazonaws.com",
@@ -127,6 +140,7 @@
             "TEAM_TABLE_NAME": "team_prd",
             "USER_TABLE_NAME": "user_prd",
             "USER_ADMIN_TABLE_NAME": "user_admin_prd",
+            "VALUES_TABLE_NAME": "values_prd",
 
             "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
             "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
@@ -144,7 +158,9 @@
             "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
             "S3_BUCKET_NAME": "playerstars-dev-photos",
             "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-            "TIME_TO_FINISH_DUEL": "18000"
+            "TIME_TO_FINISH_DUEL": "18000",
+            "RESPONSE_TIME": "120",
+            "RESULT_TIME": "30000"
         }
     }
 }

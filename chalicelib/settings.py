@@ -23,6 +23,7 @@ class Settings:
     TEAM_TABLE_NAME = config('TEAM_TABLE_NAME', 'team_dev')
     USER_TABLE_NAME = config('USER_TABLE_NAME', 'user_dev')
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin_dev')
+    VALUES_TABLE_NAME = config('VALUES_TABLE_NAME', 'value_dev')
 
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
     CONTACT_EMAIL_RECIPIENTS = config(
@@ -62,3 +63,5 @@ class Settings:
         'S#_BUCKET_URL',
         'http://playerstars-stg-photos.s3-website-us-east-1.amazonaws.com')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 18000)
+    RESULT_TIME = config('RESULT_TIME', 30000)
+    RESPONSE_TIME = config('RESPONSE_TIME', 120)
