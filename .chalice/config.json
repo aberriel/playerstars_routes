@@ -21,6 +21,9 @@
         "USER_ADMIN_TABLE_NAME": "user_admin",
         "VALUES_TABLE_NAME": "values",
 
+        "DUEL_MUTATION_NAME_PART": "Duel",
+        "NOTIFICATION_MUTATION_NAME_PART": "Notification",
+
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
         "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
         "LOG_LEVEL": "INFO",
@@ -63,6 +66,9 @@
                 "USER_TABLE_NAME": "user_dev",
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
                 "VALUES_TABLE_NAME": "values_dev",
+
+                "DUEL_MUTATION_NAME_PART": "DuelDev",
+                "NOTIFICATION_MUTATION_NAME_PART": "NotificationDev",
 
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
@@ -107,6 +113,9 @@
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
                 "VALUES_TABLE_NAME": "values_stg",
 
+                "DUEL_MUTATION_NAME_PART": "DuelStg",
+                "NOTIFICATION_MUTATION_NAME_PART": "NotificationStg",
+
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
                 "LOG_LEVEL": "DEBUG",
@@ -149,6 +158,9 @@
             "USER_TABLE_NAME": "user_prd",
             "USER_ADMIN_TABLE_NAME": "user_admin_prd",
             "VALUES_TABLE_NAME": "values_prd",
+
+            "DUEL_MUTATION_NAME_PART": "DuelPrd",
+            "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
 
             "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
             "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
