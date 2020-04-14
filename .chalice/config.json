@@ -39,7 +39,11 @@
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
         "TIME_TO_FINISH_DUEL": "300",
         "RESPONSE_TIME": "120",
-        "RESULT_TIME": "30000"
+        "RESULT_TIME": "30000",
+
+        "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+        "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
     },
     "stages": {
         "dev": {
@@ -78,7 +82,11 @@
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "300",
                 "RESPONSE_TIME": "120",
-                "RESULT_TIME": "30000"
+                "RESULT_TIME": "30000",
+
+                "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+                "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+                "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
             }
         },
         "stg": {
@@ -117,7 +125,11 @@
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "18000",
                 "RESPONSE_TIME": "120",
-                "RESULT_TIME": "30000"
+                "RESULT_TIME": "30000",
+
+                "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+                "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+                "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
             }
         },
         "prd": {
@@ -156,7 +168,11 @@
             "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
             "TIME_TO_FINISH_DUEL": "18000",
             "RESPONSE_TIME": "120",
-            "RESULT_TIME": "30000"
+            "RESULT_TIME": "30000",
+
+            "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+            "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+            "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
         }
     }
 }
