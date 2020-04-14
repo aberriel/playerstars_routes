@@ -67,7 +67,8 @@ class Settings:
         'https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-'
         'api.us-east-1.amazonaws.com/graphql')
     GRAPHQL_API_ID = config('GRAPHQL_API_ID', '3l2u7ok2cjfwdclv5qz3zb5z54')
-    GRAPHQL_API_KEY = config('GRAPHQL_API_KEY', 'da2-xqu7fukowrcilcwoxvcjsrfawm')
+    GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
+                             'da2-xqu7fukowrcilcwoxvcjsrfawm')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 18000)
     RESULT_TIME = config('RESULT_TIME', 30000)
     RESPONSE_TIME = config('RESPONSE_TIME', 120)
