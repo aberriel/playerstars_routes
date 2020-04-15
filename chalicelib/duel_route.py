@@ -51,15 +51,11 @@ def get_duel_adapter():
 
 
 def get_notification_adapter():
-    print('duel_route.get_notification_adapter -> Entrando')
-    name_part_for_mutation = Settings.NOTIFICATION_MUTATION_NAME_PART
-    print('duel_route.get_notification_adapter -> name_part_for_mutation: ' + name_part_for_mutation)
-    print('duel_route.get_notification_adapter -> Retornando o adapter')
     return NotificationAdapter(
         api_id=Settings.GRAPHQL_API_ID,
         api_key=Settings.GRAPHQL_API_KEY,
         aws_region=Settings.AWS_DEFAULT_REGION,
-        object_name=name_part_for_mutation)
+        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
 
 
 def get_player_adapter():
@@ -94,7 +90,6 @@ def get_match_list_by_player(data):
 
 @bp_create_duel.route('/', **private_post())
 def post_duel():
-    print('duel_route.post_duel -> Entrando')
     data = bp_create_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_create_duel)
     data.update({'challenger': entity_id})
@@ -102,14 +97,8 @@ def post_duel():
 
 
 def create_duel(json_data):
-    print('duel_route.create_duel -> Entrando')
     try:
-        print('duel_route.create_duel -> Criando o request')
         request = CreateDuelRequestModel(json_data)
-        print('duel_route.create_duel -> Criando o interactor')
-        print('duel_route.create_duel -> '
-              'Settings.NOTIFICATION_MUTATION_NAME_PART: '
-              + Settings.NOTIFICATION_MUTATION_NAME_PART)
         interactor = CreateDuelInteractor(
             request=request,
             duel_adapter=get_duel_adapter(),
@@ -117,7 +106,6 @@ def create_duel(json_data):
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             settings=Settings)
-        print('duel_route.create_duel -> Executando o interactor')
         response = interactor.run()
     except CreateDuelException as e:
         return server_error(str(e))
