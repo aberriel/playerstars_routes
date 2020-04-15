@@ -5,10 +5,10 @@ from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter,
-    NotificationAdapter,
     PlayerAdapter,
     TeamAdapter)
 from playerstars_domain import Duel
+from playerstars_graphql_adapters import NotificationAdapter
 from playerstars_interactors import (
     CreateDuelException,
     CreateDuelInteractor,
@@ -51,8 +51,11 @@ def get_duel_adapter():
 
 
 def get_notification_adapter():
-    return NotificationAdapter(Settings.NOTIFICATION_TABLE_NAME,
-                               Settings.DYNAMODB_URL)
+    return NotificationAdapter(
+        api_id=Settings.GRAPHQL_API_ID,
+        api_key=Settings.GRAPHQL_API_KEY,
+        aws_region=Settings.AWS_DEFAULT_REGION,
+        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
 
 
 def get_player_adapter():
@@ -96,11 +99,13 @@ def post_duel():
 def create_duel(json_data):
     try:
         request = CreateDuelRequestModel(json_data)
-
         interactor = CreateDuelInteractor(
-            request=request, player_adapter=get_player_adapter(),
+            request=request,
+            duel_adapter=get_duel_adapter(),
+            notification_adapter=get_notification_adapter(),
+            player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
-            duel_adapter=get_duel_adapter(), settings=Settings)
+            settings=Settings)
         response = interactor.run()
     except CreateDuelException as e:
         return server_error(str(e))

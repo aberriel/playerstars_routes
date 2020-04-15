@@ -21,6 +21,9 @@
         "USER_ADMIN_TABLE_NAME": "user_admin",
         "VALUES_TABLE_NAME": "values",
 
+        "DUEL_MUTATION_NAME_PART": "Duel",
+        "NOTIFICATION_MUTATION_NAME_PART": "Notification",
+
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
         "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
         "LOG_LEVEL": "INFO",
@@ -39,7 +42,11 @@
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
         "TIME_TO_FINISH_DUEL": "300",
         "RESPONSE_TIME": "120",
-        "RESULT_TIME": "30000"
+        "RESULT_TIME": "30000",
+
+        "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+        "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
     },
     "stages": {
         "dev": {
@@ -60,6 +67,9 @@
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
                 "VALUES_TABLE_NAME": "values_dev",
 
+                "DUEL_MUTATION_NAME_PART": "DuelDev",
+                "NOTIFICATION_MUTATION_NAME_PART": "NotificationDev",
+
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
                 "LOG_LEVEL": "DEBUG",
@@ -78,7 +88,11 @@
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "300",
                 "RESPONSE_TIME": "120",
-                "RESULT_TIME": "30000"
+                "RESULT_TIME": "30000",
+
+                "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+                "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+                "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
             }
         },
         "stg": {
@@ -99,6 +113,9 @@
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
                 "VALUES_TABLE_NAME": "values_stg",
 
+                "DUEL_MUTATION_NAME_PART": "DuelStg",
+                "NOTIFICATION_MUTATION_NAME_PART": "NotificationStg",
+
                 "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
                 "LOG_LEVEL": "DEBUG",
@@ -117,7 +134,11 @@
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "18000",
                 "RESPONSE_TIME": "120",
-                "RESULT_TIME": "30000"
+                "RESULT_TIME": "30000",
+
+                "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+                "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+                "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
             }
         },
         "prd": {
@@ -138,6 +159,9 @@
             "USER_ADMIN_TABLE_NAME": "user_admin_prd",
             "VALUES_TABLE_NAME": "values_prd",
 
+            "DUEL_MUTATION_NAME_PART": "DuelPrd",
+            "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
+
             "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
             "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
             "LOG_LEVEL": "INFO",
@@ -156,7 +180,11 @@
             "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
             "TIME_TO_FINISH_DUEL": "18000",
             "RESPONSE_TIME": "120",
-            "RESULT_TIME": "30000"
+            "RESULT_TIME": "30000",
+
+            "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
+            "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
+            "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
         }
     }
 }

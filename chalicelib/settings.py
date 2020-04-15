@@ -25,6 +25,11 @@ class Settings:
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin_dev')
     VALUES_TABLE_NAME = config('VALUES_TABLE_NAME', 'value_dev')
 
+    DUEL_MUTATION_NAME_PART = config('DUEL_MUTATION_NAME_PART', 'DuelDev')
+    NOTIFICATION_MUTATION_NAME_PART = config(
+        'NOTIFICATION_MUTATION_NAME_PART',
+        'NotificationDev')
+
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
     CONTACT_EMAIL_RECIPIENTS = config(
         'CONTACT_EMAIL_RECIPIENTS',
@@ -62,6 +67,13 @@ class Settings:
     S3_BUCKET_URL = config(
         'S#_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
+    GRAPHQL_API_URL = config(
+        'GRAPHQL_API_URL',
+        'https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-'
+        'api.us-east-1.amazonaws.com/graphql')
+    GRAPHQL_API_ID = config('GRAPHQL_API_ID', '3l2u7ok2cjfwdclv5qz3zb5z54')
+    GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
+                             'da2-xqu7fukowrcilcwoxvcjsrfawm')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 18000)
     RESULT_TIME = config('RESULT_TIME', 30000)
     RESPONSE_TIME = config('RESPONSE_TIME', 120)

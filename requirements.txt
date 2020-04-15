@@ -2,6 +2,7 @@ chalice==1.11.0
 playerstars_mail
 playerstars_domain
 playerstars_adapters
+playerstars_graphql_adapters
 playerstars_interactors
 playerstars_aws_lambda
 python-decouple==3.1

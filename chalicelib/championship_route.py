@@ -4,9 +4,11 @@ from chalice_support import (not_found, server_error, success, created)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import (
-    ChampionshipAdapter, DuelAdapter, PlayerAdapter, TeamAdapter,
-    NotificationAdapter
-)
+    ChampionshipAdapter,
+    DuelAdapter,
+    PlayerAdapter,
+    TeamAdapter,)
+from playerstars_graphql_adapters import NotificationAdapter
 from playerstars_interactors import (
     AcceptInvitationException,
     AcceptInvitationInteractor,
@@ -60,7 +62,9 @@ def get_team_adapter():
 
 def get_notification_adapter():
     return NotificationAdapter(
-        Settings.NOTIFICATION_TABLE_NAME, Settings.DYNAMODB_URL)
+        api_id=Settings.GRAPHQL_API_ID,
+        api_key=Settings.GRAPHQL_API_KEY,
+        aws_region=Settings.AWS_DEFAULT_REGION)
 
 
 @bp_championship.route('/', **private_get())
