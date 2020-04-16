@@ -130,8 +130,9 @@ def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
         request=request,
-        player_adapter=get_player_adapter(),
         duel_adapter=get_duel_adapter(),
+        notification_adapter=get_notification_adapter(),
+        player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
     try:
         response = interactor.run()
