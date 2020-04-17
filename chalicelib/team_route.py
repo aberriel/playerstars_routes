@@ -120,10 +120,10 @@ def put_team(entity_id):
 
 
 def put(data):
-    request = PutTeamRequestModel(**data)
-    interactor = PutTeamInteractor(
-        request, get_player_adapter(), get_team_adapter(), Settings)
     try:
+        request = PutTeamRequestModel(data)
+        interactor = PutTeamInteractor(
+            request, get_player_adapter(), get_team_adapter(), Settings)
         response = interactor.run()
     except UpdateEntityException as e:
         return server_error(str(e))
