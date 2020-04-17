@@ -65,7 +65,7 @@ class Settings:
         'http://playerstars-dev.s3-website-us-east-1.amazonaws.com')
     S3_BUCKET_NAME = config('S3_BUCKET_NAME', 'playerstars-dev-photos')
     S3_BUCKET_URL = config(
-        'S#_BUCKET_URL',
+        'S3_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
     GRAPHQL_API_URL = config(
         'GRAPHQL_API_URL',

@@ -1,0 +1,34 @@
+{
+  "resources": [
+    {
+      "name": "duel_scheduled_finisher_stg_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-stg-duel_scheduled_finisher_stg",
+      "role_name": "PlayerStars-stg-duel_scheduled_finisher_stg"
+    },
+    {
+      "name": "duel_scheduled_finisher_stg",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-stg-duel_scheduled_finisher_stg"
+    },
+    {
+      "name": "api_handler_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-stg-api_handler",
+      "role_name": "PlayerStars-stg-api_handler"
+    },
+    {
+      "name": "api_handler",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-stg"
+    },
+    {
+      "name": "rest_api",
+      "resource_type": "rest_api",
+      "rest_api_id": "sgag9twe0k",
+      "rest_api_url": "https://sgag9twe0k.execute-api.us-east-1.amazonaws.com/stg/"
+    }
+  ],
+  "schema_version": "2.0",
+  "backend": "api"
+}
