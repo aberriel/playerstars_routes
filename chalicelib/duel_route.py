@@ -4,11 +4,13 @@ from chalicelib.chalice_support import private_get, private_post
 from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
-    DuelAdapter,
+    DuelAdapter as DuelAdapterDynamo,
     PlayerAdapter,
     TeamAdapter)
 from playerstars_domain import Duel
-from playerstars_graphql_adapters import NotificationAdapter
+from playerstars_graphql_adapters import (
+    DuelAdapter as DuelAdapterGraphql,
+    NotificationAdapter)
 from playerstars_interactors import (
     CreateDuelException,
     CreateDuelInteractor,
@@ -45,9 +47,16 @@ bp_inform_invite_timeout = Blueprint(__name__)
 bp_match_list = Blueprint(__name__)
 
 
-def get_duel_adapter():
-    return DuelAdapter(Settings.DUEL_TABLE_NAME,
-                       Settings.DYNAMODB_URL)
+def get_duel_adapter_dynamo():
+    return DuelAdapterDynamo(Settings.DUEL_TABLE_NAME,
+                             Settings.DYNAMODB_URL)
+
+
+def get_duel_adapter_graphql():
+    return DuelAdapterGraphql(
+        api_id=Settings.GRAPHQL_API_ID,
+        api_key=Settings.GRAPHQL_API_KEY,
+        aws_region=Settings.AWS_DEFAULT_REGION)
 
 
 def get_notification_adapter():
@@ -101,7 +110,7 @@ def create_duel(json_data):
         request = CreateDuelRequestModel(json_data)
         interactor = CreateDuelInteractor(
             request=request,
-            duel_adapter=get_duel_adapter(),
+            duel_adapter=get_duel_adapter_dynamo(),
             notification_adapter=get_notification_adapter(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
@@ -130,7 +139,8 @@ def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
         request=request,
-        duel_adapter=get_duel_adapter(),
+        duel_adapter_dynamo=get_duel_adapter_dynamo(),
+        duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
@@ -153,7 +163,8 @@ def inform_invitation_timeout_post(json_data):
     request = InformOpponentResponseTimeoutRequestModel(json_data)
     interactor = InformOpponentResponseTimeoutInteractor(
         request=request,
-        duel_adapter=get_duel_adapter(),
+        duel_adapter_dynamo=get_duel_adapter_dynamo(),
+        duel_adapter_graphql=get_duel_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
 
@@ -172,7 +183,9 @@ def get_all_player_duels():
 
 def get_player_duels(player_id):
     request = GetAllPlayerDuelRequestModel(player_id)
-    interactor = GetAllPlayerDuelInteractor(request, get_duel_adapter())
+    interactor = GetAllPlayerDuelInteractor(
+        request=request,
+        adapter_instance=get_duel_adapter_dynamo())
     response = interactor.run()
     if response:
         return success(response)
@@ -180,7 +193,7 @@ def get_player_duels(player_id):
 
 
 def get_duel_router():
-    return BasicEntityRoute(get_duel_adapter(), Duel, 'duel')
+    return BasicEntityRoute(get_duel_adapter_dynamo(), Duel, 'duel')
 
 
 @bp_duel.route('/', **private_get())
@@ -203,7 +216,7 @@ def get_duels_by_status(entity_id, status):
     request = GetPlayerDuelByStatusRequestModel(entity_id, status)
     interactor = GetPlayerDuelByStatusInteractor(
         request=request,
-        duel_adapter=get_duel_adapter(),
+        duel_adapter=get_duel_adapter_dynamo(),
         player_adapter=get_player_adapter())
     try:
         response = interactor.run()
@@ -246,7 +259,10 @@ def reject_duel_route():
 
 def reject_duel(data):
     request = RejectDuelRequestModel(data)
-    interactor = RejectDuelInteractor(request, get_duel_adapter())
+    interactor = RejectDuelInteractor(
+        request=request,
+        duel_adapter_dynamo=get_duel_adapter_dynamo(),
+        duel_adapter_graphql=get_duel_adapter_graphql())
     try:
         response = interactor.run()
     except RejectDuelException as e:
@@ -266,7 +282,7 @@ def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
     interactor = EndDuelInteractor(
         request=request,
-        duel_adapter=get_duel_adapter(),
+        duel_adapter=get_duel_adapter_dynamo(),
         notification_adapter=get_notification_adapter(),
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
