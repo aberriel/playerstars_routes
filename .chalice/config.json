@@ -127,7 +127,7 @@
                 "PAGSEGURO_SANDBOX_TOKEN": "8D0B7247DE3B4F22ABBCCCE6AD802C19",
                 "PAGSEGURO_TOKEN": "A0ABD34C342A474C8CEB112430FCCBD8",
                 "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
-                "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification",
+                "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/stg/purchase/notification",
                 "PURCHASE_OPERATION_TIMEOUT": "20",
                 "RESPONSE_TIME": "120",
                 "RESULT_TIME": "30000",

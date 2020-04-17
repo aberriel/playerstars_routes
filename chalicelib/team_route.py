@@ -99,13 +99,13 @@ def post_team():
 
 
 def post(data):
-    request = PostTeamRequestModel(data)
-    interactor = PostTeamInteractor(
-        request=request,
-        player_adapter=get_player_adapter(),
-        team_adapter=get_team_adapter(),
-        settings=Settings)
     try:
+        request = PostTeamRequestModel(data)
+        interactor = PostTeamInteractor(
+            request=request,
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
+            settings=Settings)
         response = interactor.run()
     except SaveTeamException as e:
         return server_error(str(e))

@@ -5,6 +5,9 @@
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "appsync:GetFunction",
+                "appsync:GetGraphqlApi",
+                "appsync:GraphQL",
                 "dynamodb:BatchGetItem",
                 "dynamodb:BatchWriteItem",
                 "dynamodb:ConditionCheckItem",

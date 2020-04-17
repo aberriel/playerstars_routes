@@ -71,7 +71,9 @@ def make_post_mock_data():
         'captain': '1235',
         'members': ['pl11'],
         'description': '',
-        'image_base64': team_image_base_64
+        'image_base64': team_image_base_64,
+        'game_id': 'gameid123',
+        'console_id': 'consoleid123'
     }
     return MagicMock(
         current_request=MagicMock(json_body=payload,
