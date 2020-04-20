@@ -320,7 +320,7 @@ def test_accept_invitation_raises(boto_client, boto_resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.team_route.bp_leave_team',
+@patch('chalicelib.team_route.bp_team',
        make_leave_team_post_mock_data())
 @patch('chalicelib.team_route.LeaveTeamInteractor.run')
 @patch('boto3.resource')
@@ -333,7 +333,7 @@ def test_leave_team(boto_client, boto_resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.team_route.bp_leave_team',
+@patch('chalicelib.team_route.bp_team',
        make_leave_team_post_mock_data())
 @patch('chalicelib.team_route.LeaveTeamInteractor.run',
        MagicMock(side_effect=LeaveTeamException('oops')))

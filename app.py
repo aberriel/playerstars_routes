@@ -53,7 +53,6 @@ app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_inform_invite_timeout,
                        url_prefix='/duen/inform-invite-timeout')
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
-app.register_blueprint(bp_leave_team, url_prefix='/team/leave-team')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_player, url_prefix='/player')
