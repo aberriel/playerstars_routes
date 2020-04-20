@@ -63,6 +63,7 @@ app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
+
 app.register_blueprint(bp_value, url_prefix='/values')
 
 
