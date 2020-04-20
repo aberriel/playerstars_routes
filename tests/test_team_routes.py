@@ -353,7 +353,7 @@ def test_leave_team_raises(boto_client, boto_resource):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_delete_team(boto_client, boto_resource, run):
-    result = delete_team()
+    result = delete_team('id123')
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -367,7 +367,7 @@ def test_delete_team(boto_client, boto_resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_delete_team_raises(boto_client, boto_resource):
-    result = delete_team()
+    result = delete_team('id123')
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

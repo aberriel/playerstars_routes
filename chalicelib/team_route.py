@@ -172,11 +172,12 @@ def leave_team_post(json_data):
     return success(response)
 
 
-@bp_team.route('/', **private_delete())
-def delete_team():
-    data = bp_team.current_request.json_body
+@bp_team.route('/{entity_id}', **private_delete())
+def delete_team(entity_id):
+    data = dict()
     player_id = get_user_id_from_jwt(bp_team)
-    data.update({'player_id': player_id})
+    data.update({'player_id': player_id,
+                 'team_id': entity_id})
     return delete_team_post(data)
 
 
