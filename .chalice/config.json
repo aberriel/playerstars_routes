@@ -70,7 +70,7 @@
                 "DUEL_MUTATION_NAME_PART": "DuelDev",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationDev",
 
-                "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
+                "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
                 "LOG_LEVEL": "DEBUG",
                 "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
@@ -116,7 +116,7 @@
                 "DUEL_MUTATION_NAME_PART": "DuelStg",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationStg",
 
-                "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
+                "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
                 "LOG_LEVEL": "DEBUG",
                 "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
@@ -162,7 +162,7 @@
             "DUEL_MUTATION_NAME_PART": "DuelPrd",
             "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
 
-            "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
+            "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
             "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
             "LOG_LEVEL": "INFO",
             "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
