@@ -10,6 +10,7 @@ from chalicelib.championship_route import (
 )
 from chalicelib.console_route import bp_console, bp_console_admin
 from chalicelib.duel_route import (
+    bp_cancel_duel,
     bp_create_duel,
     bp_duel,
     bp_enter_duel,
@@ -39,6 +40,7 @@ app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_admin, url_prefix='/admin')
+app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_championship, url_prefix='/championship')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_console_admin, url_prefix='/admin/console')

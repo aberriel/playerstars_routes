@@ -27,6 +27,7 @@ from .convert_star_rate_route import (
     put_convert_rate, post_convert_rate
 )
 from .duel_route import (
+    cancel_duel_route,
     end_duel,
     enter_duel,
     get_all_duel,
@@ -178,6 +179,7 @@ __all__ = [
     'get_player_by_id_admin',
     'put_player_admin',
 
+    'cancel_duel_route',
     'end_duel',
     'enter_duel',
     'get_all_duel',
