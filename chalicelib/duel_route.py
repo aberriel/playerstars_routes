@@ -5,13 +5,17 @@ from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter as DuelAdapterDynamo,
+    NotificationAdapter as NotificationAdapterDynamo,
     PlayerAdapter,
     TeamAdapter)
 from playerstars_domain import Duel
 from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
-    NotificationAdapter)
+    NotificationAdapter as NotificationAdapterGraphql)
 from playerstars_interactors import (
+    CancelDuelException,
+    CancelDuelInteractor,
+    CancelDuelRequestModel,
     CreateDuelException,
     CreateDuelInteractor,
     CreateDuelRequestModel,
@@ -40,6 +44,7 @@ from playerstars_interactors import (
 from chalicelib.utils import get_user_id_from_jwt
 
 
+bp_cancel_duel = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
 bp_duel = Blueprint(__name__)
 bp_enter_duel = Blueprint(__name__)
@@ -59,8 +64,13 @@ def get_duel_adapter_graphql():
         aws_region=Settings.AWS_DEFAULT_REGION)
 
 
-def get_notification_adapter():
-    return NotificationAdapter(
+def get_notification_adapter_dynamo():
+    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
+                                     Settings.DYNAMODB_URL)
+
+
+def get_notification_adapter_graphql():
+    return NotificationAdapterGraphql(
         api_id=Settings.GRAPHQL_API_ID,
         api_key=Settings.GRAPHQL_API_KEY,
         aws_region=Settings.AWS_DEFAULT_REGION,
@@ -111,7 +121,7 @@ def create_duel(json_data):
         interactor = CreateDuelInteractor(
             request=request,
             duel_adapter=get_duel_adapter_dynamo(),
-            notification_adapter=get_notification_adapter(),
+            notification_adapter=get_notification_adapter_graphql(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             settings=Settings)
@@ -141,7 +151,7 @@ def enter_duel_post(json_data):
         request=request,
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
-        notification_adapter=get_notification_adapter(),
+        notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
     try:
@@ -283,7 +293,7 @@ def end_duel_post(json_data):
     interactor = EndDuelInteractor(
         request=request,
         duel_adapter=get_duel_adapter_dynamo(),
-        notification_adapter=get_notification_adapter(),
+        notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
         s3_bucket_url=Settings.S3_BUCKET_URL,
@@ -291,5 +301,30 @@ def end_duel_post(json_data):
     try:
         response = interactor.run()
     except EndDuelException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_cancel_duel.route('/', **private_post())
+def cancel_duel_route():
+    data = bp_cancel_duel.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_cancel_duel)
+    data.update({'player_id': player_id})
+    return cancel_duel_post(data)
+
+
+def cancel_duel_post(json_data):
+    request = CancelDuelRequestModel(json_data)
+    interactor = CancelDuelInteractor(
+        request=request,
+        duel_adapter_dynamo=get_duel_adapter_dynamo(),
+        duel_adapter_graphql=get_duel_adapter_graphql(),
+        notification_adapter_dynamo=get_notification_adapter_dynamo(),
+        notification_adapter_graphql=get_notification_adapter_graphql(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter())
+    try:
+        response = interactor.run()
+    except CancelDuelException as e:
         return server_error(str(e))
     return success(response)
