@@ -62,7 +62,8 @@ from .player_route import (
     post_console_data_route,
     get_player_by_console,
     convert_star_route,
-    get_player_consoles
+    get_player_consoles,
+    get_friends_by_console_game_route
 )
 from .product_route import get_all_product, post_product
 from .purchase_route import (
@@ -209,5 +210,7 @@ __all__ = [
     'get_all_values',
     'put_value',
     'post_value',
-    'delete_value'
+    'delete_value',
+
+    'get_friends_by_console_game_route'
 ]

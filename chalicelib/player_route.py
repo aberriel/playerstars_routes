@@ -17,7 +17,8 @@ from playerstars_interactors import (
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
     SaveEntityException, SaveFriendsException, UpdateEntityException,
     UpdateProfileInteractor, UpdateProfileRequestModel,
-    GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor)
+    GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
+    GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -170,6 +171,31 @@ def get_friends(entity_id):
     if response:
         return success(response)
     return not_found(f'Favorites not found')
+
+
+@bp_player.route('/friends-by-console', **private_get())
+def get_friends_by_console_game_route():
+    try:
+        data = bp_player.current_request.json_body
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'entity_id': entity_id})
+        return get_friends_by_console(data)
+    except BaseException as e:
+        return server_error(str(e))
+
+
+def get_friends_by_console(query_params):
+    player_adapter = get_adapter()
+    console_adapter = get_console_adapter()
+    request = GetFriendsByConsoleGameRequestModel(query_params)
+    interactor = GetFriendsByConsoleGameInteractor(
+        request, player_adapter, console_adapter)
+    response = interactor.run()
+    if response:
+        return success(response)
+    return not_found(f"Nenhum amigo encontrado para o console: "
+                     f"{query_params.get('console_id', None)} e o game:"
+                     f"{query_params.get('game_id', None)}")
 
 
 @bp_player.route('/{entity_id}/friends', **private_post())
