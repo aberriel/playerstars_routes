@@ -1,40 +1,21 @@
 from chalice import Blueprint
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
-    private_delete,
-    private_get,
-    private_put,
-    private_post)
+    private_delete, private_get, private_put, private_post)
 from chalicelib.settings import Settings
 from chalice_support import success, not_found, created, server_error
 from chalicelib.utils import get_user_id_from_jwt
-from playerstars_adapters import (
-    ConsoleAdapter,
-    PlayerAdapter,
-    TeamAdapter
-)
+from playerstars_adapters import ConsoleAdapter, PlayerAdapter, TeamAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
-    AcceptTeamInvitationException,
-    AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationRequestModel,
-    DeleteTeamException,
-    DeleteTeamInteractor,
-    DeleteTeamRequestModel,
-    EnterTeamException,
-    EnterTeamInteractor,
-    EnterTeamRequestModel,
-    GetTeamByUserInteractor,
-    GetTeamByUserRequestModel,
-    LeaveTeamException,
-    LeaveTeamInteractor,
-    LeaveTeamRequestModel,
-    PostTeamInteractor,
-    PostTeamRequestModel,
-    PutTeamInteractor,
-    PutTeamRequestModel,
-    SaveTeamException,
-    UpdateEntityException)
+    AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel, DeleteTeamException,
+    DeleteTeamInteractor, DeleteTeamRequestModel, EnterTeamException,
+    EnterTeamInteractor, EnterTeamRequestModel, GetTeamByUserInteractor,
+    GetTeamByUserRequestModel, LeaveTeamException, LeaveTeamInteractor,
+    LeaveTeamRequestModel, PostTeamInteractor, PostTeamRequestModel,
+    PutTeamInteractor, PutTeamRequestModel, SaveTeamException,
+    UpdateEntityException, GetTeamRequestModel, GetTeamInteractor)
 
 
 bp_enter_team = Blueprint(__name__)
@@ -65,7 +46,19 @@ def get_all_teams():
 
 @bp_team.route('/{entity_id}', **private_get())
 def get_team_by_id(entity_id):
-    return get_router().get_by_id(entity_id)
+    try:
+        request = GetTeamRequestModel(entity_id)
+        interactor = GetTeamInteractor(
+            request=request,
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
+            console_adapter=get_console_adapter())
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found("Team not found")
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_team.route('/byuser/{player_id}', **private_get())

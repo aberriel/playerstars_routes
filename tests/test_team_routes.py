@@ -118,7 +118,7 @@ def test_get_all_teams_not_found(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run')
+@patch('chalicelib.team_route.GetTeamInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_team(client, resource, run):
@@ -129,7 +129,7 @@ def test_get_team(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
+@patch('chalicelib.team_route.GetTeamInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -138,6 +138,18 @@ def test_get_team_not_found(client, resource):
     assert result.body['message'] == 'Team not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.team_route.GetTeamInteractor.run',
+       MagicMock(side_effect=Exception('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_team_raises(client, resource):
+    result = get_team_by_id('team11')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
 
 
 def make_get_by_user_mock_data():
