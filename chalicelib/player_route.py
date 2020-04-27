@@ -176,7 +176,7 @@ def get_friends(entity_id):
 @bp_player.route('/friends-by-console', **private_get())
 def get_friends_by_console_game_route():
     try:
-        data = bp_player.current_request.json_body
+        data = bp_player.current_request.query_params
         entity_id = get_user_id_from_jwt(bp_player)
         data.update({'entity_id': entity_id})
         return get_friends_by_console(data)
