@@ -173,7 +173,7 @@ def get_friends(entity_id):
     return not_found(f'Favorites not found')
 
 
-@bp_player.route('/friends-by-console', **private_get())
+@bp_player.route('/friends-by-console/', **private_get())
 def get_friends_by_console_game_route():
     try:
         data = bp_player.current_request.query_params
