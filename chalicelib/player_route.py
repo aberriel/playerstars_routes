@@ -178,7 +178,7 @@ def get_friends_by_console_game_route():
     try:
         data = bp_player.current_request.query_params
         entity_id = get_user_id_from_jwt(bp_player)
-        data.update({'entity_id': entity_id})
+        data.update({'player_id': entity_id})
         return get_friends_by_console(data)
     except BaseException as e:
         return server_error(str(e))
