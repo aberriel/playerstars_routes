@@ -38,7 +38,8 @@ from .duel_route import (
     get_opponent_list_route,
     inform_invitation_timeout,
     post_duel,
-    reject_duel_route
+    reject_duel_route,
+    get_duel_details
 )
 from .game_route import (
     delete_game,
@@ -212,5 +213,7 @@ __all__ = [
     'post_value',
     'delete_value',
 
-    'get_friends_by_console_game_route'
+    'get_friends_by_console_game_route',
+
+    'get_duel_details'
 ]

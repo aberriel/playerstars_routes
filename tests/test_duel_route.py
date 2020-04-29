@@ -1,23 +1,13 @@
 from unittest.mock import MagicMock, patch
 from chalicelib import (
-    cancel_duel_route,
-    end_duel,
-    enter_duel,
-    get_all_duel,
-    get_all_player_duels,
-    get_duel,
-    get_duels_by_status_route,
-    get_match_list,
-    get_opponent_list_route,
-    inform_invitation_timeout,
-    post_duel,
-    reject_duel_route
+    cancel_duel_route, end_duel, enter_duel, get_all_duel,
+    get_all_player_duels, get_duel, get_duels_by_status_route,
+    get_match_list, get_opponent_list_route, inform_invitation_timeout,
+    post_duel, reject_duel_route, get_duel_details
 )
 from playerstars_interactors import (
-    CancelDuelException,
-    CreateDuelException,
-    EndDuelException,
-    EnterDuelException,
+    CancelDuelException, CreateDuelException,
+    EndDuelException, EnterDuelException,
     GetOpponentCandidateListException,
     GetPlayerDuelByStatusError,
     InformOpponentResponseTimeoutException,
@@ -461,6 +451,38 @@ def test_cancel_duel(client, resource, run):
 @patch('boto3.client')
 def test_cancel_duel_raises(client, resource):
     result = cancel_duel_route()
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.duel_route.GetDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_detail(client, resource, run):
+    result = get_duel_details('id123')
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.duel_route.GetDuelInteractor.run', return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_detail_empty(client, resource, run):
+    result = get_duel_details('id123')
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+
+
+@patch('chalicelib.duel_route.GetDuelInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_duel_detail_raises(client, resource, run):
+    result = get_duel_details('id123')
+    run.assert_called_once()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

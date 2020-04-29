@@ -13,34 +13,20 @@ from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
     NotificationAdapter as NotificationAdapterGraphql)
 from playerstars_interactors import (
-    CancelDuelException,
-    CancelDuelInteractor,
-    CancelDuelRequestModel,
-    CreateDuelException,
-    CreateDuelInteractor,
-    CreateDuelRequestModel,
-    EndDuelException,
-    EndDuelInteractor,
-    EndDuelRequestModel,
-    EnterDuelException,
-    EnterDuelInteractor,
-    EnterDuelRequestModel,
-    GetAllPlayerDuelInteractor,
-    GetAllPlayerDuelRequestModel,
-    GetMatchListInteractor,
-    GetMatchListRequestModel,
-    GetOpponentCandidateListException,
-    GetOpponentCandidateListInteractor,
-    GetOpponentCandidateListRequestModel,
-    GetPlayerDuelByStatusError,
-    GetPlayerDuelByStatusInteractor,
-    GetPlayerDuelByStatusRequestModel,
+    CancelDuelException, CancelDuelInteractor, CancelDuelRequestModel,
+    CreateDuelException, CreateDuelInteractor, CreateDuelRequestModel,
+    EndDuelException, EndDuelInteractor, EndDuelRequestModel,
+    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
+    GetAllPlayerDuelInteractor, GetAllPlayerDuelRequestModel,
+    GetMatchListInteractor, GetMatchListRequestModel,
+    GetOpponentCandidateListException, GetOpponentCandidateListInteractor,
+    GetOpponentCandidateListRequestModel, GetPlayerDuelByStatusError,
+    GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
     InformOpponentResponseTimeoutException,
     InformOpponentResponseTimeoutInteractor,
     InformOpponentResponseTimeoutRequestModel,
-    RejectDuelException,
-    RejectDuelInteractor,
-    RejectDuelRequestModel)
+    RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
+    GetDuelInteractor, BasicGetRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -214,6 +200,21 @@ def get_all_duel():
 @bp_duel.route('/{entity_id}', **private_get())
 def get_duel(entity_id):
     return get_duel_router().get_by_id(entity_id)
+
+
+@bp_duel.route('/{entity_id}/details', **private_get())
+def get_duel_details(entity_id):
+    try:
+        request = BasicGetRequestModel(entity_id)
+        interactor = GetDuelInteractor(
+            request, get_duel_adapter_dynamo(),
+            get_player_adapter(), get_team_adapter())
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f'Duel: {entity_id} not found')
+    except BaseException as e:
+        return server_error(str(e))
 
 
 @bp_duel.route('/get-my-duels/{status}', **private_get())
