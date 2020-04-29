@@ -252,6 +252,8 @@ def alter_friend_list(entity_id, data, option):
 def get_all_teams_from_player():
     try:
         data = bp_player.current_request.query_params
+        print("@@@@@@@@@@@@@@@@")
+        print(data)
         player_id = get_user_id_from_jwt(bp_player)
         if not data:
             data = dict()
