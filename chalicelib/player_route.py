@@ -248,7 +248,7 @@ def alter_friend_list(entity_id, data, option):
     return created(response)
 
 
-@bp_player.route('/my-teams/', **private_get())
+@bp_player.route('/my-teams', **private_get())
 def get_all_teams_from_player():
     try:
         data = bp_player.current_request.query_params
