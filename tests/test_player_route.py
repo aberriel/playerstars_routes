@@ -8,7 +8,7 @@ from chalicelib.player_route import (
     post_accept_terms_route, accept_team_invitation_route,
     convert_star_route, post_friend_route_v2, get_friends_route_v2,
     delete_friend_route_v2, get_ranking_route, get_player_consoles,
-    get_friends_by_console_game_route
+    get_friends_by_console_game_route, get_accepted_teams_from_player
 )
 import json
 import pytest
@@ -1001,6 +1001,53 @@ def test_get_friends_by_console_empty(client, resource, run):
 @patch('boto3.client')
 def test_get_friends_by_console_raises(client, resource, run):
     result = get_friends_by_console_game_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetAcceptedTeamsByUserInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_accepted_teams_from_player(client, resource, run):
+    result = get_accepted_teams_from_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetAcceptedTeamsByUserInteractor.run',
+       return_value=[])
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_accepted_teams_from_player_empty(client, resource, run):
+    result = get_accepted_teams_from_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert 'No Accepted teams found for user: ' \
+           '8ad1635f-2263-4dda-879a-bd24b5d9732f'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetAcceptedTeamsByUserInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_accepted_teams_from_player_raises(client, resource, run):
+    result = get_accepted_teams_from_player()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
