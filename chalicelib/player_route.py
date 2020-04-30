@@ -18,7 +18,8 @@ from playerstars_interactors import (
     SaveEntityException, SaveFriendsException, UpdateEntityException,
     UpdateProfileInteractor, UpdateProfileRequestModel,
     GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
-    GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel)
+    GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel,
+    GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -257,6 +258,24 @@ def get_all_teams_from_player():
             data = dict()
         data.update({'player_id': player_id})
         return get_by_user(data)
+    except BaseException as e:
+        return server_error(str(e))
+
+
+@bp_player.route('/my-teams/accepted', **private_get())
+def get_accepted_teams_from_player():
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        team_adapter = get_team_adapter()
+        console_adapter = get_console_adapter()
+        request = GetAcceptedTeamsByUserRequestModel(entity_id)
+        interactor = GetAcceptedTeamsByUserInteractor(
+            request=request, team_adapter=team_adapter,
+            console_adapter=console_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f'No Accepted teams found for user: {entity_id}')
     except BaseException as e:
         return server_error(str(e))
 
