@@ -126,7 +126,10 @@ def put(data):
     try:
         request = PutTeamRequestModel(data)
         interactor = PutTeamInteractor(
-            request, get_player_adapter(), get_team_adapter(), Settings)
+            request=request, player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
+            notification_adapter=get_notification_graphql_adapter(),
+            settings=Settings)
         response = interactor.run()
     except UpdateEntityException as e:
         return server_error(str(e))
