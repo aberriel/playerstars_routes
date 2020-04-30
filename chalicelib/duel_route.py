@@ -47,7 +47,8 @@ def get_duel_adapter_graphql():
     return DuelAdapterGraphql(
         api_id=Settings.GRAPHQL_API_ID,
         api_key=Settings.GRAPHQL_API_KEY,
-        aws_region=Settings.AWS_DEFAULT_REGION)
+        aws_region=Settings.AWS_DEFAULT_REGION,
+        object_name=Settings.DUEL_MUTATION_NAME_PART)
 
 
 def get_notification_adapter_dynamo():
