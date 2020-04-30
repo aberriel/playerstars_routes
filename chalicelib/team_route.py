@@ -16,11 +16,20 @@ from playerstars_interactors import (
     LeaveTeamRequestModel, PostTeamInteractor, PostTeamRequestModel,
     PutTeamInteractor, PutTeamRequestModel, SaveTeamException,
     UpdateEntityException, GetTeamRequestModel, GetTeamInteractor)
-
+from playerstars_graphql_adapters import (
+    NotificationAdapter as NotificationAdapterGraphql)
 
 bp_enter_team = Blueprint(__name__)
 bp_leave_team = Blueprint(__name__)
 bp_team = Blueprint(__name__)
+
+
+def get_notification_graphql_adapter():
+    return NotificationAdapterGraphql(
+        api_id=Settings.GRAPHQL_API_ID,
+        api_key=Settings.GRAPHQL_API_KEY,
+        aws_region=Settings.AWS_DEFAULT_REGION,
+        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
 
 
 def get_console_adapter():
@@ -98,6 +107,7 @@ def post(data):
             request=request,
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
+            notification_adapter=get_notification_graphql_adapter(),
             settings=Settings)
         response = interactor.run()
     except SaveTeamException as e:
