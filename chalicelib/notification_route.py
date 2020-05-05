@@ -1,23 +1,38 @@
 from chalice import Blueprint
-from playerstars_adapters import NotificationAdapter
+from playerstars_adapters import \
+    NotificationAdapter as NotificationAdapterDynamo
 from playerstars_domain import Notification
+from playerstars_graphql_adapters import \
+    NotificationAdapter as NotificationAdapterGraphql
 from playerstars_interactors import (
-    BasicPostRequestModel, GetAppNotificationByUserInteractor,
-    GetAppNotificationByUserRequestModel, PostAppNotificationInteractor,
-    PostNotificationReadInteractor, PostNotificationReadException,
-    PostNotificationReadRequestModel, SaveEntityException
-)
+    BasicPostRequestModel,
+    GetAppNotificationByUserInteractor,
+    GetAppNotificationByUserRequestModel,
+    PostAppNotificationInteractor,
+    SaveEntityException,
+    SetNotificationAsReadException,
+    SetNotificationAsReadInteractor,
+    SetNotificationAsReadRequestModel)
 from chalicelib.chalice_support import private_post, private_get
 from chalice_support import (server_error, created, success, not_found)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 
 bp_notification = Blueprint(__name__)
+bp_notification_read = Blueprint(__name__)
 
 
-def get_notification_adapter():
-    return NotificationAdapter(Settings.NOTIFICATION_TABLE_NAME,
-                               Settings.DYNAMODB_URL)
+def get_notification_adapter_dynamo():
+    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
+                                     Settings.DYNAMODB_URL)
+
+
+def get_notification_adapter_graphql():
+    return NotificationAdapterGraphql(
+        api_id=Settings.GRAPHQL_API_ID,
+        api_key=Settings.GRAPHQL_API_KEY,
+        aws_region=Settings.AWS_DEFAULT_REGION,
+        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
 
 
 @bp_notification.route('/', **private_post())
@@ -29,7 +44,7 @@ def post_app_notification():
 
 
 def post(json_data):
-    adapter = get_notification_adapter()
+    adapter = get_notification_adapter_dynamo()
     request = BasicPostRequestModel(json_data)
     interactor = PostAppNotificationInteractor(request, adapter, Notification)
     try:
@@ -52,7 +67,7 @@ def get_app_notification_by_status(status):
 
 
 def get_by_user_and_status(entity_id, status):
-    notification_adapter = get_notification_adapter()
+    notification_adapter = get_notification_adapter_dynamo()
     request = GetAppNotificationByUserRequestModel(entity_id, status)
     interactor = GetAppNotificationByUserInteractor(
         request=request,
@@ -64,14 +79,21 @@ def get_by_user_and_status(entity_id, status):
                      f' {entity_id}')
 
 
-@bp_notification.route('/read/{entity_id}', **private_post())
-def post_notification_as_read(entity_id):
+@bp_notification_read.route('/', **private_post())
+def post_set_notification_as_read():
+    data = bp_notification_read.current_request.json_body
+    player_id = get_user_id_from_jwt(bp_notification_read)
+    data.update({'player_id': player_id})
+
+    dynamo_adapter = get_notification_adapter_dynamo()
+    graphql_adapter = get_notification_adapter_graphql()
+    request = SetNotificationAsReadRequestModel(data)
+    interactor = SetNotificationAsReadInteractor(
+        request=request,
+        notification_adapter_dynamo=dynamo_adapter,
+        notification_adapter_graphql=graphql_adapter)
     try:
-        player_id = get_user_id_from_jwt(bp_notification)
-        adapter = get_notification_adapter()
-        request = PostNotificationReadRequestModel(player_id, entity_id)
-        interactor = PostNotificationReadInteractor(request, adapter)
         response = interactor.run()
-    except PostNotificationReadException as e:
+    except SetNotificationAsReadException as e:
         return server_error(str(e))
     return success(response)
