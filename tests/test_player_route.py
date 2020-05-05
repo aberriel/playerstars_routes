@@ -117,7 +117,7 @@ def make_put_mock_data():
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_put_mock_data())
-@patch('chalicelib.player_route.UpdateProfileInteractor.run')
+@patch('chalicelib.player_route.PutPlayerInteractor')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_player(client, resource, run):
@@ -130,11 +130,13 @@ def test_put_player(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player', make_put_mock_data())
-@patch('chalicelib.player_route.UpdateProfileInteractor.run',
+@patch('chalicelib.player_route.PutPlayerInteractor.__init__',
+       return_value=None)
+@patch('chalicelib.player_route.PutPlayerInteractor.run',
        MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_put_player_raises(client, resource):
+def test_put_player_raises(client, resource, interactor):
     result = put_player()
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'

@@ -16,7 +16,7 @@ from playerstars_interactors import (
     PostPlayerInteractor, SaveConvertedStarsException,
     SaveConvertedStarsInteractor, SaveConvertedStarsRequestModel,
     SaveEntityException, SaveFriendsException, UpdateEntityException,
-    UpdateProfileInteractor, UpdateProfileRequestModel,
+    PutPlayerInteractor, PutPlayerRequestModel,
     GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
     GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel,
     GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel)
@@ -86,8 +86,8 @@ def put_player():
 def put(json_data):
     try:
         adapter = get_adapter()
-        request = UpdateProfileRequestModel(json_data)
-        interactor = UpdateProfileInteractor(
+        request = PutPlayerRequestModel(json_data)
+        interactor = PutPlayerInteractor(
             request=request,
             player_adapter=adapter,
             s3_bucket_name=Settings.S3_BUCKET_NAME,
