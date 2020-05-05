@@ -1,21 +1,11 @@
 from chalicelib import (
-    accept_invitation,
-    delete_team,
-    enter_team,
-    get_all_teams,
-    get_all_teams_by_user,
-    get_team_by_id,
-    leave_team,
-    post_team,
+    accept_invitation, delete_team, enter_team, get_all_teams,
+    get_all_teams_by_user, get_team_by_id, leave_team, post_team,
     put_team)
 from playerstars_interactors import (
-    AcceptTeamInvitationException,
-    DeleteTeamException,
-    EnterTeamException,
-    LeaveTeamException,
-    SaveTeamException,
-    UpdateEntityException,
-)
+    AcceptTeamInvitationException, DeleteTeamException, EnterTeamException,
+    LeaveTeamException, SaveTeamException, UpdateEntityException,
+    DuplicateMemberException)
 from tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 
@@ -257,6 +247,21 @@ def test_put_team_raises(client, resource, find_entity_by_id):
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
+
+
+# noinspection PyUnusedLocal
+@patch('playerstars_interactors.team.put_team.find_entity_by_id',
+       return_value=MagicMock())
+@patch('chalicelib.team_route.bp_team', make_put_mock_data())
+@patch('chalicelib.team_route.PutTeamInteractor.run',
+       MagicMock(side_effect=DuplicateMemberException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_team_raises_badrequest(client, resource, find_entity_by_id):
+    result = put_team('id1')
+    assert result.body['message'] == 'oops'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 400
 
 
 def make_enter_team_mock_data():
