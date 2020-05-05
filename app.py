@@ -2,12 +2,7 @@ from chalice import Chalice
 
 from chalicelib import root
 from chalicelib.settings import Settings
-from chalicelib.championship_route import (
-    bp_accept_invitation,
-    bp_add_friend_to_championship,
-    bp_championship,
-    bp_join_open_championship
-)
+from chalicelib.championship_route import bp_championship
 from chalicelib.console_route import bp_console, bp_console_admin
 from chalicelib.duel_route import (
     bp_cancel_duel,
@@ -15,12 +10,12 @@ from chalicelib.duel_route import (
     bp_duel,
     bp_enter_duel,
     bp_inform_invite_timeout,
-    bp_match_list
-)
+    bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
-
 from chalicelib.game_route import bp_game, bp_game_by_console
-from chalicelib.notification_route import bp_notification
+from chalicelib.notification_route import (
+    bp_notification,
+    bp_notification_read)
 from chalicelib.player_route import bp_player
 from chalicelib.product_route import bp_product
 from chalicelib.purchase_route import bp_purchase
@@ -29,7 +24,7 @@ from chalicelib.region_state_route import bp_region_state
 from chalicelib.send_contact_email import bp_contact_email
 from chalicelib.send_invitation_email import bp_invitation_email
 from chalicelib.send_welcome_email import bp_welcome_email
-from chalicelib.team_route import bp_enter_team, bp_leave_team, bp_team
+from chalicelib.team_route import bp_enter_team, bp_team
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin
@@ -57,6 +52,7 @@ app.register_blueprint(bp_inform_invite_timeout,
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
+app.register_blueprint(bp_notification_read, url_prefix='/notification/set-as-read')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_product, url_prefix='/product')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
