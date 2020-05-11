@@ -19,7 +19,8 @@ from playerstars_interactors import (
     PutPlayerInteractor, PutPlayerRequestModel,
     GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
     GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel,
-    GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel)
+    GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel,
+    BasicGetAllRequestModel, BasicGetAllInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -107,9 +108,8 @@ def get_player_by_id(entity_id):
 def get_all_player():
     if bp_player.current_request and bp_player.current_request.query_params:
         if 'filter_param' in bp_player.current_request.query_params.keys():
-            return get_router().get_all(
-                query_params=bp_player.current_request.query_params,
-                _filter=True)
+            return get_all_player_filter(
+                query_params=bp_player.current_request.query_params)
         return get_player_by_console(bp_player.current_request.query_params)
     return get_router().get_all()
 
@@ -127,6 +127,21 @@ def get_player_by_console(query_params):
         return not_found(f"Nenhum player encontrado para o console: "
                          f"{query_params.get('console_id', None)} e o game:"
                          f"{query_params.get('game_id', None)}")
+    except BaseException as exc:
+        return server_error(str(exc))
+
+
+def get_all_player_filter(query_params):
+    try:
+        player_adapter = get_adapter()
+        request = BasicGetAllRequestModel(query_params)
+        interactor = BasicGetAllInteractor(
+            request=request, adapter_instance=player_adapter,
+            paginate=False, _filter=True)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found('No player found')
     except BaseException as exc:
         return server_error(str(exc))
 
