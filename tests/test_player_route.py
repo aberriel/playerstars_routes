@@ -8,7 +8,8 @@ from chalicelib.player_route import (
     post_accept_terms_route, accept_team_invitation_route,
     convert_star_route, post_friend_route_v2, get_friends_route_v2,
     delete_friend_route_v2, get_ranking_route, get_player_consoles,
-    get_friends_by_console_game_route, get_accepted_teams_from_player
+    get_friends_by_console_game_route, get_accepted_teams_from_player,
+    get_all_player_filter_route
 )
 import json
 import pytest
@@ -832,7 +833,7 @@ def query_params_filter():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_filter_route()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -847,7 +848,7 @@ def test_get_all_player_filter(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter_empty(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_filter_route()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -863,7 +864,7 @@ def test_get_all_player_filter_empty(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter_raises(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_filter_route()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
