@@ -18,7 +18,7 @@ class BasicEntityRoute:
     def get_all(self, query_params=None, paginate=False, _filter=False):
         try:
             request = BasicGetAllRequestModel(query_params) if \
-                (paginate or _filter) and query_params else None
+                paginate and query_params else None
             interactor = BasicGetAllInteractor(
                 request=request, adapter_instance=self.adapter_instance,
                 paginate=paginate, _filter=_filter)
