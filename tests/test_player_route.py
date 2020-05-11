@@ -818,6 +818,58 @@ def test_get_player_by_console_raises(client, resource, run):
     assert result.body['message'] == 'oops'
 
 
+def query_params_filter():
+    return {
+        'filter_param': '{"nome": "siclano"}'
+    }
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_filter())))
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_filter(client, resource, run):
+    result = get_all_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_filter())))
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+       return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_filter_empty(client, resource, run):
+    result = get_all_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == 'No player found'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_filter())))
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
+       side_effect=BaseException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_player_filter_raises(client, resource, run):
+    result = get_all_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
 def convert_star_json():
     payload = """{
         "gold_stars": 3,

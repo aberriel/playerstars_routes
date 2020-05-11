@@ -15,14 +15,14 @@ class BasicEntityRoute:
         self.entity_class = entity_class
         self.entity_name = entity_name
 
-    def get_all(self, query_params=None, paginate=False):
+    def get_all(self, query_params=None, paginate=False, _filter=False):
         try:
             request = BasicGetAllRequestModel(query_params) if \
-                paginate and query_params else None
+                (paginate or _filter) and query_params else None
             interactor = BasicGetAllInteractor(
                 request=request, adapter_instance=self.adapter_instance,
-                paginate=paginate)
-            if request:
+                paginate=paginate, _filter=_filter)
+            if paginate and query_params:
                 response, range_data = interactor.run()
                 return success_partial(
                     response, range_data.unit, range_data.initial,
