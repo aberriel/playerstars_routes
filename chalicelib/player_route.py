@@ -131,7 +131,7 @@ def get_player_by_console(query_params):
 @bp_player.route('/filter/{username}', **private_get())
 def get_all_player_filter_route(username):
     dict_param = {
-        'param': json.dumps({"user.name__contains": username})
+        'param': json.dumps({"user.nickname__contains": username})
     }
     return get_all_player_filter(query_params=dict_param)
 
