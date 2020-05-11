@@ -833,7 +833,7 @@ def query_params_filter():
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter(client, resource, run):
-    result = get_all_player_filter_route()
+    result = get_all_player_filter_route('siclano')
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -848,7 +848,7 @@ def test_get_all_player_filter(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter_empty(client, resource, run):
-    result = get_all_player_filter_route()
+    result = get_all_player_filter_route('siclano')
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -864,7 +864,7 @@ def test_get_all_player_filter_empty(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_filter_raises(client, resource, run):
-    result = get_all_player_filter_route()
+    result = get_all_player_filter_route('siclano')
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
