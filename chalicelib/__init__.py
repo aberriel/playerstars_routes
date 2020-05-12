@@ -39,7 +39,8 @@ from .duel_route import (
     inform_invitation_timeout,
     post_duel,
     reject_duel_route,
-    get_duel_details
+    get_duel_details,
+    get_opponent_teams_for_duel
 )
 from .game_route import (
     delete_game,
@@ -64,7 +65,8 @@ from .player_route import (
     convert_star_route,
     get_player_consoles,
     get_friends_by_console_game_route,
-    get_accepted_teams_from_player
+    get_accepted_teams_from_player,
+    get_my_teams_for_duel
 )
 from .product_route import get_all_product, post_product
 from .purchase_route import (
@@ -217,5 +219,8 @@ __all__ = [
 
     'get_duel_details',
 
-    'get_accepted_teams_from_player'
+    'get_accepted_teams_from_player',
+
+    'get_opponent_teams_for_duel',
+    'get_my_teams_for_duel'
 ]

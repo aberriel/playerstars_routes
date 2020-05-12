@@ -20,7 +20,8 @@ from playerstars_interactors import (
     GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
     GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel,
     GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel,
-    BasicGetAllRequestModel, BasicGetAllInteractor)
+    BasicGetAllRequestModel, BasicGetAllInteractor, GetMyTeamsByGameInteractor,
+    GetMyTeamsByGameRequestModel)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (

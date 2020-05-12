@@ -22,8 +22,8 @@ from playerstars_interactors import (
     GetOpponentCandidateListException, GetOpponentCandidateListInteractor,
     GetOpponentCandidateListRequestModel, GetPlayerDuelByStatusError,
     GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    InformOpponentResponseTimeoutException,
-    InformOpponentResponseTimeoutInteractor,
+    InformOpponentResponseTimeoutException, GetOpponentTeamsInteractor,
+    InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
     GetDuelInteractor, BasicGetRequestModel)
@@ -333,7 +333,7 @@ def cancel_duel_post(json_data):
 
 
 @bp_duel.route('/teams/get-opponent', **private_get())
-def get_my_teams_for_duel():
+def get_opponent_teams_for_duel():
     try:
         data = bp_duel.current_request.query_params
         duel_adapter = get_duel_adapter_dynamo()
