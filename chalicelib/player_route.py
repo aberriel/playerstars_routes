@@ -171,6 +171,26 @@ def get_my_profile():
         return server_error(str(e))
 
 
+@bp_player.route('/teams/', **private_get())
+def get_my_teams_for_duel():
+    try:
+        data = bp_player.current_request.query_params
+        entity_id = get_user_id_from_jwt(bp_player)
+        data.update({'player_id': entity_id})
+        adapter = get_adapter()
+        team_adapter = get_team_adapter()
+        console_adapter = get_console_adapter()
+        request = GetMyTeamsByGameRequestModel(data)
+        interactor = GetMyTeamsByGameInteractor(
+            request, adapter, team_adapter, console_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f'No team found for this game')
+    except BaseException as ex:
+        return server_error(str(ex))
+
+
 @bp_player.route('/{entity_id}/friends', **private_get())
 def get_friends_route(entity_id):
     try:
