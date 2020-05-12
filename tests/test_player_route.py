@@ -9,7 +9,7 @@ from chalicelib.player_route import (
     convert_star_route, post_friend_route_v2, get_friends_route_v2,
     delete_friend_route_v2, get_ranking_route, get_player_consoles,
     get_friends_by_console_game_route, get_accepted_teams_from_player,
-    get_all_player_filter_route
+    get_all_player_filter_route, get_my_teams_for_duel
 )
 import json
 import pytest
@@ -369,11 +369,11 @@ def test_get_all_friends_raises(client, resource):
 
 
 def make_post_friends_mock_data():
-    json = {
+    json1 = {
         "friends": ['gluglu', 'yeahyeah']
     }
     return MagicMock(current_request=MagicMock(
-        json_body=json, headers=dict(AUTHORIZATION=jwt)))
+        json_body=json1, headers=dict(AUTHORIZATION=jwt)))
 
 
 # noinspection PyUnusedLocal
@@ -967,7 +967,6 @@ def test_get_ranking_not_found(client, resource, run):
         'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f ranking not found'
 
 
-####
 # noinspection PyUnusedLocal
 @patch('chalicelib.player_route.bp_player',
        MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
@@ -1089,8 +1088,8 @@ def test_get_accepted_teams_from_player_empty(client, resource, run):
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
-    assert 'No Accepted teams found for user: ' \
-           '8ad1635f-2263-4dda-879a-bd24b5d9732f'
+    assert result.body['message'] == 'No Accepted teams found for user: ' \
+        '8ad1635f-2263-4dda-879a-bd24b5d9732f'
 
 
 # noinspection PyUnusedLocal
@@ -1103,6 +1102,52 @@ def test_get_accepted_teams_from_player_empty(client, resource, run):
 @patch('boto3.client')
 def test_get_accepted_teams_from_player_raises(client, resource, run):
     result = get_accepted_teams_from_player()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetMyTeamsByGameInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_my_teams_for_duel(client, resource, run):
+    result = get_my_teams_for_duel()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetMyTeamsByGameInteractor.run',
+       return_value=[])
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_my_teams_for_duel_empty(client, resource, run):
+    result = get_my_teams_for_duel()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == 'No team found for this game'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetMyTeamsByGameInteractor.run',
+       side_effect=Exception('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_my_teams_for_duel_raises(client, resource, run):
+    result = get_my_teams_for_duel()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500

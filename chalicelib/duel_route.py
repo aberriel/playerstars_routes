@@ -22,8 +22,8 @@ from playerstars_interactors import (
     GetOpponentCandidateListException, GetOpponentCandidateListInteractor,
     GetOpponentCandidateListRequestModel, GetPlayerDuelByStatusError,
     GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    InformOpponentResponseTimeoutException,
-    InformOpponentResponseTimeoutInteractor,
+    InformOpponentResponseTimeoutException, GetOpponentTeamsInteractor,
+    InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
     GetDuelInteractor, BasicGetRequestModel)
@@ -330,3 +330,20 @@ def cancel_duel_post(json_data):
     except CancelDuelException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_duel.route('/teams/get-opponent', **private_get())
+def get_opponent_teams_for_duel():
+    try:
+        data = bp_duel.current_request.query_params
+        duel_adapter = get_duel_adapter_dynamo()
+        team_adapter = get_team_adapter()
+        request = GetOpponentTeamsRequestModel(data)
+        interactor = GetOpponentTeamsInteractor(
+            request, duel_adapter, team_adapter)
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(f'No team found to be opponent of that team id')
+    except BaseException as ex:
+        return server_error(str(ex))
