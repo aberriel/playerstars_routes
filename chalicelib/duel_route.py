@@ -336,11 +336,11 @@ def cancel_duel_post(json_data):
 def get_opponent_teams_for_duel():
     try:
         data = bp_duel.current_request.query_params
-        duel_adapter = get_duel_adapter_dynamo()
+        player_adapter = get_player_adapter()
         team_adapter = get_team_adapter()
         request = GetOpponentTeamsRequestModel(data)
         interactor = GetOpponentTeamsInteractor(
-            request, duel_adapter, team_adapter)
+            request, player_adapter, team_adapter)
         response = interactor.run()
         if response:
             return success(response)
