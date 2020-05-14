@@ -25,10 +25,15 @@ class Settings:
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin_dev')
     VALUES_TABLE_NAME = config('VALUES_TABLE_NAME', 'value_dev')
 
+    CHAMPIONSHIP_MUTATION_NAME_PART = config(
+        'CHAMPIONSHIP_MUTATION_NAME_PART', 'ChampionshipDev')
     DUEL_MUTATION_NAME_PART = config('DUEL_MUTATION_NAME_PART', 'DuelDev')
     NOTIFICATION_MUTATION_NAME_PART = config(
         'NOTIFICATION_MUTATION_NAME_PART',
         'NotificationDev')
+
+    CHAMPIONSHIP_CHECK_TASK_NAME = config('CHAMPIONSHIP_CHECK_TASK_NAME',
+                                          'championship_check_dev')
 
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
     CONTACT_EMAIL_RECIPIENTS = config(

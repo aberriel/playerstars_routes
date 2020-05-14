@@ -21,8 +21,11 @@
         "USER_ADMIN_TABLE_NAME": "user_admin",
         "VALUES_TABLE_NAME": "values",
 
+        "CHAMPIONSHIP_MUTATION_NAME_PART": "Championship",
         "DUEL_MUTATION_NAME_PART": "Duel",
         "NOTIFICATION_MUTATION_NAME_PART": "Notification",
+
+        "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check",
 
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
         "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
@@ -67,8 +70,11 @@
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
                 "VALUES_TABLE_NAME": "values_dev",
 
+                "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipDev",
                 "DUEL_MUTATION_NAME_PART": "DuelDev",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationDev",
+
+                "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_dev",
 
                 "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
@@ -113,8 +119,11 @@
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
                 "VALUES_TABLE_NAME": "values_stg",
 
+                "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipStg",
                 "DUEL_MUTATION_NAME_PART": "DuelStg",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationStg",
+
+                "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_stg",
 
                 "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_stg",
@@ -159,8 +168,11 @@
             "USER_ADMIN_TABLE_NAME": "user_admin_prd",
             "VALUES_TABLE_NAME": "values_prd",
 
+            "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
             "DUEL_MUTATION_NAME_PART": "DuelPrd",
             "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
+
+            "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_prd",
 
             "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
             "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
