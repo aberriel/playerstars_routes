@@ -28,7 +28,7 @@
         "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check",
 
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
-        "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher",
+        "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
         "LOG_LEVEL": "INFO",
         "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
         "PAGSEGURO_HOST_URL": "https://ws.pagseguro.uol.com.br",
@@ -171,7 +171,7 @@
             "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
             "DUEL_MUTATION_NAME_PART": "DuelPrd",
             "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
-            
+
             "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_prd",
 
             "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
