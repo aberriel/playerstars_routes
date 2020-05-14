@@ -25,11 +25,6 @@
         "DUEL_MUTATION_NAME_PART": "Duel",
         "NOTIFICATION_MUTATION_NAME_PART": "Notification",
 
-        "CHAMPIONSHIP_TIME_TO_CHECK_VIABILITY": "60",
-        "CHAMPIONShIP_AWARD_FIRST_PLACE_PERC": "70",
-        "CHAMPIONSHIP_AWARD_SECOND_PLACE_PERC": "20",
-        "CHAMPIONSHIP_AWARD_THIRD_PLACE_PERC": "10",
-        "CHAMPIONSHIP_INTERVAL_BETWEN_LEVELS": "30",
         "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check",
 
         "CONTACT_EMAIL_RECIPIENTS": "'noreply@stormsec.com.br'",
@@ -79,11 +74,6 @@
                 "DUEL_MUTATION_NAME_PART": "DuelDev",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationDev",
 
-                "CHAMPIONSHIP_TIME_TO_CHECK_VIABILITY": "60",
-                "CHAMPIONShIP_AWARD_FIRST_PLACE_PERC": "70",
-                "CHAMPIONSHIP_AWARD_SECOND_PLACE_PERC": "20",
-                "CHAMPIONSHIP_AWARD_THIRD_PLACE_PERC": "10",
-                "CHAMPIONSHIP_INTERVAL_BETWEN_LEVELS": "30",
                 "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_dev",
 
                 "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
@@ -133,11 +123,6 @@
                 "DUEL_MUTATION_NAME_PART": "DuelStg",
                 "NOTIFICATION_MUTATION_NAME_PART": "NotificationStg",
 
-                "CHAMPIONSHIP_TIME_TO_CHECK_VIABILITY": "60",
-                "CHAMPIONShIP_AWARD_FIRST_PLACE_PERC": "70",
-                "CHAMPIONSHIP_AWARD_SECOND_PLACE_PERC": "20",
-                "CHAMPIONSHIP_AWARD_THIRD_PLACE_PERC": "10",
-                "CHAMPIONSHIP_INTERVAL_BETWEN_LEVELS": "30",
                 "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_stg",
 
                 "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
@@ -186,12 +171,7 @@
             "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
             "DUEL_MUTATION_NAME_PART": "DuelPrd",
             "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
-
-            "CHAMPIONSHIP_TIME_TO_CHECK_VIABILITY": "60",
-            "CHAMPIONShIP_AWARD_FIRST_PLACE_PERC": "70",
-            "CHAMPIONSHIP_AWARD_SECOND_PLACE_PERC": "20",
-            "CHAMPIONSHIP_AWARD_THIRD_PLACE_PERC": "10",
-            "CHAMPIONSHIP_INTERVAL_BETWEN_LEVELS": "30",
+            
             "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_prd",
 
             "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
