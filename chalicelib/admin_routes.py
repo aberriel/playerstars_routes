@@ -145,6 +145,7 @@ def get_all_duels_solo_admin():
         user_id = get_user_id_from_jwt(bp_admin)
         check_admin_authorization(user_id)
         json_data = bp_admin.current_request.json_body
+        json_data.update({'player_id': user_id})
         request = GetAllDuelAdminRequestModel(json_data)
         interactor = GetAllDuelAdminInteractor(
             request=request, duel_adapter=duel_adapter(),
