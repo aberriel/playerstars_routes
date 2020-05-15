@@ -3,7 +3,7 @@ from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
 from playerstars_domain import Player, Console
 from playerstars_adapters import (
-    PlayerAdapter, ConsoleAdapter
+    PlayerAdapter, ConsoleAdapter, DuelAdapter
 )
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
@@ -11,7 +11,8 @@ from chalicelib.chalice_support import (
     private_get, private_put, private_post, private_delete)
 from chalice_support import unauthorized, server_error, success
 from playerstars_interactors import (
-    BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException
+    BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException,
+    GetAllDuelAdminRequestModel, GetAllDuelAdminInteractor
 )
 bp_admin = Blueprint(__name__)
 
@@ -30,6 +31,10 @@ def console_router():
 
 def player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def duel_adapter():
+    return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def authorize(blueprint):
@@ -125,6 +130,25 @@ def put_player_admin(entity_id):
         request = BasicPutRequestModel(json_data)
         interactor = PutPlayerIsAdminInteractor(
             request, player_adapter(), Player)
+        response = interactor.run()
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+#############################
+@bp_admin.route('/duel/solo', **private_get())
+def get_all_duels_solo_admin():
+    try:
+        user_id = get_user_id_from_jwt(bp_admin)
+        check_admin_authorization(user_id)
+        json_data = bp_admin.current_request.json_body
+        request = GetAllDuelAdminRequestModel(json_data)
+        interactor = GetAllDuelAdminInteractor(
+            request=request, duel_adapter=duel_adapter(),
+            duel_type='individual', paginate=True, sort=True)
         response = interactor.run()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
