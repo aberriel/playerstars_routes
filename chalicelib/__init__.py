@@ -4,7 +4,8 @@ from .admin_routes import (
     put_player_admin,
     post_console_admin,
     put_console_admin,
-    delete_console_admin
+    delete_console_admin,
+    get_all_duels_solo_admin
 )
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
@@ -103,7 +104,7 @@ from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
-    put_user_admin,
+    put_user_admin
 )
 from .values_route import (
     get_all_values,
@@ -222,5 +223,6 @@ __all__ = [
     'get_accepted_teams_from_player',
 
     'get_opponent_teams_for_duel',
-    'get_my_teams_for_duel'
+    'get_my_teams_for_duel',
+    'get_all_duels_solo_admin'
 ]

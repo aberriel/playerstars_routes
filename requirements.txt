@@ -5,7 +5,7 @@ playerstars_adapters
 playerstars_graphql_adapters
 playerstars_interactors
 playerstars_aws_lambda
+chalice_support
 python-decouple==3.1
 defusedxml==0.6.0
 requests==2.22.0
-chalice_support
