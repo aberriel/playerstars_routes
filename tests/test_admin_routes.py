@@ -364,6 +364,23 @@ def test_get_all_duels_solo_admin(client, resource, run, check, get):
 # noinspection PyUnusedLocal
 @patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
 @patch('chalicelib.admin_routes.get_user_id_from_jwt')
+@patch('chalicelib.admin_routes.check_admin_authorization')
+@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
+       MagicMock(return_value=([], None)))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_all_duels_solo_admin_empty(
+        client, resource, cehck, get):
+    result = get_all_duels_solo_admin()
+
+    assert result.body['status'] == "error"
+    assert result.status_code == 404
+    assert 'No individual duel found for player' in result.body['message']
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
+@patch('chalicelib.admin_routes.get_user_id_from_jwt')
 @patch('chalicelib.admin_routes.check_admin_authorization',
        side_effect=UserNotAdminAuthorized('oops'))
 @patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
