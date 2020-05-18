@@ -8,8 +8,11 @@ from playerstars_adapters import (
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
 from chalicelib.chalice_support import (
-    private_get, private_put, private_post, private_delete)
-from chalice_support import unauthorized, server_error, success
+    private_get, private_put, private_post, private_delete
+)
+from chalice_support import (
+    unauthorized, server_error, success, success_partial
+)
 from playerstars_interactors import (
     BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException,
     GetAllDuelAdminRequestModel, GetAllDuelAdminInteractor
@@ -150,9 +153,11 @@ def get_all_duels_solo_admin():
         interactor = GetAllDuelAdminInteractor(
             request=request, duel_adapter=duel_adapter(),
             duel_type='individual', paginate=True, sort=True)
-        response = interactor.run()
+        response, range_data = interactor.run()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     except UpdateEntityException as e:
         return server_error(str(e))
-    return success(response)
+    return success_partial(
+        response, range_data.unit, range_data.initial,
+        range_data.final, range_data.total)
