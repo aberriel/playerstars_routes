@@ -144,6 +144,15 @@ def put_player_admin(entity_id):
 #############################
 @bp_admin.route('/duel', **private_get())
 def get_all_duels_solo_admin():
+    return get_all_duels('individual')
+
+
+@bp_admin.route('/duel-team', **private_get())
+def get_all_duels_team_admin():
+    return get_all_duels('team')
+
+
+def get_all_duels(duel_type):
     try:
         user_id = get_user_id_from_jwt(bp_admin)
         check_admin_authorization(user_id)
@@ -152,7 +161,7 @@ def get_all_duels_solo_admin():
         request = GetAllDuelAdminRequestModel(json_data)
         interactor = GetAllDuelAdminInteractor(
             request=request, duel_adapter=duel_adapter(),
-            duel_type='individual', paginate=True, sort=True)
+            duel_type=duel_type, paginate=True, sort=True)
         response, range_data = interactor.run()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
