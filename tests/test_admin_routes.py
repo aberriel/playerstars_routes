@@ -347,7 +347,8 @@ def test_put_player_is_admin_server_error(client, resource, cehck, get):
 @patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
 @patch('chalicelib.admin_routes.get_user_id_from_jwt')
 @patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run')
+@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
+       return_value=(MagicMock(), MagicMock()))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_duels_solo_admin(client, resource, run, check, get):
@@ -355,7 +356,7 @@ def test_get_all_duels_solo_admin(client, resource, run, check, get):
     run.assert_called_once()
 
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
+    assert result.status_code == 206
 
 
 # noinspection PyUnusedLocal
