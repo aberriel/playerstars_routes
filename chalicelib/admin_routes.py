@@ -142,7 +142,7 @@ def put_player_admin(entity_id):
 
 
 #############################
-@bp_admin.route('/duel/solo', **private_get())
+@bp_admin.route('/duel', **private_get())
 def get_all_duels_solo_admin():
     try:
         user_id = get_user_id_from_jwt(bp_admin)
