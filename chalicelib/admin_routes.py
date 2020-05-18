@@ -11,7 +11,7 @@ from chalicelib.chalice_support import (
     private_get, private_put, private_post, private_delete
 )
 from chalice_support import (
-    unauthorized, server_error, success, success_partial
+    unauthorized, server_error, success, success_partial, not_found
 )
 from playerstars_interactors import (
     BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException,
@@ -163,10 +163,14 @@ def get_all_duels(duel_type):
             request=request, duel_adapter=duel_adapter(),
             duel_type=duel_type, paginate=True, sort=True)
         response, range_data = interactor.run()
+        if not response:
+            return not_found(
+                f'No {duel_type} duel found for player {user_id}')
+        return success_partial(
+            response, range_data.unit, range_data.initial,
+            range_data.final, range_data.total)
+
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     except UpdateEntityException as e:
         return server_error(str(e))
-    return success_partial(
-        response, range_data.unit, range_data.initial,
-        range_data.final, range_data.total)
