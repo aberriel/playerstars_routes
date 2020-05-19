@@ -15,7 +15,6 @@ from chalice_support import (
 )
 from playerstars_interactors import (
     BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException)
-from clapy_basic_classes.basic_routes import BasicEntityRoutes
 
 
 bp_admin = Blueprint(__name__)
@@ -24,7 +23,7 @@ bp_admin = Blueprint(__name__)
 def duel_router():
     adapter = DuelAdapter(
         Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
-    return BasicEntityRoutes(adapter, Duel, 'duel')
+    return BasicEntityRoute(adapter, Duel, 'duel')
 
 
 def player_router():
