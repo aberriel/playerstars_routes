@@ -31,8 +31,8 @@ from chalicelib.admin_routes import bp_admin
 from chalicelib.values_route import bp_value
 
 app = Chalice(app_name='playerstars')
-
 app.experimental_feature_flags.update(['BLUEPRINTS'])
+
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_admin, url_prefix='/admin')
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
@@ -61,7 +61,6 @@ app.register_blueprint(bp_region_state, url_prefix='/region-state')
 app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
-
 app.register_blueprint(bp_value, url_prefix='/values')
 
 
