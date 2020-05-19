@@ -347,7 +347,7 @@ def test_put_player_is_admin_server_error(client, resource, cehck, get):
 
 
 @patch('chalicelib.admin_routes.DuelAdapter')
-@patch('chalicelib.admin_routes.BasicEntityRoutes')
+@patch('chalicelib.admin_routes.BasicEntityRoute')
 def test_duel_router(routes, adapter):
     router = duel_router()
     assert router
