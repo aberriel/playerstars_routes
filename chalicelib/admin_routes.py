@@ -1,7 +1,7 @@
 from chalice import Blueprint
 from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Player, Console
+from playerstars_domain import Player, Console, Duel
 from playerstars_adapters import (
     PlayerAdapter, ConsoleAdapter, DuelAdapter
 )
@@ -11,13 +11,20 @@ from chalicelib.chalice_support import (
     private_get, private_put, private_post, private_delete
 )
 from chalice_support import (
-    unauthorized, server_error, success, success_partial, not_found
+    unauthorized, server_error, success
 )
 from playerstars_interactors import (
-    BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException,
-    GetAllDuelAdminRequestModel, GetAllDuelAdminInteractor
-)
+    BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException)
+from clapy_basic_classes.basic_routes import BasicEntityRoutes
+
+
 bp_admin = Blueprint(__name__)
+
+
+def duel_router():
+    adapter = DuelAdapter(
+        Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+    return BasicEntityRoutes(adapter, Duel, 'duel')
 
 
 def player_router():
@@ -34,10 +41,6 @@ def console_router():
 
 def player_adapter():
     return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
-
-
-def duel_adapter():
-    return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def authorize(blueprint):
@@ -143,34 +146,10 @@ def put_player_admin(entity_id):
 
 #############################
 @bp_admin.route('/duel', **private_get())
-def get_all_duels_solo_admin():
-    return get_all_duels('individual')
+def get_all_duel_admin():
+    return get_all_admin(duel_router())
 
 
-@bp_admin.route('/duel-team', **private_get())
-def get_all_duels_team_admin():
-    return get_all_duels('team')
-
-
-def get_all_duels(duel_type):
-    try:
-        user_id = get_user_id_from_jwt(bp_admin)
-        check_admin_authorization(user_id)
-        json_data = bp_admin.current_request.query_params or {}
-        json_data.update({'player_id': user_id})
-        request = GetAllDuelAdminRequestModel(json_data)
-        interactor = GetAllDuelAdminInteractor(
-            request=request, duel_adapter=duel_adapter(),
-            duel_type=duel_type, paginate=True, sort=True)
-        response, range_data = interactor.run()
-        if not response:
-            return not_found(
-                f'No {duel_type} duel found for player {user_id}')
-        return success_partial(
-            response, range_data.unit, range_data.initial,
-            range_data.final, range_data.total)
-
-    except UserNotAdminAuthorized as e:
-        return unauthorized(str(e))
-    except UpdateEntityException as e:
-        return server_error(str(e))
+@bp_admin.route('/duel/{entity_id}', **private_get())
+def get_duel_by_id_admin(entity_id):
+    return get_by_id_admin(entity_id, duel_router())

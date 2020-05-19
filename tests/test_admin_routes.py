@@ -1,11 +1,12 @@
 from chalicelib import (
     get_all_players_admin, get_player_by_id_admin, put_player_admin,
-    post_console_admin, put_console_admin, delete_console_admin
+    post_console_admin, put_console_admin, delete_console_admin,
+    get_all_duel_admin, get_duel_by_id_admin
 )
 from chalicelib.admin_routes import (
-    get_all_consoles_admin, get_console_by_id_admin,
-    get_all_duels_solo_admin, get_all_duels_team_admin
+    get_all_consoles_admin, get_console_by_id_admin
 )
+from chalicelib.admin_routes import duel_router
 from chalicelib.utils import UserNotAdminAuthorized
 from unittest.mock import MagicMock, patch
 from playerstars_interactors import UpdateEntityException
@@ -345,85 +346,27 @@ def test_put_player_is_admin_server_error(client, resource, cehck, get):
     assert result.status_code == 500
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
-       return_value=(MagicMock(), MagicMock()))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_duels_solo_admin(client, resource, run, check, get):
-    result = get_all_duels_solo_admin()
-    run.assert_called_once()
-
-    assert result.body['status'] == 'success'
-    assert result.status_code == 206
+@patch('chalicelib.admin_routes.DuelAdapter')
+@patch('chalicelib.admin_routes.BasicEntityRoutes')
+def test_duel_router(routes, adapter):
+    router = duel_router()
+    assert router
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
-       MagicMock(return_value=([], None)))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_duels_solo_admin_empty(
-        client, resource, cehck, get):
-    result = get_all_duels_solo_admin()
-
-    assert result.body['status'] == "error"
-    assert result.status_code == 404
-    assert 'No individual duel found for player' in result.body['message']
+router_mock = MagicMock()
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization',
-       side_effect=UserNotAdminAuthorized('oops'))
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_duels_solo_admin_unauthorized(
-        client, resource, cehck, get):
-    result = get_all_duels_solo_admin()
-
-    assert result.body['message'] == "oops"
-    assert result.body['status'] == "error"
-    assert result.status_code == 401
+@patch('chalicelib.admin_routes.get_all_admin')
+@patch('chalicelib.admin_routes.duel_router', return_value=router_mock)
+def test_get_all_duel_admin(router, get_all):
+    result = get_all_duel_admin()
+    get_all.assert_called_with(router_mock)
+    assert result
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization',
-       side_effect=UpdateEntityException('oops'))
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_duels_solo_admin_server_error(client, resource, cehck, get):
-    result = get_all_duels_solo_admin()
-
-    assert result.body['message'] == "oops"
-    assert result.body['status'] == "error"
-    assert result.status_code == 500
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.bp_admin', make_put_mock_data())
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.admin_routes.GetAllDuelAdminInteractor.run',
-       return_value=(MagicMock(), MagicMock()))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_duels_team_admin(client, resource, run, check, get):
-    result = get_all_duels_team_admin()
-    run.assert_called_once()
-
-    assert result.body['status'] == 'success'
-    assert result.status_code == 206
+@patch('chalicelib.admin_routes.get_by_id_admin')
+@patch('chalicelib.admin_routes.duel_router', return_value=router_mock)
+def test_get_duel_by_id_admin(router, get_all):
+    result = get_duel_by_id_admin('entity_id')
+    get_all.assert_called_with('entity_id', router_mock)
+    assert result
