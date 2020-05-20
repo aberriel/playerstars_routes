@@ -23,16 +23,21 @@ class BasicEntityRoute:
                 request=request, adapter_instance=self.adapter_instance,
                 paginate=paginate, _filter=_filter)
             if paginate and query_params:
-                response, range_data = interactor.run()
-                return success_partial(
-                    response, range_data.unit, range_data.initial,
-                    range_data.final, range_data.total)
+                return self.paginated_return(interactor)
             response = interactor.run()
             if response:
                 return success(response)
             return not_found(f'No {self.entity_name} found')
         except BaseException as e:
             return server_error(str(e))
+
+    def paginated_return(self, interactor):
+        response, range_data = interactor.run()
+        if response:
+            return success_partial(
+                response, range_data.unit, range_data.initial,
+                range_data.final, range_data.total)
+        return not_found(f'No {self.entity_name} found')
 
     def get_by_id(self, entity_id):
         try:
