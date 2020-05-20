@@ -1,9 +1,9 @@
 from chalice import Blueprint
 from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Player, Console, Duel
+from playerstars_domain import Player, Console, Duel, Terms
 from playerstars_adapters import (
-    PlayerAdapter, ConsoleAdapter, DuelAdapter
+    PlayerAdapter, ConsoleAdapter, DuelAdapter, TermsAdapter
 )
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
@@ -143,7 +143,6 @@ def put_player_admin(entity_id):
     return success(response)
 
 
-#############################
 @bp_admin.route('/duel', **private_get())
 def get_all_duel_admin():
     return get_all_admin(duel_router())
@@ -152,3 +151,34 @@ def get_all_duel_admin():
 @bp_admin.route('/duel/{entity_id}', **private_get())
 def get_duel_by_id_admin(entity_id):
     return get_by_id_admin(entity_id, duel_router())
+
+
+##################
+def terms_router():
+    adapter = TermsAdapter(Settings.TERMS_TABLE_NAME, Settings.DYNAMODB_URL)
+    return BasicEntityRoute(adapter, Terms, 'terms')
+
+
+@bp_admin.route('/term', **private_get())
+def get_all_terms_admin():
+    return get_all_admin(terms_router())
+
+
+@bp_admin.route('/term/{entity_id}', **private_get())
+def get_terms_by_id_admin(entity_id):
+    return get_by_id_admin(entity_id, terms_router())
+
+
+@bp_admin.route('/term', **private_post())
+def post_terms_admin():
+    return post_admin(terms_router())
+
+
+@bp_admin.route('/term/{entity_id}', **private_put())
+def put_terms_admin(entity_id):
+    return put_admin(terms_router())
+
+
+@bp_admin.route('/term/{entity_id}', **private_delete())
+def delete_terms_admin(entity_id):
+    return delete_admin(entity_id, terms_router())

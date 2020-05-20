@@ -24,6 +24,8 @@ class Settings:
     USER_TABLE_NAME = config('USER_TABLE_NAME', 'user_dev')
     USER_ADMIN_TABLE_NAME = config('USER_ADMIN_TABLE_NAME', 'user_admin_dev')
     VALUES_TABLE_NAME = config('VALUES_TABLE_NAME', 'value_dev')
+    TERMS_TABLE_NAME = config('TERMS_TABLE_NAME', 'terms_dev')
+    PRIVACY_TABLE_NAME = config('PRIVACY_TABLE_NAME', 'privacy_dev')
 
     CHAMPIONSHIP_MUTATION_NAME_PART = config(
         'CHAMPIONSHIP_MUTATION_NAME_PART', 'ChampionshipDev')

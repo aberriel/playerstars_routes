@@ -1,12 +1,14 @@
 from chalicelib import (
     get_all_players_admin, get_player_by_id_admin, put_player_admin,
     post_console_admin, put_console_admin, delete_console_admin,
-    get_all_duel_admin, get_duel_by_id_admin
+    get_all_duel_admin, get_duel_by_id_admin, get_all_terms_admin,
+    get_terms_by_id_admin, post_terms_admin, put_terms_admin,
+    delete_terms_admin
 )
 from chalicelib.admin_routes import (
     get_all_consoles_admin, get_console_by_id_admin
 )
-from chalicelib.admin_routes import duel_router
+from chalicelib.admin_routes import duel_router, terms_router
 from chalicelib.utils import UserNotAdminAuthorized
 from unittest.mock import MagicMock, patch
 from playerstars_interactors import UpdateEntityException
@@ -369,4 +371,52 @@ def test_get_all_duel_admin(router, get_all):
 def test_get_duel_by_id_admin(router, get_all):
     result = get_duel_by_id_admin('entity_id')
     get_all.assert_called_with('entity_id', router_mock)
+    assert result
+
+
+######################
+@patch('chalicelib.admin_routes.TermsAdapter')
+@patch('chalicelib.admin_routes.BasicEntityRoute')
+def test_terms_router(routes, adapter):
+    router = terms_router()
+    assert router
+
+
+@patch('chalicelib.admin_routes.get_all_admin')
+@patch('chalicelib.admin_routes.terms_router', return_value=router_mock)
+def test_get_all_terms_admin(router, get_all):
+    result = get_all_terms_admin()
+    get_all.assert_called_with(router_mock)
+    assert result
+
+
+@patch('chalicelib.admin_routes.get_by_id_admin')
+@patch('chalicelib.admin_routes.terms_router', return_value=router_mock)
+def test_get_terms_by_id_admin(router, get):
+    result = get_terms_by_id_admin('entity_id')
+    get.assert_called_with('entity_id', router_mock)
+    assert result
+
+
+@patch('chalicelib.admin_routes.post_admin')
+@patch('chalicelib.admin_routes.terms_router', return_value=router_mock)
+def test_post_terms_admin(router, post):
+    result = post_terms_admin()
+    post.assert_called_with(router_mock)
+    assert result
+
+
+@patch('chalicelib.admin_routes.put_admin')
+@patch('chalicelib.admin_routes.terms_router', return_value=router_mock)
+def test_put_terms_admin(router, put):
+    result = put_terms_admin('entityd_id')
+    put.assert_called_with(router_mock)
+    assert result
+
+
+@patch('chalicelib.admin_routes.delete_admin')
+@patch('chalicelib.admin_routes.terms_router', return_value=router_mock)
+def test_delete_terms_admin(router, delete):
+    result = delete_terms_admin('entity_id')
+    delete.assert_called_with('entity_id', router_mock)
     assert result
