@@ -1,9 +1,10 @@
 from chalice import Blueprint
 from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Player, Console, Duel, Terms
+from playerstars_domain import Player, Console, Duel, Terms, PrivacyPolicy
 from playerstars_adapters import (
-    PlayerAdapter, ConsoleAdapter, DuelAdapter, TermsAdapter
+    PlayerAdapter, ConsoleAdapter, DuelAdapter, TermsAdapter,
+    PrivacyPolicyAdapter
 )
 from chalicelib.utils import \
     get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
@@ -182,3 +183,34 @@ def put_terms_admin(entity_id):
 @bp_admin.route('/term/{entity_id}', **private_delete())
 def delete_terms_admin(entity_id):
     return delete_admin(entity_id, terms_router())
+
+
+def privacy_router():
+    adapter = PrivacyPolicyAdapter(
+        Settings.PRIVACY_TABLE_NAME, Settings.DYNAMODB_URL)
+    return BasicEntityRoute(adapter, PrivacyPolicy, 'privacy-policy')
+
+
+@bp_admin.route('/privacy', **private_get())
+def get_all_privacy_admin():
+    return get_all_admin(privacy_router())
+
+
+@bp_admin.route('/privacy/{entity_id}', **private_get())
+def get_privacy_by_id_admin(entity_id):
+    return get_by_id_admin(entity_id, privacy_router())
+
+
+@bp_admin.route('/privacy', **private_post())
+def post_privacy_admin():
+    return post_admin(privacy_router())
+
+
+@bp_admin.route('/privacy/{entity_id}', **private_put())
+def put_privacy_admin(entity_id):
+    return put_admin(privacy_router())
+
+
+@bp_admin.route('/privacy/{entity_id}', **private_delete())
+def delete_privacy_admin(entity_id):
+    return delete_admin(entity_id, privacy_router())
