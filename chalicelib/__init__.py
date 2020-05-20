@@ -6,7 +6,17 @@ from .admin_routes import (
     put_console_admin,
     delete_console_admin,
     get_all_duel_admin,
-    get_duel_by_id_admin
+    get_duel_by_id_admin,
+    get_all_terms_admin,
+    get_terms_by_id_admin,
+    post_terms_admin,
+    put_terms_admin,
+    delete_terms_admin,
+    get_privacy_by_id_admin,
+    get_all_privacy_admin,
+    post_privacy_admin,
+    put_privacy_admin,
+    delete_privacy_admin
 )
 from .basic_entity_route import BasicEntityRoute
 from .championship_route import (
@@ -226,5 +236,15 @@ __all__ = [
     'get_opponent_teams_for_duel',
     'get_my_teams_for_duel',
     'get_all_duel_admin',
-    'get_duel_by_id_admin'
+    'get_duel_by_id_admin',
+    'get_terms_by_id_admin',
+    'get_all_terms_admin',
+    'post_terms_admin',
+    'put_terms_admin',
+    'delete_terms_admin',
+    'get_all_privacy_admin',
+    'get_privacy_by_id_admin',
+    'post_privacy_admin',
+    'put_privacy_admin',
+    'delete_privacy_admin'
 ]

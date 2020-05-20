@@ -20,6 +20,8 @@
         "USER_TABLE_NAME": "user",
         "USER_ADMIN_TABLE_NAME": "user_admin",
         "VALUES_TABLE_NAME": "values",
+        "TERMS_TABLE_NAME": "terms",
+        "PRIVACY_TABLE_NAME": "privacy",
 
         "CHAMPIONSHIP_MUTATION_NAME_PART": "Championship",
         "DUEL_MUTATION_NAME_PART": "Duel",
@@ -69,6 +71,8 @@
                 "USER_TABLE_NAME": "user_dev",
                 "USER_ADMIN_TABLE_NAME": "user_admin_dev",
                 "VALUES_TABLE_NAME": "values_dev",
+                "TERMS_TABLE_NAME": "terms_dev",
+                "PRIVACY_TABLE_NAME": "privacy_dev",
 
                 "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipDev",
                 "DUEL_MUTATION_NAME_PART": "DuelDev",
@@ -118,6 +122,8 @@
                 "USER_TABLE_NAME": "user_stg",
                 "USER_ADMIN_TABLE_NAME": "user_admin_stg",
                 "VALUES_TABLE_NAME": "values_stg",
+                "TERMS_TABLE_NAME": "terms_stg",
+                "PRIVACY_TABLE_NAME": "privacy_stg",
 
                 "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipStg",
                 "DUEL_MUTATION_NAME_PART": "DuelStg",
@@ -167,6 +173,8 @@
             "USER_TABLE_NAME": "user_prd",
             "USER_ADMIN_TABLE_NAME": "user_admin_prd",
             "VALUES_TABLE_NAME": "values_prd",
+            "TERMS_TABLE_NAME": "terms_prd",
+            "PRIVACY_TABLE_NAME": "privacy_prd",
 
             "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
             "DUEL_MUTATION_NAME_PART": "DuelPrd",
