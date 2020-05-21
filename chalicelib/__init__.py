@@ -16,20 +16,20 @@ from .admin_routes import (
     get_all_privacy_admin,
     post_privacy_admin,
     put_privacy_admin,
-    delete_privacy_admin
-)
+    delete_privacy_admin)
 from .basic_entity_route import BasicEntityRoute
-from .championship_route import (
-    get_all_championships,
-    get_championship_by_id,
-    get_championships_by_player,
-    get_championships_by_team,
-    get_open_championships,
-    post_accept_invitation,
-    post_add_friend_to_championship,
-    post_create_championship,
-    post_join_open_championship
-)
+
+# from .championship_route import (
+#     get_all_championships,
+#     get_championship_by_id,
+#     get_championships_by_player,
+#     get_championships_by_team,
+#     get_open_championships,
+#     post_accept_invitation,
+#     post_add_friend_to_championship,
+#     post_create_championship,
+#     post_join_open_championship)
+
 from .console_route import (
     post_console,
     put_console
@@ -169,15 +169,15 @@ __all__ = [
     'post_app_notification',
     'post_set_notification_as_read',
 
-    'get_all_championships',
-    'get_championship_by_id',
-    'get_championships_by_player',
-    'get_championships_by_team',
-    'get_open_championships',
-    'post_accept_invitation',
-    'post_add_friend_to_championship',
-    'post_create_championship',
-    'post_join_open_championship',
+    # 'get_all_championships',
+    # 'get_championship_by_id',
+    # 'get_championships_by_player',
+    # 'get_championships_by_team',
+    # 'get_open_championships',
+    # 'post_accept_invitation',
+    # 'post_add_friend_to_championship',
+    # 'post_create_championship',
+    # 'post_join_open_championship',
 
     'get_history_route',
 
