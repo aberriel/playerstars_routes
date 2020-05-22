@@ -14,9 +14,9 @@ def terms_router():
     return BasicEntityRoute(adapter, Terms, 'terms')
 
 
-@bp_terms.route('/{entity_id}', **private_get())
-def get_terms_by_id(entity_id):
-    return terms_router().get_by_id(entity_id)
+@bp_terms.route('/', **private_get())
+def get_terms():
+    return terms_router().get_all()
 
 
 bp_policy = Blueprint(__name__)
@@ -28,6 +28,6 @@ def policy_router():
     return BasicEntityRoute(adapter, PrivacyPolicy, 'privacy-policy')
 
 
-@bp_policy.route('/{entity_id}', **private_get())
-def get_policy_by_id(entity_id):
-    return policy_router().get_by_id(entity_id)
+@bp_policy.route('/', **private_get())
+def get_policy():
+    return policy_router().get_all()
