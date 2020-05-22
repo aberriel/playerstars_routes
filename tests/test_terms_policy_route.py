@@ -1,4 +1,4 @@
-from chalicelib import get_terms_by_id, get_policy_by_id
+from chalicelib import get_terms, get_policy
 from chalicelib.terms_policy_route import terms_router, policy_router
 from unittest.mock import patch
 from chalicelib.settings import Settings
@@ -17,9 +17,9 @@ def test_terms_router(ber, adapter):
 
 @patch('chalicelib.terms_policy_route.terms_router')
 def test_get_terms_by_id(router):
-    response = get_terms_by_id('entity_id')
+    response = get_terms()
     assert response
-    router().get_by_id.assert_called_with('entity_id')
+    router().get_all.assert_called_once()
 
 
 @patch('chalicelib.terms_policy_route.PrivacyPolicyAdapter')
@@ -34,6 +34,6 @@ def test_policy_router(ber, adapter):
 
 @patch('chalicelib.terms_policy_route.policy_router')
 def test_get_policy_by_id(router):
-    response = get_policy_by_id('entity_id')
+    response = get_policy()
     assert response
-    router().get_by_id.assert_called_with('entity_id')
+    router().get_all.assert_called_once()

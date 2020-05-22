@@ -125,8 +125,8 @@ from .values_route import (
     delete_value
 )
 from .terms_policy_route import (
-    get_policy_by_id,
-    get_terms_by_id
+    get_policy,
+    get_terms
 )
 __all__ = [
     'BasicEntityRoute',
@@ -252,6 +252,6 @@ __all__ = [
     'put_privacy_admin',
     'delete_privacy_admin',
 
-    'get_policy_by_id',
-    'get_terms_by_id'
+    'get_policy',
+    'get_terms'
 ]
