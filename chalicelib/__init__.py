@@ -124,6 +124,10 @@ from .values_route import (
     put_value,
     delete_value
 )
+from .terms_policy_route import (
+    get_policy_by_id,
+    get_terms_by_id
+)
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -246,5 +250,8 @@ __all__ = [
     'get_privacy_by_id_admin',
     'post_privacy_admin',
     'put_privacy_admin',
-    'delete_privacy_admin'
+    'delete_privacy_admin',
+
+    'get_policy_by_id',
+    'get_terms_by_id'
 ]

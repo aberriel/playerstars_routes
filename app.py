@@ -29,6 +29,7 @@ from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin
 from chalicelib.values_route import bp_value
+from chalicelib.terms_policy_route import bp_terms, bp_policy
 
 app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
@@ -63,6 +64,8 @@ app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_value, url_prefix='/values')
+app.register_blueprint(bp_policy, url_prefix='/privacy-policy')
+app.register_blueprint(bp_terms, url_prefix='/terms-and-conditions')
 
 
 @app.route('/check', methods=['POST', 'GET'])
