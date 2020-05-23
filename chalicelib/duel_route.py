@@ -111,11 +111,12 @@ def create_duel(json_data):
             notification_adapter=get_notification_adapter_graphql(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
-            settings=Settings)
+            accept_time=Settings.TIME_TO_ACCEPT_DUEL,
+            time_to_finish=Settings.TIME_TO_FINISH_DUEL)
         response = interactor.run()
     except CreateDuelException as e:
         return server_error(str(e))
-    return created(response)
+    return created(response())
 
 
 @bp_enter_duel.route('/', **private_post())
@@ -140,12 +141,16 @@ def enter_duel_post(json_data):
         duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
-        team_adapter=get_team_adapter())
+        team_adapter=get_team_adapter(),
+        aws_default_region=Settings.AWS_DEFAULT_REGION,
+        duel_scheduled_finisher_name=Settings.DUEL_SCHEDULED_FINISHER_NAME,
+        time_to_accept_invitation=Settings.TIME_TO_ACCEPT_DUEL,
+        time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL)
     try:
         response = interactor.run()
     except EnterDuelException as e:
         return server_error(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_inform_invite_timeout.route('/', **private_post())
