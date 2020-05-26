@@ -9,7 +9,7 @@ from chalicelib.player_route import (
     convert_star_route, post_friend_route_v2, get_friends_route_v2,
     delete_friend_route_v2, get_ranking_route, get_player_consoles,
     get_friends_by_console_game_route, get_accepted_teams_from_player,
-    get_all_player_filter_route, get_my_teams_for_duel
+    get_all_player_filter_route, get_my_teams_for_duel, get_ranking_team_route
 )
 import json
 import pytest
@@ -960,6 +960,57 @@ def test_get_ranking_error(client, resource, run):
 @patch('boto3.client')
 def test_get_ranking_not_found(client, resource, run):
     result = get_ranking_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == \
+        'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f ranking not found'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_ranking(),
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetTeamsRankingInteractor.run',
+       return_value=(MagicMock(), MagicMock()))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_ranking_team(client, resource, run):
+    result = get_ranking_team_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 206
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_ranking(),
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetTeamsRankingInteractor.run',
+       side_effect=BaseException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_ranking_team_error(client, resource, run):
+    result = get_ranking_team_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           query_params=query_params_ranking(),
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetTeamsRankingInteractor.run',
+       return_value=(None, None))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_ranking_team_not_found(client, resource, run):
+    result = get_ranking_team_route()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
