@@ -82,4 +82,4 @@ class Settings:
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
                              'da2-xqu7fukowrcilcwoxvcjsrfawm')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 300)
-    TIME_TO_ACCEPTING_DUEL_INVITATION = config('RESPONSE_TIME', 5)
+    TIME_TO_ACCEPT_DUEL = config('RESPONSE_TIME', 5)

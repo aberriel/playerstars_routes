@@ -46,7 +46,7 @@
         "S3_BUCKET_NAME": "playerstars-dev-photos",
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
         "TIME_TO_FINISH_DUEL": "300",
-        "TIME_TO_ACCEPTING_DUEL_INVITATION": "5",
+        "TIME_TO_ACCEPT_DUEL": "5",
 
         "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
         "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -96,7 +96,7 @@
                 "S3_BUCKET_NAME": "playerstars-dev-photos",
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "300",
-                "TIME_TO_ACCEPTING_DUEL_INVITATION": "5",
+                "TIME_TO_ACCEPT_DUEL": "5",
 
                 "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
                 "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -146,7 +146,7 @@
                 "S3_BUCKET_NAME": "playerstars-stg-photos",
                 "S3_BUCKET_URL": "http://playerstars-stg-photos.s3-website-us-east-1.amazonaws.com",
                 "TIME_TO_FINISH_DUEL": "300",
-                "TIME_TO_ACCEPTING_DUEL_INVITATION": "5",
+                "TIME_TO_ACCEPT_DUEL": "5",
 
                 "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
                 "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -196,7 +196,7 @@
             "S3_BUCKET_NAME": "playerstars-dev-photos",
             "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
             "TIME_TO_FINISH_DUEL": "300",
-            "TIME_TO_ACCEPTING_DUEL_INVITATION": "5",
+            "TIME_TO_ACCEPT_DUEL": "5",
 
             "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
             "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
