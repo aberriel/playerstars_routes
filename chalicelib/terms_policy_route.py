@@ -1,9 +1,9 @@
 from chalice import Blueprint
 from playerstars_adapters import TermsAdapter, PrivacyPolicyAdapter
 from playerstars_domain import Terms, PrivacyPolicy
-from chalicelib.chalice_support import private_get
 from chalicelib import BasicEntityRoute
 from chalicelib.settings import Settings
+from chalicelib.chalice_support.auth import cors
 
 bp_terms = Blueprint(__name__)
 
@@ -14,7 +14,7 @@ def terms_router():
     return BasicEntityRoute(adapter, Terms, 'terms')
 
 
-@bp_terms.route('/', **private_get())
+@bp_terms.route('/', methods=['GET'], cors=cors)
 def get_terms():
     return terms_router().get_all()
 
@@ -28,6 +28,6 @@ def policy_router():
     return BasicEntityRoute(adapter, PrivacyPolicy, 'privacy-policy')
 
 
-@bp_policy.route('/', **private_get())
+@bp_policy.route('/', methods=['GET'], cors=cors)
 def get_policy():
     return policy_router().get_all()
