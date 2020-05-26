@@ -418,7 +418,7 @@ def get_ranking_route():
         response, range_data = interactor.run()
         if response:
             return success_partial(
-                response, range_data.unit, range_data.initial,
+                response(), range_data.unit, range_data.initial,
                 range_data.final, range_data.total)
     except BaseException as e:
         return server_error(str(e))
