@@ -22,7 +22,8 @@ from playerstars_interactors import (
     GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel,
     BasicGetAllRequestModel, BasicGetAllInteractor, GetMyTeamsByGameInteractor,
     GetMyTeamsByGameRequestModel, GetTeamsRankingRequestModel,
-    GetTeamsRankingInteractor)
+    GetTeamsRankingInteractor, GetMyTeamsRankingRequestModel,
+    GetMyTeamsRankingInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -442,6 +443,24 @@ def get_ranking_team_route():
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} team ranking not found')
+
+
+@bp_player.route('/ranking/my-teams', **private_get())
+def get_ranking_my_teams_route():
+    try:
+        query_params = bp_player.current_request.query_params or {}
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetMyTeamsRankingRequestModel(query_params, entity_id)
+        interactor = GetMyTeamsRankingInteractor(
+            request, get_team_adapter())
+        response, range_data = interactor.run()
+        if response:
+            return success_partial(
+                response, range_data.unit, range_data.initial,
+                range_data.final, range_data.total)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} my team ranking not found')
 
 
 @bp_player.route('/consoles', **private_get())
