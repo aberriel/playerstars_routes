@@ -419,7 +419,7 @@ def get_ranking_route():
         response, range_data = interactor.run()
         if response:
             return success_partial(
-                response(), range_data.unit, range_data.initial,
+                response, range_data.unit, range_data.initial,
                 range_data.final, range_data.total)
     except BaseException as e:
         return server_error(str(e))
@@ -441,7 +441,7 @@ def get_ranking_team_route():
                 range_data.final, range_data.total)
     except BaseException as e:
         return server_error(str(e))
-    return not_found(f'Player {entity_id} ranking not found')
+    return not_found(f'Player {entity_id} team ranking not found')
 
 
 @bp_player.route('/consoles', **private_get())
