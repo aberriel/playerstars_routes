@@ -1015,7 +1015,7 @@ def test_get_ranking_team_not_found(client, resource, run):
     assert result.body['status'] == 'error'
     assert result.status_code == 404
     assert result.body['message'] == \
-        'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f ranking not found'
+        'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f team ranking not found'
 
 
 # noinspection PyUnusedLocal
