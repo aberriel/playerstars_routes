@@ -23,7 +23,8 @@ def post_invitation_email():
 def post(json_data, entity_id):
     adapter = PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     request = SendInvitationMailRequestModel(json_data, entity_id)
-    interactor = SendInvitationMailInteractor(request, adapter)
+    interactor = SendInvitationMailInteractor(
+        request, adapter, Settings.CONTACT_EMAIL_RECIPIENTS)
     try:
         response = interactor.run()
     except BaseException as e:
