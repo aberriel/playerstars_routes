@@ -78,7 +78,8 @@ from .player_route import (
     get_player_consoles,
     get_friends_by_console_game_route,
     get_accepted_teams_from_player,
-    get_my_teams_for_duel
+    get_my_teams_for_duel,
+    get_ranking_my_teams_route
 )
 from .product_route import get_all_product, post_product
 from .purchase_route import (
@@ -253,5 +254,7 @@ __all__ = [
     'delete_privacy_admin',
 
     'get_policy',
-    'get_terms'
+    'get_terms',
+
+    'get_ranking_my_teams_route'
 ]
