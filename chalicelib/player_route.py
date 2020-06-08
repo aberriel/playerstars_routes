@@ -94,6 +94,7 @@ def put(json_data):
         interactor = PutPlayerInteractor(
             request=request,
             player_adapter=adapter,
+            console_adapter=get_console_adapter(),
             s3_bucket_name=Settings.S3_BUCKET_NAME,
             s3_bucket_url=Settings.S3_BUCKET_URL)
         response = interactor.run()
