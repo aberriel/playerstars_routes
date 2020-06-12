@@ -52,7 +52,10 @@ from .duel_route import (
     post_duel,
     reject_duel_route,
     get_duel_details,
-    get_opponent_teams_for_duel
+    get_opponent_teams_for_duel,
+    get_random_duel,
+    put_random_duel,
+    delete_random_duel
 )
 from .game_route import (
     delete_game,
@@ -256,5 +259,9 @@ __all__ = [
     'get_policy',
     'get_terms',
 
-    'get_ranking_my_teams_route'
+    'get_ranking_my_teams_route',
+
+    'get_random_duel',
+    'put_random_duel',
+    'delete_random_duel'
 ]
