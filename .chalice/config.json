@@ -22,7 +22,7 @@
         "VALUES_TABLE_NAME": "values",
         "TERMS_TABLE_NAME": "terms",
         "PRIVACY_TABLE_NAME": "privacy",
-
+        "PREDUEL_TABLE_NAME": "preduel",
         "CHAMPIONSHIP_MUTATION_NAME_PART": "Championship",
         "DUEL_MUTATION_NAME_PART": "Duel",
         "NOTIFICATION_MUTATION_NAME_PART": "Notification",
@@ -72,6 +72,7 @@
                 "VALUES_TABLE_NAME": "values_dev",
                 "TERMS_TABLE_NAME": "terms_dev",
                 "PRIVACY_TABLE_NAME": "privacy_dev",
+                "PREDUEL_TABLE_NAME": "preduel_dev",
 
                 "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipDev",
                 "DUEL_MUTATION_NAME_PART": "DuelDev",
@@ -122,6 +123,7 @@
                 "VALUES_TABLE_NAME": "values_stg",
                 "TERMS_TABLE_NAME": "terms_stg",
                 "PRIVACY_TABLE_NAME": "privacy_stg",
+                "PREDUEL_TABLE_NAME": "preduel_stg",
 
                 "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipStg",
                 "DUEL_MUTATION_NAME_PART": "DuelStg",
@@ -172,6 +174,7 @@
             "VALUES_TABLE_NAME": "values_prd",
             "TERMS_TABLE_NAME": "terms_prd",
             "PRIVACY_TABLE_NAME": "privacy_prd",
+            "PREDUEL_TABLE_NAME": "preduel_prd",
 
             "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
             "DUEL_MUTATION_NAME_PART": "DuelPrd",

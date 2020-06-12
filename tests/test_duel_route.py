@@ -3,7 +3,9 @@ from chalicelib import (
     cancel_duel_route, end_duel, enter_duel, get_all_duel,
     get_all_player_duels, get_duel, get_duels_by_status_route,
     get_match_list, get_opponent_list_route, inform_invitation_timeout,
-    post_duel, reject_duel_route, get_duel_details, get_opponent_teams_for_duel
+    post_duel, reject_duel_route, get_duel_details,
+    get_opponent_teams_for_duel, get_random_duel, put_random_duel,
+    delete_random_duel
 )
 from playerstars_interactors import (
     CancelDuelException, CreateDuelException,
@@ -533,3 +535,31 @@ def test_get_opponent_teams_for_duel_raises(client, resource, run):
     assert result.body['status'] == 'error'
     assert result.status_code == 500
     assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_delete_random_duel(client, resource, run):
+    result = delete_random_duel("schrubles")
+    assert result
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel')
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_random_duel(client, resource, run, bp):
+    result = put_random_duel("schrubles")
+    assert result
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_random_duel(client, resource, run):
+    result = get_random_duel('schrubles')
+    assert result
