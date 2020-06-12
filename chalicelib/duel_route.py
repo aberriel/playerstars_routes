@@ -1,14 +1,15 @@
 from .basic_entity_route import BasicEntityRoute
 from chalice import Blueprint
-from chalicelib.chalice_support import private_get, private_post
+from chalicelib.chalice_support import (
+    private_get, private_post, private_put, private_delete
+)
 from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter as DuelAdapterDynamo,
     NotificationAdapter as NotificationAdapterDynamo,
-    PlayerAdapter,
-    TeamAdapter)
-from playerstars_domain import Duel
+    PlayerAdapter, PreDuelAdapter, TeamAdapter)
+from playerstars_domain import Duel, PreDuel
 from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
     NotificationAdapter as NotificationAdapterGraphql)
@@ -36,6 +37,14 @@ bp_duel = Blueprint(__name__)
 bp_enter_duel = Blueprint(__name__)
 bp_inform_invite_timeout = Blueprint(__name__)
 bp_match_list = Blueprint(__name__)
+
+
+def get_preduel_adapter():
+    return PreDuelAdapter(Settings.PREDUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def get_preduel_router():
+    return BasicEntityRoute(get_preduel_adapter(), PreDuel, 'pre-duel')
 
 
 def get_duel_adapter_dynamo():
@@ -352,3 +361,19 @@ def get_opponent_teams_for_duel():
         return not_found(f'No team found to be opponent of that team id')
     except BaseException as ex:
         return server_error(str(ex))
+
+
+@bp_duel.route('/randomico/{entity_id}', **private_get())
+def get_random_duel(entity_id):
+    return get_preduel_router().get_by_id(entity_id)
+
+
+@bp_duel.route('/randomico/{entity_id}', **private_put())
+def put_random_duel(entity_id):
+    data = bp_duel.current_request.json_body
+    return get_preduel_router().put(data)
+
+
+@bp_duel.route('/randomico/{entity_id}', **private_delete())
+def delete_random_duel(entity_id):
+    return get_preduel_router().delete(entity_id)

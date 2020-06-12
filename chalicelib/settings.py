@@ -26,6 +26,7 @@ class Settings:
     VALUES_TABLE_NAME = config('VALUES_TABLE_NAME', 'value_dev')
     TERMS_TABLE_NAME = config('TERMS_TABLE_NAME', 'terms_dev')
     PRIVACY_TABLE_NAME = config('PRIVACY_TABLE_NAME', 'privacy_dev')
+    PREDUEL_TABLE_NAME = config('PREDUEL_TABLE_NAME', 'preduel_dev')
 
     CHAMPIONSHIP_MUTATION_NAME_PART = config(
         'CHAMPIONSHIP_MUTATION_NAME_PART', 'ChampionshipDev')
