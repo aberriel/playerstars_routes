@@ -5,7 +5,7 @@ from chalicelib import (
     get_match_list, get_opponent_list_route, inform_invitation_timeout,
     post_duel, reject_duel_route, get_duel_details,
     get_opponent_teams_for_duel, get_random_duel, put_random_duel,
-    delete_random_duel
+    delete_random_duel, post_random_duel
 )
 from playerstars_interactors import (
     CancelDuelException, CreateDuelException,
@@ -13,7 +13,7 @@ from playerstars_interactors import (
     GetOpponentCandidateListException,
     GetPlayerDuelByStatusError,
     InformOpponentResponseTimeoutException,
-    RejectDuelException)
+    RejectDuelException, PostPreDuelException)
 from tests.test_utils import jwt
 
 import json
@@ -563,3 +563,41 @@ def test_put_random_duel(client, resource, run, bp):
 def test_get_random_duel(client, resource, run):
     result = get_random_duel('schrubles')
     assert result
+
+
+data = {
+    "star_amount": 5,
+    "duel_type": "PLAYER",
+    "game_entity_id": "a8b7c2e4-7d89-4a24-965b-7c201e4bbe37",
+    "star_type": "GOLDEN_STAR"
+}
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt),
+           json_body=data)))
+@patch('chalicelib.duel_route.PostPreDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_random_duel(client, resource, run):
+    result = post_random_duel()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt),
+           json_body=data)))
+@patch('chalicelib.duel_route.PostPreDuelInteractor.run',
+       side_effect=PostPreDuelException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_random_duel_raises(client, resource, run):
+    result = post_random_duel()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'

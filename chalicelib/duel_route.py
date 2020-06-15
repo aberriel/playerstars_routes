@@ -27,7 +27,8 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
-    GetDuelInteractor, BasicGetRequestModel)
+    GetDuelInteractor, BasicGetRequestModel, PostPreDuelInteractor,
+    PostPreDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -367,6 +368,22 @@ def get_opponent_teams_for_duel():
 @bp_duel.route('/randomico/{entity_id}', **private_get())
 def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
+
+
+@bp_duel.route('/randomico', **private_post())
+def post_random_duel():
+    try:
+        data = bp_duel.current_request.json_body
+        player_id = get_user_id_from_jwt(bp_duel)
+        data.update({'player_id': player_id})
+        request = PostPreDuelRequestModel(data)
+        interactor = PostPreDuelInteractor(
+            request, get_preduel_adapter(), get_player_adapter(),
+            get_team_adapter())
+        response = interactor.run()
+        return success(response)
+    except BaseException as ex:
+        return server_error(str(ex))
 
 
 @bp_duel.route('/randomico/{entity_id}', **private_put())
