@@ -8,7 +8,7 @@ from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
     DuelAdapter as DuelAdapterDynamo,
     NotificationAdapter as NotificationAdapterDynamo,
-    PlayerAdapter, PreDuelAdapter, TeamAdapter)
+    PlayerAdapter, PreDuelAdapter, TeamAdapter, ConsoleAdapter)
 from playerstars_domain import Duel, PreDuel
 from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
@@ -28,7 +28,7 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
     GetDuelInteractor, BasicGetRequestModel, PostPreDuelInteractor,
-    PostPreDuelRequestModel)
+    PostPreDuelRequestModel, PutPreDuelInteractor, PutPreDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
 
@@ -52,6 +52,9 @@ def get_duel_adapter_dynamo():
     return DuelAdapterDynamo(Settings.DUEL_TABLE_NAME,
                              Settings.DYNAMODB_URL)
 
+
+def get_console_adapter():
+    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
 
 def get_duel_adapter_graphql():
     return DuelAdapterGraphql(
@@ -386,10 +389,26 @@ def post_random_duel():
         return server_error(str(ex))
 
 
-@bp_duel.route('/randomico/{entity_id}', **private_put())
-def put_random_duel(entity_id):
-    data = bp_duel.current_request.json_body
-    return get_preduel_router().put(data)
+@bp_duel.route('/randomico/{entity_id}/{status}', **private_put())
+def put_random_duel(entity_id, status):
+    try:
+        player_id = get_user_id_from_jwt(bp_duel)
+        data = {
+            'player_id': player_id,
+            'preduel_id': entity_id,
+            'status': status
+        }
+        request = PutPreDuelRequestModel(data)
+        interactor = PutPreDuelInteractor(
+            request, get_preduel_adapter(), get_player_adapter(),
+            get_team_adapter(), get_duel_adapter_dynamo(),
+            get_console_adapter(), Settings.TIME_TO_FINISH_DUEL,
+            Settings.DUEL_SCHEDULED_FINISHER_NAME,
+            Settings.AWS_DEFAULT_REGION)
+        response = interactor.run()
+        return success(response())
+    except BaseException as ex:
+        return server_error(str(ex))
 
 
 @bp_duel.route('/randomico/{entity_id}', **private_delete())
