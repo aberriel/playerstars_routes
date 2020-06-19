@@ -50,6 +50,7 @@ app.register_blueprint(bp_game, url_prefix='/game')
 app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_inform_invite_timeout,
                        url_prefix='/duel/inform-invite-timeout')
+
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
