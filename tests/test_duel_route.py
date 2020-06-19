@@ -547,16 +547,6 @@ def test_delete_random_duel(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.duel_route.bp_duel')
-@patch('chalicelib.basic_entity_route.BasicPutInteractor.run')
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_put_random_duel(client, resource, run, bp):
-    result = put_random_duel("schrubles")
-    assert result
-
-
-# noinspection PyUnusedLocal
 @patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -598,6 +588,34 @@ def test_post_random_duel(client, resource, run):
 @patch('boto3.client')
 def test_post_random_duel_raises(client, resource, run):
     result = post_random_duel()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.duel_route.PutPreDuelInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_random_duel(client, resource, run):
+    result = put_random_duel('entity_id', 'status')
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.duel_route.PutPreDuelInteractor.run',
+       side_effect=PostPreDuelException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_put_random_duel_raises(client, resource, run):
+    result = put_random_duel('entity_id', 'status')
     assert result.body['status'] == 'error'
     assert result.status_code == 500
     assert result.body['message'] == 'oops'
