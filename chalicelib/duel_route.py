@@ -56,6 +56,7 @@ def get_duel_adapter_dynamo():
 def get_console_adapter():
     return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
 
+
 def get_duel_adapter_graphql():
     return DuelAdapterGraphql(
         api_id=Settings.GRAPHQL_API_ID,
