@@ -385,7 +385,10 @@ def post_random_duel():
             request, get_preduel_adapter(), get_player_adapter(),
             get_team_adapter())
         response = interactor.run()
-        return success(response())
+        preduel_id, operation = response()
+        if operation == 'created':
+            return created(preduel_id)
+        return success(preduel_id)
     except BaseException as ex:
         return server_error(str(ex))
 

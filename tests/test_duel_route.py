@@ -563,18 +563,42 @@ data = {
 }
 
 
+def post_preduel_run():
+    return MagicMock(), 'success'
+
+
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel',
        MagicMock(current_request=MagicMock(
            headers=dict(AUTHORIZATION=jwt),
            json_body=data)))
-@patch('chalicelib.duel_route.PostPreDuelInteractor.run')
+@patch('chalicelib.duel_route.PostPreDuelInteractor.run',
+       return_value=post_preduel_run)
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_random_duel(client, resource, run):
     result = post_random_duel()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
+
+
+def post_preduel_run2():
+    return MagicMock(), 'created'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.duel_route.bp_duel',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt),
+           json_body=data)))
+@patch('chalicelib.duel_route.PostPreDuelInteractor.run',
+       return_value=post_preduel_run2)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_post_random_duel_created(client, resource, run):
+    result = post_random_duel()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 201
 
 
 # noinspection PyUnusedLocal
