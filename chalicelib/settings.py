@@ -83,7 +83,7 @@ class Settings:
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
                              'da2-xqu7fukowrcilcwoxvcjsrfawm')
 
-    DUEL_JUDGE_MATRIX = config('JUDGE_DUEL_MATRIX', ''''\
+    DUEL_JUDGE_MATRIX = config('DUEL_JUDGE_MATRIX', ''''\
         I
         1X
         12I

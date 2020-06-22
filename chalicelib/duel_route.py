@@ -1,8 +1,7 @@
 from .basic_entity_route import BasicEntityRoute
 from chalice import Blueprint
 from chalicelib.chalice_support import (
-    private_get, private_post, private_put, private_delete
-)
+    private_get, private_post, private_put, private_delete)
 from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
 from playerstars_adapters import (
@@ -101,9 +100,9 @@ def get_match_list_by_player(data):
         request=request,
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
-    response = interactor.run()
-    if response:
-        return success(response)
+    response_data = interactor.run()()
+    if response_data:
+        return success(response_data)
     return not_found("Nenhum match encontrado para o player: {0}"
                      .format(data['player_id']))
 
@@ -188,7 +187,7 @@ def inform_invitation_timeout_post(json_data):
         response = interactor.run()
     except InformOpponentResponseTimeoutException as e:
         return server_error(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_duel.route('/get-my-duels', **private_get())
@@ -224,12 +223,13 @@ def get_duel(entity_id):
 
 @bp_duel.route('/{entity_id}/details', **private_get())
 def get_duel_details(entity_id):
+    print('get_duel_details -> Entrando')
     try:
         request = BasicGetRequestModel(entity_id)
         interactor = GetDuelInteractor(
             request, get_duel_adapter_dynamo(),
             get_player_adapter(), get_team_adapter())
-        response = interactor.run()
+        response = interactor.run()()
         if response:
             return success(response)
         return not_found(f'Duel: {entity_id} not found')
@@ -274,7 +274,7 @@ def get_opponent_list(data):
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
     try:
-        response = interactor.run()
+        response = interactor.run()()
         if response:
             return success(response)
         return not_found(f"No opponent candidate found")
@@ -298,7 +298,7 @@ def reject_duel(data):
         response = interactor.run()
     except RejectDuelException as e:
         return server_error(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_duel.route('/end-duel', **private_post())
@@ -319,12 +319,13 @@ def end_duel_post(json_data):
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
         s3_bucket_url=Settings.S3_BUCKET_URL,
-        team_adapter=get_team_adapter())
+        team_adapter=get_team_adapter(),
+        judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
     except EndDuelException as e:
         return server_error(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_cancel_duel.route('/', **private_post())
@@ -349,7 +350,7 @@ def cancel_duel_post(json_data):
         response = interactor.run()
     except CancelDuelException as e:
         return server_error(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_duel.route('/teams/get-opponent', **private_get())
@@ -361,7 +362,7 @@ def get_opponent_teams_for_duel():
         request = GetOpponentTeamsRequestModel(data)
         interactor = GetOpponentTeamsInteractor(
             request, player_adapter, team_adapter)
-        response = interactor.run()
+        response = interactor.run()()
         if response:
             return success(response)
         return not_found(f'No team found to be opponent of that team id')

@@ -8,12 +8,19 @@ from chalicelib import (
     delete_random_duel, post_random_duel
 )
 from playerstars_interactors import (
-    CancelDuelException, CreateDuelException,
-    EndDuelException, EnterDuelException,
+    CancelDuelException,
+    CreateDuelException,
+    EndDuelException,
+    EnterDuelException,
+    GetDuelResponseModel,
+    GetMatchListResponseModel,
     GetOpponentCandidateListException,
+    GetOpponentCandidateListResponseModel,
+    GetOpponentTeamsResponseModel,
     GetPlayerDuelByStatusError,
     InformOpponentResponseTimeoutException,
-    RejectDuelException, PostPreDuelException)
+    RejectDuelException,
+    PostPreDuelException)
 from tests.test_utils import jwt
 
 import json
@@ -44,7 +51,7 @@ def test_get_match_list(client, resource, run):
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_match_list', make_get_match_list_mock())
 @patch('chalicelib.duel_route.GetMatchListInteractor.run',
-       MagicMock(return_value=None))
+       MagicMock(return_value=GetMatchListResponseModel([])))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_match_list_not_found(client, resource):
@@ -332,7 +339,7 @@ def test_get_opponent_list(client, resource, run):
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_opponent_list_request())
 @patch('chalicelib.duel_route.GetOpponentCandidateListInteractor.run',
-       MagicMock(return_value=None))
+       MagicMock(return_value=GetOpponentCandidateListResponseModel([])))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_opponent_list_not_found(client, resource):
@@ -468,7 +475,8 @@ def test_get_duel_detail(client, resource, run):
     assert result.status_code == 200
 
 
-@patch('chalicelib.duel_route.GetDuelInteractor.run', return_value=None)
+@patch('chalicelib.duel_route.GetDuelInteractor.run',
+       return_value=GetDuelResponseModel(None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_duel_detail_empty(client, resource, run):
@@ -509,7 +517,7 @@ def test_get_opponent_teams_for_duel(client, resource, run):
        MagicMock(current_request=MagicMock(
            headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.duel_route.GetOpponentTeamsInteractor.run',
-       return_value=[])
+       return_value=GetOpponentTeamsResponseModel([]))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_opponent_teams_for_duel_empty(client, resource, run):
