@@ -82,5 +82,17 @@ class Settings:
     GRAPHQL_API_ID = config('GRAPHQL_API_ID', '3l2u7ok2cjfwdclv5qz3zb5z54')
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
                              'da2-xqu7fukowrcilcwoxvcjsrfawm')
+
+    DUEL_JUDGE_MATRIX = config('JUDGE_DUEL_MATRIX', ''''\
+        I
+        1X
+        12I
+        122I
+        2222X
+        22221I
+        222211I
+        TXTTXTTT
+        T2II1ITTT
+        T2TI11ITTT''')
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 300)
     TIME_TO_ACCEPT_DUEL = config('RESPONSE_TIME', 5)
