@@ -20,9 +20,8 @@ from chalicelib.product_route import bp_product
 from chalicelib.purchase_route import bp_purchase
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
-from chalicelib.send_contact_email import bp_contact_email
-from chalicelib.send_invitation_email import bp_invitation_email
-from chalicelib.send_welcome_email import bp_welcome_email
+from chalicelib.mail_routes import (
+    bp_contact_email, bp_invitation_email, bp_welcome_email)
 from chalicelib.team_route import bp_enter_team, bp_team
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.convert_star_rate_route import bp_convert
