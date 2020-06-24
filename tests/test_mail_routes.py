@@ -114,7 +114,8 @@ def public_contact_email_data():
         'subject': 'testinho',
         'contact_message': 'Mensagem de teste',
         'data': '',
-        'sender_name': 'schrubles'
+        'sender_name': 'schrubles',
+        'sender_mail': 'schrubles@ig.com.br'
     }
     return MagicMock(current_request=MagicMock(json_body=payload))
 
