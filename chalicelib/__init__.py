@@ -102,9 +102,12 @@ from .region_state_route import (
     put_region_state
 )
 from .routes import root
-from .send_contact_email import post_contact_email
-from .send_invitation_email import post_invitation_email
-from .send_welcome_email import post_welcome_email
+from .mail_routes import (
+    post_contact_email,
+    post_invitation_email,
+    post_welcome_email,
+    post_public_contact_email
+)
 from .team_route import (
     accept_invitation,
     delete_team,
@@ -172,6 +175,7 @@ __all__ = [
     'post_contact_email',
     'post_invitation_email',
     'post_welcome_email',
+    'post_public_contact_email',
 
     'get_app_notification_by_status',
     'get_app_notification',
