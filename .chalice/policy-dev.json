@@ -101,7 +101,8 @@
                 "ses:VerifyEmailIdentity",
                 "sqs:SendMessage",
                 "sqs:ServiceResource",
-                "sqs:GetQueueUrl"
+                "sqs:GetQueueUrl",
+                "sqs:CreateQueue"
             ],
             "Resource": "*"
         },
