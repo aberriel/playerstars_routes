@@ -370,7 +370,7 @@ def get_opponent_teams_for_duel():
         return server_error(str(ex))
 
 
-@bp_duel.route('/randomico/{entity_id}', **private_get())
+@bp_duel.route('/random/{entity_id}', **private_get())
 def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
 
@@ -394,7 +394,7 @@ def post_random_duel():
         return server_error(str(ex))
 
 
-@bp_duel.route('/randomico/{entity_id}/{status}', **private_put())
+@bp_duel.route('/random/{entity_id}/{status}', **private_put())
 def put_random_duel(entity_id, status):
     try:
         player_id = get_user_id_from_jwt(bp_duel)
@@ -416,6 +416,6 @@ def put_random_duel(entity_id, status):
         return server_error(str(ex))
 
 
-@bp_duel.route('/randomico/{entity_id}', **private_delete())
+@bp_duel.route('/random/{entity_id}', **private_delete())
 def delete_random_duel(entity_id):
     return get_preduel_router().delete(entity_id)
