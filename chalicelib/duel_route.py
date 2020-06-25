@@ -375,7 +375,7 @@ def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
 
 
-@bp_duel.route('/randomico', **private_post())
+@bp_duel.route('/random', **private_post())
 def post_random_duel():
     try:
         data = bp_duel.current_request.json_body
