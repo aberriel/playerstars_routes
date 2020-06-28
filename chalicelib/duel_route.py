@@ -1,3 +1,5 @@
+from playerstars_aws_scheduled_task_adapter import AwsScheduleTaskAdapter
+
 from .basic_entity_route import BasicEntityRoute
 from chalice import Blueprint
 from chalicelib.chalice_support import (
@@ -155,8 +157,7 @@ def enter_duel_post(json_data):
         notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter(),
-        aws_default_region=Settings.AWS_DEFAULT_REGION,
-        duel_scheduled_finisher_name=Settings.DUEL_SCHEDULED_FINISHER_NAME,
+        schedule_task_adapter=get_schedule_task_adapter(),
         time_to_accept_invitation=Settings.TIME_TO_ACCEPT_DUEL,
         time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL)
     try:
@@ -164,6 +165,14 @@ def enter_duel_post(json_data):
     except EnterDuelException as e:
         return server_error(str(e))
     return success(response())
+
+
+def get_schedule_task_adapter():
+    schedule_task_adapter = AwsScheduleTaskAdapter(
+        name='duel-finish',
+        task_identifier=Settings.DUEL_SCHEDULED_FINISHER_NAME,
+        aws_region=Settings.AWS_DEFAULT_REGION)
+    return schedule_task_adapter
 
 
 @bp_inform_invite_timeout.route('/', **private_post())
@@ -408,8 +417,7 @@ def put_random_duel(entity_id, status):
             request, get_preduel_adapter(), get_player_adapter(),
             get_team_adapter(), get_duel_adapter_dynamo(),
             get_console_adapter(), Settings.TIME_TO_FINISH_DUEL,
-            Settings.DUEL_SCHEDULED_FINISHER_NAME,
-            Settings.AWS_DEFAULT_REGION)
+            schedule_task_adapter=get_schedule_task_adapter())
         response = interactor.run()
         return success(response())
     except BaseException as ex:
