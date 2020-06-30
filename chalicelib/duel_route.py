@@ -211,18 +211,19 @@ def get_duel_router():
 
 
 @bp_duel.route('/', **private_get())
+@logger_aspect
 def get_all_duel():
     return get_duel_router().get_all()
 
 
-@logger_aspect
 @bp_duel.route('/{entity_id}', **private_get())
+@logger_aspect
 def get_duel(entity_id):
     return get_duel_router().get_by_id(entity_id)
 
 
-@logger_aspect
 @bp_duel.route('/{entity_id}/details', **private_get())
+@logger_aspect
 def get_duel_details(entity_id):
     player_id = get_user_id_from_jwt(bp_duel)
     get_data = {
@@ -373,8 +374,8 @@ def cancel_duel_post(json_data):
     return success(response())
 
 
-@logger_aspect
 @bp_duel.route('/teams/get-opponent', **private_get())
+@logger_aspect
 def get_opponent_teams_for_duel():
     try:
         data = bp_duel.current_request.query_params
@@ -391,14 +392,14 @@ def get_opponent_teams_for_duel():
         return server_error(str(ex))
 
 
-@logger_aspect
 @bp_duel.route('/random/{entity_id}', **private_get())
+@logger_aspect
 def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
 
 
-@logger_aspect
 @bp_duel.route('/random', **private_post())
+@logger_aspect
 def post_random_duel():
     try:
         data = bp_duel.current_request.json_body
@@ -417,8 +418,8 @@ def post_random_duel():
         return server_error(str(ex))
 
 
-@logger_aspect
 @bp_duel.route('/random/{entity_id}/{status}', **private_put())
+@logger_aspect
 def put_random_duel(entity_id, status):
     try:
         player_id = get_user_id_from_jwt(bp_duel)
@@ -439,7 +440,7 @@ def put_random_duel(entity_id, status):
         return server_error(str(ex))
 
 
-@logger_aspect
 @bp_duel.route('/random/{entity_id}', **private_delete())
+@logger_aspect
 def delete_random_duel(entity_id):
     return get_preduel_router().delete(entity_id)
