@@ -42,7 +42,7 @@ from playerstars_interactors.duel.end_duel import LoadDuelException, \
     LoadMemberException, UpdateDuelException, JudgeException, \
     UploadImageException, SubmitResultException
 
-from chalicelib.aspect.logging import logger_aspect
+from chalicelib.aspect.logging import logger_aspect, Logging
 from chalicelib.chalice_support import (
     private_get,
     private_post,
@@ -61,6 +61,7 @@ from .duel_route_adapters import (
     get_player_adapter,
     get_team_adapter,
     get_schedule_task_adapter)
+import logging
 
 bp_cancel_duel = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
@@ -68,6 +69,12 @@ bp_duel = Blueprint(__name__)
 bp_enter_duel = Blueprint(__name__)
 bp_inform_invite_timeout = Blueprint(__name__)
 bp_match_list = Blueprint(__name__)
+
+
+logger = logging.getLogger()
+logger.setLevel(Settings.LOG_LEVEL)
+aspect_logging = Logging()
+aspect_logging.set_logger(logger)
 
 
 def get_preduel_router():
