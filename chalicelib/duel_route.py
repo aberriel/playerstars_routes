@@ -1,37 +1,65 @@
-from playerstars_aws_scheduled_task_adapter import AwsScheduleTaskAdapter
-
-from .basic_entity_route import BasicEntityRoute
 from chalice import Blueprint
-from chalicelib.chalice_support import (
-    private_get, private_post, private_put, private_delete)
-from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
-from playerstars_adapters import (
-    DuelAdapter as DuelAdapterDynamo,
-    NotificationAdapter as NotificationAdapterDynamo,
-    PlayerAdapter, PreDuelAdapter, TeamAdapter, ConsoleAdapter)
 from playerstars_domain import Duel, PreDuel
-from playerstars_graphql_adapters import (
-    DuelAdapter as DuelAdapterGraphql,
-    NotificationAdapter as NotificationAdapterGraphql)
 from playerstars_interactors import (
-    CancelDuelException, CancelDuelInteractor, CancelDuelRequestModel,
-    CreateDuelException, CreateDuelInteractor, CreateDuelRequestModel,
-    EndDuelException, EndDuelInteractor, EndDuelRequestModel,
-    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
-    GetAllPlayerDuelInteractor, GetAllPlayerDuelRequestModel,
-    GetMatchListInteractor, GetMatchListRequestModel,
-    GetOpponentCandidateListException, GetOpponentCandidateListInteractor,
-    GetOpponentCandidateListRequestModel, GetPlayerDuelByStatusError,
-    GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    InformOpponentResponseTimeoutException, GetOpponentTeamsInteractor,
-    InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
+    CancelDuelException,
+    CancelDuelInteractor,
+    CancelDuelRequestModel,
+    CreateDuelException,
+    CreateDuelInteractor,
+    CreateDuelRequestModel,
+    EndDuelException,
+    EndDuelInteractor,
+    EndDuelRequestModel,
+    EnterDuelException,
+    EnterDuelInteractor,
+    EnterDuelRequestModel,
+    GetAllPlayerDuelInteractor,
+    GetAllPlayerDuelRequestModel,
+    GetMatchListInteractor,
+    GetMatchListRequestModel,
+    GetOpponentCandidateListException,
+    GetOpponentCandidateListInteractor,
+    GetOpponentCandidateListRequestModel,
+    GetPlayerDuelByStatusError,
+    GetPlayerDuelByStatusInteractor,
+    GetPlayerDuelByStatusRequestModel,
+    InformOpponentResponseTimeoutException,
+    GetOpponentTeamsInteractor,
+    InformOpponentResponseTimeoutInteractor,
+    GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
-    RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
-    GetDuelRequestModel, GetDuelInteractor, PostPreDuelInteractor,
-    PostPreDuelRequestModel, PutPreDuelInteractor, PutPreDuelRequestModel)
-from chalicelib.utils import get_user_id_from_jwt
+    RejectDuelException,
+    RejectDuelInteractor,
+    RejectDuelRequestModel,
+    GetDuelRequestModel,
+    GetDuelInteractor,
+    PostPreDuelInteractor,
+    PostPreDuelRequestModel,
+    PutPreDuelInteractor,
+    PutPreDuelRequestModel)
+from playerstars_interactors.duel.end_duel import LoadDuelException, \
+    LoadMemberException, UpdateDuelException, JudgeException, \
+    UploadImageException, SubmitResultException
 
+from chalicelib.chalice_support import (
+    private_get,
+    private_post,
+    private_put,
+    private_delete)
+from chalicelib.settings import Settings
+from chalicelib.utils import get_user_id_from_jwt
+from .basic_entity_route import BasicEntityRoute
+from .duel_route_adapters import (
+    get_preduel_adapter,
+    get_duel_adapter_dynamo,
+    get_console_adapter,
+    get_duel_adapter_graphql,
+    get_notification_adapter_dynamo,
+    get_notification_adapter_graphql,
+    get_player_adapter,
+    get_team_adapter,
+    get_schedule_task_adapter)
 
 bp_cancel_duel = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
@@ -41,51 +69,8 @@ bp_inform_invite_timeout = Blueprint(__name__)
 bp_match_list = Blueprint(__name__)
 
 
-def get_preduel_adapter():
-    return PreDuelAdapter(Settings.PREDUEL_TABLE_NAME, Settings.DYNAMODB_URL)
-
-
 def get_preduel_router():
     return BasicEntityRoute(get_preduel_adapter(), PreDuel, 'pre-duel')
-
-
-def get_duel_adapter_dynamo():
-    return DuelAdapterDynamo(Settings.DUEL_TABLE_NAME,
-                             Settings.DYNAMODB_URL)
-
-
-def get_console_adapter():
-    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
-
-
-def get_duel_adapter_graphql():
-    return DuelAdapterGraphql(
-        api_id=Settings.GRAPHQL_API_ID,
-        api_key=Settings.GRAPHQL_API_KEY,
-        aws_region=Settings.AWS_DEFAULT_REGION,
-        object_name=Settings.DUEL_MUTATION_NAME_PART)
-
-
-def get_notification_adapter_dynamo():
-    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
-                                     Settings.DYNAMODB_URL)
-
-
-def get_notification_adapter_graphql():
-    return NotificationAdapterGraphql(
-        api_id=Settings.GRAPHQL_API_ID,
-        api_key=Settings.GRAPHQL_API_KEY,
-        aws_region=Settings.AWS_DEFAULT_REGION,
-        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
-
-
-def get_player_adapter():
-    return PlayerAdapter(Settings.PLAYER_TABLE_NAME,
-                         Settings.DYNAMODB_URL)
-
-
-def get_team_adapter():
-    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @bp_match_list.route('/', **private_get())
@@ -165,14 +150,6 @@ def enter_duel_post(json_data):
     except EnterDuelException as e:
         return server_error(str(e))
     return success(response())
-
-
-def get_schedule_task_adapter():
-    schedule_task_adapter = AwsScheduleTaskAdapter(
-        name='duel-finish',
-        task_identifier=Settings.DUEL_SCHEDULED_FINISHER_NAME,
-        aws_region=Settings.AWS_DEFAULT_REGION)
-    return schedule_task_adapter
 
 
 @bp_inform_invite_timeout.route('/', **private_post())
@@ -335,9 +312,20 @@ def end_duel_post(json_data):
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
-    except EndDuelException as e:
-        return server_error(str(e))
-    return success(response())
+        return success(response())
+    except (EndDuelException,
+            LoadDuelException,
+            LoadMemberException,
+            UpdateDuelException,
+            JudgeException,
+            UploadImageException,
+            SubmitResultException) as e:
+        msg = f'Error in end_duel_post: {e.__class__.__name__}({e})'
+        return server_error(msg)
+
+    except Exception as e:
+        msg = f'Unexpected error in end_duel: {e.__class__.__name__}({e})'
+        return server_error(msg)
 
 
 @bp_cancel_duel.route('/', **private_post())
