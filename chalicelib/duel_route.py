@@ -28,7 +28,7 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
-    GetDuelInteractor, BasicGetRequestModel, PostPreDuelInteractor,
+    GetDuelRequestModel, GetDuelInteractor, PostPreDuelInteractor,
     PostPreDuelRequestModel, PutPreDuelInteractor, PutPreDuelRequestModel)
 from chalicelib.utils import get_user_id_from_jwt
 
@@ -232,9 +232,12 @@ def get_duel(entity_id):
 
 @bp_duel.route('/{entity_id}/details', **private_get())
 def get_duel_details(entity_id):
-    print('get_duel_details -> Entrando')
+    player_id = get_user_id_from_jwt(bp_duel)
+    get_data = {
+        "duel_id": entity_id,
+        "player_id": player_id}
     try:
-        request = BasicGetRequestModel(entity_id)
+        request = GetDuelRequestModel(get_data)
         interactor = GetDuelInteractor(
             request, get_duel_adapter_dynamo(),
             get_player_adapter(), get_team_adapter())

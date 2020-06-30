@@ -409,6 +409,11 @@ def make_end_duel_request():
                                   headers=dict(AUTHORIZATION=jwt)))
 
 
+def make_get_duel_detail_request():
+    return MagicMock(
+        current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
+
+
 @patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
 @patch('chalicelib.duel_route.EndDuelInteractor.run')
 @patch('boto3.resource')
@@ -465,6 +470,7 @@ def test_cancel_duel_raises(client, resource):
     assert result.status_code == 500
 
 
+@patch('chalicelib.duel_route.bp_duel', make_get_duel_detail_request())
 @patch('chalicelib.duel_route.GetDuelInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -475,6 +481,7 @@ def test_get_duel_detail(client, resource, run):
     assert result.status_code == 200
 
 
+@patch('chalicelib.duel_route.bp_duel', make_get_duel_detail_request())
 @patch('chalicelib.duel_route.GetDuelInteractor.run',
        return_value=GetDuelResponseModel(None))
 @patch('boto3.resource')
@@ -486,6 +493,7 @@ def test_get_duel_detail_empty(client, resource, run):
     assert result.status_code == 404
 
 
+@patch('chalicelib.duel_route.bp_duel', make_get_duel_detail_request())
 @patch('chalicelib.duel_route.GetDuelInteractor.run',
        side_effect=Exception('oops'))
 @patch('boto3.resource')
