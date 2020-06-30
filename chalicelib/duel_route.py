@@ -312,9 +312,20 @@ def end_duel_post(json_data):
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
-    except EndDuelException as e:
-        return server_error(str(e))
-    return success(response())
+        return success(response())
+    except (EndDuelException,
+            LoadDuelException,
+            LoadMemberException,
+            UpdateDuelException,
+            JudgeException,
+            UploadImageException,
+            SubmitResultException) as e:
+        msg = f'Error in end_duel_post: {e.__class__.__name__}({e})'
+        return server_error(msg)
+
+    except Exception as e:
+        msg = f'Unexpected error in end_duel: {e.__class__.__name__}({e})'
+        return server_error(msg)
 
 
 @bp_cancel_duel.route('/', **private_post())
