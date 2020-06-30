@@ -8,12 +8,7 @@ default_logger = logging.getLogger('log-aspect')
 class Logging:
     class __Logging:
         def __init__(self):
-            log_format = "%(levelname)s %(asctime)s - %(message)s"
-            fhandler = logging.FileHandler('log-aspect.log')
-            fhandler.setFormatter(logging.Formatter(log_format))
-            default_logger.addHandler(fhandler)
-
-            self.logger = default_logger
+            self.logger = logging.getLogger()
 
         def set_logger(self, external_logger):
             self.logger = external_logger
