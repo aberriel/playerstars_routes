@@ -42,6 +42,7 @@ from playerstars_interactors.duel.end_duel import LoadDuelException, \
     LoadMemberException, UpdateDuelException, JudgeException, \
     UploadImageException, SubmitResultException
 
+from chalicelib.aspect.logging import logger_aspect
 from chalicelib.chalice_support import (
     private_get,
     private_post,
@@ -81,6 +82,7 @@ def get_match_list():
     return get_match_list_by_player(data)
 
 
+@logger_aspect
 def get_match_list_by_player(data):
     request = GetMatchListRequestModel(data)
     interactor = GetMatchListInteractor(
@@ -102,6 +104,7 @@ def post_duel():
     return create_duel(data)
 
 
+@logger_aspect
 def create_duel(json_data):
     try:
         request = CreateDuelRequestModel(json_data)
@@ -133,6 +136,7 @@ def enter_duel():
     return enter_duel_post(data)
 
 
+@logger_aspect
 def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
@@ -160,6 +164,7 @@ def inform_invitation_timeout():
     return inform_invitation_timeout_post(data)
 
 
+@logger_aspect
 def inform_invitation_timeout_post(json_data):
     request = InformOpponentResponseTimeoutRequestModel(json_data)
     interactor = InformOpponentResponseTimeoutInteractor(
@@ -182,6 +187,7 @@ def get_all_player_duels():
     return get_player_duels(entity_id)
 
 
+@logger_aspect
 def get_player_duels(player_id):
     request = GetAllPlayerDuelRequestModel(player_id)
     interactor = GetAllPlayerDuelInteractor(
@@ -202,11 +208,13 @@ def get_all_duel():
     return get_duel_router().get_all()
 
 
+@logger_aspect
 @bp_duel.route('/{entity_id}', **private_get())
 def get_duel(entity_id):
     return get_duel_router().get_by_id(entity_id)
 
 
+@logger_aspect
 @bp_duel.route('/{entity_id}/details', **private_get())
 def get_duel_details(entity_id):
     player_id = get_user_id_from_jwt(bp_duel)
@@ -232,6 +240,7 @@ def get_duels_by_status_route(status):
     return get_duels_by_status(entity_id, status)
 
 
+@logger_aspect
 def get_duels_by_status(entity_id, status):
     request = GetPlayerDuelByStatusRequestModel(entity_id, status)
     interactor = GetPlayerDuelByStatusInteractor(
@@ -256,6 +265,7 @@ def get_opponent_list_route():
     return get_opponent_list(data)
 
 
+@logger_aspect
 def get_opponent_list(data):
     request = GetOpponentCandidateListRequestModel(data)
     interactor = GetOpponentCandidateListInteractor(
@@ -277,6 +287,7 @@ def reject_duel_route():
     return reject_duel(data)
 
 
+@logger_aspect
 def reject_duel(data):
     request = RejectDuelRequestModel(data)
     interactor = RejectDuelInteractor(
@@ -298,6 +309,7 @@ def end_duel():
     return end_duel_post(data)
 
 
+@logger_aspect
 def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
     interactor = EndDuelInteractor(
@@ -336,6 +348,7 @@ def cancel_duel_route():
     return cancel_duel_post(data)
 
 
+@logger_aspect
 def cancel_duel_post(json_data):
     request = CancelDuelRequestModel(json_data)
     interactor = CancelDuelInteractor(
@@ -353,6 +366,7 @@ def cancel_duel_post(json_data):
     return success(response())
 
 
+@logger_aspect
 @bp_duel.route('/teams/get-opponent', **private_get())
 def get_opponent_teams_for_duel():
     try:
@@ -370,11 +384,13 @@ def get_opponent_teams_for_duel():
         return server_error(str(ex))
 
 
+@logger_aspect
 @bp_duel.route('/random/{entity_id}', **private_get())
 def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
 
 
+@logger_aspect
 @bp_duel.route('/random', **private_post())
 def post_random_duel():
     try:
@@ -394,6 +410,7 @@ def post_random_duel():
         return server_error(str(ex))
 
 
+@logger_aspect
 @bp_duel.route('/random/{entity_id}/{status}', **private_put())
 def put_random_duel(entity_id, status):
     try:
@@ -415,6 +432,7 @@ def put_random_duel(entity_id, status):
         return server_error(str(ex))
 
 
+@logger_aspect
 @bp_duel.route('/random/{entity_id}', **private_delete())
 def delete_random_duel(entity_id):
     return get_preduel_router().delete(entity_id)
