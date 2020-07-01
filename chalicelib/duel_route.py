@@ -1,37 +1,67 @@
-from playerstars_aws_scheduled_task_adapter import AwsScheduleTaskAdapter
-
-from .basic_entity_route import BasicEntityRoute
 from chalice import Blueprint
-from chalicelib.chalice_support import (
-    private_get, private_post, private_put, private_delete)
-from chalicelib.settings import Settings
 from chalice_support import server_error, created, success, not_found
-from playerstars_adapters import (
-    DuelAdapter as DuelAdapterDynamo,
-    NotificationAdapter as NotificationAdapterDynamo,
-    PlayerAdapter, PreDuelAdapter, TeamAdapter, ConsoleAdapter)
 from playerstars_domain import Duel, PreDuel
-from playerstars_graphql_adapters import (
-    DuelAdapter as DuelAdapterGraphql,
-    NotificationAdapter as NotificationAdapterGraphql)
 from playerstars_interactors import (
-    CancelDuelException, CancelDuelInteractor, CancelDuelRequestModel,
-    CreateDuelException, CreateDuelInteractor, CreateDuelRequestModel,
-    EndDuelException, EndDuelInteractor, EndDuelRequestModel,
-    EnterDuelException, EnterDuelInteractor, EnterDuelRequestModel,
-    GetAllPlayerDuelInteractor, GetAllPlayerDuelRequestModel,
-    GetMatchListInteractor, GetMatchListRequestModel,
-    GetOpponentCandidateListException, GetOpponentCandidateListInteractor,
-    GetOpponentCandidateListRequestModel, GetPlayerDuelByStatusError,
-    GetPlayerDuelByStatusInteractor, GetPlayerDuelByStatusRequestModel,
-    InformOpponentResponseTimeoutException, GetOpponentTeamsInteractor,
-    InformOpponentResponseTimeoutInteractor, GetOpponentTeamsRequestModel,
+    CancelDuelException,
+    CancelDuelInteractor,
+    CancelDuelRequestModel,
+    CreateDuelException,
+    CreateDuelInteractor,
+    CreateDuelRequestModel,
+    EndDuelException,
+    EndDuelInteractor,
+    EndDuelRequestModel,
+    EnterDuelException,
+    EnterDuelInteractor,
+    EnterDuelRequestModel,
+    GetAllPlayerDuelInteractor,
+    GetAllPlayerDuelRequestModel,
+    GetMatchListInteractor,
+    GetMatchListRequestModel,
+    GetOpponentCandidateListException,
+    GetOpponentCandidateListInteractor,
+    GetOpponentCandidateListRequestModel,
+    GetPlayerDuelByStatusError,
+    GetPlayerDuelByStatusInteractor,
+    GetPlayerDuelByStatusRequestModel,
+    InformOpponentResponseTimeoutException,
+    GetOpponentTeamsInteractor,
+    InformOpponentResponseTimeoutInteractor,
+    GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
-    RejectDuelException, RejectDuelInteractor, RejectDuelRequestModel,
-    GetDuelRequestModel, GetDuelInteractor, PostPreDuelInteractor,
-    PostPreDuelRequestModel, PutPreDuelInteractor, PutPreDuelRequestModel)
-from chalicelib.utils import get_user_id_from_jwt
+    RejectDuelException,
+    RejectDuelInteractor,
+    RejectDuelRequestModel,
+    GetDuelRequestModel,
+    GetDuelInteractor,
+    PostPreDuelInteractor,
+    PostPreDuelRequestModel,
+    PutPreDuelInteractor,
+    PutPreDuelRequestModel)
+from playerstars_interactors.duel.end_duel import LoadDuelException, \
+    LoadMemberException, UpdateDuelException, JudgeException, \
+    UploadImageException, SubmitResultException
 
+from chalicelib.aspect.logging import logger_aspect, Logging
+from chalicelib.chalice_support import (
+    private_get,
+    private_post,
+    private_put,
+    private_delete)
+from chalicelib.settings import Settings
+from chalicelib.utils import get_user_id_from_jwt
+from .basic_entity_route import BasicEntityRoute
+from .duel_route_adapters import (
+    get_preduel_adapter,
+    get_duel_adapter_dynamo,
+    get_console_adapter,
+    get_duel_adapter_graphql,
+    get_notification_adapter_dynamo,
+    get_notification_adapter_graphql,
+    get_player_adapter,
+    get_team_adapter,
+    get_schedule_task_adapter)
+import logging
 
 bp_cancel_duel = Blueprint(__name__)
 bp_create_duel = Blueprint(__name__)
@@ -41,51 +71,14 @@ bp_inform_invite_timeout = Blueprint(__name__)
 bp_match_list = Blueprint(__name__)
 
 
-def get_preduel_adapter():
-    return PreDuelAdapter(Settings.PREDUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+logger = logging.getLogger()
+logger.setLevel(Settings.LOG_LEVEL)
+aspect_logging = Logging()
+aspect_logging.set_logger(logger)
 
 
 def get_preduel_router():
     return BasicEntityRoute(get_preduel_adapter(), PreDuel, 'pre-duel')
-
-
-def get_duel_adapter_dynamo():
-    return DuelAdapterDynamo(Settings.DUEL_TABLE_NAME,
-                             Settings.DYNAMODB_URL)
-
-
-def get_console_adapter():
-    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
-
-
-def get_duel_adapter_graphql():
-    return DuelAdapterGraphql(
-        api_id=Settings.GRAPHQL_API_ID,
-        api_key=Settings.GRAPHQL_API_KEY,
-        aws_region=Settings.AWS_DEFAULT_REGION,
-        object_name=Settings.DUEL_MUTATION_NAME_PART)
-
-
-def get_notification_adapter_dynamo():
-    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
-                                     Settings.DYNAMODB_URL)
-
-
-def get_notification_adapter_graphql():
-    return NotificationAdapterGraphql(
-        api_id=Settings.GRAPHQL_API_ID,
-        api_key=Settings.GRAPHQL_API_KEY,
-        aws_region=Settings.AWS_DEFAULT_REGION,
-        object_name=Settings.NOTIFICATION_MUTATION_NAME_PART)
-
-
-def get_player_adapter():
-    return PlayerAdapter(Settings.PLAYER_TABLE_NAME,
-                         Settings.DYNAMODB_URL)
-
-
-def get_team_adapter():
-    return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @bp_match_list.route('/', **private_get())
@@ -96,6 +89,7 @@ def get_match_list():
     return get_match_list_by_player(data)
 
 
+@logger_aspect
 def get_match_list_by_player(data):
     request = GetMatchListRequestModel(data)
     interactor = GetMatchListInteractor(
@@ -117,6 +111,7 @@ def post_duel():
     return create_duel(data)
 
 
+@logger_aspect
 def create_duel(json_data):
     try:
         request = CreateDuelRequestModel(json_data)
@@ -148,6 +143,7 @@ def enter_duel():
     return enter_duel_post(data)
 
 
+@logger_aspect
 def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
     interactor = EnterDuelInteractor(
@@ -167,14 +163,6 @@ def enter_duel_post(json_data):
     return success(response())
 
 
-def get_schedule_task_adapter():
-    schedule_task_adapter = AwsScheduleTaskAdapter(
-        name='duel-finish',
-        task_identifier=Settings.DUEL_SCHEDULED_FINISHER_NAME,
-        aws_region=Settings.AWS_DEFAULT_REGION)
-    return schedule_task_adapter
-
-
 @bp_inform_invite_timeout.route('/', **private_post())
 def inform_invitation_timeout():
     data = bp_inform_invite_timeout.current_request.json_body
@@ -183,6 +171,7 @@ def inform_invitation_timeout():
     return inform_invitation_timeout_post(data)
 
 
+@logger_aspect
 def inform_invitation_timeout_post(json_data):
     request = InformOpponentResponseTimeoutRequestModel(json_data)
     interactor = InformOpponentResponseTimeoutInteractor(
@@ -205,6 +194,7 @@ def get_all_player_duels():
     return get_player_duels(entity_id)
 
 
+@logger_aspect
 def get_player_duels(player_id):
     request = GetAllPlayerDuelRequestModel(player_id)
     interactor = GetAllPlayerDuelInteractor(
@@ -221,16 +211,19 @@ def get_duel_router():
 
 
 @bp_duel.route('/', **private_get())
+@logger_aspect
 def get_all_duel():
     return get_duel_router().get_all()
 
 
 @bp_duel.route('/{entity_id}', **private_get())
+@logger_aspect
 def get_duel(entity_id):
     return get_duel_router().get_by_id(entity_id)
 
 
 @bp_duel.route('/{entity_id}/details', **private_get())
+@logger_aspect
 def get_duel_details(entity_id):
     player_id = get_user_id_from_jwt(bp_duel)
     get_data = {
@@ -255,6 +248,7 @@ def get_duels_by_status_route(status):
     return get_duels_by_status(entity_id, status)
 
 
+@logger_aspect
 def get_duels_by_status(entity_id, status):
     request = GetPlayerDuelByStatusRequestModel(entity_id, status)
     interactor = GetPlayerDuelByStatusInteractor(
@@ -279,6 +273,7 @@ def get_opponent_list_route():
     return get_opponent_list(data)
 
 
+@logger_aspect
 def get_opponent_list(data):
     request = GetOpponentCandidateListRequestModel(data)
     interactor = GetOpponentCandidateListInteractor(
@@ -300,6 +295,7 @@ def reject_duel_route():
     return reject_duel(data)
 
 
+@logger_aspect
 def reject_duel(data):
     request = RejectDuelRequestModel(data)
     interactor = RejectDuelInteractor(
@@ -321,6 +317,7 @@ def end_duel():
     return end_duel_post(data)
 
 
+@logger_aspect
 def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
     interactor = EndDuelInteractor(
@@ -335,9 +332,20 @@ def end_duel_post(json_data):
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
-    except EndDuelException as e:
-        return server_error(str(e))
-    return success(response())
+        return success(response())
+    except (EndDuelException,
+            LoadDuelException,
+            LoadMemberException,
+            UpdateDuelException,
+            JudgeException,
+            UploadImageException,
+            SubmitResultException) as e:
+        msg = f'Error in end_duel_post: {e.__class__.__name__}({e})'
+        return server_error(msg)
+
+    except Exception as e:
+        msg = f'Unexpected error in end_duel: {e.__class__.__name__}({e})'
+        return server_error(msg)
 
 
 @bp_cancel_duel.route('/', **private_post())
@@ -348,6 +356,7 @@ def cancel_duel_route():
     return cancel_duel_post(data)
 
 
+@logger_aspect
 def cancel_duel_post(json_data):
     request = CancelDuelRequestModel(json_data)
     interactor = CancelDuelInteractor(
@@ -366,6 +375,7 @@ def cancel_duel_post(json_data):
 
 
 @bp_duel.route('/teams/get-opponent', **private_get())
+@logger_aspect
 def get_opponent_teams_for_duel():
     try:
         data = bp_duel.current_request.query_params
@@ -383,11 +393,13 @@ def get_opponent_teams_for_duel():
 
 
 @bp_duel.route('/random/{entity_id}', **private_get())
+@logger_aspect
 def get_random_duel(entity_id):
     return get_preduel_router().get_by_id(entity_id)
 
 
 @bp_duel.route('/random', **private_post())
+@logger_aspect
 def post_random_duel():
     try:
         data = bp_duel.current_request.json_body
@@ -407,6 +419,7 @@ def post_random_duel():
 
 
 @bp_duel.route('/random/{entity_id}/{status}', **private_put())
+@logger_aspect
 def put_random_duel(entity_id, status):
     try:
         player_id = get_user_id_from_jwt(bp_duel)
@@ -428,5 +441,6 @@ def put_random_duel(entity_id, status):
 
 
 @bp_duel.route('/random/{entity_id}', **private_delete())
+@logger_aspect
 def delete_random_duel(entity_id):
     return get_preduel_router().delete(entity_id)

@@ -432,7 +432,21 @@ def test_end_duel(client, resource, run):
 @patch('boto3.client')
 def test_end_duel_raises(client, resource):
     result = end_duel()
-    assert result.body['message'] == 'oops'
+    assert result.body['message'] == 'Error in end_duel_post: ' \
+                                     'EndDuelException(oops)'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
+@patch('chalicelib.duel_route.EndDuelInteractor.run',
+       MagicMock(side_effect=ValueError('Valor errado')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_end_duel_general_raises(client, resource):
+    result = end_duel()
+    assert result.body['message'] == 'Unexpected error in end_duel: ' \
+                                     'ValueError(Valor errado)'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
 
