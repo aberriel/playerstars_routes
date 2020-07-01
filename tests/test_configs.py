@@ -55,17 +55,17 @@ def test_config_file_exists():
     assert path.isfile(config_file_path)
 
 
-def test_check_has_stage_dev():
+def test_has_stage_dev():
     config_from_json = read_config_json()
     assert 'dev' in config_from_json['stages']
 
 
-def test_check_has_stage_stg():
+def test_has_stage_stg():
     config_from_json = read_config_json()
     assert 'stg' in config_from_json['stages']
 
 
-def test_check_has_stage_prd():
+def test_has_stage_prd():
     config_content = read_config_json()
     assert 'prd' in config_content['stages']
 
@@ -110,11 +110,10 @@ def test_has_table_configs_on_stg():
 
 def test_has_table_configs_on_prd():
     tables = get_settings_variables_table()
-    stage_prd = get_stage_from_config('prd')
+    stage_prd = get_stage_from_config('prd')['environment_variables']
     for table in tables:
         assert table in stage_prd
         assert stage_prd[table]
-        assert '_prd' in stage_prd[table]
 
 
 def test_has_environment_variables_on_dev():
@@ -139,14 +138,14 @@ def test_has_environment_variables_on_stg():
 
 def test_has_environment_variables_on_prd():
     tables = get_settings_variables_not_table()
-    environment_variables = get_stage_from_config('prd')
+    envvars = get_stage_from_config('prd')['environment_variables']
     for env in tables:
         if env not in exclusion_list:
-            assert env in environment_variables
-            assert environment_variables[env]
+            assert env in envvars
+            assert envvars[env]
 
 
-def test_check_log_level():
+def test_log_level():
     settings_envs = get_settings_variables_not_table()
     assert 'LOG_LEVEL' in settings_envs
     json_envs = get_environment_variables_from_config()
@@ -154,19 +153,19 @@ def test_check_log_level():
     assert json_envs['LOG_LEVEL'] == 'INFO'
 
 
-def test_check_log_level_dev():
+def test_log_level_dev():
     json_dev_envs = get_stage_from_config('dev')['environment_variables']
     assert 'LOG_LEVEL' in json_dev_envs
-    assert json_dev_envs['LOG_LEVEL'] == 'DEBUG'
+    assert json_dev_envs['LOG_LEVEL'] == 'INFO'
 
 
-def test_check_log_level_stg():
+def test_log_level_stg():
     json_stg_envs = get_stage_from_config('stg')['environment_variables']
     assert 'LOG_LEVEL' in json_stg_envs
-    assert json_stg_envs['LOG_LEVEL'] == 'DEBUG'
+    assert json_stg_envs['LOG_LEVEL'] == 'INFO'
 
 
-def test_check_log_level_prd():
-    json_prd_envs = get_stage_from_config('prd')
+def test_log_level_prd():
+    json_prd_envs = get_stage_from_config('prd')['environment_variables']
     assert 'LOG_LEVEL' in json_prd_envs
     assert json_prd_envs['LOG_LEVEL'] == 'INFO'
