@@ -37,8 +37,8 @@
         "PAGSEGURO_RETURN_URL": "www.google.com.br",
         "PAGSEGURO_SANDBOX_ENABLE": "True",
         "PAGSEGURO_SANDBOX_HOST_URL": "https://ws.sandbox.pagseguro.uol.com.br",
-        "PAGSEGURO_SANDBOX_TOKEN": "8D0B7247DE3B4F22ABBCCCE6AD802C19",
-        "PAGSEGURO_TOKEN": "A0ABD34C342A474C8CEB112430FCCBD8",
+        "PAGSEGURO_SANDBOX_TOKEN": "USE O AWS PARAM-STORE",
+        "PAGSEGURO_TOKEN": "USE O AWS PARAM-STORE",
         "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
         "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification",
         "PURCHASE_OPERATION_TIMEOUT": "20",
@@ -57,6 +57,7 @@
     "stages": {
         "dev": {
             "api_gateway_stage": "dev",
+            "lambda_memory_size": 1024,
             "environment_variables": {
                 "CHAMPIONSHIP_TABLE_NAME": "championship_dev",
                 "CONSOLE_TABLE_NAME": "console_dev",
@@ -84,14 +85,14 @@
 
                 "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
                 "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_dev",
-                "LOG_LEVEL": "DEBUG",
+                "LOG_LEVEL": "INFO",
                 "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
                 "PAGSEGURO_HOST_URL": "https://ws.pagseguro.uol.com.br",
                 "PAGSEGURO_RETURN_URL": "www.google.com.br",
                 "PAGSEGURO_SANDBOX_ENABLE": "True",
                 "PAGSEGURO_SANDBOX_HOST_URL": "https://ws.sandbox.pagseguro.uol.com.br",
-                "PAGSEGURO_SANDBOX_TOKEN": "8D0B7247DE3B4F22ABBCCCE6AD802C19",
-                "PAGSEGURO_TOKEN": "A0ABD34C342A474C8CEB112430FCCBD8",
+                "PAGSEGURO_SANDBOX_TOKEN": "USE O AWS PARAM-STORE",
+                "PAGSEGURO_TOKEN": "USE O AWS PARAM-STORE",
                 "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
                 "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification",
                 "PURCHASE_OPERATION_TIMEOUT": "20",
@@ -143,8 +144,8 @@
                 "PAGSEGURO_RETURN_URL": "www.google.com.br",
                 "PAGSEGURO_SANDBOX_ENABLE": "True",
                 "PAGSEGURO_SANDBOX_HOST_URL": "https://ws.sandbox.pagseguro.uol.com.br",
-                "PAGSEGURO_SANDBOX_TOKEN": "8D0B7247DE3B4F22ABBCCCE6AD802C19",
-                "PAGSEGURO_TOKEN": "A0ABD34C342A474C8CEB112430FCCBD8",
+                "PAGSEGURO_SANDBOX_TOKEN": "USE O AWS PARAM-STORE",
+                "PAGSEGURO_TOKEN": "USE O AWS PARAM-STORE",
                 "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
                 "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/stg/purchase/notification",
                 "PURCHASE_OPERATION_TIMEOUT": "20",
@@ -162,56 +163,7 @@
             }
         },
         "prd": {
-            "api_gateway_stage": "api",
-
-            "CHAMPIONSHIP_TABLE_NAME": "championship_prd",
-            "CONSOLE_TABLE_NAME": "console_prd",
-            "CONVERT_STAR_TABLE_NAME": "convert_rate_prd",
-            "DUEL_TABLE_NAME": "duel_prd",
-            "NOTIFICATION_TABLE_NAME": "notification_prd",
-            "PLAYER_TABLE_NAME": "player_prd",
-            "PRODUCT_TABLE_NAME": "product_prd",
-            "PURCHASE_HISTORY_TABLE_NAME": "purchase_prd",
-            "REGION_COUNTRY_TABLE_NAME": "region_country_prd",
-            "REGION_STATE_TABLE_NAME": "region_state_prd",
-            "TEAM_TABLE_NAME": "team_prd",
-            "USER_TABLE_NAME": "user_prd",
-            "USER_ADMIN_TABLE_NAME": "user_admin_prd",
-            "VALUES_TABLE_NAME": "values_prd",
-            "TERMS_TABLE_NAME": "terms_prd",
-            "PRIVACY_TABLE_NAME": "privacy_prd",
-            "PREDUEL_TABLE_NAME": "preduel_prd",
-
-            "CHAMPIONSHIP_MUTATION_NAME_PART": "ChampionshipPrd",
-            "DUEL_MUTATION_NAME_PART": "DuelPrd",
-            "NOTIFICATION_MUTATION_NAME_PART": "NotificationPrd",
-
-            "CHAMPIONSHIP_CHECK_TASK_NAME": "championship_check_prd",
-
-            "CONTACT_EMAIL_RECIPIENTS": "noreply@stormsec.com.br",
-            "DUEL_SCHEDULED_FINISHER_NAME": "duel_scheduled_finisher_prd",
-            "LOG_LEVEL": "INFO",
-            "PAGSEGURO_EMAIL": "wanderley@stormsec.com.br",
-            "PAGSEGURO_HOST_URL": "https://ws.pagseguro.uol.com.br",
-            "PAGSEGURO_RETURN_URL": "www.google.com.br",
-            "PAGSEGURO_SANDBOX_ENABLE": "True",
-            "PAGSEGURO_SANDBOX_HOST_URL": "https://ws.sandbox.pagseguro.uol.com.br",
-            "PAGSEGURO_SANDBOX_TOKEN": "8D0B7247DE3B4F22ABBCCCE6AD802C19",
-            "PAGSEGURO_TOKEN": "A0ABD34C342A474C8CEB112430FCCBD8",
-            "PAGSEGURO_UPDATE_NOTIFICATION_URL": "{host}/v3/transactions/notifications/{notification_code}?email={email}&token={token}",
-            "PLAYERSTARS_NOTIFICATION_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/purchase/notification",
-            "PURCHASE_OPERATION_TIMEOUT": "20",
-            "RETURN_URL": "http://playerstars-dev.s3-website-us-east-1.amazonaws.com",
-            "S3_BUCKET_NAME": "playerstars-dev-photos",
-            "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
-
-            "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
-            "TIME_TO_FINISH_DUEL": "300",
-            "TIME_TO_ACCEPT_DUEL": "5",
-
-            "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
-            "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
-            "GRAPHQL_API_KEY": "da2-xqu7fukowrcilcwoxvcjsrfawm"
+            "api_gateway_stage": "api"
         }
     }
 }
