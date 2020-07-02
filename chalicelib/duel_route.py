@@ -433,7 +433,8 @@ def put_random_duel(entity_id, status):
             request, get_preduel_adapter(), get_player_adapter(),
             get_team_adapter(), get_duel_adapter_dynamo(),
             get_console_adapter(), Settings.TIME_TO_FINISH_DUEL,
-            schedule_task_adapter=get_schedule_task_adapter())
+            schedule_task_adapter=get_schedule_task_adapter(),
+            time_to_finish=Settings.TIME_TO_FINISH_DUEL)
         response = interactor.run()
         return success(response())
     except BaseException as ex:
