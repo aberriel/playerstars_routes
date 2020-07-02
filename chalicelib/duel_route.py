@@ -430,11 +430,15 @@ def put_random_duel(entity_id, status):
         }
         request = PutPreDuelRequestModel(data)
         interactor = PutPreDuelInteractor(
-            request, get_preduel_adapter(), get_player_adapter(),
-            get_team_adapter(), get_duel_adapter_dynamo(),
-            get_console_adapter(), Settings.TIME_TO_FINISH_DUEL,
-            schedule_task_adapter=get_schedule_task_adapter(),
-            time_to_finish=Settings.TIME_TO_FINISH_DUEL)
+            request=request,
+            preduel_adapter=get_preduel_adapter(),
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
+            duel_adapter=get_duel_adapter_dynamo(),
+            console_adapter=get_console_adapter(),
+            notification_adapter=get_notification_adapter_graphql(),
+            time_to_finish=Settings.TIME_TO_FINISH_DUEL,
+            schedule_task_adapter=get_schedule_task_adapter())
         response = interactor.run()
         return success(response())
     except BaseException as ex:
