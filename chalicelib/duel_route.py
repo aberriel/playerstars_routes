@@ -1,5 +1,6 @@
 from chalice import Blueprint
-from chalice_support import server_error, created, success, not_found
+from chalice_support import server_error, created, success, not_found, \
+    bad_request
 from playerstars_domain import Duel, PreDuel
 from playerstars_interactors import (
     CancelDuelException,
@@ -41,6 +42,7 @@ from playerstars_interactors import (
 from playerstars_interactors.duel.end_duel import LoadDuelException, \
     LoadMemberException, UpdateDuelException, JudgeException, \
     UploadImageException, SubmitResultException
+from playerstars_interactors.duel.enter_duel import InvalidStatusException
 
 from chalicelib.aspect.logging import logger_aspect, Logging
 from chalicelib.chalice_support import (
@@ -158,6 +160,10 @@ def enter_duel_post(json_data):
         time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL)
     try:
         response = interactor.run()
+
+    except InvalidStatusException as e:
+        return bad_request(str(e))
+
     except EnterDuelException as e:
         return server_error(str(e))
     return success(response())
