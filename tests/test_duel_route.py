@@ -1,12 +1,6 @@
+import json
 from unittest.mock import MagicMock, patch
-from chalicelib import (
-    cancel_duel_route, end_duel, enter_duel, get_all_duel,
-    get_all_player_duels, get_duel, get_duels_by_status_route,
-    get_match_list, get_opponent_list_route, inform_invitation_timeout,
-    post_duel, reject_duel_route, get_duel_details,
-    get_opponent_teams_for_duel, get_random_duel, put_random_duel,
-    delete_random_duel, post_random_duel
-)
+
 from playerstars_interactors import (
     CancelDuelException,
     CreateDuelException,
@@ -21,9 +15,18 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutException,
     RejectDuelException,
     PostPreDuelException)
-from tests.test_utils import jwt
+from playerstars_interactors.duel.enter_duel import InvalidStatusException
 
-import json
+from chalicelib import (
+    cancel_duel_route, end_duel, enter_duel, get_all_duel,
+    get_all_player_duels, get_duel, get_duels_by_status_route,
+    get_match_list, get_opponent_list_route, inform_invitation_timeout,
+    post_duel, reject_duel_route, get_duel_details,
+    get_opponent_teams_for_duel, get_random_duel, put_random_duel,
+    delete_random_duel, post_random_duel
+)
+from chalicelib.duel_route import enter_duel_post
+from tests.test_utils import jwt
 
 
 def make_get_match_list_mock():
@@ -673,3 +676,24 @@ def test_put_random_duel_raises(client, resource, run):
     assert result.body['status'] == 'error'
     assert result.status_code == 500
     assert result.body['message'] == 'oops'
+
+
+@patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractor',
+       return_value=MagicMock(
+           run=MagicMock(
+               side_effect=InvalidStatusException('Status inválido'))))
+@patch('playerstars_adapters.basic_adapter.boto3')
+@patch('playerstars_graphql_adapters.basic_adapter.AppSyncClient')
+@patch('chalicelib.duel_route.get_schedule_task_adapter')
+def test_enter_duel_invalid_status(mock_get_schedule_task,
+                                   mock_appsync,
+                                   mock_boto3,
+                                   mock_interactor,
+                                   mock_request):
+    json_data = MagicMock()
+    result = enter_duel_post(json_data)
+
+    assert result.status_code == 400
+    assert result.body['status'] == 'error'
+    assert result.body['message'] == 'Status inválido'
