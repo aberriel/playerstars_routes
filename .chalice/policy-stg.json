@@ -97,7 +97,11 @@
                 "ses:VerifyDomainDkim",
                 "ses:VerifyDomainIdentity",
                 "ses:VerifyEmailAddress",
-                "ses:VerifyEmailIdentity"
+                "ses:VerifyEmailIdentity",
+                "sqs:SendMessage",
+                "sqs:ServiceResource",
+                "sqs:GetQueueUrl",
+                "sqs:CreateQueue"
             ],
             "Resource": "*"
         },
