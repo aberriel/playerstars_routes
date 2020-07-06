@@ -23,7 +23,7 @@ import os
 req = 'requirements.txt'
 for package in [x.split('==')[0] for x in open(req).read().split('\n')]:
 	if package.strip():
-		os.system('pip uninstall --yes %s' % package)
+		os.system(f'pip uninstall --yes {package}')
 
 endef
 export UNINSTALL_ALL_PYSCRIPT
