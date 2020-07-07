@@ -205,7 +205,8 @@ def get_player_duels(player_id):
     request = GetAllPlayerDuelRequestModel(player_id)
     interactor = GetAllPlayerDuelInteractor(
         request=request,
-        adapter_instance=get_duel_adapter_dynamo())
+        adapter_instance=get_duel_adapter_dynamo(),
+        team_adapter=get_team_adapter())
     response = interactor.run()
     if response:
         return success(response)
