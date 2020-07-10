@@ -21,7 +21,7 @@ class BasicEntityRoute:
                 paginate and query_params else None
             interactor = BasicGetAllInteractor(
                 request=request, adapter_instance=self.adapter_instance,
-                paginate=paginate, _filter=_filter)
+                paginate=paginate)
             if paginate and query_params:
                 return self.paginated_return(interactor)
             response = interactor.run()

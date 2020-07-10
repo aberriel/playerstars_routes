@@ -146,7 +146,7 @@ def get_all_player_filter(query_params):
         request = BasicGetAllRequestModel(query_params)
         interactor = BasicGetAllInteractor(
             request=request, adapter_instance=player_adapter,
-            paginate=False, _filter=True)
+            paginate=False)
         response = interactor.run()
         if response:
             return success(response)
