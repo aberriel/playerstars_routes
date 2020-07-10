@@ -110,11 +110,12 @@ def post(data):
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             notification_adapter=get_notification_graphql_adapter(),
-            settings=Settings)
+            s3_bucket_url=Settings.S3_BUCKET_URL,
+            s3_bucket_name=Settings.S3_BUCKET_NAME)
         response = interactor.run()
     except SaveTeamException as e:
         return server_error(str(e))
-    return created(response)
+    return created(response())
 
 
 @bp_team.route('/{entity_id}', **private_put())
