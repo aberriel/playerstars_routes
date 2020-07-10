@@ -11,7 +11,7 @@ from playerstars_interactors import (
     GetOpponentCandidateListException,
     GetOpponentCandidateListResponseModel,
     GetOpponentTeamsResponseModel,
-    GetPlayerDuelByStatusError,
+    GetAllPlayerDuelByStatusError,
     InformOpponentResponseTimeoutException,
     RejectDuelException,
     PostPreDuelException)
@@ -201,7 +201,7 @@ def make_get_profile_request():
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
-@patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run')
+@patch('chalicelib.duel_route.GetAllPlayerDuelByStatusInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player_duel(client, resource, run):
@@ -213,7 +213,7 @@ def test_get_all_player_duel(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
-@patch('chalicelib.duel_route.GetAllPlayerDuelInteractor.run',
+@patch('chalicelib.duel_route.GetAllPlayerDuelByStatusInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -275,7 +275,7 @@ def teste_get_duel(client, resource):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
-@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run')
+@patch('chalicelib.duel_route.GetAllPlayerDuelByStatusInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_duel_by_status(client, resource, run):
@@ -287,7 +287,7 @@ def test_get_duel_by_status(client, resource, run):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
-@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run',
+@patch('chalicelib.duel_route.GetAllPlayerDuelByStatusInteractor.run',
        MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -303,8 +303,8 @@ def test_get_duel_by_status_not_found(client, resource):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_duel', make_get_profile_request())
-@patch('chalicelib.duel_route.GetPlayerDuelByStatusInteractor.run',
-       MagicMock(side_effect=GetPlayerDuelByStatusError('oops')))
+@patch('chalicelib.duel_route.GetAllPlayerDuelByStatusInteractor.run',
+       MagicMock(side_effect=GetAllPlayerDuelByStatusError('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_duel_by_status_not_found_raises(client, resource):

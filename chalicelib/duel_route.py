@@ -15,16 +15,14 @@ from playerstars_interactors import (
     EnterDuelException,
     EnterDuelInteractor,
     EnterDuelRequestModel,
-    GetAllPlayerDuelInteractor,
-    GetAllPlayerDuelRequestModel,
     GetMatchListInteractor,
     GetMatchListRequestModel,
     GetOpponentCandidateListException,
     GetOpponentCandidateListInteractor,
     GetOpponentCandidateListRequestModel,
-    GetPlayerDuelByStatusError,
-    GetPlayerDuelByStatusInteractor,
-    GetPlayerDuelByStatusRequestModel,
+    GetAllPlayerDuelByStatusError,
+    GetAllPlayerDuelByStatusInteractor,
+    GetAllPlayerDuelByStatusRequestModel,
     InformOpponentResponseTimeoutException,
     GetOpponentTeamsInteractor,
     InformOpponentResponseTimeoutInteractor,
@@ -202,8 +200,8 @@ def get_all_player_duels():
 
 @logger_aspect
 def get_player_duels(player_id):
-    request = GetAllPlayerDuelRequestModel(player_id)
-    interactor = GetAllPlayerDuelInteractor(
+    request = GetAllPlayerDuelByStatusRequestModel(player_id)
+    interactor = GetAllPlayerDuelByStatusInteractor(
         request=request,
         adapter_instance=get_duel_adapter_dynamo(),
         team_adapter=get_team_adapter(),
@@ -258,10 +256,11 @@ def get_duels_by_status_route(status):
 
 @logger_aspect
 def get_duels_by_status(entity_id, status):
-    request = GetPlayerDuelByStatusRequestModel(entity_id, status)
-    interactor = GetPlayerDuelByStatusInteractor(
+    request = GetAllPlayerDuelByStatusRequestModel(entity_id, status)
+    interactor = GetAllPlayerDuelByStatusInteractor(
         request=request,
-        duel_adapter=get_duel_adapter_dynamo(),
+        adapter_instance=get_duel_adapter_dynamo(),
+        team_adapter=get_team_adapter(),
         player_adapter=get_player_adapter())
     try:
         response = interactor.run()
@@ -269,7 +268,7 @@ def get_duels_by_status(entity_id, status):
             return success(response)
         return not_found(
             f"No duel found with status {status} for the player {entity_id}")
-    except GetPlayerDuelByStatusError as e:
+    except GetAllPlayerDuelByStatusError as e:
         return server_error(str(e))
 
 
