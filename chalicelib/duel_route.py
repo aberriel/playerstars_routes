@@ -212,6 +212,30 @@ def get_player_duels(player_id):
     return not_found(f"No duel found for the player {player_id}")
 
 
+@bp_duel.route('/get-my-duels/{status}', **private_get())
+def get_duels_by_status_route(status):
+    entity_id = get_user_id_from_jwt(bp_duel)
+    return get_duels_by_status(entity_id, status)
+
+
+@logger_aspect
+def get_duels_by_status(entity_id, status):
+    request = GetAllPlayerDuelByStatusRequestModel(entity_id, status)
+    interactor = GetAllPlayerDuelByStatusInteractor(
+        request=request,
+        adapter_instance=get_duel_adapter_dynamo(),
+        team_adapter=get_team_adapter(),
+        player_adapter=get_player_adapter())
+    try:
+        response = interactor.run()
+        if response:
+            return success(response)
+        return not_found(
+            f"No duel found with status {status} for the player {entity_id}")
+    except GetAllPlayerDuelByStatusError as e:
+        return server_error(str(e))
+
+
 def get_duel_router():
     return BasicEntityRoute(get_duel_adapter_dynamo(), Duel, 'duel')
 
@@ -245,30 +269,6 @@ def get_duel_details(entity_id):
             return success(response)
         return not_found(f'Duel: {entity_id} not found')
     except BaseException as e:
-        return server_error(str(e))
-
-
-@bp_duel.route('/get-my-duels/{status}', **private_get())
-def get_duels_by_status_route(status):
-    entity_id = get_user_id_from_jwt(bp_duel)
-    return get_duels_by_status(entity_id, status)
-
-
-@logger_aspect
-def get_duels_by_status(entity_id, status):
-    request = GetAllPlayerDuelByStatusRequestModel(entity_id, status)
-    interactor = GetAllPlayerDuelByStatusInteractor(
-        request=request,
-        adapter_instance=get_duel_adapter_dynamo(),
-        team_adapter=get_team_adapter(),
-        player_adapter=get_player_adapter())
-    try:
-        response = interactor.run()
-        if response:
-            return success(response)
-        return not_found(
-            f"No duel found with status {status} for the player {entity_id}")
-    except GetAllPlayerDuelByStatusError as e:
         return server_error(str(e))
 
 
