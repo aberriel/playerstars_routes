@@ -10,24 +10,11 @@ import json
 @patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_convert_rate(client, resource, run):
+def test_get_all_values_rate(client, resource, run):
     result = get_all_values()
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_convert_rate_not_found(client, resource):
-    result = get_all_values()
-
-    assert result.body['message'] == 'No values found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
+    assert result.status_code == 206
 
 
 # noinspection PyUnusedLocal
@@ -35,10 +22,10 @@ def test_get_all_convert_rate_not_found(client, resource):
        MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
-def test_get_all_convert_rate_raises(client, resource):
+def test_get_all_values_rate_raises(client, resource):
     result = get_all_values()
 
-    assert result.body['message'] == 'oops'
+    assert 'oops' in result.body['message']
     assert result.body['status'] == 'error'
     assert result.status_code == 500
 

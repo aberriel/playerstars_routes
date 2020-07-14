@@ -1,12 +1,15 @@
 from playerstars_interactors import (
-    BasicGetAllInteractor, BasicGetRequestModel, BasicGetInteractor,
+    BasicGetRequestModel, BasicGetInteractor,
     BasicPostRequestModel, BasicPostInteractor, SaveEntityException,
     BasicPutRequestModel, BasicPutInteractor, UpdateEntityException,
-    BasicDeleteInteractor, BasicDeleteRequestModel, BasicGetAllRequestModel
+    BasicDeleteInteractor, BasicDeleteRequestModel
 )
-
+from clapy_basic_classes.basic_interactors.basic_get_all import (
+    BasicGetAllInteractor, BasicGetAllRequestModel
+)
 from chalice_support.api_responses import (
     created, not_found, server_error, success, success_partial)
+from marshmallow import ValidationError
 
 
 class BasicEntityRoute:
@@ -15,29 +18,24 @@ class BasicEntityRoute:
         self.entity_class = entity_class
         self.entity_name = entity_name
 
-    def get_all(self, query_params=None, paginate=False, _filter=False):
+    def get_all(self, query_params=None, unit=None):
         try:
-            request = BasicGetAllRequestModel(query_params) if \
-                paginate and query_params else None
-            interactor = BasicGetAllInteractor(
-                request=request, adapter_instance=self.adapter_instance,
-                paginate=paginate)
-            if paginate and query_params:
-                return self.paginated_return(interactor)
+            request = BasicGetAllRequestModel(query_params, unit)
+            interactor = BasicGetAllInteractor(request, self.adapter_instance)
             response = interactor.run()
-            if response:
-                return success(response)
-            return not_found(f'No {self.entity_name} found')
-        except BaseException as e:
-            return server_error(str(e))
 
-    def paginated_return(self, interactor):
-        response, range_data = interactor.run()
-        if response:
-            return success_partial(
-                response, range_data.unit, range_data.initial,
-                range_data.final, range_data.total)
-        return not_found(f'No {self.entity_name} found')
+            return success_partial(response.object_list,
+                                   response.unit,
+                                   response.initial,
+                                   response.final,
+                                   response.total)
+        except ValidationError as e:
+            msg = f'Validation error obtaining list of ' \
+                  f'{self.entity_name}: {e}'
+            return server_error(msg)
+        except BaseException as e:
+            msg = f'Error obtaining list of {self.entity_name}: {e}'
+            return server_error(msg)
 
     def get_by_id(self, entity_id):
         try:

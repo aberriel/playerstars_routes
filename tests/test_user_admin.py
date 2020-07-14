@@ -57,19 +57,6 @@ def test_get_user_admin(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_user_admin_not_found(client, resource):
-    result = get_user_admin_by_id('id001')
-
-    assert result.body['message'] == 'User-admin not found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
-
-
-# noinspection PyUnusedLocal
 @patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')

@@ -43,7 +43,7 @@ def test_get_all_convert_rate_not_found(client, resource):
 def test_get_all_convert_rate_raises(client, resource):
     result = get_all_convert_rate()
 
-    assert result.body['message'] == 'oops'
+    assert 'oops' in result.body['message']
     assert result.body['status'] == 'error'
     assert result.status_code == 500
 
