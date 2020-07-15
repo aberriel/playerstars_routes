@@ -31,7 +31,6 @@ from chalicelib.chalice_support import (
 from chalicelib.settings import Settings
 from chalicelib.team_route import get_by_user
 from chalicelib.utils import get_user_id_from_jwt
-import json
 bp_player = Blueprint(__name__)
 
 
@@ -132,12 +131,13 @@ def get_player_by_console(query_params):
         return server_error(str(exc))
 
 
-@bp_player.route('/filter/{username}', **private_get())
-def get_all_player_filter_route(username):
-    dict_param = {
-        'param': json.dumps({"user.nickname__contains": username})
+@bp_player.route('/filter/{nickname}', **private_get())
+def get_all_player_filter_route(nickname):
+    query_params = {
+        'filter_value': nickname,
+        'filter_field': 'user.nickname'
     }
-    return get_router().get_all(query_params=dict_param, unit='player')
+    return get_router().get_all(query_params=query_params, unit='player')
 
 
 @bp_player.route('/get-my-profile', **private_get())
