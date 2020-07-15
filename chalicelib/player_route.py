@@ -20,7 +20,7 @@ from playerstars_interactors import (
     GetPlayerConsolesRequestModel, GetPlayerConsolesInteractor,
     GetFriendsByConsoleGameInteractor, GetFriendsByConsoleGameRequestModel,
     GetAcceptedTeamsByUserInteractor, GetAcceptedTeamsByUserRequestModel,
-    BasicGetAllRequestModel, BasicGetAllInteractor, GetMyTeamsByGameInteractor,
+    GetMyTeamsByGameInteractor,
     GetMyTeamsByGameRequestModel, GetTeamsRankingRequestModel,
     GetTeamsRankingInteractor, GetMyTeamsRankingRequestModel,
     GetMyTeamsRankingInteractor)
@@ -137,22 +137,7 @@ def get_all_player_filter_route(username):
     dict_param = {
         'param': json.dumps({"user.nickname__contains": username})
     }
-    return get_all_player_filter(query_params=dict_param)
-
-
-def get_all_player_filter(query_params):
-    try:
-        player_adapter = get_adapter()
-        request = BasicGetAllRequestModel(query_params)
-        interactor = BasicGetAllInteractor(
-            request=request, adapter_instance=player_adapter,
-            paginate=False)
-        response = interactor.run()
-        if response:
-            return success(response)
-        return not_found('No player found')
-    except BaseException as exc:
-        return server_error(str(exc))
+    return get_router().get_all(query_params=dict_param, unit='player')
 
 
 @bp_player.route('/get-my-profile', **private_get())
