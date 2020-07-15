@@ -11,41 +11,12 @@ from unittest.mock import MagicMock, patch
 import json
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_convert_rate(client, resource, run):
-    result = get_all_convert_rate()
+    get_all_convert_rate()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_convert_rate_not_found(client, resource):
-    result = get_all_convert_rate()
-
-    assert result.body['message'] == 'No convert-rate found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(side_effect=BaseException('oops')))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_convert_rate_raises(client, resource):
-    result = get_all_convert_rate()
-
-    assert result.body['message'] == 'oops'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 500
 
 
 # noinspection PyUnusedLocal

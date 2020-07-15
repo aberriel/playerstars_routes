@@ -8,27 +8,12 @@ import json
 from playerstars_interactors import SaveEntityException, UpdateEntityException
 
 
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_region_state(client, resource, run):
-    result = get_all_region_state()
+    get_all_region_state()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def teste_get_all_region_state_not_found(clien, resource):
-    result = get_all_region_state()
-
-    assert result.body['message'] == 'No region-state found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal

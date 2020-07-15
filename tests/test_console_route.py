@@ -6,7 +6,6 @@ from chalicelib.console_route import (
     put_console,
 )
 from playerstars_interactors import (
-    GetConsolesAdminException,
     SaveEntityException,
     UpdateEntityException
 )
@@ -16,38 +15,12 @@ import json
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_consoles(client, resource, run):
-    result = get_all_console()
+    get_all_console()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_consoles_not_found(client, resource):
-    result = get_all_console()
-    assert result.body['message'] == 'No console found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(side_effect=GetConsolesAdminException('oops')))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_consoles_raises(boto_client, boto_resource):
-    result = get_all_console()
-    assert result.body['message'] == 'oops'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 500
 
 
 # noinspection PyUnusedLocal

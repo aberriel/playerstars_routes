@@ -127,6 +127,7 @@ def make_inform_invite_timeout_mock_data():
         current_request=MagicMock(json_body=data,
                                   headers=dict(AUTHORIZATION=jwt)))
 
+
 @patch('chalicelib.duel_route.bp_inform_invite_timeout',
        make_inform_invite_timeout_mock_data())
 @patch('chalicelib.duel_route.InformOpponentResponseTimeoutInteractor.run')
@@ -227,27 +228,12 @@ def test_get_all_player_duel_not_found(client, resource):
     assert result.status_code == 404
 
 
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_duel(client, resource, run):
-    result = get_all_duel()
+    get_all_duel()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def teste_get_all_duel(client, resource):
-    result = get_all_duel()
-
-    assert result.body['message'] == 'No duel found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
 
 
 @patch('chalicelib.basic_entity_route.BasicGetInteractor.run')

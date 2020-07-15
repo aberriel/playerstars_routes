@@ -58,7 +58,7 @@ def get_all_admin(router):
         query_params = None
         if bp_admin.current_request and bp_admin.current_request.query_params:
             query_params = bp_admin.current_request.query_params
-        return router.get_all(query_params=query_params, paginate=True)
+        return router.get_all(query_params=query_params)
     return unauthorized(str(msg))
 
 

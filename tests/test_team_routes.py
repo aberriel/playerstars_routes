@@ -85,26 +85,12 @@ def make_put_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_teams(client, resource, run):
-    result = get_all_teams()
+    get_all_teams()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_teams_not_found(client, resource):
-    result = get_all_teams()
-    assert result.body['message'] == 'No team found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal

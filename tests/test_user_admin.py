@@ -57,40 +57,12 @@ def test_get_user_admin(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_user_admin_not_found(client, resource):
-    result = get_user_admin_by_id('id001')
-
-    assert result.body['message'] == 'User-admin not found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_user_admin(client, resource, run):
-    result = get_all_user_admin()
+    get_all_user_admin()
     run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def teste_get_all_user_admin_not_found(client, resource):
-    result = get_all_user_admin()
-
-    assert result.body['message'] == 'No user-admin found'
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
 
 
 def make_put_mock_data():

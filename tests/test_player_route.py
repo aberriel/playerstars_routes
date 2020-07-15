@@ -219,28 +219,12 @@ def test_get_player_raises(client, resource):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
+@patch('chalicelib.basic_entity_route.BasicEntityRoute.get_all')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_player(client, resource, run):
-    result = get_all_player()
+    get_all_player()
     run.assert_called_once()
-
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(return_value=None))
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_player_raises(client, resource):
-    result = get_all_player()
-
-    assert result.body['message'] == "No player found"
-    assert result.body['status'] == "error"
-    assert result.status_code == 404
 
 
 def make_post_mock_data_without_authorization():
@@ -837,23 +821,7 @@ def test_get_all_player_filter(client, resource, run):
     result = get_all_player_filter_route('siclano')
     run.assert_called_once()
     assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.player_route.bp_player',
-       MagicMock(current_request=MagicMock(
-           query_params=query_params_filter())))
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       return_value=None)
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_player_filter_empty(client, resource, run):
-    result = get_all_player_filter_route('siclano')
-    run.assert_called_once()
-    assert result.body['status'] == 'error'
-    assert result.status_code == 404
-    assert result.body['message'] == 'No player found'
+    assert result.status_code == 206
 
 
 # noinspection PyUnusedLocal
@@ -866,10 +834,10 @@ def test_get_all_player_filter_empty(client, resource, run):
 @patch('boto3.client')
 def test_get_all_player_filter_raises(client, resource, run):
     result = get_all_player_filter_route('siclano')
-    run.assert_called_once()
-    assert result.body['status'] == 'error'
     assert result.status_code == 500
-    assert result.body['message'] == 'oops'
+    assert 'ops' in result.body['message']
+    assert result.body['status'] == 'error'
+    run.assert_called_once()
 
 
 def convert_star_json():
