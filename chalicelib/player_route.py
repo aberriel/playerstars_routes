@@ -2,7 +2,8 @@ from chalice import Blueprint
 from chalice_support import (
     created, not_found, server_error, success, success_partial)
 from playerstars_adapters import (
-    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter)
+    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter,
+    TeamTournamentAdapter, PlayerTournamentAdapter)
 from playerstars_domain import Player
 from playerstars_interactors import (
     AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
@@ -24,7 +25,7 @@ from playerstars_interactors import (
     GetMyTeamsByGameRequestModel, GetTeamsRankingRequestModel,
     GetTeamsRankingInteractor, GetMyTeamsRankingRequestModel,
     GetMyTeamsRankingInteractor, GetPlayerTournamentsRequestModel,
-    GetPlayerTournamentsInteractor, GetPlayerTournamentsError)
+    GetPlayerTournamentsInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -46,11 +47,13 @@ def get_team_adapter():
 
 
 def get_team_tournament_adapter():
-    return TeamAdapter(Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
+    return TeamTournamentAdapter(
+        Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_player_tournament_adapter():
-    return TeamAdapter(Settings.PLAYER_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
+    return PlayerTournamentAdapter(
+        Settings.PLAYER_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_console_adapter():

@@ -51,6 +51,7 @@
         "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
         "TIME_TO_FINISH_DUEL": "300",
         "TIME_TO_ACCEPT_DUEL": "5",
+        "TOURNAMENT_REVIEW_TIME": "500",
 
         "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
         "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -107,6 +108,7 @@
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
                 "TIME_TO_ACCEPT_DUEL": "5",
+                "TOURNAMENT_REVIEW_TIME": "500",
 
                 "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
                 "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -163,6 +165,7 @@
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
                 "TIME_TO_ACCEPT_DUEL": "5",
+                "TOURNAMENT_REVIEW_TIME": "500",
 
                 "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
                 "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",
@@ -219,6 +222,7 @@
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
                 "TIME_TO_ACCEPT_DUEL": "5",
+                "TOURNAMENT_REVIEW_TIME": "500",
 
                 "GRAPHQL_API_URL": "https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-api.us-east-1.amazonaws.com/graphql",
                 "GRAPHQL_API_ID": "3l2u7ok2cjfwdclv5qz3zb5z54",

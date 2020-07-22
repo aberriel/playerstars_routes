@@ -1248,7 +1248,7 @@ def test_get_player_tournaments(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_tournaments_error(client, resource, run):
-    result = get_player_consoles()
+    result = get_player_tournaments()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
