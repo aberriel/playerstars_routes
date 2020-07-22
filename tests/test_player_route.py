@@ -10,7 +10,8 @@ from chalicelib.player_route import (
     delete_friend_route_v2, get_ranking_route, get_player_consoles,
     get_friends_by_console_game_route, get_accepted_teams_from_player,
     get_all_player_filter_route, get_my_teams_for_duel,
-    get_ranking_team_route, get_ranking_my_teams_route
+    get_ranking_team_route, get_ranking_my_teams_route,
+    get_player_tournaments
 )
 import json
 import pytest
@@ -1223,3 +1224,48 @@ def test_get_my_teams_for_duel_raises(client, resource, run):
     assert result.body['status'] == 'error'
     assert result.status_code == 500
     assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerTournamentsInteractor.run',
+       return_value=(MagicMock()))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_tournaments(client, resource, run):
+    result = get_player_tournaments()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerTournamentsInteractor.run',
+       side_effect=BaseException('oops'))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_tournaments_error(client, resource, run):
+    result = get_player_tournaments()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+    assert result.body['message'] == 'oops'
+
+
+# noinspection PyUnusedLocal
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
+@patch('chalicelib.player_route.GetPlayerTournamentsInteractor.run',
+       return_value=None)
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_get_player_tournaments_not_found(client, resource, run):
+    result = get_player_tournaments()
+    run.assert_called_once()
+    assert result.body['status'] == 'error'
+    assert result.status_code == 404
+    assert result.body['message'] == \
+        'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f tournaments not found'

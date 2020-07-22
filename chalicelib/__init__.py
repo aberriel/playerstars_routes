@@ -83,7 +83,8 @@ from .player_route import (
     get_friends_by_console_game_route,
     get_accepted_teams_from_player,
     get_my_teams_for_duel,
-    get_ranking_my_teams_route
+    get_ranking_my_teams_route,
+    get_player_tournaments
 )
 from .product_route import get_all_product, post_product
 from .purchase_route import (
@@ -182,16 +183,6 @@ __all__ = [
     'post_app_notification',
     'post_set_notification_as_read',
 
-    # 'get_all_championships',
-    # 'get_championship_by_id',
-    # 'get_championships_by_player',
-    # 'get_championships_by_team',
-    # 'get_open_championships',
-    # 'post_accept_invitation',
-    # 'post_add_friend_to_championship',
-    # 'post_create_championship',
-    # 'post_join_open_championship',
-
     'get_history_route',
 
     'get_player_by_console',
@@ -269,5 +260,7 @@ __all__ = [
     'get_random_duel',
     'put_random_duel',
     'delete_random_duel',
-    'post_random_duel'
+    'post_random_duel',
+
+    'get_player_tournaments'
 ]

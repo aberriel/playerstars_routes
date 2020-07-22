@@ -2,7 +2,8 @@ from chalice import Blueprint
 from chalice_support import (
     created, not_found, server_error, success, success_partial)
 from playerstars_adapters import (
-    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter)
+    ConsoleAdapter, DuelAdapter, PlayerAdapter, TeamAdapter,
+    TeamTournamentAdapter, PlayerTournamentAdapter)
 from playerstars_domain import Player
 from playerstars_interactors import (
     AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
@@ -23,7 +24,8 @@ from playerstars_interactors import (
     GetMyTeamsByGameInteractor,
     GetMyTeamsByGameRequestModel, GetTeamsRankingRequestModel,
     GetTeamsRankingInteractor, GetMyTeamsRankingRequestModel,
-    GetMyTeamsRankingInteractor)
+    GetMyTeamsRankingInteractor, GetPlayerTournamentsRequestModel,
+    GetPlayerTournamentsInteractor)
 
 from chalicelib.basic_entity_route import BasicEntityRoute
 from chalicelib.chalice_support import (
@@ -42,6 +44,16 @@ def get_router():
 
 def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def get_team_tournament_adapter():
+    return TeamTournamentAdapter(
+        Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def get_player_tournament_adapter():
+    return PlayerTournamentAdapter(
+        Settings.PLAYER_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_console_adapter():
@@ -462,3 +474,22 @@ def get_player_consoles():
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} consoles not found')
+
+
+@bp_player.route('/my-tournaments', **private_get())
+def get_player_tournaments():
+    try:
+        entity_id = get_user_id_from_jwt(bp_player)
+        request = GetPlayerTournamentsRequestModel(entity_id)
+        interactor = GetPlayerTournamentsInteractor(
+            request=request, player_adapter=get_adapter(),
+            team_adapter=get_team_adapter(),
+            player_tournament_adapter=get_player_tournament_adapter(),
+            team_tournament_adapter=get_team_tournament_adapter(),
+            tournament_review_time=Settings.TOURNAMENT_REVIEW_TIME)
+        response = interactor.run()
+        if response:
+            return success(response)
+    except BaseException as e:
+        return server_error(str(e))
+    return not_found(f'Player {entity_id} tournaments not found')
