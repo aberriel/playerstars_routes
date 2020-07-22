@@ -28,10 +28,12 @@ from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin
 from chalicelib.values_route import bp_value
 from chalicelib.terms_policy_route import bp_terms, bp_policy
+from chalicelib.tournament.post_tournament import tournament_route
 
 app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
 
+app.register_blueprint(tournament_route, url_prefix='/tournament')
 app.register_blueprint(root, url_prefix='/')
 app.register_blueprint(bp_admin, url_prefix='/admin')
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
