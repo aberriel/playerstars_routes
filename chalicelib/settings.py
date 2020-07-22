@@ -3,9 +3,11 @@ from decouple import config
 
 class Settings:
     LOG_LEVEL = config('LOG_LEVEL', 'DEBUG')
-
-    CHAMPIONSHIP_TABLE_NAME = config(
-        'CHAMPIONSHIP_TABLE_NAME', 'championship_dev')
+    COGNITO_USERPOOL_ARN = config('COGNITO_USERPOOL_ARN', 'test_cognito_arn')
+    PLAYER_TOURNAMENT_TABLE_NAME = config(
+        'PLAYER_TOURNAMENT_TABLE_NAME', 'test_player_tournament')
+    TEAM_TOURNAMENT_TABLE_NAME = config(
+        'TEAM_TOURNAMENT_TABLE_NAME', 'test_team_tournament')
     CONSOLE_TABLE_NAME = config('CONSOLE_TABLE_NAME', 'console_dev')
     CONVERT_STAR_TABLE_NAME = config(
         'CONVERT_STAR_TABLE_NAME', 'convert_rate_dev')
