@@ -6,7 +6,9 @@
         "CentroCusto": "PlayerStars"
     },
     "environment_variables": {
-        "CHAMPIONSHIP_TABLE_NAME": "championship",
+        "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CIRAÇÃO DE AMBIENTE >>>",
+        "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
+        "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
         "CONSOLE_TABLE_NAME": "console",
         "CONVERT_STAR_TABLE_NAME": "convert_rate",
         "DUEL_TABLE_NAME": "duel",
