@@ -6,7 +6,9 @@
         "CentroCusto": "PlayerStars"
     },
     "environment_variables": {
-        "CHAMPIONSHIP_TABLE_NAME": "championship",
+        "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CIRAÇÃO DE AMBIENTE >>>",
+        "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
+        "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
         "CONSOLE_TABLE_NAME": "console",
         "CONVERT_STAR_TABLE_NAME": "convert_rate",
         "DUEL_TABLE_NAME": "duel",
@@ -59,7 +61,9 @@
             "api_gateway_stage": "dev",
             "lambda_memory_size": 1024,
             "environment_variables": {
-                "CHAMPIONSHIP_TABLE_NAME": "championship_dev",
+                "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
+                "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_dev",
+                "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_dev",
                 "CONSOLE_TABLE_NAME": "console_dev",
                 "CONVERT_STAR_TABLE_NAME": "convert_rate_dev",
                 "DUEL_TABLE_NAME": "duel_dev",
@@ -113,7 +117,9 @@
             "api_gateway_stage": "stg",
             "lambda_memory_size": 1024,
             "environment_variables": {
-                "CHAMPIONSHIP_TABLE_NAME": "championship_stg",
+                "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
+                "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_stg",
+                "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_stg",
                 "CONSOLE_TABLE_NAME": "console_stg",
                 "CONVERT_STAR_TABLE_NAME": "convert_rate_stg",
                 "DUEL_TABLE_NAME": "duel_stg",
@@ -167,7 +173,9 @@
             "api_gateway_stage": "api",
             "lambda_memory_size": 1024,
             "environment_variables": {
-                "CHAMPIONSHIP_TABLE_NAME": "championship",
+                "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CRIAÇÃO DO AMBIENTE >>>",
+                "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
+                "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
                 "CONSOLE_TABLE_NAME": "console",
                 "CONVERT_STAR_TABLE_NAME": "convert_rate",
                 "DUEL_TABLE_NAME": "duel",
