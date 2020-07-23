@@ -489,7 +489,7 @@ def get_player_tournaments():
             tournament_review_time=Settings.TOURNAMENT_REVIEW_TIME)
         response = interactor.run()
         if response:
-            return success(response)
+            return success(response())
     except BaseException as e:
         return server_error(str(e))
     return not_found(f'Player {entity_id} tournaments not found')
