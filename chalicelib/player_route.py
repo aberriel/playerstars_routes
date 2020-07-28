@@ -478,10 +478,19 @@ def get_player_consoles():
 
 
 @bp_player.route('/my-tournaments', **private_get())
-def get_player_tournaments():
+def get_tournament_route():
+    return get_player_tournaments()
+
+
+@bp_player.route('/my-tournaments/{status}', **private_get())
+def get_tournaments_by_status_route(status):
+    return get_player_tournaments(status)
+
+
+def get_player_tournaments(status=None):
     try:
         entity_id = get_user_id_from_jwt(bp_player)
-        request = GetPlayerTournamentsRequestModel(entity_id)
+        request = GetPlayerTournamentsRequestModel(entity_id, status)
         interactor = GetPlayerTournamentsInteractor(
             request=request, player_adapter=get_adapter(),
             team_adapter=get_team_adapter(),
