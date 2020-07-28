@@ -490,7 +490,7 @@ def get_tournaments_by_status_route(status):
     return get_player_tournaments(status)
 
 
-def get_player_tournaments(status=None):
+def get_player_tournaments(status=[]):
     try:
         entity_id = get_user_id_from_jwt(bp_player)
         request = GetPlayerTournamentsRequestModel(entity_id, status)
