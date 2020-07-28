@@ -122,7 +122,10 @@ def get_player_by_id(entity_id):
 
 @bp_player.route('/', **private_get())
 def get_all_player():
-    return get_router().get_all()
+    query_params = bp_player.current_request.query_params \
+        if bp_player.current_request and \
+        bp_player.current_request.query_params else None
+    return get_router().get_all(query_params=query_params)
 
 
 @bp_player_by_console.route('/', **private_get())
