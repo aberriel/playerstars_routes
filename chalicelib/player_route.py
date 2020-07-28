@@ -34,6 +34,7 @@ from chalicelib.settings import Settings
 from chalicelib.team_route import get_by_user
 from chalicelib.utils import get_user_id_from_jwt
 bp_player = Blueprint(__name__)
+bp_player_by_console = Blueprint(__name__)
 
 
 def get_router():
@@ -121,13 +122,13 @@ def get_player_by_id(entity_id):
 
 @bp_player.route('/', **private_get())
 def get_all_player():
-    if bp_player.current_request and bp_player.current_request.query_params:
-        return get_player_by_console(bp_player.current_request.query_params)
     return get_router().get_all()
 
 
-def get_player_by_console(query_params):
+@bp_player_by_console.route('/', **private_get())
+def get_all_player_by_console():
     try:
+        query_params = bp_player_by_console.current_request.query_params
         player_adapter = get_adapter()
         console_adapter = get_console_adapter()
         request = GetPlayersByConsoleGameRequestModel(query_params)

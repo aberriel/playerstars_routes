@@ -15,7 +15,7 @@ from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.notification_route import (
     bp_notification,
     bp_notification_read)
-from chalicelib.player_route import bp_player
+from chalicelib.player_route import bp_player, bp_player_by_console
 from chalicelib.product_route import bp_product
 from chalicelib.purchase_route import bp_purchase
 from chalicelib.region_country_route import bp_region_country
@@ -56,6 +56,7 @@ app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_notification_read, url_prefix='/notification/set-as-read')
 app.register_blueprint(bp_player, url_prefix='/player')
+app.register_blueprint(bp_player_by_console, url_prefix='/player-by-game')
 app.register_blueprint(bp_product, url_prefix='/product')
 app.register_blueprint(bp_purchase, url_prefix='/purchase')
 app.register_blueprint(bp_region_country, url_prefix='/region-country')

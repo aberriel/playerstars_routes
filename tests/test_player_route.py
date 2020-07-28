@@ -11,7 +11,7 @@ from chalicelib.player_route import (
     get_friends_by_console_game_route, get_accepted_teams_from_player,
     get_all_player_filter_route, get_my_teams_for_duel,
     get_ranking_team_route, get_ranking_my_teams_route,
-    get_player_tournaments
+    get_player_tournaments, get_all_player_by_console
 )
 import json
 import pytest
@@ -762,27 +762,27 @@ def query_params():
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.player_route.bp_player',
+@patch('chalicelib.player_route.bp_player_by_console',
        MagicMock(current_request=MagicMock(query_params=query_params())))
 @patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_by_console()
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.player_route.bp_player',
+@patch('chalicelib.player_route.bp_player_by_console',
        MagicMock(current_request=MagicMock(query_params=query_params())))
 @patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run',
        return_value=None)
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console_empty(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_by_console()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -791,14 +791,14 @@ def test_get_player_by_console_empty(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.player_route.bp_player',
+@patch('chalicelib.player_route.bp_player_by_console',
        MagicMock(current_request=MagicMock(query_params=query_params())))
 @patch('chalicelib.player_route.GetPlayersByConsoleGameInteractor.run',
        side_effect=BaseException('oops'))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_by_console_raises(client, resource, run):
-    result = get_all_player()
+    result = get_all_player_by_console()
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500

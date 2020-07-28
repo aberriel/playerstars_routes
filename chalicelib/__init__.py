@@ -77,7 +77,7 @@ from .player_route import (
     put_player,
     post_accept_terms_route,
     post_console_data_route,
-    get_player_by_console,
+    get_all_player_by_console,
     convert_star_route,
     get_player_consoles,
     get_friends_by_console_game_route,
@@ -185,7 +185,7 @@ __all__ = [
 
     'get_history_route',
 
-    'get_player_by_console',
+    'get_all_player_by_console',
 
     'get_convert_rate_by_id',
     'get_all_convert_rate',
