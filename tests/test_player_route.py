@@ -11,7 +11,8 @@ from chalicelib.player_route import (
     get_friends_by_console_game_route, get_accepted_teams_from_player,
     get_all_player_filter_route, get_my_teams_for_duel,
     get_ranking_team_route, get_ranking_my_teams_route,
-    get_player_tournaments, get_all_player_by_console
+    get_player_tournaments, get_all_player_by_console,
+    get_tournament_route, get_tournaments_by_status_route
 )
 import json
 import pytest
@@ -1269,3 +1270,18 @@ def test_get_player_tournaments_not_found(client, resource, run):
     assert result.status_code == 404
     assert result.body['message'] == \
         'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f tournaments not found'
+
+
+@patch('chalicelib.player_route.get_player_tournaments')
+def test_get_tournament_route(mock):
+    result = get_tournament_route()
+    assert result
+    mock.assert_called_once()
+
+
+@patch('chalicelib.player_route.get_player_tournaments')
+def test_get_tournament_by_status_route(mock):
+    result = get_tournaments_by_status_route('schrubles')
+    assert result
+    mock.assert_called_with('schrubles')
+    mock.assert_called_once()
