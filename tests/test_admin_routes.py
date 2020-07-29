@@ -16,32 +16,23 @@ from playerstars_interactors import UpdateEntityException
 import json
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_players_admin(client, resource, run, check, get):
+@patch('chalicelib.admin_routes.get_all_admin')
+@patch('chalicelib.admin_routes.player_router')
+def test_get_all_players_admin(mock_player_router, mock_get_all_admin):
     result = get_all_players_admin()
-    run.assert_called_once()
 
-    assert result.body['status'] == 'success'
-    assert result.status_code == 206
+    mock_get_all_admin.assert_called_with(mock_player_router())
+
+    assert result == mock_get_all_admin()
 
 
-# noinspection PyUnusedLocal
-@patch('chalicelib.admin_routes.get_user_id_from_jwt')
-@patch('chalicelib.admin_routes.check_admin_authorization')
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run')
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_get_all_consoles_admin(client, resource, run, check, get):
+@patch('chalicelib.admin_routes.get_all_admin')
+@patch('chalicelib.admin_routes.console_router')
+def test_get_all_consoles_admin(mock_console_router, mock_get_all_admin):
     result = get_all_consoles_admin()
-    run.assert_called_once()
 
-    assert result.body['status'] == 'success'
-    assert result.status_code == 206
+    mock_get_all_admin.assert_called_with(mock_console_router())
+    assert result == mock_get_all_admin()
 
 
 def query_params():
