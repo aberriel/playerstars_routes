@@ -169,20 +169,6 @@ def make_enter_duel_mock_data():
 # noinspection PyUnusedLocal
 @patch('chalicelib.duel_route.bp_enter_duel',
        make_enter_duel_mock_data())
-@patch('chalicelib.duel_route.EnterDuelInteractor.run')
-@patch('boto3.resource')
-@patch('boto3.client')
-def test_enter_duel(client, resource, run):
-    result = enter_duel()
-
-    run.assert_called_once()
-    assert result.body['status'] == 'success'
-    assert result.status_code == 200
-
-
-# noinspection PyUnusedLocal
-@patch('chalicelib.duel_route.bp_enter_duel',
-       make_enter_duel_mock_data())
 @patch('chalicelib.duel_route.EnterDuelInteractor.run',
        MagicMock(side_effect=EnterDuelException('oops')))
 @patch('boto3.resource')
@@ -665,21 +651,124 @@ def test_put_random_duel_raises(client, resource, run):
 
 
 @patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractor')
+@patch('chalicelib.duel_route.get_duel_adapter_dynamo')
+@patch('chalicelib.duel_route.get_duel_adapter_graphql')
+@patch('chalicelib.duel_route.get_notification_adapter_graphql')
+@patch('chalicelib.duel_route.get_player_adapter')
+@patch('chalicelib.duel_route.get_team_adapter')
+@patch('chalicelib.duel_route.get_schedule_task_adapter')
+@patch('chalicelib.duel_route.Settings')
+@patch('chalicelib.duel_route.success')
+def test_enter_duel(mock_success,
+                    mock_settings,
+                    mock_get_schedule,
+                    mock_get_team,
+                    mock_get_player,
+                    mock_get_notification,
+                    mock_get_duel_gql,
+                    mock_get_duel,
+                    mock_interactor,
+                    mock_request):
+    mock_json_data = MagicMock()
+    result = enter_duel_post(mock_json_data)
+
+    mock_request.assert_called_with(mock_json_data)
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        duel_adapter_dynamo=mock_get_duel(),
+        duel_adapter_graphql=mock_get_duel_gql(),
+        notification_adapter=mock_get_notification(),
+        player_adapter=mock_get_player(),
+        team_adapter=mock_get_team(),
+        schedule_task_adapter=mock_get_schedule(),
+        time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+
+    mock_interactor().run.assert_called_once()
+    mock_success.assert_called_with(mock_interactor().run()())
+    assert result == mock_success()
+
+
+@patch('chalicelib.duel_route.EnterDuelRequestModel')
 @patch('chalicelib.duel_route.EnterDuelInteractor',
        return_value=MagicMock(
-           run=MagicMock(
-               side_effect=InvalidStatusException('Status inválido'))))
-@patch('playerstars_adapters.basic_adapter.boto3')
-@patch('playerstars_graphql_adapters.basic_adapter.AppSyncClient')
+           run=MagicMock(side_effect=InvalidStatusException('invalido'))))
+@patch('chalicelib.duel_route.get_duel_adapter_dynamo')
+@patch('chalicelib.duel_route.get_duel_adapter_graphql')
+@patch('chalicelib.duel_route.get_notification_adapter_graphql')
+@patch('chalicelib.duel_route.get_player_adapter')
+@patch('chalicelib.duel_route.get_team_adapter')
 @patch('chalicelib.duel_route.get_schedule_task_adapter')
-def test_enter_duel_invalid_status(mock_get_schedule_task,
-                                   mock_appsync,
-                                   mock_boto3,
+@patch('chalicelib.duel_route.Settings')
+@patch('chalicelib.duel_route.bad_request')
+def test_enter_duel_invalid_status(mock_bad_request,
+                                   mock_settings,
+                                   mock_get_schedule,
+                                   mock_get_team,
+                                   mock_get_player,
+                                   mock_get_notification,
+                                   mock_get_duel_gql,
+                                   mock_get_duel,
                                    mock_interactor,
                                    mock_request):
-    json_data = MagicMock()
-    result = enter_duel_post(json_data)
+    mock_json_data = MagicMock()
+    result = enter_duel_post(mock_json_data)
 
-    assert result.status_code == 400
-    assert result.body['status'] == 'error'
-    assert result.body['message'] == 'Status inválido'
+    mock_request.assert_called_with(mock_json_data)
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        duel_adapter_dynamo=mock_get_duel(),
+        duel_adapter_graphql=mock_get_duel_gql(),
+        notification_adapter=mock_get_notification(),
+        player_adapter=mock_get_player(),
+        team_adapter=mock_get_team(),
+        schedule_task_adapter=mock_get_schedule(),
+        time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+
+    mock_interactor().run.assert_called_once()
+    mock_bad_request.assert_called_with('invalido')
+    assert result == mock_bad_request()
+
+
+@patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractor',
+       return_value=MagicMock(
+           run=MagicMock(side_effect=EnterDuelException('erro'))))
+@patch('chalicelib.duel_route.get_duel_adapter_dynamo')
+@patch('chalicelib.duel_route.get_duel_adapter_graphql')
+@patch('chalicelib.duel_route.get_notification_adapter_graphql')
+@patch('chalicelib.duel_route.get_player_adapter')
+@patch('chalicelib.duel_route.get_team_adapter')
+@patch('chalicelib.duel_route.get_schedule_task_adapter')
+@patch('chalicelib.duel_route.Settings')
+@patch('chalicelib.duel_route.server_error')
+def test_enter_duel_error(mock_server_error,
+                          mock_settings,
+                          mock_get_schedule,
+                          mock_get_team,
+                          mock_get_player,
+                          mock_get_notification,
+                          mock_get_duel_gql,
+                          mock_get_duel,
+                          mock_interactor,
+                          mock_request):
+    mock_json_data = MagicMock()
+    result = enter_duel_post(mock_json_data)
+
+    mock_request.assert_called_with(mock_json_data)
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        duel_adapter_dynamo=mock_get_duel(),
+        duel_adapter_graphql=mock_get_duel_gql(),
+        notification_adapter=mock_get_notification(),
+        player_adapter=mock_get_player(),
+        team_adapter=mock_get_team(),
+        schedule_task_adapter=mock_get_schedule(),
+        time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+
+    mock_interactor().run.assert_called_once()
+    mock_server_error.assert_called_with('erro')
+    assert result == mock_server_error()

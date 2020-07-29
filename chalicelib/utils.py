@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from playerstars_adapters import PlayerAdapter
 from base64 import b64decode
 from chalicelib.settings import Settings
@@ -57,3 +59,21 @@ def check_admin_authorization(user_id):
     if not user.is_admin:
         msg = "Usuário não autorizado como admin"
         raise UserNotAdminAuthorized(msg)
+
+
+def _replace_dot(value):
+    return value.replace('.', '_dot_')
+
+
+def make_fields_dot(params):
+    new_params = deepcopy(params) if params else {}
+
+    if 'sort_field' in new_params:
+        new_value = _replace_dot(new_params['sort_field'])
+        new_params['sort_field'] = new_value
+
+    if 'filter_field' in new_params:
+        new_value = _replace_dot(new_params['filter_field'])
+        new_params['filter_field'] = new_value
+
+    return new_params

@@ -7,7 +7,8 @@ from playerstars_adapters import (
     PrivacyPolicyAdapter
 )
 from chalicelib.utils import \
-    get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized
+    get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized, \
+    make_fields_dot
 from chalicelib.chalice_support import (
     private_get, private_put, private_post, private_delete
 )
@@ -54,12 +55,11 @@ def authorize(blueprint):
 
 def get_all_admin(router):
     auth, msg = authorize(bp_admin)
-    if auth:
-        query_params = None
-        if bp_admin.current_request and bp_admin.current_request.query_params:
-            query_params = bp_admin.current_request.query_params
-        return router.get_all(query_params=query_params)
-    return unauthorized(str(msg))
+    if not auth:
+        return unauthorized(str(msg))
+
+    query_params = make_fields_dot(bp_admin.current_request.query_params)
+    return router.get_all(query_params=query_params)
 
 
 def get_by_id_admin(entity_id, router):

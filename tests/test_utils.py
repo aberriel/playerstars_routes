@@ -1,10 +1,13 @@
-from marshmallow import Schema, fields
-from uuid import uuid4
-from chalicelib.utils import \
-    check_admin_authorization, UserNotAdminAuthorized, UserNotFoundToAuthorize
 from unittest.mock import patch, MagicMock
-from playerstars_domain import Player
+from uuid import uuid4
+
 import pytest
+from marshmallow import Schema, fields
+from playerstars_domain import Player
+
+from chalicelib.utils import \
+    (check_admin_authorization, UserNotAdminAuthorized,
+     UserNotFoundToAuthorize, _replace_dot, make_fields_dot)
 
 
 @patch('chalicelib.utils.PlayerAdapter')
@@ -132,3 +135,67 @@ jwt = "eyJraWQiOiI5bisrRW95QnVjUjRoTHRjUnRHeG5yb0YyTkFBT0I0emdxVFlRbXN" \
       "yFV9WoybqVJ06TKqks4XjpkCoHP9-pO3-6GqB02leL-mL_U9Jcu-yO6ANVuXn12" \
       "v8ZCNJjWqNY-LNzdfRShk8GUf92XWxzAu9BuVM9cfKiQL-xznpWMBnuuAY5MjSO" \
       "_oWDQnH3PZEd_pLdPsLg"
+
+
+def test_replace_dot():
+    mock_field = 'campo.subcampo'
+
+    # noinspection PyProtectedMember
+    result = _replace_dot(mock_field)
+
+    assert result == 'campo_dot_subcampo'
+
+
+def test_make_fields_dot():
+    mock_params = dict(sort_field='campo.subcampo',
+                       filter_field='outro.sub')
+
+    result = make_fields_dot(mock_params)
+
+    assert result['sort_field'] == 'campo_dot_subcampo'
+    assert result['filter_field'] == 'outro_dot_sub'
+
+
+def test_make_fields_dot_no_params():
+    mock_params = dict()
+
+    result = make_fields_dot(mock_params)
+    assert result == {}
+
+    mock_params = None
+    result = make_fields_dot(mock_params)
+    assert result == {}
+
+
+def test_make_fields_dot_only_sort():
+    mock_params = dict(sort_field='campo.subcampo',
+                       sort_order='asc',
+                       pagination_page=1,
+                       pagination_perPage=10)
+
+    # noinspection PyProtectedMember
+    result = make_fields_dot(mock_params)
+
+    assert result == {
+        'pagination_page': 1,
+        'pagination_perPage': 10,
+        'sort_field': 'campo_dot_subcampo',
+        'sort_order': 'asc'
+    }
+
+
+def test_make_fields_dot_only_filter():
+    mock_params = dict(filter_field='campo.subcampo',
+                       filter_value='42',
+                       pagination_page=1,
+                       pagination_perPage=10)
+
+    # noinspection PyProtectedMember
+    result = make_fields_dot(mock_params)
+
+    assert result == {
+        'pagination_page': 1,
+        'pagination_perPage': 10,
+        'filter_field': 'campo_dot_subcampo',
+        'filter_value': '42'
+    }
