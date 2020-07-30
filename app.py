@@ -34,7 +34,7 @@ app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
 
 app.register_blueprint(tournament_route, url_prefix='/tournament')
-app.register_blueprint(root, url_prefix='/')
+app.register_blueprint(root)
 app.register_blueprint(bp_admin, url_prefix='/admin')
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_console, url_prefix='/console')
