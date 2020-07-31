@@ -1,12 +1,12 @@
 chalice==1.16.0
 playerstars_mail==0.1.1
-playerstars_domain==0.2.0
-playerstars_adapters==0.2.1
+playerstars_domain==0.3.0
+playerstars_adapters==0.3.0
 playerstars_graphql_adapters==0.1.0
 playerstars-aws-scheduled-task-adapter==0.1.0
-playerstars_interactors==0.1.2
+playerstars_interactors==0.2.0
 playerstars_aws_lambda==0.1.0
-chalice_support==0.3.0
+chalice_support==0.4.0
 python-decouple==3.1
 defusedxml==0.6.0
 requests==2.22.0
