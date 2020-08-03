@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 from tests.test_utils import jwt
 
 
-@patch('chalicelib.tournament.get_tournament_detail.tournament_details_route',
+@patch('chalicelib.tournament.get_tournament_detail.tournament_route',
        MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.tournament.get_tournament_detail.'
        'GetTournamentInteractor.run', return_value=(MagicMock()))
@@ -22,7 +22,7 @@ def test_get_player_tournaments(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.tournament.get_tournament_detail.tournament_details_route',
+@patch('chalicelib.tournament.get_tournament_detail.tournament_route',
        MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.tournament.get_tournament_detail.'
        'GetTournamentInteractor.run', side_effect=BaseException('oops'))
@@ -38,7 +38,7 @@ def test_get_player_tournaments_error(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.tournament.get_tournament_detail.tournament_details_route',
+@patch('chalicelib.tournament.get_tournament_detail.tournament_route',
        MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.tournament.get_tournament_detail.'
        'GetTournamentInteractor.run', side_effect=GetTournamentError('oops'))
@@ -54,7 +54,7 @@ def test_get_player_tournaments_known_error(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.tournament.get_tournament_detail.tournament_details_route',
+@patch('chalicelib.tournament.get_tournament_detail.tournament_route',
        MagicMock(current_request=MagicMock(headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.tournament.get_tournament_detail.'
        'GetTournamentInteractor.run', return_value=None)
