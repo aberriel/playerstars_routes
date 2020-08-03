@@ -21,7 +21,7 @@ def get_team_tournament_adapter():
         Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@tournament_route.route('/{entity_id}')
+@tournament_route.get('/{entity_id}')
 def get_tournament_details(entity_id):
     try:
         player_id = get_user_id_from_jwt(tournament_route)
