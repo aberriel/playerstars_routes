@@ -1,7 +1,7 @@
 from chalice_support import (not_found, server_error, success)
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
-from chalicelib.tournament.post_tournament import tournament_route
+from chalicelib.private_route import PrivateRoute
 from playerstars_interactors.tournament.get_tournament_detail import (
     GetTournamentInteractor, GetTournamentRequestModel, GetTournamentError
 )
@@ -9,6 +9,9 @@ from chalicelib.duel_route_adapters import \
     get_player_adapter, get_team_adapter
 from playerstars_adapters import \
     PlayerTournamentAdapter, TeamTournamentAdapter
+
+
+tournament_details_route = PrivateRoute(__name__)
 
 
 def get_player_tournament_adapter():
@@ -21,10 +24,10 @@ def get_team_tournament_adapter():
         Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@tournament_route.get('/{entity_id}')
+@tournament_details_route.get('/{entity_id}')
 def get_tournament_details(entity_id):
     try:
-        player_id = get_user_id_from_jwt(tournament_route)
+        player_id = get_user_id_from_jwt(tournament_details_route)
         request = GetTournamentRequestModel(
             tournament_id=entity_id, player_id=player_id)
         interactor = GetTournamentInteractor(
