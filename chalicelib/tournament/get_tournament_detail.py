@@ -40,7 +40,7 @@ def get_tournament_details(entity_id):
             tournament_review_time=Settings.TOURNAMENT_REVIEW_TIME)
         response = interactor.run()
         if response:
-            return success(response)
+            return success(response())
         return not_found(
             f"Tournament {entity_id} not found for the player {player_id}")
     except GetTournamentError as e:
