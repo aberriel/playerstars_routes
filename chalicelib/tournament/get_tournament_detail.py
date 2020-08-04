@@ -14,7 +14,7 @@ from playerstars_adapters import \
 
 def get_player_tournament_adapter():
     return PlayerTournamentAdapter(
-        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+        Settings.PLAYER_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_team_tournament_adapter():
