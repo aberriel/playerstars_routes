@@ -12,7 +12,7 @@ from chalicelib.player_route import (
     get_all_player_filter_route, get_my_teams_for_duel,
     get_ranking_team_route, get_ranking_my_teams_route,
     get_player_tournaments, get_all_player_by_console,
-    get_tournament_route, get_tournaments_by_status_route
+    get_tournaments_by_status_route
 )
 import json
 import pytest
@@ -1235,7 +1235,7 @@ def test_get_my_teams_for_duel_raises(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_tournaments(client, resource, run):
-    result = get_player_tournaments()
+    result = get_player_tournaments(None)
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
@@ -1249,7 +1249,7 @@ def test_get_player_tournaments(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_tournaments_error(client, resource, run):
-    result = get_player_tournaments()
+    result = get_player_tournaments(status=None)
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -1264,7 +1264,7 @@ def test_get_player_tournaments_error(client, resource, run):
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_player_tournaments_not_found(client, resource, run):
-    result = get_player_tournaments()
+    result = get_player_tournaments(None)
     run.assert_called_once()
     assert result.body['status'] == 'error'
     assert result.status_code == 404
@@ -1272,16 +1272,11 @@ def test_get_player_tournaments_not_found(client, resource, run):
         'Player 8ad1635f-2263-4dda-879a-bd24b5d9732f tournaments not found'
 
 
-@patch('chalicelib.player_route.get_player_tournaments')
-def test_get_tournament_route(mock):
-    result = get_tournament_route()
-    assert result
-    mock.assert_called_once()
-
-
+@patch('chalicelib.player_route.bp_player',
+       MagicMock(current_request=MagicMock(
+           headers=dict(AUTHORIZATION=jwt))))
 @patch('chalicelib.player_route.get_player_tournaments')
 def test_get_tournament_by_status_route(mock):
-    result = get_tournaments_by_status_route('schrubles')
+    result = get_tournaments_by_status_route()
     assert result
-    mock.assert_called_with('schrubles')
     mock.assert_called_once()
