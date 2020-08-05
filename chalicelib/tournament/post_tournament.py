@@ -3,6 +3,7 @@ from marshmallow import ValidationError
 from playerstars_adapters import PlayerTournamentAdapter, \
     TeamTournamentAdapter, ConsoleAdapter, ValuesAdapter
 from playerstars_domain import DuelType
+from playerstars_graphql_adapters import NotificationAdapter
 from playerstars_interactors.tournament.post_tournament_interactor import \
     PostTournamentRestModel, PostTournamentInteractor, PostTournamentAdapters
 from playerstars_interactors.utils.report_exception import exception_str
@@ -36,6 +37,13 @@ def _get_values_adapter():
     return ValuesAdapter(table_name=Settings.VALUES_TABLE_NAME)
 
 
+def _get_notification_gql_adapter():
+    return NotificationAdapter(Settings.GRAPHQL_API_ID,
+                               Settings.GRAPHQL_API_KEY,
+                               Settings.AWS_DEFAULT_REGION,
+                               Settings.NOTIFICATION_MUTATION_NAME_PART)
+
+
 @tournament_route.post('/')
 def post_tournament():
     ju = JwtUtils(tournament_route)
@@ -51,10 +59,12 @@ def post_tournament():
     tournament_adapter = _get_tournament_adapter(request)
     console_adapter = _get_console_adapter()
     values_adapter = _get_values_adapter()
+    notification_gql_adapter = _get_notification_gql_adapter()
     adapters = PostTournamentAdapters(
         tournament=tournament_adapter,
         console=console_adapter,
-        values=values_adapter)
+        values=values_adapter,
+        notification_gql=notification_gql_adapter)
 
     interactor = PostTournamentInteractor(
         request=request,
