@@ -2,7 +2,7 @@ from chalice_support import bad_request, success, server_error
 from marshmallow import ValidationError
 from playerstars_adapters import PlayerTournamentAdapter, \
     TeamTournamentAdapter, ConsoleAdapter, ValuesAdapter
-from playerstars_domain import DuelType
+from playerstars_domain import DuelMemberType as MemberType
 from playerstars_graphql_adapters import NotificationAdapter
 from playerstars_interactors.tournament.post_tournament_interactor import \
     PostTournamentRestModel, PostTournamentInteractor, PostTournamentAdapters
@@ -18,10 +18,10 @@ tournament_route = PrivateRoute(__name__)
 
 def _get_tournament_adapter(request: PostTournamentRestModel):
     adapter_map = {
-        DuelType.INDIVIDUAL: (PlayerTournamentAdapter,
-                              Settings.PLAYER_TOURNAMENT_TABLE_NAME),
-        DuelType.CHAMPIONSHIP: (TeamTournamentAdapter,
-                                Settings.TEAM_TOURNAMENT_TABLE_NAME)
+        MemberType.PLAYER: (PlayerTournamentAdapter,
+                            Settings.PLAYER_TOURNAMENT_TABLE_NAME),
+        MemberType.TEAM: (TeamTournamentAdapter,
+                          Settings.TEAM_TOURNAMENT_TABLE_NAME)
     }
 
     klass, table_name = adapter_map[request.duel_type]

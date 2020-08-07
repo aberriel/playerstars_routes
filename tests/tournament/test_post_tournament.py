@@ -1,7 +1,7 @@
 from unittest.mock import patch, MagicMock
 
 from marshmallow import ValidationError
-from playerstars_domain import DuelType
+from playerstars_domain import DuelMemberType as MemberType
 
 from chalicelib.settings import Settings
 
@@ -15,7 +15,7 @@ from chalicelib.tournament.post_tournament import (
 
 @patch('chalicelib.tournament.post_tournament.PlayerTournamentAdapter')
 def test_get_tournament_adapter_player(mock_adapter):
-    mock_rest_model = MagicMock(duel_type=DuelType.INDIVIDUAL)
+    mock_rest_model = MagicMock(duel_type=MemberType.PLAYER)
     result = _get_tournament_adapter(mock_rest_model)
 
     mock_adapter.assert_called_with(
@@ -25,7 +25,7 @@ def test_get_tournament_adapter_player(mock_adapter):
 
 @patch('chalicelib.tournament.post_tournament.TeamTournamentAdapter')
 def test_get_tournament_adapter_team(mock_adapter):
-    mock_rest_model = MagicMock(duel_type=DuelType.CHAMPIONSHIP)
+    mock_rest_model = MagicMock(duel_type=MemberType.TEAM)
     result = _get_tournament_adapter(mock_rest_model)
 
     mock_adapter.assert_called_with(
