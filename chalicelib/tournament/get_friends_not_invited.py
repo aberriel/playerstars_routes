@@ -9,7 +9,7 @@ from playerstars_interactors.tournament.get_friends_not_invited import (
 )
 
 
-@tournament_route.get('/friends-by-console/')
+@tournament_route.get('/friends-not-invited/')
 def get_friends_not_invited_route():
     try:
         data = tournament_route.current_request.query_params
