@@ -1,5 +1,5 @@
 from chalice_support import server_error, success
-from chalicelib.tournament.post_invite_answer import tournament_route
+from chalicelib.tournament.get_friends_not_invited import tournament_route
 from playerstars_interactors.tournament.post_invite_new_players import (
     PostInviteNewPlayersAdapters, PostInviteNewPlayersRequestModel,
     PostInviteNewPlayersInteractor, PostInviteNewPlayersError
