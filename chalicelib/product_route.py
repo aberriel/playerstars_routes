@@ -1,7 +1,8 @@
 from chalice import Blueprint
 from playerstars_adapters import ProductAdapter
 from playerstars_domain import Product
-from playerstars_interactors import GetAllProductsInteractor
+from playerstars_interactors import \
+    GetAllProductsInteractor, GetPlanListInteractor
 
 from chalicelib.chalice_support import private_get, private_post
 from chalice_support import success, not_found
@@ -9,6 +10,7 @@ from chalicelib.settings import Settings
 from .basic_entity_route import BasicEntityRoute
 
 bp_product = Blueprint(__name__)
+bp_plan = Blueprint(__name__)
 
 
 def get_router():
@@ -23,6 +25,13 @@ def get_adapter():
 @bp_product.route('/', **private_get())
 def get_all_product():
     return get_all()
+
+
+@bp_plan.route('/', **private_get())
+def get_all_plan():
+    interactor = GetPlanListInteractor()
+    response = interactor.run()
+    return success(response)
 
 
 @bp_product.route('/', **private_post())

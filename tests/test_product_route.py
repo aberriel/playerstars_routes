@@ -1,7 +1,18 @@
 from playerstars_interactors import SaveEntityException
 from unittest.mock import MagicMock, patch
-from chalicelib import get_all_product, post_product
+from chalicelib import (
+    get_all_plan,
+    get_all_product,
+    post_product)
 import json
+
+
+@patch('chalicelib.product_route.GetPlanListInteractor.run')
+def test_get_all_plan(run):
+    result = get_all_plan()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
 
 
 @patch('chalicelib.product_route.GetAllProductsInteractor.run')

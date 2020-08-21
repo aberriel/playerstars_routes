@@ -86,7 +86,7 @@ from .player_route import (
     get_ranking_my_teams_route,
     get_player_tournaments
 )
-from .product_route import get_all_product, post_product
+from .product_route import get_all_plan, get_all_product, post_product
 from .purchase_route import (
     get_history_route
 )
@@ -170,6 +170,7 @@ __all__ = [
     'leave_team',
     'accept_invitation',
 
+    'get_all_plan',
     'get_all_product',
     'post_product',
 
