@@ -26,7 +26,7 @@ def get_duel_adapter():
     return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
-@tournament_route.get('/{entity_id}/phase1')
+@tournament_route.get('/{entity_id}/phases')
 def get_tournament_phase(entity_id):
     try:
         player_id = get_user_id_from_jwt(tournament_route)
