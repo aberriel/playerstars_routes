@@ -28,7 +28,7 @@ from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.admin_routes import bp_admin
 from chalicelib.values_route import bp_value
 from chalicelib.terms_policy_route import bp_terms, bp_policy
-from chalicelib.tournament.post_tournament_start import tournament_route
+from chalicelib.tournament.get_tournament_detail import tournament_route
 
 app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
