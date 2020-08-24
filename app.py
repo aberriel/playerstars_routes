@@ -1,6 +1,13 @@
 from chalice import Chalice
+from playerstars_adapters.event_reminder_assistant_adapter import \
+    EventReminderAssistantAdapter
+from playerstars_domain.event_reminder_assistant import EventReminderAssistant
+from playerstars_domain.event_reminder_assistant.era_runner import EraRunner
+from playerstars_domain.utils.datetime_helper import aware_now
 
 from chalicelib import root
+from chalicelib.aws_task_scheduler_adatper.aws_task_scheduler_adapter import \
+    AwsTaskSchedulerAdapter
 from chalicelib.settings import Settings
 from chalicelib.console_route import bp_console, bp_console_admin
 from chalicelib.duel_route import (
@@ -79,3 +86,18 @@ def index():
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
 def duel_finish_handler(event, context):
     return duel_scheduled_finisher(event['duel_id'])
+
+
+@app.lambda_function(name=Settings.ERA_RUNNER_NAME)
+def era_runner(event, context):
+    identifier = event['identifier']
+
+    name = 'não sei ainda'
+    scheduler_adapter = AwsTaskSchedulerAdapter.get_current(identifier)
+    persist_adapter = EventReminderAssistantAdapter(
+        table_name=Settings.ERA_TABLE_NAME)
+    runner = EraRunner(name=name,
+                       scheduler_adapter=scheduler_adapter,
+                       persist_adapter=persist_adapter)
+
+    runner.run()
