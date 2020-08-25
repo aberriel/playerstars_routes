@@ -3,6 +3,8 @@ from playerstars_adapters.event_reminder_assistant_adapter import \
     EventReminderAssistantAdapter
 from playerstars_domain.event_reminder_assistant import EventReminderAssistant
 from playerstars_domain.event_reminder_assistant.era_runner import EraRunner
+from playerstars_domain.event_reminder_assistant.event_reminder_assistant import \
+    era_factory, EraAction
 from playerstars_domain.utils.datetime_helper import aware_now
 
 from chalicelib import root
@@ -81,6 +83,51 @@ def index():
     return {
         'status': 'ok',
         'data': 'PlayerStars is alive!!'}
+
+
+@app.route('/test_era', methods=['POST'])
+def do_era_test():
+    body = app.current_request.json_body
+
+    cmd = body['command']
+    if cmd == 'SET_ERA':
+        """
+            Command SET_ERA:
+            {
+                "action": {
+                    "url": "https://url_para_chamar.com/resource",
+                    "method": "get|post|put|delete",
+                    "payload": {"answer": 42}
+                },
+                "name": "era_test_name",
+                "event_time": "datetime_utc_iso",
+                "task_identifier": "o que será isso?",
+
+            }
+        """
+        persist_adapter = EventReminderAssistantAdapter(
+            table_name=Settings.ERA_TABLE_NAME)
+        scheduler_adapter = AwsTaskSchedulerAdapter(
+            name=body['name'],
+            task_identifier=body['task_identifier'],
+            execution_time=aware_now(),
+            aws_region='us-east-1',
+            lambda_runner='era_runner'
+        )
+
+        era_action = EraAction(
+            url=body['action']['url'],
+            method=body['action']['method'],
+            payload=body['action']['payload']
+        )
+        era = era_factory(
+            name=body['name'],
+            event_time=body['event_time'],
+            action=era_action,
+            persist_adapter=persist_adapter,
+            scheduler_adapter=scheduler_adapter
+        )
+        era.save()
 
 
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
