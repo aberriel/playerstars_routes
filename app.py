@@ -1,6 +1,10 @@
 from chalice import Chalice
+from playerstars_adapters.event_reminder_assistant_adapter import \
+    EventReminderAssistantAdapter
+from playerstars_domain.event_reminder_assistant.era_runner import EraRunner
 
 from chalicelib import root
+from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, era_factory
 from chalicelib.settings import Settings
 from chalicelib.console_route import bp_console, bp_console_admin
 from chalicelib.duel_route import (
@@ -76,6 +80,62 @@ def index():
         'data': 'PlayerStars is alive!!'}
 
 
+@app.route('/test_era', methods=['POST'])
+def do_era_test():
+    body = app.current_request.json_body
+
+    cmd = body['command']
+    if cmd == 'SET_ERA':
+        """
+            Command SET_ERA:
+            {
+                "command": "SET_ERA",
+                "action": {
+                    "url": "https://url_para_chamar.com/resource",
+                    "method": "get|post|put|delete",
+                    "payload": {"answer": 42}
+                },
+                "name": "event name",
+                "event_time": "datetime_utc_iso"
+            }
+        """
+        persist_adapter = EventReminderAssistantAdapter(
+            table_name=Settings.ERA_TABLE_NAME)
+        scheduler_adapter = AwsTaskSchedulerAdapter(
+            name=body['name'],
+            lambda_runner='era_runner'
+        )
+
+        era_action = EraAction(
+            url=body['action']['url'],
+            method=body['action']['method'],
+            payload=body['action']['payload']
+        )
+        era = era_factory(
+            name=body['name'],
+            event_time=body['event_time'],
+            action=era_action,
+            persist_adapter=persist_adapter,
+            scheduler_adapter=scheduler_adapter
+        )
+        era.save()
+
+
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
 def duel_finish_handler(event, context):
     return duel_scheduled_finisher(event['duel_id'])
+
+
+@app.lambda_function(name=Settings.ERA_RUNNER_NAME)
+def era_runner(event, context):
+    identifier = event[AwsTaskSchedulerAdapter.get_task_id_name()]
+
+    name = 'não sei ainda'
+    scheduler_adapter = AwsTaskSchedulerAdapter.get_current(identifier)
+    persist_adapter = EventReminderAssistantAdapter(
+        table_name=Settings.ERA_TABLE_NAME)
+    runner = EraRunner(name=name,
+                       scheduler_adapter=scheduler_adapter,
+                       persist_adapter=persist_adapter)
+
+    runner.run()
