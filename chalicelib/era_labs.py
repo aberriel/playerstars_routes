@@ -117,15 +117,18 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
         try:
             targets = events_client.list_targets_by_rule(Rule=name)['Targets']
             return targets[0]
-        except KeyError:
-            raise TaskNotFoundException('Key "Targets" not found')
-        except IndexError:
-            raise TaskNotFoundException('Empty target list found')
         except Exception as e:
-            if e.__class__.__name__ == 'ResourceNotFoundException':
-                raise TaskNotFoundException('No rule installed at this moment')
-            else:
+            map_exc = {
+                'KeyError': TaskNotFoundException('Key "Targets" not found'),
+                'IndexError': TaskNotFoundException('Empty target list found'),
+                'ResourceNotFoundException': TaskNotFoundException(
+                    'No rule installed at this moment')
+            }
+            exc_class = e.__class__.__name__
+            if exc_class not in map_exc:
                 raise e
+
+            raise map_exc[exc_class]
 
     @staticmethod
     def _get_identifier_from_target(target):
