@@ -1,15 +1,10 @@
 from chalice import Chalice
 from playerstars_adapters.event_reminder_assistant_adapter import \
     EventReminderAssistantAdapter
-from playerstars_domain.event_reminder_assistant import EventReminderAssistant
 from playerstars_domain.event_reminder_assistant.era_runner import EraRunner
-from playerstars_domain.event_reminder_assistant.event_reminder_assistant import \
-    era_factory, EraAction
-from playerstars_domain.utils.datetime_helper import aware_now
 
 from chalicelib import root
-from chalicelib.aws_task_scheduler_adatper.aws_task_scheduler_adapter import \
-    AwsTaskSchedulerAdapter
+from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, era_factory
 from chalicelib.settings import Settings
 from chalicelib.console_route import bp_console, bp_console_admin
 from chalicelib.duel_route import (
@@ -94,24 +89,20 @@ def do_era_test():
         """
             Command SET_ERA:
             {
+                "command": "SET_ERA",
                 "action": {
                     "url": "https://url_para_chamar.com/resource",
                     "method": "get|post|put|delete",
                     "payload": {"answer": 42}
                 },
-                "name": "era_test_name",
-                "event_time": "datetime_utc_iso",
-                "task_identifier": "o que será isso?",
-
+                "name": "event name",
+                "event_time": "datetime_utc_iso"
             }
         """
         persist_adapter = EventReminderAssistantAdapter(
             table_name=Settings.ERA_TABLE_NAME)
         scheduler_adapter = AwsTaskSchedulerAdapter(
             name=body['name'],
-            task_identifier=body['task_identifier'],
-            execution_time=aware_now(),
-            aws_region='us-east-1',
             lambda_runner='era_runner'
         )
 
@@ -137,7 +128,7 @@ def duel_finish_handler(event, context):
 
 @app.lambda_function(name=Settings.ERA_RUNNER_NAME)
 def era_runner(event, context):
-    identifier = event['identifier']
+    identifier = event[AwsTaskSchedulerAdapter.get_task_id_name()]
 
     name = 'não sei ainda'
     scheduler_adapter = AwsTaskSchedulerAdapter.get_current(identifier)

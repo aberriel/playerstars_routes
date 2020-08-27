@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch, call
 # noinspection PyPackageRequirements
 import pytest
 # noinspection PyPackageRequirements
-from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter import \
-    TaskNotFoundException
+from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter \
+    import TaskNotFoundException
 from playerstars_domain.utils.datetime_helper import aware_utc
 from pytest import fixture, raises
 

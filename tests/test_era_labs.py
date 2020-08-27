@@ -1,6 +1,6 @@
 from collections import namedtuple
 from datetime import datetime
-from typing import Optional, overload
+from typing import Optional
 from unittest import TestCase
 from unittest.mock import MagicMock, patch, call
 
@@ -505,7 +505,9 @@ class TestAtsa(TestCase):
         mock_describe_rule.__getitem__.assert_called_with('Arn')
         assert result == mock_describe_rule.__getitem__()
 
-###########################################################################
+
+# ##########################################################################
+
 
 @fixture
 def url():
@@ -642,7 +644,6 @@ def test_update_if_sooner_update(mock_get_current_scheduler,
     era._update_if_sooner()
 
     mock_get_current_scheduler.assert_called_once()
-    mock_current = mock_get_current_scheduler()
     fac.mock_scheduler_adapter.update.assert_called_once()
 
 
@@ -658,7 +659,6 @@ def test_get_current_scheduler(era_factory_fixture):
 
 
 def test_runner():
-    mock_name = MagicMock()
     mock_scheduler_adapter = MagicMock()
     mock_persist_adapter = MagicMock()
     mock_era_runner_class = MagicMock()

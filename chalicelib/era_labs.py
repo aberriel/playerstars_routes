@@ -1,6 +1,16 @@
-from abc import ABC, abstractmethod
+import json
+from abc import ABC
+from abc import abstractmethod
 from datetime import datetime
+from hashlib import sha256
 from typing import Optional
+
+import boto3
+from clapy_basic_classes import BasicEntity, BasicValue
+from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
+from marshmallow import fields, post_load
+from playerstars_domain.utils.datetime_helper import aware_utc
+from playerstars_domain.utils.marshmallow_helper import REQUIRED
 
 
 class TaskNotFoundException(BaseException):
@@ -36,10 +46,10 @@ class BasicTaskSchedulerAdapter(ABC):
     def get_current(cls, name: str):
         raise NotImplementedError
 
+
 ##############################################################
 # TaskSchedulerPort
 
-from abc import ABC
 
 # from clapy_basic_classes.basic_scheduler_adapter import \
 #     BasicTaskSchedulerAdapter
@@ -53,18 +63,17 @@ class TaskSchedulerPort(ABC):
                               scheduler_adapter: BasicTaskSchedulerAdapter):
         self.scheduler_adapter = scheduler_adapter
 
-##############################################################
-# AwsTaskSchedulerAdapter
-import json
-from datetime import datetime
-from hashlib import sha256
 
-import boto3
-from playerstars_domain.utils.datetime_helper import aware_utc
+# #############################################################
+# AwsTaskSchedulerAdapter
 
 
 class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
     _task_id_name = 'task_id'
+
+    @classmethod
+    def get_task_id_name(cls):
+        return cls._task_id_name
 
     def __init__(self,
                  name: str,
@@ -271,16 +280,9 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
     def _remove_rule(self):
         self.events_client.delete_rule(Name=self.name)
 
-############################################33
+
+# ###########################################
 # ERA
-from datetime import datetime
-from typing import Optional
-
-from clapy_basic_classes import BasicEntity, BasicValue
-from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
-from marshmallow import fields, post_load
-
-from playerstars_domain.utils.marshmallow_helper import REQUIRED
 
 
 class EraAction(BasicValue):
@@ -374,4 +376,3 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
                                       persist_adapter=persist_adapter,
                                       logger=logger)
         era_runner.run()
-
