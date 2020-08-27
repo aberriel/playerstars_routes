@@ -121,6 +121,11 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
             raise TaskNotFoundException('Key "Targets" not found')
         except IndexError:
             raise TaskNotFoundException('Empty target list found')
+        except Exception as e:
+            if e.__class__.__name__ == 'ResourceNotFoundException':
+                raise TaskNotFoundException('No rule installed at this moment')
+            else:
+                raise e
 
     @staticmethod
     def _get_identifier_from_target(target):
