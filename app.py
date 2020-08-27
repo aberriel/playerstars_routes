@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from chalice import Chalice
 from playerstars_adapters.event_reminder_assistant_adapter import \
     EventReminderAssistantAdapter
@@ -115,7 +117,7 @@ def do_era_test():
             )
             era = era_factory(
                 name=body['name'],
-                event_time=body['event_time'],
+                event_time=datetime.fromisoformat(body['event_time']),
                 action=era_action,
                 persist_adapter=persist_adapter,
                 scheduler_adapter=scheduler_adapter
