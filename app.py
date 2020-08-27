@@ -4,9 +4,9 @@ from playerstars_adapters.event_reminder_assistant_adapter import \
 from playerstars_domain.event_reminder_assistant.era_runner import EraRunner
 
 from chalicelib import root
-from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, era_factory
-from chalicelib.settings import Settings
+from chalicelib.admin_routes import bp_admin
 from chalicelib.console_route import bp_console, bp_console_admin
+from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.duel_route import (
     bp_cancel_duel,
     bp_create_duel,
@@ -15,7 +15,10 @@ from chalicelib.duel_route import (
     bp_inform_invite_timeout,
     bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
+from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, era_factory
 from chalicelib.game_route import bp_game, bp_game_by_console
+from chalicelib.mail_routes import (
+    bp_contact_email, bp_invitation_email, bp_welcome_email)
 from chalicelib.notification_route import (
     bp_notification,
     bp_notification_read)
@@ -24,15 +27,12 @@ from chalicelib.product_route import bp_plan, bp_product
 from chalicelib.purchase_route import bp_purchase
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
-from chalicelib.mail_routes import (
-    bp_contact_email, bp_invitation_email, bp_welcome_email)
+from chalicelib.settings import Settings
 from chalicelib.team_route import bp_enter_team, bp_team
-from chalicelib.user_admin_route import bp_user_admin
-from chalicelib.convert_star_rate_route import bp_convert
-from chalicelib.admin_routes import bp_admin
-from chalicelib.values_route import bp_value
 from chalicelib.terms_policy_route import bp_terms, bp_policy
 from chalicelib.tournament.get_tournament_detail import tournament_route
+from chalicelib.user_admin_route import bp_user_admin
+from chalicelib.values_route import bp_value
 
 app = Chalice(app_name='playerstars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
@@ -58,7 +58,8 @@ app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
-app.register_blueprint(bp_notification_read, url_prefix='/notification/set-as-read')
+app.register_blueprint(bp_notification_read,
+                       url_prefix='/notification/set-as-read')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_player_by_console, url_prefix='/player-by-game')
 app.register_blueprint(bp_plan, url_prefix='/plan')
@@ -82,43 +83,57 @@ def index():
 
 @app.route('/test_era', methods=['POST'])
 def do_era_test():
-    body = app.current_request.json_body
+    try:
+        body = app.current_request.json_body
 
-    cmd = body['command']
-    if cmd == 'SET_ERA':
-        """
-            Command SET_ERA:
-            {
-                "command": "SET_ERA",
-                "action": {
-                    "url": "https://url_para_chamar.com/resource",
-                    "method": "get|post|put|delete",
-                    "payload": {"answer": 42}
-                },
-                "name": "event name",
-                "event_time": "datetime_utc_iso"
+        cmd = body['command']
+        if cmd == 'SET_ERA':
+            """
+                Command SET_ERA:
+                {
+                    "command": "SET_ERA",
+                    "action": {
+                        "url": "https://url_para_chamar.com/resource",
+                        "method": "get|post|put|delete",
+                        "payload": {"answer": 42}
+                    },
+                    "name": "event name",
+                    "event_time": "datetime_utc_iso"
+                }
+            """
+            persist_adapter = EventReminderAssistantAdapter(
+                table_name=Settings.ERA_TABLE_NAME)
+            scheduler_adapter = AwsTaskSchedulerAdapter(
+                name=body['name'],
+                lambda_runner='era_runner'
+            )
+
+            era_action = EraAction(
+                url=body['action']['url'],
+                method=body['action']['method'],
+                payload=body['action']['payload']
+            )
+            era = era_factory(
+                name=body['name'],
+                event_time=body['event_time'],
+                action=era_action,
+                persist_adapter=persist_adapter,
+                scheduler_adapter=scheduler_adapter
+            )
+            era.save()
+
+            return {
+                'Sucesso': {
+                    'Era Id': era.entity_id
+                }
             }
-        """
-        persist_adapter = EventReminderAssistantAdapter(
-            table_name=Settings.ERA_TABLE_NAME)
-        scheduler_adapter = AwsTaskSchedulerAdapter(
-            name=body['name'],
-            lambda_runner='era_runner'
-        )
-
-        era_action = EraAction(
-            url=body['action']['url'],
-            method=body['action']['method'],
-            payload=body['action']['payload']
-        )
-        era = era_factory(
-            name=body['name'],
-            event_time=body['event_time'],
-            action=era_action,
-            persist_adapter=persist_adapter,
-            scheduler_adapter=scheduler_adapter
-        )
-        era.save()
+    except Exception as e:
+        return {
+            'Erro': {
+                'Class': e.__class__.__name__,
+                'Value': str(e)
+            }
+        }
 
 
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
