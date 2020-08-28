@@ -218,7 +218,7 @@ class TestAtsa(TestCase):
         self.assertEqual(str(excinfo.value), 'Empty target list found')
 
     def test_get_identifier_from_target(self):
-        mock_target = {'Input': '{"task_id": "Ident"}', 'Id': 'meu id'}
+        mock_target = {'Input': '{"era_id": "Ident"}', 'Id': 'meu id'}
         result = AwsTaskSchedulerAdapter._get_identifier_from_target(
             mock_target)
         assert result == 'Ident'

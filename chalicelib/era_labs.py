@@ -135,8 +135,7 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
 
     @staticmethod
     def _get_identifier_from_target(target):
-        task_id_name = AwsTaskSchedulerAdapter._task_id_name
-        return json.loads(target['Input'])[task_id_name]
+        return json.loads(target['Input'])['era_id']
 
     @staticmethod
     def _get_runner_from_target(target):
