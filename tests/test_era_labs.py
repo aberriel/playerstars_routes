@@ -361,6 +361,7 @@ class TestAtsa(TestCase):
         atsa: AwsTaskSchedulerAdapter = self.atsa_factory(
             identifier='sou eu').atsa
 
+        atsa.name = 'scheduler_name'
         result = atsa._make_targets()
 
         mock_glfa.assert_called_once()
@@ -368,7 +369,7 @@ class TestAtsa(TestCase):
         expected = [{
             'Id': atsa.lambda_runner,
             'Arn': mock_glfa(),
-            'Input': '{"task_id": "sou eu"}'
+            'Input': '{"scheduler_name": "scheduler_name", "era_id": "sou eu"}'
         }]
 
         self.assertEqual(result, expected)

@@ -222,11 +222,13 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
         return target_response
 
     def _make_targets(self):
+        lambda_input = dict(scheduler_name=self.name,
+                            era_id=self.task_id)
         lambda_arn = self._get_lambda_function_arn()
         scheduled_lambda = [{
             'Id': self.lambda_runner,
             'Arn': lambda_arn,
-            'Input': json.dumps({"task_id": self.task_id})
+            'Input': json.dumps(lambda_input)
         }]
         return scheduled_lambda
 
