@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from os import environ
 
 from chalice import Chalice
 from playerstars_adapters.event_reminder_assistant_adapter import \
@@ -37,7 +38,7 @@ from chalicelib.tournament.get_tournament_detail import tournament_route
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
 
-app = Chalice(app_name='playerstars')
+app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
 
 app.register_blueprint(tournament_route, url_prefix='/tournament')
@@ -86,18 +87,7 @@ def index():
 
 @app.route('/test_era', methods=['POST'])
 def do_era_test():
-    try:
-        with open('.chalice/config.json', 'r') as f:
-            config = json.loads(f.read())
-
-        config_app_name = config['app_name']
-    except Exception as e:
-        config_app_name = f'Erro: {e.__class__.__name__}: {e}'
-
-    app_app_name = app.app_name
-
-    return dict(config_app_name=config_app_name,
-                app_app_name=app_app_name)
+    return json.dumps({k: v for k, v in environ.items()})
 
     #
     # try:
