@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from chalice import Chalice
@@ -86,56 +87,80 @@ def index():
 @app.route('/test_era', methods=['POST'])
 def do_era_test():
     try:
-        body = app.current_request.json_body
+        with open('.chalice/config.json', 'r') as f:
+            config = json.loads(f.read())
 
-        cmd = body['command']
-        if cmd == 'SET_ERA':
-            """
-                Command SET_ERA:
-                {
-                    "command": "SET_ERA",
-                    "action": {
-                        "url": "https://url_para_chamar.com/resource",
-                        "method": "get|post|put|delete",
-                        "payload": {"answer": 42}
-                    },
-                    "name": "event name",
-                    "event_time": "datetime_utc_iso"
-                }
-            """
-            persist_adapter = EventReminderAssistantAdapter(
-                table_name=Settings.ERA_TABLE_NAME)
-            scheduler_adapter = AwsTaskSchedulerAdapter(
-                name=body['name'],
-                lambda_runner='era_runner'
-            )
-
-            era_action = EraAction(
-                url=body['action']['url'],
-                method=body['action']['method'],
-                payload=body['action']['payload']
-            )
-            era = era_factory(
-                name=body['name'],
-                event_time=datetime.fromisoformat(body['event_time']),
-                action=era_action,
-                persist_adapter=persist_adapter,
-                scheduler_adapter=scheduler_adapter
-            )
-            era.save()
-
-            return {
-                'Sucesso': {
-                    'Era Id': era.entity_id
-                }
-            }
+        config_app_name = config['app_name']
     except Exception as e:
-        return {
-            'Erro': {
-                'Class': e.__class__.__name__,
-                'Value': str(e)
-            }
-        }
+        config_app_name = f'Erro: {e.__class__.__name__}: {e}'
+
+    app_app_name = app.app_name
+
+    return dict(config_app_name=config_app_name,
+                app_app_name=app_app_name)
+
+    #
+    # try:
+    #     body = app.current_request.json_body
+    #
+    #     cmd = body['command']
+    #     if cmd == 'SET_ERA':
+    #         """
+    #             Command SET_ERA:
+    #             {
+    #                 "command": "SET_ERA",
+    #                 "event": {
+    #                     "action": {
+    #                         "url": "https://url_para_chamar.com/resource",
+    #                         "method": "GET|POST|PUT|DELETE",
+    #                         "payload": {
+    #                             "answer": 42
+    #                         }
+    #                     },
+    #                     "name": "Me acorde",
+    #                     "event_time": "datetime_utc_iso"
+    #                 },
+    #                 "scheduler": {
+    #                     "name": "test_scheduler"
+    #                 }
+    #             }
+    #         """
+    #         persist_adapter = EventReminderAssistantAdapter(
+    #             table_name=Settings.ERA_TABLE_NAME)
+    #         scheduler_adapter = AwsTaskSchedulerAdapter(
+    #             name=body['scheduler']['name'],
+    #             lambda_runner='PlayerStars-dev-era_runner_dev'
+    #         )
+    #
+    #         action = body['event']['action']
+    #         era_action = EraAction(
+    #             url=action['url'],
+    #             method=action['method'],
+    #             payload=action['payload']
+    #         )
+    #
+    #         event = body['event']
+    #         era = era_factory(
+    #             name=event['name'],
+    #             event_time=datetime.fromisoformat(event['event_time']),
+    #             action=era_action,
+    #             persist_adapter=persist_adapter,
+    #             scheduler_adapter=scheduler_adapter
+    #         )
+    #         era.save()
+    #
+    #         return {
+    #             'Sucesso': {
+    #                 'Era Id': era.entity_id
+    #             }
+    #         }
+    # except Exception as e:
+    #     return {
+    #         'Erro': {
+    #             'Class': e.__class__.__name__,
+    #             'Value': str(e)
+    #         }
+    #     }
 
 
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
@@ -143,16 +168,24 @@ def duel_finish_handler(event, context):
     return duel_scheduled_finisher(event['duel_id'])
 
 
+def get_era_runner_name():
+    app_name = app.app_name
+    runner_name = Settings.ERA_RUNNER_NAME
+
+    return f'{app_name}-{runner_name}'
+
+
 @app.lambda_function(name=Settings.ERA_RUNNER_NAME)
 def era_runner(event, context):
-    identifier = event[AwsTaskSchedulerAdapter.get_task_id_name()]
-
-    name = 'não sei ainda'
-    scheduler_adapter = AwsTaskSchedulerAdapter.get_current(identifier)
-    persist_adapter = EventReminderAssistantAdapter(
-        table_name=Settings.ERA_TABLE_NAME)
-    runner = EraRunner(name=name,
-                       scheduler_adapter=scheduler_adapter,
-                       persist_adapter=persist_adapter)
-
-    runner.run()
+    pass
+    # scheduler_name = event['scheduler_name']
+    # era_id = event['era_id']
+    #
+    # scheduler_adapter = AwsTaskSchedulerAdapter(name=scheduler_name)
+    # persist_adapter = EventReminderAssistantAdapter(
+    #     table_name=Settings.ERA_TABLE_NAME)
+    # runner = EraRunner(name=name,
+    #                    scheduler_adapter=scheduler_adapter,
+    #                    persist_adapter=persist_adapter)
+    #
+    # runner.run()
