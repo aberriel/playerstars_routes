@@ -1,15 +1,18 @@
 import json
 from abc import ABC
 from abc import abstractmethod
+from copy import deepcopy
 from datetime import datetime
 from hashlib import sha256
+from logging import getLogger
 from typing import Optional
 
 import boto3
+import requests
 from clapy_basic_classes import BasicEntity, BasicValue
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from marshmallow import fields, post_load
-from playerstars_domain.utils.datetime_helper import aware_utc
+from playerstars_domain.utils.datetime_helper import aware_utc, aware_now
 from playerstars_domain.utils.marshmallow_helper import REQUIRED
 
 
@@ -357,6 +360,9 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
         super().save()
         self._set_scheduler()
 
+    def set_scheduler(self):
+        self._set_scheduler()
+
     def _set_scheduler(self):
         try:
             self._update_if_sooner()
@@ -370,17 +376,75 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
             self.scheduler_adapter.update(self.entity_id, self.event_time)
 
     def _get_current_scheduler(self):
-        scheduler_name = self.scheduler_adapter.name
         current_scheduler: BasicTaskSchedulerAdapter = \
-            self.scheduler_adapter.get_current(scheduler_name)
+            self.scheduler_adapter.get_current(self.scheduler_adapter.name)
         return current_scheduler
 
-    @staticmethod
-    def runner(scheduler_adapter: BasicTaskSchedulerAdapter,
-               persist_adapter: BasicPersistAdapter,
-               era_runner_class,
-               logger=None):
-        era_runner = era_runner_class(scheduler_adapter=scheduler_adapter,
-                                      persist_adapter=persist_adapter,
-                                      logger=logger)
-        era_runner.run()
+# ###############################3
+# Era Runner
+
+
+def _extend_dict(a_dict: dict, extension: dict):
+    result = deepcopy(a_dict)
+    result.update(extension)
+    return result
+
+
+class EraRunner(TaskSchedulerPort):
+    def __init__(self,
+                 era_id: str,
+                 scheduler_adapter: BasicTaskSchedulerAdapter,
+                 persist_adapter: BasicPersistAdapter,
+                 logger=None):
+        super().__init__()
+        self.era_id = era_id
+        self.logger = logger or getLogger(__name__)
+        self.set_scheduler_adapter(scheduler_adapter)
+        self.persist_adapter = persist_adapter
+
+    def run(self):
+        current_era = self._execute_action()
+
+        self._remove_current(current_era)
+        self._setup_next()
+
+    def _remove_current(self, current_era):
+        current_era.set_scheduler_adapter(self.scheduler_adapter)
+        current_era.delete()
+
+    def _execute_action(self):
+        era: EventReminderAssistant = self.persist_adapter.get_by_id(
+            self.era_id)
+
+        args = {'url': era.action.url}
+        args_with_payload = _extend_dict(args, {'data': era.action.payload})
+        map_request = {
+            'GET': (requests.get, args),
+            'DELETE': (requests.delete, args),
+            'POST': (requests.post, args_with_payload),
+            'PUT': (requests.put, args_with_payload)
+        }
+        fn, fn_args = map_request[era.action.method]
+        response = fn(**fn_args)
+
+        self._log_response(response)
+
+        return era
+
+    def _log_response(self, response):
+        now = aware_now().isoformat()
+        self.logger.info(f'{now}: ERA Execution: {response.json()}')
+
+    def _setup_next(self):
+        now = aware_now().isoformat()
+        all_eras = self.persist_adapter.filter(event_time__gte=now)
+
+        if len(all_eras) == 0:
+            return
+
+        oredered_eras = sorted(all_eras, key=lambda x: x.event_time)
+
+        next_era: EventReminderAssistant = oredered_eras[0]
+        next_era.set_adapter(self.persist_adapter)
+        next_era.set_scheduler_adapter(self.scheduler_adapter)
+        next_era.set_scheduler()

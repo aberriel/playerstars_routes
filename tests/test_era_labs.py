@@ -12,7 +12,7 @@ from pytest import raises, fixture
 
 from chalicelib.era_labs import BasicTaskSchedulerAdapter, TaskSchedulerPort, \
     AwsTaskSchedulerAdapter, TaskNotFoundException, EventReminderAssistant, \
-    era_factory, EraAction
+    era_factory, EraAction, _extend_dict
 
 
 def test_basic_task_scheduler_adapter():
@@ -196,6 +196,16 @@ class TestAtsa(TestCase):
             AwsTaskSchedulerAdapter._get_target(mock_ev, mock_name)
 
         self.assertEqual(str(excinfo.value), 'Key "Targets" not found')
+
+    def test_get_target_error(self):
+        mock_ev = MagicMock(list_targets_by_rule=MagicMock(
+            side_effect=ValueError('error')))
+        mock_name = MagicMock()
+
+        with raises(ValueError) as excinfo:
+            AwsTaskSchedulerAdapter._get_target(mock_ev, mock_name)
+
+        self.assertEqual(str(excinfo.value), 'error')
 
     def test_get_target_empty_targets(self):
         mock_ev = MagicMock(list_targets_by_rule=MagicMock(
@@ -601,6 +611,16 @@ def test_set_scheduler(mock_update_if_sooner, era_factory_fixture):
     mock_update_if_sooner.assert_called_once()
 
 
+@patch.object(EventReminderAssistant, '_set_scheduler')
+def test_set_scheduler(mock_set_scheduler, era_factory_fixture):
+    fac: Factory = era_factory_fixture()
+    era: EventReminderAssistant = fac.era
+
+    era.set_scheduler()
+
+    mock_set_scheduler.assert_called_once()
+
+
 @patch.object(EventReminderAssistant, '_update_if_sooner',
               side_effect=TaskNotFoundException('olá!'))
 def test_set_scheduler_create(mock_update_if_sooner, era_factory_fixture):
@@ -658,19 +678,11 @@ def test_get_current_scheduler(era_factory_fixture):
     assert result == fac.mock_scheduler_adapter.get_current()
 
 
-def test_runner():
-    mock_scheduler_adapter = MagicMock()
-    mock_persist_adapter = MagicMock()
-    mock_era_runner_class = MagicMock()
-    EventReminderAssistant.runner(
-        mock_scheduler_adapter,
-        mock_persist_adapter,
-        mock_era_runner_class)
+def test_get_task_id():
+    assert AwsTaskSchedulerAdapter.get_task_id_name() == 'task_id'
 
-    mock_era_runner_class.assert_called_with(
-        scheduler_adapter=mock_scheduler_adapter,
-        persist_adapter=mock_persist_adapter,
-        logger=None
-    )
 
-    mock_era_runner_class().run.assert_called_once()
+def test_extend_dict():
+    x = {'a': 1}
+    y = _extend_dict(x, dict(b=2))
+    assert y == dict(a=1, b=2)
