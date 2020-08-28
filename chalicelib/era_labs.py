@@ -370,10 +370,14 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
         except TaskNotFoundException:
             self.scheduler_adapter.set(self.entity_id, self.event_time)
 
-    def _update_if_sooner(self):
-        current_scheduler = self._get_current_scheduler()
+    @staticmethod
+    def _is_sooner(current, event_time):
+        return event_time < current or current < aware_now()
 
-        if current_scheduler.execution_time > self.event_time:
+    def _update_if_sooner(self):
+        current = self._get_current_scheduler().execution_time
+
+        if self._is_sooner(current, self.event_time):
             self.scheduler_adapter.update(self.entity_id, self.event_time)
 
     def _get_current_scheduler(self):

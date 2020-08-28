@@ -636,10 +636,13 @@ def test_set_scheduler_create(mock_update_if_sooner, era_factory_fixture):
 
 @patch.object(EventReminderAssistant, '_get_current_scheduler',
               return_value=MagicMock(
-                  execution_time=datetime(2020, 8, 22, 10, 0)))
-def test_update_if_sooner_no_update(mock_get_current_scheduler,
+                  execution_time=aware_utc(datetime(2020, 8, 22, 10, 0))))
+@patch('chalicelib.era_labs.aware_now',
+       return_value=aware_utc(datetime(2020, 8, 20)))
+def test_update_if_sooner_no_update(mock_aware_now,
+                                    mock_get_current_scheduler,
                                     era_factory_fixture):
-    mock_our_exec_time = datetime(2020, 8, 22, 10, 1)
+    mock_our_exec_time = aware_utc(datetime(2020, 8, 22, 10, 1))
 
     fac: Factory = era_factory_fixture(mock_event_time=mock_our_exec_time)
     era: EventReminderAssistant = fac.era
@@ -648,7 +651,8 @@ def test_update_if_sooner_no_update(mock_get_current_scheduler,
 
     mock_get_current_scheduler.assert_called_once()
     mock_current = mock_get_current_scheduler()
-    assert mock_current.execution_time == datetime(2020, 8, 22, 10, 0)
+    assert mock_current.execution_time == aware_utc(
+        datetime(2020, 8, 22, 10, 0))
     fac.mock_scheduler_adapter.update.assert_not_called()
 
 
