@@ -418,6 +418,7 @@ class EraRunner(TaskSchedulerPort):
         current_era.delete()
 
     def _execute_action(self):
+        self.logger.info(f'Executando {self.era_id}...')
         era: EventReminderAssistant = self.persist_adapter.get_by_id(
             self.era_id)
         era.set_adapter(self.persist_adapter)
@@ -440,7 +441,12 @@ class EraRunner(TaskSchedulerPort):
 
     def _log_response(self, response):
         now = aware_now().isoformat()
-        self.logger.info(f'{now}: ERA Execution: {response.json()}')
+        try:
+            report = response.json()
+        except Exception:
+            report = 'None'
+
+        self.logger.info(f'{now}: ERA Execution: {report}')
 
     def _setup_next(self):
         now = aware_now().isoformat()
