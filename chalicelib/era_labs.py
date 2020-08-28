@@ -381,6 +381,10 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
             self.scheduler_adapter.get_current(self.scheduler_adapter.name)
         return current_scheduler
 
+    def delete(self):
+        self.adapter.delete(self.entity_id)
+
+
 # ###############################3
 # Era Runner
 
