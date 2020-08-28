@@ -409,13 +409,15 @@ class EraRunner(TaskSchedulerPort):
         self._remove_current(current_era)
         self._setup_next()
 
-    def _remove_current(self, current_era):
+    def _remove_current(self, current_era: EventReminderAssistant):
         current_era.set_scheduler_adapter(self.scheduler_adapter)
         current_era.delete()
 
     def _execute_action(self):
         era: EventReminderAssistant = self.persist_adapter.get_by_id(
             self.era_id)
+        era.set_adapter(self.persist_adapter)
+        era.set_scheduler_adapter(self.scheduler_adapter)
 
         args = {'url': era.action.url}
         args_with_payload = _extend_dict(args, {'data': era.action.payload})
