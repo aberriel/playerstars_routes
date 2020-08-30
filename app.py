@@ -17,7 +17,7 @@ from chalicelib.notification_route import (
     bp_notification_read)
 from chalicelib.player_route import bp_player, bp_player_by_console
 from chalicelib.product_route import bp_plan, bp_product
-from chalicelib.purchase_route import bp_purchase
+from chalicelib.pagseguro_purchase_route import bp_purchase
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
 from chalicelib.mail_routes import (

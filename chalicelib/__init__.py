@@ -87,7 +87,7 @@ from .player_route import (
     get_player_tournaments
 )
 from .product_route import get_all_plan, get_all_product, post_product
-from .purchase_route import (
+from .pagseguro_purchase_route import (
     get_history_route
 )
 from .region_country_route import (

@@ -85,6 +85,14 @@ class Settings:
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
                              'da2-xqu7fukowrcilcwoxvcjsrfawm')
 
+    WIRECARD_API_USER = config('WIRECARD_API_USER',
+                               'KQXIFCN0ZMTKWXHIZMWO1U0AY0GYAKK4')
+    WIRECARD_API_PASSWORD = config('WIRECARD_API_PASSWORD',
+                                   'ZJAOG3V8NXTCEQOGM3BPUATY3RMQPCVAEUMEQWBY')
+    WIRECARD_API_URL_BASE = config(
+        'WIRECARD_API_URL_BASE',
+        'https://sandbox.moip.com.br/assinaturas/v1/')
+
     DUEL_JUDGE_MATRIX = config('DUEL_JUDGE_MATRIX', ''''\
         I
         1X

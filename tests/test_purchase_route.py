@@ -1,6 +1,6 @@
 from playerstars_interactors import \
     PostPurchaseException, PagSeguroException
-from chalicelib.purchase_route import (
+from chalicelib.pagseguro_purchase_route import (
     post_purchase, post_notification, get_history_route
 )
 from tests.test_utils import jwt
