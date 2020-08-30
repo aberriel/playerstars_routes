@@ -24,8 +24,9 @@ def make_post_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.purchase_route.bp_purchase', make_post_mock_data())
-@patch('chalicelib.purchase_route.PostPurchaseInteractor.run')
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_post_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.PostPurchaseInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_purchase(client, resource, run):
@@ -37,8 +38,9 @@ def test_post_purchase(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.purchase_route.bp_purchase', make_post_mock_data())
-@patch('chalicelib.purchase_route.PostPurchaseInteractor.run',
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_post_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.PostPurchaseInteractor.run',
        MagicMock(side_effect=PostPurchaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -55,8 +57,9 @@ def make_post_noti_mock_data():
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.purchase_route.bp_purchase', make_post_noti_mock_data())
-@patch('chalicelib.purchase_route.PostNotificationInteractor.run')
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_post_noti_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.PostNotificationInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_notification(client, resource, run):
@@ -68,8 +71,9 @@ def test_post_notification(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.purchase_route.bp_purchase', make_post_noti_mock_data())
-@patch('chalicelib.purchase_route.PostNotificationInteractor.run',
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_post_noti_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.PostNotificationInteractor.run',
        MagicMock(side_effect=PagSeguroException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
@@ -85,8 +89,9 @@ def make_get_history_mock_data():
         current_request=MagicMock(headers=dict(AUTHORIZATION=jwt)))
 
 
-@patch('chalicelib.purchase_route.bp_purchase', make_get_history_mock_data())
-@patch('chalicelib.purchase_route.GetPurchaseHistoryInteractor.run')
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_get_history_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.GetPurchaseHistoryInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_purchase_history_route(client, resource, run):
@@ -96,8 +101,9 @@ def test_get_purchase_history_route(client, resource, run):
     assert result.status_code == 200
 
 
-@patch('chalicelib.purchase_route.bp_purchase', make_get_history_mock_data())
-@patch('chalicelib.purchase_route.GetPurchaseHistoryInteractor.run',
+@patch('chalicelib.pagseguro_purchase_route.bp_purchase',
+       make_get_history_mock_data())
+@patch('chalicelib.pagseguro_purchase_route.GetPurchaseHistoryInteractor.run',
        return_value=None)
 @patch('boto3.resource')
 @patch('boto3.client')
