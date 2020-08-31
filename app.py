@@ -1,4 +1,9 @@
+from datetime import datetime
+from os import environ
+
 from chalice import Chalice
+from playerstars_adapters.event_reminder_assistant_adapter import \
+    EventReminderAssistantAdapter
 
 from chalicelib import root
 from chalicelib.admin_routes import bp_admin
@@ -12,6 +17,8 @@ from chalicelib.duel_route import (
     bp_inform_invite_timeout,
     bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
+from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, \
+    era_factory, EraRunner
 from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.mail_routes import (
     bp_contact_email, bp_invitation_email, bp_welcome_email)
@@ -24,14 +31,14 @@ from chalicelib.product_route import bp_plan, bp_product
 from chalicelib.purchase import bp_wirecard
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
+from chalicelib.settings import Settings
 from chalicelib.team_route import bp_enter_team, bp_team
 from chalicelib.terms_policy_route import bp_terms, bp_policy
-from chalicelib.tournament.post_tournament_start import tournament_route
+from chalicelib.tournament.get_tournament_detail import tournament_route
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
-from chalicelib.settings import Settings
 
-app = Chalice(app_name='playerstars')
+app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
 
 app.register_blueprint(root)
@@ -53,7 +60,8 @@ app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
-app.register_blueprint(bp_notification_read, url_prefix='/notification/set-as-read')
+app.register_blueprint(bp_notification_read,
+                       url_prefix='/notification/set-as-read')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_player_by_console, url_prefix='/player-by-game')
 app.register_blueprint(bp_plan, url_prefix='/plan')
@@ -77,6 +85,98 @@ def index():
         'data': 'PlayerStars is alive!!'}
 
 
+@app.route('/test_era', methods=['POST'])
+def do_era_test():
+
+    try:
+        body = app.current_request.json_body
+
+        cmd = body['command']
+        if cmd == 'SET_ERA':
+            """
+                Command SET_ERA:
+                {
+                    "command": "SET_ERA",
+                    "event": {
+                        "action": {
+                            "url": "https://url_para_chamar.com/resource",
+                            "method": "GET|POST|PUT|DELETE",
+                            "payload": {
+                                "answer": 42
+                            }
+                        },
+                        "name": "Me acorde",
+                        "event_time": "datetime_utc_iso"
+                    },
+                    "scheduler": {
+                        "name": "test_scheduler"
+                    }
+                }
+            """
+            persist_adapter = EventReminderAssistantAdapter(
+                table_name=Settings.ERA_TABLE_NAME)
+            scheduler_adapter = AwsTaskSchedulerAdapter(
+                name=body['scheduler']['name'],
+                lambda_runner=get_era_runner_name()
+            )
+
+            action = body['event']['action']
+            era_action = EraAction(
+                url=action['url'],
+                method=action['method'],
+                payload=action['payload']
+            )
+
+            event = body['event']
+            era = era_factory(
+                name=event['name'],
+                event_time=datetime.fromisoformat(event['event_time']),
+                action=era_action,
+                persist_adapter=persist_adapter,
+                scheduler_adapter=scheduler_adapter
+            )
+            era.save()
+
+            return {
+                'Sucesso': {
+                    'Era Id': era.entity_id
+                }
+            }
+    except Exception as e:
+        return {
+            'Erro': {
+                'Class': e.__class__.__name__,
+                'Value': str(e)
+            }
+        }
+
+
 @app.lambda_function(name=Settings.DUEL_SCHEDULED_FINISHER_NAME)
 def duel_finish_handler(event, context):
     return duel_scheduled_finisher(event['duel_id'])
+
+
+def get_era_runner_name():
+    app_name = environ.get('AWS_LAMBDA_FUNCTION_NAME')
+    runner_name = Settings.ERA_RUNNER_NAME
+
+    return f'{app_name}-{runner_name}'
+
+
+@app.lambda_function(name=Settings.ERA_RUNNER_NAME)
+def era_runner(event, context):
+    scheduler_name = event['scheduler_name']
+    era_id = event['era_id']
+
+    scheduler_adapter = AwsTaskSchedulerAdapter(
+        name=scheduler_name,
+        lambda_runner=get_era_runner_name())
+
+    persist_adapter = EventReminderAssistantAdapter(
+        table_name=Settings.ERA_TABLE_NAME)
+
+    runner = EraRunner(era_id=era_id,
+                       scheduler_adapter=scheduler_adapter,
+                       persist_adapter=persist_adapter)
+
+    runner.run()

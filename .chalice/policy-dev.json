@@ -135,6 +135,16 @@
             "arn:aws:s3:::playerstars-dev-photos",
             "arn:aws:s3:::playerstars-dev-photos/*"
           ]
+        },
+        {
+          "Effect": "Allow",
+          "Action": "events:*",
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": "lambda:*",
+          "Resource": "*"
         }
     ]
 }

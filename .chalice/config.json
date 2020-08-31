@@ -6,6 +6,8 @@
         "CentroCusto": "PlayerStars"
     },
     "environment_variables": {
+        "ERA_TABLE_NAME": "event_reminder_assistant",
+        "ERA_RUNNER_NAME": "era_runner",
         "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CIRAÇÃO DE AMBIENTE >>>",
         "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
         "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
@@ -66,6 +68,8 @@
             "api_gateway_stage": "dev",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ERA_TABLE_NAME": "event_reminder_assistant_dev",
+                "ERA_RUNNER_NAME": "era_runner_dev",
                 "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_dev",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_dev",
@@ -127,6 +131,8 @@
             "api_gateway_stage": "stg",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ERA_TABLE_NAME": "event_reminder_assistant_stg",
+                "ERA_RUNNER_NAME": "era_runner_stg",
                 "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_stg",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_stg",
@@ -188,6 +194,8 @@
             "api_gateway_stage": "api",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ERA_TABLE_NAME": "event_reminder_assistant",
+                "ERA_RUNNER_NAME": "era_runner_prd",
                 "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CRIAÇÃO DO AMBIENTE >>>",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
