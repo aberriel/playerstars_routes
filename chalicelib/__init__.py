@@ -251,5 +251,7 @@ __all__ = [
     'delete_random_duel',
     'post_random_duel',
 
-    'get_player_tournaments'
+    'get_player_tournaments',
+
+    'purchase_red_stars'
 ]

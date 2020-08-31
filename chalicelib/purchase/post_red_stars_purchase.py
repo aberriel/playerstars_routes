@@ -13,8 +13,7 @@ from playerstars_adapters import PlayerAdapter
 from playerstars_interactors import (
     RedStarsPurchaseException,
     RedStarsPurchaseInteractor,
-    RedStarsPurchaseRequestModel,
-    RedStarsPurchaseResponseModel)
+    RedStarsPurchaseRequestModel)
 from playerstars_interactors.wirecard.red_stars_purchase import \
     RedStarPurchaseInteractorAdapters
 

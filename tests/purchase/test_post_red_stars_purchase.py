@@ -1,13 +1,9 @@
-import pytest
-
 from chalicelib.purchase.post_red_stars_purchase import (
     get_player_adapter,
     mount_interactor_adapters,
     post_wirecard_purchase,
     purchase_red_stars)
-from playerstars_interactors import (
-    RedStarsPurchaseException,
-    RedStarsPurchaseInteractor)
+from playerstars_interactors import RedStarsPurchaseException
 from unittest.mock import patch, MagicMock
 
 prefix = 'chalicelib.purchase.post_red_stars_purchase'
@@ -56,7 +52,7 @@ def test_mount_interactor_adapters(get_subscription_adapter_mock,
 def test_post_wirecard_purchase(purchase_red_stars_mock,
                                 get_user_id_from_jwt_mock,
                                 bp_wirecard_mock):
-    response = post_wirecard_purchase()
+    post_wirecard_purchase()
     mock_data = bp_wirecard_mock.current_request.json_body
     mock_player_id = get_user_id_from_jwt_mock()
     mock_data.update.assert_called_with({'code': mock_player_id})
@@ -100,14 +96,17 @@ def test_purchase_red_stars_fail(created_mock,
                                  interactor_mock,
                                  request_model_mock,
                                  mount_adapters_mock):
-    interactor_mock().run = MagicMock(side_effect=RedStarsPurchaseException('oops'))
+    interactor_mock().run = \
+        MagicMock(side_effect=RedStarsPurchaseException('oops'))
     json_data = MagicMock()
     player_id = MagicMock()
-    with pytest.raises(RedStarsPurchaseException) as excinfo:
-        purchase_red_stars(json_data, player_id)
-
+    response = purchase_red_stars(json_data, player_id)
     mount_adapters_mock.assert_called_once_with(player_id)
     request_model_mock.assert_called_once_with(json_data)
+    interactor_mock.assert_called_with(
+        adapters=mount_adapters_mock(),
+        request=request_model_mock())
     interactor_mock().run.assert_called_once()
-    server_error_mock.assert_called_once_with('oops')
     created_mock.assert_not_called()
+    server_error_mock.assert_called_once_with('oops')
+    assert response == server_error_mock()
