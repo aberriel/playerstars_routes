@@ -1,9 +1,13 @@
+import pytest
+
 from chalicelib.purchase.post_red_stars_purchase import (
     get_player_adapter,
     mount_interactor_adapters,
     post_wirecard_purchase,
     purchase_red_stars)
-from playerstars_interactors import RedStarsPurchaseInteractor
+from playerstars_interactors import (
+    RedStarsPurchaseException,
+    RedStarsPurchaseInteractor)
 from unittest.mock import patch, MagicMock
 
 prefix = 'chalicelib.purchase.post_red_stars_purchase'
@@ -64,7 +68,11 @@ def test_post_wirecard_purchase(purchase_red_stars_mock,
 @patch(f'{prefix}.mount_interactor_adapters')
 @patch(f'{prefix}.RedStarsPurchaseRequestModel')
 @patch(f'{prefix}.RedStarsPurchaseInteractor')
-def test_purchase_red_stars(interactor_mock,
+@patch(f'{prefix}.created')
+@patch(f'{prefix}.server_error')
+def test_purchase_red_stars(server_error_mock,
+                            created_mock,
+                            interactor_mock,
                             request_model_mock,
                             mount_adapters_mock):
     json_data = MagicMock()
@@ -77,4 +85,29 @@ def test_purchase_red_stars(interactor_mock,
         adapters=mount_adapters_mock(),
         request=request_model_mock())
     interactor_mock().run.assert_called_once()
-    assert response == interactor_mock().run()()
+    created_mock.assert_called_once_with(interactor_mock().run()())
+    server_error_mock.assert_not_called()
+    assert response == created_mock()
+
+
+@patch(f'{prefix}.mount_interactor_adapters')
+@patch(f'{prefix}.RedStarsPurchaseRequestModel')
+@patch(f'{prefix}.RedStarsPurchaseInteractor')
+@patch(f'{prefix}.server_error')
+@patch(f'{prefix}.created')
+def test_purchase_red_stars_fail(created_mock,
+                                 server_error_mock,
+                                 interactor_mock,
+                                 request_model_mock,
+                                 mount_adapters_mock):
+    interactor_mock().run = MagicMock(side_effect=RedStarsPurchaseException('oops'))
+    json_data = MagicMock()
+    player_id = MagicMock()
+    with pytest.raises(RedStarsPurchaseException) as excinfo:
+        purchase_red_stars(json_data, player_id)
+
+    mount_adapters_mock.assert_called_once_with(player_id)
+    request_model_mock.assert_called_once_with(json_data)
+    interactor_mock().run.assert_called_once()
+    server_error_mock.assert_called_once_with('oops')
+    created_mock.assert_not_called()
