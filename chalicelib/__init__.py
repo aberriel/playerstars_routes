@@ -30,14 +30,13 @@ from .basic_entity_route import BasicEntityRoute
 #     post_create_championship,
 #     post_join_open_championship)
 
-from .console_route import (
-    post_console,
-    put_console
-)
+from .console_route import post_console, put_console
 from .convert_star_rate_route import (
-    delete_convert_rate, get_all_convert_rate, get_convert_rate_by_id,
-    put_convert_rate, post_convert_rate
-)
+    delete_convert_rate,
+    get_all_convert_rate,
+    get_convert_rate_by_id,
+    post_convert_rate,
+    put_convert_rate)
 from .duel_route import (
     cancel_duel_route,
     end_duel,
@@ -56,20 +55,19 @@ from .duel_route import (
     get_random_duel,
     put_random_duel,
     delete_random_duel,
-    post_random_duel
-)
+    post_random_duel)
 from .game_route import (
     delete_game,
     get_all_games,
     get_game_by_id,
     post_game,
-    put_game,
-)
+    put_game)
 from .notification_route import (
     get_app_notification,
     get_app_notification_by_status,
     post_app_notification,
     post_set_notification_as_read)
+from .pagseguro_purchase_route import get_history_route
 from .player_route import (
     get_all_player,
     get_player_by_id,
@@ -84,31 +82,25 @@ from .player_route import (
     get_accepted_teams_from_player,
     get_my_teams_for_duel,
     get_ranking_my_teams_route,
-    get_player_tournaments
-)
+    get_player_tournaments)
 from .product_route import get_all_plan, get_all_product, post_product
-from .purchase_route import (
-    get_history_route
-)
+from .purchase import purchase_red_stars
 from .region_country_route import (
     get_all_region_country,
     get_region_country_by_id,
     post_region_country,
-    put_region_country
-)
+    put_region_country)
 from .region_state_route import (
     get_all_region_state,
     get_region_state_by_id,
     post_region_state,
-    put_region_state
-)
+    put_region_state)
 from .routes import root
 from .mail_routes import (
     post_contact_email,
     post_invitation_email,
     post_welcome_email,
-    post_public_contact_email
-)
+    post_public_contact_email)
 from .team_route import (
     accept_invitation,
     delete_team,
@@ -118,25 +110,21 @@ from .team_route import (
     leave_team,
     post_team,
     put_team,
-    enter_team
-)
+    enter_team)
 from .user_admin_route import (
     get_all_user_admin,
     get_user_admin_by_id,
     post_user_admin,
-    put_user_admin
-)
+    put_user_admin)
 from .values_route import (
     get_all_values,
     get_value_by_id,
     post_value,
     put_value,
-    delete_value
-)
-from .terms_policy_route import (
-    get_policy,
-    get_terms
-)
+    delete_value)
+from .terms_policy_route import get_policy, get_terms
+
+
 __all__ = [
     'BasicEntityRoute',
     'post_game',
@@ -263,5 +251,7 @@ __all__ = [
     'delete_random_duel',
     'post_random_duel',
 
-    'get_player_tournaments'
+    'get_player_tournaments',
+
+    'purchase_red_stars'
 ]
