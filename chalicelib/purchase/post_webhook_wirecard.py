@@ -2,14 +2,12 @@ from chalice import Blueprint
 from chalice_support import server_error, success
 from playerstars_interactors import ReceiveWebhookInteractor
 
+from chalicelib.aspect.logging import logger_aspect
 from chalicelib.chalice_support import private_post
 from chalicelib.purchase.wirecard_adapters import get_subscription_adapter, get_plan_adapter
 from chalicelib.settings import Settings
 from playerstars_adapters import PlayerAdapter
 from playerstars_interactors.wirecard import WebhookProcessorAdapters
-from playerstars_wirecard import (
-    PlanAdapter,
-    SubscriptionAdapter)
 
 
 bp_webhook_wirecard = Blueprint(__name__)
@@ -34,6 +32,7 @@ def post_webhook_wirecard():
     return process_received_webhook(data)
 
 
+@logger_aspect
 def process_received_webhook(webhook_data):
     try:
         adapters = mount_webhook_adapters()
