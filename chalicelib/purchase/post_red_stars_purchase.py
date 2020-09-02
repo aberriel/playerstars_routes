@@ -11,7 +11,6 @@ from chalicelib.utils import get_user_id_from_jwt
 from chalice_support import created, server_error
 from playerstars_adapters import PlayerAdapter
 from playerstars_interactors import (
-    RedStarsPurchaseException,
     RedStarsPurchaseInteractor,
     RedStarsPurchaseRequestModel)
 from playerstars_interactors.wirecard.red_stars_purchase import \

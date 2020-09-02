@@ -1,12 +1,13 @@
 from chalice import Blueprint
 from chalice_support import server_error, success
-from playerstars_interactors import ReceiveWebhookInteractor
-
 from chalicelib.aspect.logging import logger_aspect
 from chalicelib.chalice_support import private_post
-from chalicelib.purchase.wirecard_adapters import get_subscription_adapter, get_plan_adapter
+from chalicelib.purchase.wirecard_adapters import (
+    get_plan_adapter,
+    get_subscription_adapter)
 from chalicelib.settings import Settings
 from playerstars_adapters import PlayerAdapter
+from playerstars_interactors import ReceiveWebhookInteractor
 from playerstars_interactors.wirecard import WebhookProcessorAdapters
 
 
@@ -27,9 +28,10 @@ def mount_webhook_adapters():
 
 
 @bp_webhook_wirecard.route('/', **private_post())
-def post_webhook_wirecard():
+def post_webhook():
     data = bp_webhook_wirecard.current_request.json_body
-    return process_received_webhook(data)
+    return process_received_webhook(
+        webhook_data=data)
 
 
 @logger_aspect
@@ -42,4 +44,5 @@ def process_received_webhook(webhook_data):
         response = interactor.run()
         return success(response())
     except BaseException as exc:
-        return server_error(str(exc))
+        error_msg = f'{exc.__class__.__name__}: {exc}'
+        return server_error(error_msg)

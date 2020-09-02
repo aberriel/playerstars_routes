@@ -85,7 +85,7 @@ from .player_route import (
     get_player_tournaments)
 from .product_route import get_all_plan, get_all_product, post_product
 from .purchase import (
-    post_webhook_wirecard,
+    post_webhook,
     post_wirecard_purchase,
     post_red_stars_purchase)
 from .region_country_route import (
@@ -256,7 +256,7 @@ __all__ = [
 
     'get_player_tournaments',
 
-    'post_webhook_wirecard',
+    'post_webhook',
     'post_wirecard_purchase',
     'post_red_stars_purchase'
 ]
