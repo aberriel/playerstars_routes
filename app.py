@@ -28,7 +28,7 @@ from chalicelib.notification_route import (
 from chalicelib.pagseguro_purchase_route import bp_purchase
 from chalicelib.player_route import bp_player, bp_player_by_console
 from chalicelib.product_route import bp_plan, bp_product
-from chalicelib.purchase import bp_wirecard
+from chalicelib.purchase import bp_webhook_wirecard, bp_wirecard
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
 from chalicelib.settings import Settings
@@ -74,6 +74,8 @@ app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_terms, url_prefix='/terms-and-conditions')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_value, url_prefix='/values')
+app.register_blueprint(bp_webhook_wirecard,
+                       url_prefix='/purchase/wirecard/webhook')
 app.register_blueprint(bp_wirecard, url_prefix='/purchase/wirecard')
 app.register_blueprint(tournament_route, url_prefix='/tournament')
 
