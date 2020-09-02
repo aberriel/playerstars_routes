@@ -56,5 +56,5 @@ def purchase_red_stars(json_data, player_id):
             request=request)
         response = interactor.run()
         return created(response())
-    except RedStarsPurchaseException as exc:
+    except BaseException as exc:
         return server_error(str(exc))
