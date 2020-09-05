@@ -28,7 +28,10 @@ from chalicelib.notification_route import (
 from chalicelib.pagseguro_purchase_route import bp_purchase
 from chalicelib.player_route import bp_player, bp_player_by_console
 from chalicelib.product_route import bp_plan, bp_product
-from chalicelib.purchase import bp_webhook_wirecard, bp_wirecard
+from chalicelib.purchase import (
+    bp_google,
+    bp_webhook_wirecard,
+    bp_wirecard)
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
 from chalicelib.settings import Settings
@@ -53,6 +56,7 @@ app.register_blueprint(bp_enter_duel, url_prefix='/enter-duel')
 app.register_blueprint(bp_enter_team, url_prefix='/enter')
 app.register_blueprint(bp_game, url_prefix='/game')
 app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
+app.register_blueprint(bp_google, url_prefix='/purchase/google')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
 app.register_blueprint(bp_inform_invite_timeout,
                        url_prefix='/duel/inform-invite-timeout')
