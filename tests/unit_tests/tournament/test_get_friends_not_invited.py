@@ -5,7 +5,7 @@ from playerstars_interactors.tournament.get_friends_not_invited import (
     GetFriendsNotInvitedError
 )
 from unittest.mock import patch, MagicMock
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 
 
 @patch('chalicelib.tournament.get_friends_not_invited.tournament_route',

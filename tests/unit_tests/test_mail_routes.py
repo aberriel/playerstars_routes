@@ -1,7 +1,7 @@
 from chalicelib.mail_routes import (
     post_contact_email, post_welcome_email, post_invitation_email,
     post_public_contact_email)
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 from unittest.mock import patch, MagicMock
 
 

@@ -6,7 +6,7 @@ from playerstars_adapters import (
     ConsoleAdapter, CountryRegionAdapter, ChampionshipAdapter,
     StateRegionAdapter, UserAdminAdapter, NotificationAdapter,
     PlayerAdapter, TeamAdapter)
-from tests.test_utils import jwt
+from tests import jwt
 import jsondiff
 
 

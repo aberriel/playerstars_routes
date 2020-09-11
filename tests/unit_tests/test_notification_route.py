@@ -9,7 +9,7 @@ from playerstars_interactors import (
     SetNotificationAsReadException,
     SaveEntityException
 )
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 
 import json

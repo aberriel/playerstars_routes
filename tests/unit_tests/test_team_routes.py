@@ -6,7 +6,7 @@ from playerstars_interactors import (
     AcceptTeamInvitationException, DeleteTeamException, EnterTeamException,
     LeaveTeamException, SaveTeamException, UpdateEntityException,
     DuplicateMemberException)
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 
 import json
