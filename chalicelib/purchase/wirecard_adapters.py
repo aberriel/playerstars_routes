@@ -12,7 +12,7 @@ def get_credit_card_adapter(customer_id):
         auth_user=Settings.WIRECARD_API_USER,
         auth_password=Settings.WIRECARD_API_PASSWORD,
         url_base=Settings.WIRECARD_API_URL_BASE,
-        customer_id=customer_id)
+        customer_code=customer_id)
 
 
 def get_plan_adapter():

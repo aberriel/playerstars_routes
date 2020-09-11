@@ -18,7 +18,7 @@ def test_credit_card_adapter(settings_mock, credit_card_adapter_mock):
         auth_user=settings_mock.WIRECARD_API_USER,
         auth_password=settings_mock.WIRECARD_API_PASSWORD,
         url_base=settings_mock.WIRECARD_API_URL_BASE,
-        customer_id='player123')
+        customer_code='player123')
     assert credit_card_adapter == credit_card_adapter_mock()
 
 
