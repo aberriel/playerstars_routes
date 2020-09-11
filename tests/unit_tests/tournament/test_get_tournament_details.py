@@ -5,7 +5,7 @@ from chalicelib.tournament.get_tournament_detail import (
     get_tournament_details
 )
 from unittest.mock import MagicMock, patch
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 
 
 @patch('chalicelib.tournament.get_tournament_detail.tournament_route',

@@ -3,7 +3,7 @@ from playerstars_interactors import \
 from chalicelib.pagseguro_purchase_route import (
     post_purchase, post_notification, get_history_route
 )
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 
 import json

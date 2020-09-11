@@ -26,7 +26,7 @@ from chalicelib import (
     delete_random_duel, post_random_duel
 )
 from chalicelib.duel_route import enter_duel_post
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 
 
 def make_get_match_list_mock():

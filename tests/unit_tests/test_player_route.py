@@ -16,7 +16,7 @@ from chalicelib.player_route import (
 )
 import json
 import pytest
-from tests.test_utils import jwt
+from tests.unit_tests.test_utils import jwt
 from unittest.mock import MagicMock, patch
 from chalicelib.utils import TokenNotFoundException
 from playerstars_adapters import PlayerAdapter
