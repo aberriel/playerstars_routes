@@ -5,6 +5,7 @@ from playerstars_domain import Duel, PreDuel
 from playerstars_interactors import (
     CancelDuelException,
     CancelDuelInteractor,
+    CancelDuelInteractorAdapters,
     CancelDuelRequestModel,
     CreateDuelException,
     CreateDuelInteractor,
@@ -363,17 +364,22 @@ def cancel_duel_route():
     return cancel_duel_post(data)
 
 
-@logger_aspect
-def cancel_duel_post(json_data):
-    request = CancelDuelRequestModel(json_data)
-    interactor = CancelDuelInteractor(
-        request=request,
+def mount_cancel_duel_interactor_adapters():
+    return CancelDuelInteractorAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter_dynamo=get_notification_adapter_dynamo(),
         notification_adapter_graphql=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
+
+
+@logger_aspect
+def cancel_duel_post(json_data):
+    request = CancelDuelRequestModel(json_data)
+    interactor = CancelDuelInteractor(
+        request=request,
+        adapters=mount_cancel_duel_interactor_adapters())
     try:
         response = interactor.run()
     except CancelDuelException as e:
