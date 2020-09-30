@@ -101,7 +101,8 @@
                 "sqs:SendMessage",
                 "sqs:ServiceResource",
                 "sqs:GetQueueUrl",
-                "sqs:CreateQueue"
+                "sqs:CreateQueue",
+                "rekognition:DetectText"
             ],
             "Resource": "*"
         },
