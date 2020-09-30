@@ -372,7 +372,8 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
 
     @staticmethod
     def _is_sooner(current, event_time):
-        return event_time < current or current < aware_now()
+
+        return event_time < current or aware_utc(current) <= aware_now()
 
     def _update_if_sooner(self):
         current = self._get_current_scheduler().execution_time
