@@ -372,7 +372,6 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
 
     @staticmethod
     def _is_sooner(current, event_time):
-
         return event_time < current or aware_utc(current) <= aware_now()
 
     def _update_if_sooner(self):
@@ -461,7 +460,9 @@ class EraRunner(TaskSchedulerPort):
             return
 
         oredered_eras = sorted(all_eras, key=lambda x: x.event_time)
-
+        next_era_type = type(oredered_eras[0]).__name__
+        self.logger.info(f'Next Era {next_era_type}: '
+                         '{oredered_eras[0].entity_id}...')
         next_era: EventReminderAssistant = oredered_eras[0]
         next_era.set_adapter(self.persist_adapter)
         next_era.set_scheduler_adapter(self.scheduler_adapter)
