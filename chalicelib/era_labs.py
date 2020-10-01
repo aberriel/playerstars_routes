@@ -415,7 +415,10 @@ class EraRunner(TaskSchedulerPort):
         current_era = self._execute_action()
 
         self._remove_current(current_era)
-        self._setup_next()
+        try:
+            self._setup_next()
+        except Exception as e:
+            self.logger.info(f'Error ao setar próximo ERA: {str(e)} ...')
 
     def _remove_current(self, current_era: EventReminderAssistant):
         current_era.set_scheduler_adapter(self.scheduler_adapter)
@@ -462,8 +465,9 @@ class EraRunner(TaskSchedulerPort):
         oredered_eras = sorted(all_eras, key=lambda x: x.event_time)
         next_era_type = type(oredered_eras[0]).__name__
         self.logger.info(f'Next Era {next_era_type}: '
-                         '{oredered_eras[0].entity_id}...')
+                         f'{oredered_eras[0].entity_id}...')
         next_era: EventReminderAssistant = oredered_eras[0]
+
         next_era.set_adapter(self.persist_adapter)
         next_era.set_scheduler_adapter(self.scheduler_adapter)
         next_era.set_scheduler()

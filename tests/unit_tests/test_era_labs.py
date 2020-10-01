@@ -12,7 +12,7 @@ from pytest import raises, fixture
 
 from chalicelib.era_labs import BasicTaskSchedulerAdapter, TaskSchedulerPort, \
     AwsTaskSchedulerAdapter, TaskNotFoundException, EventReminderAssistant, \
-    era_factory, EraAction, _extend_dict
+    era_factory, EraAction, _extend_dict, EraRunner
 
 
 def test_basic_task_scheduler_adapter():
@@ -603,7 +603,7 @@ def test_era_save(mock_set_scheduler, era_factory_fixture):
 
 
 @patch.object(EventReminderAssistant, '_update_if_sooner')
-def test_set_scheduler(mock_update_if_sooner, era_factory_fixture):
+def test_set_update_if_sooner(mock_update_if_sooner, era_factory_fixture):
     fac: Factory = era_factory_fixture()
     era: EventReminderAssistant = fac.era
 
@@ -689,7 +689,7 @@ def test_update_next_if_sooner_update(mock_get_current_scheduler,
 
 
 @patch('chalicelib.era_labs.aware_now',
-       return_value=aware_utc(datetime(2020, 8, 22, 10, 0)))
+       return_value=aware_utc(datetime(2020, 8, 22, 10, 0, 59)))
 @patch.object(EventReminderAssistant, '_get_current_scheduler',
               return_value=MagicMock(
                   execution_time=datetime(2020, 8, 22, 10, 0)))
@@ -726,3 +726,59 @@ def test_extend_dict():
     x = {'a': 1}
     y = _extend_dict(x, dict(b=2))
     assert y == dict(a=1, b=2)
+
+
+# Tests EraRunner
+@fixture(scope='class')
+def era_runner_factory(request):
+    Runner = namedtuple(
+        'Runner',
+        'era_runner, mock_era_id, mock_scheduler_adapter,'
+        'mock_persist_adapter')
+
+    def factory(era_id=MagicMock(),
+                scheduler_adapter=MagicMock(),
+                persist_adapter=MagicMock()):
+
+        era_runner = EraRunner(era_id=era_id,
+                               scheduler_adapter=scheduler_adapter,
+                               persist_adapter=persist_adapter)
+
+        return Runner(era_runner, era_id, scheduler_adapter,
+                      persist_adapter)
+
+    request.cls.runner_factory = factory
+
+
+@pytest.mark.usefixtures('era_runner_factory')
+class TestEraRunner(TestCase):
+
+    @patch.object(EraRunner, '_execute_action')
+    @patch.object(EraRunner, '_remove_current')
+    @patch.object(EraRunner, '_setup_next')
+    def test_run(self, mock_execute_action, mock_remove_current,
+                 mock_setup_next):
+        runner: EraRunner = self.runner_factory().era_runner
+        runner.run()
+        mock_execute_action.assert_called_once()
+        mock_remove_current.assert_called_once()
+        mock_setup_next.assert_called_once()
+
+    @patch.object(EventReminderAssistant, 'set_adapter')
+    @patch.object(EventReminderAssistant, 'set_scheduler_adapter')
+    @patch.object(EventReminderAssistant, 'set_scheduler')
+    def test_set_up_next(self, mock_set_adapter, mock_set_scheduler_adapter,
+                         mock_set_scheduler):
+        persist_adapter_mock = MagicMock()
+        persist_adapter_mock.filter = MagicMock(
+            return_value=[EventReminderAssistant(MagicMock(),
+                          MagicMock(), MagicMock())])
+        runner = EraRunner(era_id=MagicMock(),
+                           scheduler_adapter=MagicMock(),
+                           persist_adapter=persist_adapter_mock)
+
+        runner._setup_next()
+
+        mock_set_adapter.assert_called_once()
+        mock_set_scheduler_adapter.assert_called_once()
+        mock_set_scheduler.assert_called_once()
