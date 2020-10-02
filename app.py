@@ -2,8 +2,6 @@ from datetime import datetime
 from os import environ
 
 from chalice import Chalice
-from playerstars_adapters.event_reminder_assistant_adapter import \
-    EventReminderAssistantAdapter
 
 from chalicelib import root
 from chalicelib.admin_routes import bp_admin
@@ -18,7 +16,7 @@ from chalicelib.duel_route import (
     bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
 from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraAction, \
-    era_factory, EraRunner
+    era_factory, EraRunner, EventReminderAssistantAdapter
 from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.mail_routes import (
     bp_contact_email, bp_invitation_email, bp_welcome_email)
