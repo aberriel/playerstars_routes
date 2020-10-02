@@ -9,6 +9,7 @@ from typing import Optional
 
 import boto3
 import requests
+from clapy_dynamodb_adapter.basic_dynamodb_adapter import BasicDynamodbAdapter
 from clapy_basic_classes import BasicEntity, BasicValue
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from marshmallow import fields, post_load
@@ -389,6 +390,14 @@ class EventReminderAssistant(BasicEntity, TaskSchedulerPort):
         self.adapter.delete(self.entity_id)
 
 
+class EventReminderAssistantAdapter(BasicDynamodbAdapter):
+    def __init__(self, table_name, db_endpoint=None):
+        super().__init__(
+            table_name=table_name,
+            db_endpoint=db_endpoint,
+            adapted_class=EventReminderAssistant)
+
+
 # ###############################3
 # Era Runner
 
@@ -415,7 +424,10 @@ class EraRunner(TaskSchedulerPort):
         current_era = self._execute_action()
 
         self._remove_current(current_era)
-        self._setup_next()
+        try:
+            self._setup_next()
+        except Exception as e:
+            self.logger.info(f'Error ao setar próximo ERA: {str(e)} ...')
 
     def _remove_current(self, current_era: EventReminderAssistant):
         current_era.set_scheduler_adapter(self.scheduler_adapter)
@@ -462,8 +474,9 @@ class EraRunner(TaskSchedulerPort):
         oredered_eras = sorted(all_eras, key=lambda x: x.event_time)
         next_era_type = type(oredered_eras[0]).__name__
         self.logger.info(f'Next Era {next_era_type}: '
-                         '{oredered_eras[0].entity_id}...')
+                         f'{oredered_eras[0].entity_id}...')
         next_era: EventReminderAssistant = oredered_eras[0]
+
         next_era.set_adapter(self.persist_adapter)
         next_era.set_scheduler_adapter(self.scheduler_adapter)
         next_era.set_scheduler()
