@@ -4,6 +4,8 @@ from decouple import config
 class Settings:
     ERA_TABLE_NAME = config('ERA_TABLE_NAME', 'test_era_table_name')
     ERA_RUNNER_NAME = config('ERA_RUNNER_NAME', 'DEBUG_ERA_RUNNER_NAME')
+    ERA_AWS_LAMBDA_FUNCTION_NAME = config(
+        'ERA_AWS_LAMBDA_FUNCTION_NAME', 'DEBUG_ERA_AWS_LAMBDA_FUNCTION_NAME')
     LOG_LEVEL = config('LOG_LEVEL', 'DEBUG')
     COGNITO_USERPOOL_ARN = config('COGNITO_USERPOOL_ARN', 'test_cognito_arn')
     PLAYER_TOURNAMENT_TABLE_NAME = config(

@@ -162,7 +162,7 @@ def duel_finish_handler(event, context):
 
 
 def get_era_runner_name():
-    app_name = environ.get('AWS_LAMBDA_FUNCTION_NAME')
+    app_name = Settings.ERA_AWS_LAMBDA_FUNCTION_NAME
     runner_name = Settings.ERA_RUNNER_NAME
 
     return f'{app_name}-{runner_name}'
