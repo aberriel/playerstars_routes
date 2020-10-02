@@ -8,6 +8,7 @@
     "environment_variables": {
         "ERA_TABLE_NAME": "event_reminder_assistant",
         "ERA_RUNNER_NAME": "era_runner",
+        "ERA_AWS_LAMBDA_FUNCTION_NAME": "PlayerStars",
         "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CIRAÇÃO DE AMBIENTE >>>",
         "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
         "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
@@ -70,6 +71,7 @@
             "environment_variables": {
                 "ERA_TABLE_NAME": "event_reminder_assistant_dev",
                 "ERA_RUNNER_NAME": "era_runner_dev",
+                "ERA_AWS_LAMBDA_FUNCTION_NAME": "PlayerStars-dev",
                 "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_dev",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_dev",
@@ -133,6 +135,7 @@
             "environment_variables": {
                 "ERA_TABLE_NAME": "event_reminder_assistant_stg",
                 "ERA_RUNNER_NAME": "era_runner_stg",
+                "ERA_AWS_LAMBDA_FUNCTION_NAME": "PlayerStars-stg",
                 "COGNITO_USERPOOL_ARN": "arn:aws:cognito-idp:us-east-1:230639242520:userpool/us-east-1_kOuqOxe1b",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament_stg",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament_stg",
@@ -196,6 +199,7 @@
             "environment_variables": {
                 "ERA_TABLE_NAME": "event_reminder_assistant",
                 "ERA_RUNNER_NAME": "era_runner_prd",
+                "ERA_AWS_LAMBDA_FUNCTION_NAME": "PlayerStars-prd",
                 "COGNITO_USERPOOL_ARN": "<<< AGUARDANDO CRIAÇÃO DO AMBIENTE >>>",
                 "PLAYER_TOURNAMENT_TABLE_NAME": "player_tournament",
                 "TEAM_TOURNAMENT_TABLE_NAME": "team_tournament",
