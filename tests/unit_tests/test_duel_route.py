@@ -651,6 +651,7 @@ def test_put_random_duel_raises(client, resource, run):
 
 
 @patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractorAdapters')
 @patch('chalicelib.duel_route.EnterDuelInteractor')
 @patch('chalicelib.duel_route.get_duel_adapter_dynamo')
 @patch('chalicelib.duel_route.get_duel_adapter_graphql')
@@ -669,18 +670,21 @@ def test_enter_duel(mock_success,
                     mock_get_duel_gql,
                     mock_get_duel,
                     mock_interactor,
+                    mock_interactor_adapters,
                     mock_request):
     mock_json_data = MagicMock()
     result = enter_duel_post(mock_json_data)
 
     mock_request.assert_called_with(mock_json_data)
-    mock_interactor.assert_called_with(
-        request=mock_request(),
+    mock_interactor_adapters.assert_called_with(
         duel_adapter_dynamo=mock_get_duel(),
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team(),
+        team_adapter=mock_get_team())
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
         time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
@@ -691,6 +695,7 @@ def test_enter_duel(mock_success,
 
 
 @patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractorAdapters')
 @patch('chalicelib.duel_route.EnterDuelInteractor',
        return_value=MagicMock(
            run=MagicMock(side_effect=InvalidStatusException('invalido'))))
@@ -711,18 +716,21 @@ def test_enter_duel_invalid_status(mock_bad_request,
                                    mock_get_duel_gql,
                                    mock_get_duel,
                                    mock_interactor,
+                                   mock_interactor_adapters,
                                    mock_request):
     mock_json_data = MagicMock()
     result = enter_duel_post(mock_json_data)
 
     mock_request.assert_called_with(mock_json_data)
-    mock_interactor.assert_called_with(
-        request=mock_request(),
+    mock_interactor_adapters.assert_called_with(
         duel_adapter_dynamo=mock_get_duel(),
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team(),
+        team_adapter=mock_get_team())
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
         time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
@@ -733,6 +741,7 @@ def test_enter_duel_invalid_status(mock_bad_request,
 
 
 @patch('chalicelib.duel_route.EnterDuelRequestModel')
+@patch('chalicelib.duel_route.EnterDuelInteractorAdapters')
 @patch('chalicelib.duel_route.EnterDuelInteractor',
        return_value=MagicMock(
            run=MagicMock(side_effect=EnterDuelException('erro'))))
@@ -753,18 +762,21 @@ def test_enter_duel_error(mock_server_error,
                           mock_get_duel_gql,
                           mock_get_duel,
                           mock_interactor,
+                          mock_interactor_adapters,
                           mock_request):
     mock_json_data = MagicMock()
     result = enter_duel_post(mock_json_data)
 
     mock_request.assert_called_with(mock_json_data)
-    mock_interactor.assert_called_with(
-        request=mock_request(),
+    mock_interactor_adapters.assert_called_with(
         duel_adapter_dynamo=mock_get_duel(),
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team(),
+        team_adapter=mock_get_team())
+    mock_interactor.assert_called_with(
+        request=mock_request(),
+        adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
         time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
