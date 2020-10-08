@@ -15,6 +15,7 @@ from playerstars_interactors import (
     EndDuelRequestModel,
     EnterDuelException,
     EnterDuelInteractor,
+    EnterDuelInteractorAdapters,
     EnterDuelRequestModel,
     GetMatchListInteractor,
     GetMatchListRequestModel,
@@ -27,6 +28,7 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutException,
     GetOpponentTeamsInteractor,
     InformOpponentResponseTimeoutInteractor,
+    InformOpponentResponseTimeoutInteractorAdapters,
     GetOpponentTeamsRequestModel,
     InformOpponentResponseTimeoutRequestModel,
     RejectDuelException,
@@ -147,13 +149,15 @@ def enter_duel():
 @logger_aspect
 def enter_duel_post(json_data):
     request = EnterDuelRequestModel(json_data)
-    interactor = EnterDuelInteractor(
-        request=request,
+    adapters = EnterDuelInteractorAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
-        team_adapter=get_team_adapter(),
+        team_adapter=get_team_adapter())
+    interactor = EnterDuelInteractor(
+        request=request,
+        adapters=adapters,
         schedule_task_adapter=get_schedule_task_adapter(),
         time_to_accept_invitation=Settings.TIME_TO_ACCEPT_DUEL,
         time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL)
@@ -179,12 +183,14 @@ def inform_invitation_timeout():
 @logger_aspect
 def inform_invitation_timeout_post(json_data):
     request = InformOpponentResponseTimeoutRequestModel(json_data)
-    interactor = InformOpponentResponseTimeoutInteractor(
-        request=request,
+    adapters = InformOpponentResponseTimeoutInteractorAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
+    interactor = InformOpponentResponseTimeoutInteractor(
+        request=request,
+        adapters=adapters)
 
     try:
         response = interactor.run()
