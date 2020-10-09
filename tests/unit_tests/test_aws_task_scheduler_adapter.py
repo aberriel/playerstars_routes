@@ -11,7 +11,8 @@
 # from playerstars_domain.utils.datetime_helper import aware_utc
 # from pytest import fixture, raises
 #
-# from chalicelib.aws_task_scheduler_adatper.aws_task_scheduler_adapter import \
+# from chalicelib.aws_task_scheduler_adatper
+# .aws_task_scheduler_adapter import \
 #     AwsTaskSchedulerAdapter
 #
 #
@@ -269,7 +270,8 @@
 #
 #     def test__get_policy_statement_ids(self):
 #         mock_policy = dict(Policy='{"Statement": [{"Sid": 1}, {"Sid": 2}]}')
-#         result = AwsTaskSchedulerAdapter._get_policy_statement_ids(mock_policy)
+#         result = AwsTaskSchedulerAdapter.
+#         _get_policy_statement_ids(mock_policy)
 #
 #         self.assertListEqual(result, [1, 2])
 #
@@ -286,7 +288,8 @@
 #     @patch.object(AwsTaskSchedulerAdapter, '_get_policy',
 #                   side_effect=ValueError('nada'))
 #     @patch.object(AwsTaskSchedulerAdapter, '_remove_policies')
-#     @patch.object(AwsTaskSchedulerAdapter, '_is_resource_not_found_exception',
+#     @patch.object(AwsTaskSchedulerAdapter,
+#     '_is_resource_not_found_exception',
 #                   return_value=True)
 #     def test_clear_permissions_empty(self,
 #                                      mock_is_resource_not_found,
@@ -303,7 +306,8 @@
 #     @patch.object(AwsTaskSchedulerAdapter, '_get_policy',
 #                   side_effect=ValueError('Erro mesmo'))
 #     @patch.object(AwsTaskSchedulerAdapter, '_remove_policies')
-#     @patch.object(AwsTaskSchedulerAdapter, '_is_resource_not_found_exception',
+#     @patch.object(AwsTaskSchedulerAdapter,
+#     '_is_resource_not_found_exception',
 #                   return_value=False)
 #     def test_clear_permissions_error(self,
 #                                      mock_is_resource_not_found,
@@ -320,12 +324,14 @@
 #         mock = MagicMock(
 #             __class__=MagicMock(
 #                 __name__='ResourceNotFoundException'))
-#         result = AwsTaskSchedulerAdapter._is_resource_not_found_exception(mock)
+#         result = AwsTaskSchedulerAdapter.
+#         _is_resource_not_found_exception(mock)
 #         self.assertTrue(result)
 #
 #     def test_not_is_resource_not_found_exception(self):
 #         mock = ValueError('oops')
-#         result = AwsTaskSchedulerAdapter._is_resource_not_found_exception(mock)
+#         result = AwsTaskSchedulerAdapter.
+#         _is_resource_not_found_exception(mock)
 #         self.assertFalse(result)
 #
 #     @patch.object(AwsTaskSchedulerAdapter, '_get_policy_statement_ids',
