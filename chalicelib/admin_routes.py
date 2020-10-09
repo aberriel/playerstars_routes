@@ -114,7 +114,7 @@ def get_console_by_id_admin(entity_id):
 
 @bp_admin.route('/console', **private_post())
 def post_console_admin():
-    return post_admin(player_router())
+    return post_admin(console_router())
 
 
 @bp_admin.route('/console/{entity_id}', **private_put())
