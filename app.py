@@ -37,9 +37,8 @@ from chalicelib.terms_policy_route import bp_terms, bp_policy
 from chalicelib.tournament.get_tournament_detail import tournament_route
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
-from playerstars_domain import EraAction, EventReminderAssistant
-from playerstars_domain.event_reminder_assistant.\
-    event_reminder_assistant import era_factory
+from playerstars_domain import EraAction
+from chalicelib.era_labs import era_factory
 from playerstars_adapters import EventReminderAssistantAdapter
 
 app = Chalice(app_name='PlayerStars')
@@ -122,6 +121,7 @@ def do_era_test():
             """
             persist_adapter = EventReminderAssistantAdapter(
                 table_name=Settings.ERA_TABLE_NAME)
+            #
             scheduler_adapter = AwsTaskSchedulerAdapter(
                 name=body['scheduler']['name'],
                 lambda_runner=get_era_runner_name()
