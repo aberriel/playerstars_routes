@@ -11,58 +11,15 @@ import boto3
 import requests
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from playerstars_domain.utils.datetime_helper import aware_utc, aware_now
-from playerstars_domain import EventReminderAssistant
+from playerstars_domain import EventReminderAssistant, EraAction
+from clapy_basic_classes.basic_domain.task_scheduler_port import\
+    TaskSchedulerPort
+from clapy_basic_classes.basic_scheduler_adapter.\
+    basic_scheduler_adapter import BasicTaskSchedulerAdapter
 
 
 class TaskNotFoundException(BaseException):
     pass
-
-
-class BasicTaskSchedulerAdapter(ABC):
-    def __init__(self,
-                 name: str,
-                 task_id: Optional[str] = None,
-                 execution_time: Optional[datetime] = None):
-        self.name = name
-        self.task_id = task_id
-        self.execution_time = execution_time
-
-    @abstractmethod
-    def set(self, task_identifier: str, execution_time: datetime):
-        self.task_id = task_identifier
-        self.execution_time = execution_time
-
-    @abstractmethod
-    def update(self, task_identifier: str, execution_time: datetime):
-        self.task_id = task_identifier
-        self.execution_time = execution_time
-
-    @abstractmethod
-    def delete(self):
-        self.task_id = None
-        self.execution_time = None
-
-    @classmethod
-    @abstractmethod
-    def get_current(cls, name: str):
-        raise NotImplementedError
-
-
-##############################################################
-# TaskSchedulerPort
-
-
-# from clapy_basic_classes.basic_scheduler_adapter import \
-#     BasicTaskSchedulerAdapter
-
-
-class TaskSchedulerPort(ABC):
-    def __init__(self):
-        self.scheduler_adapter = None
-
-    def set_scheduler_adapter(self,
-                              scheduler_adapter: BasicTaskSchedulerAdapter):
-        self.scheduler_adapter = scheduler_adapter
 
 
 # #############################################################
@@ -290,6 +247,21 @@ class AwsTaskSchedulerAdapter(BasicTaskSchedulerAdapter):
     def _remove_rule(self):
         self.events_client.delete_rule(Name=self.name)
 
+
+# ###### Era factory
+
+
+def era_factory(name: str,
+                event_time: datetime,
+                action: EraAction,
+                persist_adapter: BasicPersistAdapter,
+                scheduler_adapter: BasicTaskSchedulerAdapter):
+    era = EventReminderAssistant(name=name,
+                                 event_time=event_time,
+                                 action=action)
+    era.set_adapter(persist_adapter)
+    era.set_scheduler_adapter(scheduler_adapter)
+    return era
 
 # ###############################3
 # Era Runner
