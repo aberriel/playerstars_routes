@@ -12,7 +12,10 @@ from pytest import raises, fixture
 
 from chalicelib.era_labs import BasicTaskSchedulerAdapter, TaskSchedulerPort, \
     AwsTaskSchedulerAdapter, TaskNotFoundException, EventReminderAssistant, \
-    era_factory, EraAction, _extend_dict, EraRunner
+    _extend_dict, EraRunner
+from playerstars_domain import EraAction
+from playerstars_domain.event_reminder_assistant.\
+    event_reminder_assistant import era_factory
 
 
 def test_basic_task_scheduler_adapter():
@@ -589,133 +592,6 @@ def test_era_factory():
     assert result.action == mock_action
     assert result.adapter == mock_persist_adapter
     assert result.scheduler_adapter == mock_scheduler_adapter
-
-
-@patch.object(EventReminderAssistant, '_set_scheduler')
-def test_era_save(mock_set_scheduler, era_factory_fixture):
-    fac: Factory = era_factory_fixture()
-    era: EventReminderAssistant = fac.era
-
-    era.save()
-
-    fac.mock_persist_adapter.save.assert_called_once()
-    mock_set_scheduler.assert_called_once()
-
-
-@patch.object(EventReminderAssistant, '_update_if_sooner')
-def test_set_update_if_sooner(mock_update_if_sooner, era_factory_fixture):
-    fac: Factory = era_factory_fixture()
-    era: EventReminderAssistant = fac.era
-
-    era._set_scheduler()
-
-    mock_update_if_sooner.assert_called_once()
-
-
-@patch.object(EventReminderAssistant, '_set_scheduler')
-def test_set_scheduler(mock_set_scheduler, era_factory_fixture):
-    fac: Factory = era_factory_fixture()
-    era: EventReminderAssistant = fac.era
-
-    era.set_scheduler()
-
-    mock_set_scheduler.assert_called_once()
-
-
-@patch.object(EventReminderAssistant, '_update_if_sooner',
-              side_effect=TaskNotFoundException('olá!'))
-def test_set_scheduler_create(mock_update_if_sooner, era_factory_fixture):
-    fac: Factory = era_factory_fixture()
-    era: EventReminderAssistant = fac.era
-
-    era._set_scheduler()
-
-    mock_update_if_sooner.assert_called_once()
-    fac.mock_scheduler_adapter.set.assert_called_once()
-
-
-@patch.object(EventReminderAssistant, '_get_current_scheduler',
-              return_value=MagicMock(
-                  execution_time=aware_utc(datetime(2020, 8, 22, 10, 0))))
-@patch('chalicelib.era_labs.aware_now',
-       return_value=aware_utc(datetime(2020, 8, 20)))
-def test_update_if_sooner_no_update(mock_aware_now,
-                                    mock_get_current_scheduler,
-                                    era_factory_fixture):
-    mock_our_exec_time = aware_utc(datetime(2020, 8, 22, 10, 1))
-
-    fac: Factory = era_factory_fixture(mock_event_time=mock_our_exec_time)
-    era: EventReminderAssistant = fac.era
-
-    era._update_if_sooner()
-
-    mock_get_current_scheduler.assert_called_once()
-    mock_current = mock_get_current_scheduler()
-    assert mock_current.execution_time == aware_utc(
-        datetime(2020, 8, 22, 10, 0))
-    fac.mock_scheduler_adapter.update.assert_not_called()
-
-
-@patch.object(EventReminderAssistant, '_get_current_scheduler',
-              return_value=MagicMock(
-                  execution_time=datetime(2020, 8, 22, 10, 1)))
-def test_update_if_sooner_update(mock_get_current_scheduler,
-                                 era_factory_fixture):
-    mock_our_exec_time = datetime(2020, 8, 22, 10, 0)
-
-    fac: Factory = era_factory_fixture(mock_event_time=mock_our_exec_time)
-    era: EventReminderAssistant = fac.era
-
-    era._update_if_sooner()
-
-    mock_get_current_scheduler.assert_called_once()
-    fac.mock_scheduler_adapter.update.assert_called_once()
-
-
-@patch.object(EventReminderAssistant, '_get_current_scheduler',
-              return_value=MagicMock(
-                  execution_time=datetime(2020, 8, 22, 10, 0)))
-def test_update_next_if_sooner_update(mock_get_current_scheduler,
-                                      era_factory_fixture):
-    mock_our_exec_time = datetime(2020, 8, 22, 10, 2)
-
-    fac: Factory = era_factory_fixture(mock_event_time=mock_our_exec_time)
-    era: EventReminderAssistant = fac.era
-
-    era._update_if_sooner()
-
-    mock_get_current_scheduler.assert_called_once()
-    fac.mock_scheduler_adapter.update.assert_called_once()
-
-
-@patch('chalicelib.era_labs.aware_now',
-       return_value=aware_utc(datetime(2020, 8, 22, 10, 0, 59)))
-@patch.object(EventReminderAssistant, '_get_current_scheduler',
-              return_value=MagicMock(
-                  execution_time=datetime(2020, 8, 22, 10, 0)))
-def test_update_same_minute_if_sooner_update(mock_get_current_scheduler,
-                                             mock_aware_now,
-                                             era_factory_fixture):
-    mock_our_exec_time = datetime(2020, 8, 22, 10, 2)
-
-    fac: Factory = era_factory_fixture(mock_event_time=mock_our_exec_time)
-    era: EventReminderAssistant = fac.era
-
-    era._update_if_sooner()
-
-    mock_get_current_scheduler.assert_called_once()
-    fac.mock_scheduler_adapter.update.assert_called_once()
-
-
-def test_get_current_scheduler(era_factory_fixture):
-    fac: Factory = era_factory_fixture()
-    era: EventReminderAssistant = fac.era
-
-    result = era._get_current_scheduler()
-
-    fac.mock_scheduler_adapter.get_current.assert_called_with(
-        fac.mock_scheduler_adapter.name)
-    assert result == fac.mock_scheduler_adapter.get_current()
 
 
 def test_get_task_id():
