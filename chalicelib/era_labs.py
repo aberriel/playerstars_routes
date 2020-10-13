@@ -12,12 +12,8 @@ from playerstars_domain.utils.datetime_helper import aware_utc, aware_now
 from playerstars_domain import EventReminderAssistant, EraAction
 from clapy_basic_classes.basic_domain.task_scheduler_port import\
     TaskSchedulerPort
-from clapy_basic_classes.basic_scheduler_adapter.\
-    basic_scheduler_adapter import BasicTaskSchedulerAdapter
-
-
-class TaskNotFoundException(BaseException):
-    pass
+from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter \
+    import BasicTaskSchedulerAdapter, TaskNotFoundException
 
 
 # #############################################################
