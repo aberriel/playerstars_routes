@@ -126,7 +126,6 @@ def do_era_test():
                 name=body['scheduler']['name'],
                 lambda_runner=get_era_runner_name()
             )
-
             action = body['event']['action']
             era_action = EraAction(
                 url=action['url'],
