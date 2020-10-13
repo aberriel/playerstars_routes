@@ -122,7 +122,6 @@ def do_era_test():
             """
             persist_adapter = EventReminderAssistantAdapter(
                 table_name=Settings.ERA_TABLE_NAME)
-            #
             scheduler_adapter = AwsTaskSchedulerAdapter(
                 name=body['scheduler']['name'],
                 lambda_runner=get_era_runner_name()
@@ -134,7 +133,6 @@ def do_era_test():
                 method=action['method'],
                 payload=action['payload']
             )
-
             event = body['event']
             era = era_factory(
                 name=event['name'],
