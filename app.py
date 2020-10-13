@@ -15,7 +15,7 @@ from chalicelib.duel_route import (
     bp_inform_invite_timeout,
     bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
-from chalicelib.era_labs import AwsTaskSchedulerAdapter, EraRunner
+from chalicelib.era_routes import EraRunner
 from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.mail_routes import (
     bp_contact_email, bp_invitation_email, bp_welcome_email)
@@ -38,8 +38,9 @@ from chalicelib.tournament.get_tournament_detail import tournament_route
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
 from playerstars_domain import EraAction
-from chalicelib.era_labs import era_factory
-from playerstars_adapters import EventReminderAssistantAdapter
+from chalicelib.era_routes import era_factory
+from playerstars_adapters import \
+    EventReminderAssistantAdapter, AwsTaskSchedulerAdapter
 
 app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
