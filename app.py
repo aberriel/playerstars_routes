@@ -39,8 +39,8 @@ from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
 from playerstars_domain import EraAction
 from chalicelib.era_routes import era_factory
-from playerstars_adapters import \
-    EventReminderAssistantAdapter, AwsTaskSchedulerAdapter
+from playerstars_adapters import EventReminderAssistantAdapter
+from aws_task_scheduler import AwsTaskSchedulerAdapter
 
 app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
