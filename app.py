@@ -41,6 +41,8 @@ from playerstars_domain import EraAction
 from chalicelib.era_routes import era_factory
 from playerstars_adapters import EventReminderAssistantAdapter
 from aws_task_scheduler import AwsTaskSchedulerAdapter
+from chalicelib.era_routes import bp_era_finish_duel
+
 
 app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS'])
@@ -84,6 +86,7 @@ app.register_blueprint(bp_webhook_wirecard,
                        url_prefix='/purchase/wirecard/webhook')
 app.register_blueprint(bp_wirecard, url_prefix='/purchase/wirecard')
 app.register_blueprint(tournament_route, url_prefix='/tournament')
+app.register_blueprint(bp_era_finish_duel, url_prefix='/era-finish-duel')
 
 
 @app.route('/check', methods=['POST', 'GET'])

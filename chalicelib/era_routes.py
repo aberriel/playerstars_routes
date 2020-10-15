@@ -1,7 +1,8 @@
 from copy import deepcopy
 from datetime import datetime
 from logging import getLogger
-
+from chalice import Blueprint
+from chalicelib.chalice_support import private_post
 import requests
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from playerstars_domain.utils.datetime_helper import aware_now
@@ -10,6 +11,14 @@ from clapy_basic_classes.basic_domain.task_scheduler_port import\
     TaskSchedulerPort
 from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter \
     import BasicTaskSchedulerAdapter
+from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
+
+bp_era_finish_duel = Blueprint(__name__)
+
+
+@bp_era_finish_duel.route('/{duel_id}', **private_post())
+def receive_era(duel_id):
+    return duel_scheduled_finisher(duel_id)
 
 
 def era_factory(name: str,
