@@ -7,6 +7,7 @@ from playerstars_aws_lambda import DuelFinishHandler
 from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
     NotificationAdapter)
+from chalicelib.aspect.logging import logger_aspect
 
 
 def get_duel_adapter_dynamo():
@@ -37,6 +38,7 @@ def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
+@logger_aspect
 def duel_scheduled_finisher(duel_id):
     duel_finish_handler = DuelFinishHandler(
         duel_id=duel_id,
