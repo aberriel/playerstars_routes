@@ -67,7 +67,7 @@ def get_by_id(id):
 def test_check_admin_raises(adapter):
     with pytest.raises(UserNotAdminAuthorized) as excinfo:
         check_admin_authorization('1234')
-    assert 'Usuário não autorizado como admin' in str(excinfo.value)
+    assert "User isn't admin. Access denied." in str(excinfo.value)
 
 
 def get_by_id2(id):
@@ -79,7 +79,7 @@ def get_by_id2(id):
 def test_check_admin_user_not_found(adapter):
     with pytest.raises(UserNotFoundToAuthorize) as excinfo:
         check_admin_authorization('1234')
-    assert 'Usuário não encontrado' in str(excinfo.value)
+    assert 'User not found' in str(excinfo.value)
 
 
 class FakeDomain:

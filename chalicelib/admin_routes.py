@@ -1,25 +1,41 @@
 from chalice import Blueprint
 from chalicelib.settings import Settings
 from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Player, Console, Duel, Terms, PrivacyPolicy
+from playerstars_domain import Console, Duel, Player, PrivacyPolicy, Terms
 from playerstars_adapters import (
-    PlayerAdapter, ConsoleAdapter, DuelAdapter, TermsAdapter,
-    PrivacyPolicyAdapter
-)
-from chalicelib.utils import \
-    get_user_id_from_jwt, check_admin_authorization, UserNotAdminAuthorized, \
-    make_fields_dot
+    ConsoleAdapter,
+    DuelAdapter,
+    PlayerAdapter,
+    PrivacyPolicyAdapter,
+    TermsAdapter)
+from chalicelib.utils import (
+    check_admin_authorization,
+    get_user_id_from_jwt,
+    make_fields_dot,
+    UserNotAdminAuthorized)
 from chalicelib.chalice_support import (
-    private_get, private_put, private_post, private_delete
-)
-from chalice_support import (
-    unauthorized, server_error, success
-)
+    private_delete,
+    private_get,
+    private_post,
+    private_put)
+from chalice_support import server_error, success, unauthorized
 from playerstars_interactors import (
-    BasicPutRequestModel, PutPlayerIsAdminInteractor, UpdateEntityException)
+    BasicPutRequestModel,
+    GetAllGamesAdminException,
+    GetAllGamesAdminInteractor,
+    PutPlayerIsAdminInteractor,
+    UpdateEntityException)
 
 
 bp_admin = Blueprint(__name__)
+
+
+def console_adapter():
+    return ConsoleAdapter(Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
+def player_adapter():
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def duel_router():
@@ -35,13 +51,7 @@ def player_router():
 
 
 def console_router():
-    adapter = ConsoleAdapter(
-        Settings.CONSOLE_TABLE_NAME, Settings.DYNAMODB_URL)
-    return BasicEntityRoute(adapter, Console, 'console')
-
-
-def player_adapter():
-    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    return BasicEntityRoute(console_adapter(), Console, 'console')
 
 
 def authorize(blueprint):
@@ -140,6 +150,21 @@ def put_player_admin(entity_id):
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     except UpdateEntityException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_admin.route('/games', **private_get())
+def get_all_games_admin():
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+        interactor = GetAllGamesAdminInteractor(
+            console_adapter=console_adapter())
+        response = interactor.run()()
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    except GetAllGamesAdminException as e:
         return server_error(str(e))
     return success(response)
 

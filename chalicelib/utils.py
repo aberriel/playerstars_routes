@@ -54,10 +54,10 @@ def check_admin_authorization(user_id):
         table_name=Settings.PLAYER_TABLE_NAME)
     user = user_adapter.get_by_id(user_id)
     if not user:
-        msg = "Usuário não encontrado"
+        msg = "User not found"
         raise UserNotFoundToAuthorize(msg)
     if not user.is_admin:
-        msg = "Usuário não autorizado como admin"
+        msg = "User isn't admin. Access denied."
         raise UserNotAdminAuthorized(msg)
 
 
