@@ -1,28 +1,46 @@
-from chalicelib import (
-    get_all_players_admin, get_player_by_id_admin, put_player_admin,
-    post_console_admin, put_console_admin, delete_console_admin,
-    get_all_duel_admin, get_duel_by_id_admin, get_all_terms_admin,
-    get_terms_by_id_admin, post_terms_admin, put_terms_admin,
-    delete_terms_admin, get_privacy_by_id_admin, get_all_privacy_admin,
-    post_privacy_admin, put_privacy_admin, delete_privacy_admin
-)
 from chalicelib.admin_routes import (
-    get_all_consoles_admin, get_console_by_id_admin
+    duel_router,
+    privacy_router,
+    terms_router,
+
+    delete_console_admin,
+    delete_privacy_admin,
+    delete_terms_admin,
+    get_all_consoles_admin,
+    get_all_duel_admin,
+    get_all_games_admin,
+    get_all_players_admin,
+    get_all_privacy_admin,
+    get_all_terms_admin,
+    get_console_by_id_admin,
+    get_duel_by_id_admin,
+    get_player_by_id_admin,
+    get_privacy_by_id_admin,
+    get_terms_by_id_admin,
+    post_console_admin,
+    post_privacy_admin,
+    post_terms_admin,
+    put_console_admin,
+    put_player_admin,
+    put_privacy_admin,
+    put_terms_admin
 )
-from chalicelib.admin_routes import duel_router, terms_router, privacy_router
 from chalicelib.utils import UserNotAdminAuthorized
+from playerstars_interactors import (
+    GetAllGamesAdminException,
+    UpdateEntityException)
 from unittest.mock import MagicMock, patch
-from playerstars_interactors import UpdateEntityException
 import json
+
+
+path = 'chalicelib.admin_routes'
 
 
 @patch('chalicelib.admin_routes.get_all_admin')
 @patch('chalicelib.admin_routes.player_router')
 def test_get_all_players_admin(mock_player_router, mock_get_all_admin):
     result = get_all_players_admin()
-
     mock_get_all_admin.assert_called_with(mock_player_router())
-
     assert result == mock_get_all_admin()
 
 
@@ -458,3 +476,84 @@ def test_delete_privacy_admin(router, delete):
     result = delete_privacy_admin('entity_id')
     delete.assert_called_with('entity_id', router_mock)
     assert result
+
+
+# noinspection PyUnusedLocal
+@patch(f'{path}.get_user_id_from_jwt')
+@patch(f'{path}.console_adapter')
+@patch(f'{path}.check_admin_authorization')
+@patch(f'{path}.GetAllGamesAdminInteractor')
+@patch(f'{path}.success')
+@patch(f'{path}.unauthorized')
+@patch(f'{path}.server_error')
+def test_get_all_games_admin(server_error_mock,
+                             unauthorized_mock,
+                             success_mock,
+                             get_all_interactor_mock,
+                             check_admin_mock,
+                             console_adapter_mock,
+                             get_user_id_from_jwt_mock):
+    result = get_all_games_admin()
+    get_user_id_from_jwt_mock.assert_called()
+    check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
+    console_adapter_mock.assert_called()
+    get_all_interactor_mock.assert_called_with(
+        console_adapter=console_adapter_mock())
+    get_all_interactor_mock().run.assert_called()
+    success_mock.assert_called_with(get_all_interactor_mock().run()())
+    server_error_mock.assert_not_called()
+    unauthorized_mock.assert_not_called()
+    assert result == success_mock()
+
+
+
+# noinspection PyUnusedLocal
+@patch(f'{path}.get_user_id_from_jwt')
+@patch(f'{path}.console_adapter')
+@patch(f'{path}.check_admin_authorization',
+       side_effect=UserNotAdminAuthorized('oops'))
+@patch(f'{path}.GetAllGamesAdminInteractor')
+@patch(f'{path}.success')
+@patch(f'{path}.unauthorized')
+@patch(f'{path}.server_error')
+def test_get_all_games_admin_user_not_admin_error(server_error_mock,
+                                                  unauthorized_mock,
+                                                  success_mock,
+                                                  get_all_interactor_mock,
+                                                  check_admin_mock,
+                                                  cosole_adapter_mock,
+                                                  get_user_id_from_jwt_mock):
+    response = get_all_games_admin()
+    get_user_id_from_jwt_mock.assert_called()
+    check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
+    get_all_interactor_mock.assert_not_called()
+    success_mock.assert_not_called()
+    server_error_mock.assert_not_called()
+    unauthorized_mock.asert_called_with('oops')
+    assert response == unauthorized_mock()
+
+
+# noinspection PyUnusedLocal
+@patch(f'{path}.get_user_id_from_jwt')
+@patch(f'{path}.console_adapter')
+@patch(f'{path}.check_admin_authorization')
+@patch(f'{path}.GetAllGamesAdminInteractor.run',
+       side_effect=GetAllGamesAdminException('oops'))
+@patch(f'{path}.success')
+@patch(f'{path}.unauthorized')
+@patch(f'{path}.server_error')
+def test_get_all_games_admin_get_all_error(server_error_mock,
+                                           unauthorized_mock,
+                                           success_mock,
+                                           run_mock,
+                                           check_admin_mock,
+                                           console_adapter_mock,
+                                           get_user_id_from_jwt_mock):
+    response = get_all_games_admin()
+    get_user_id_from_jwt_mock.assert_called()
+    check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
+    run_mock.assert_called()
+    success_mock.assert_not_called()
+    unauthorized_mock.assert_not_called()
+    server_error_mock.assert_called_with('oops')
+    assert response == server_error_mock()
