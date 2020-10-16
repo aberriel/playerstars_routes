@@ -146,6 +146,7 @@ __all__ = [
     'get_all_duel',
     'get_all_duel_admin',
     'get_all_games',
+    'get_all_games_admin',
     'get_all_plan',
     'get_all_player',
     'get_all_player_by_console',

@@ -506,7 +506,6 @@ def test_get_all_games_admin(server_error_mock,
     assert result == success_mock()
 
 
-
 # noinspection PyUnusedLocal
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.console_adapter')
