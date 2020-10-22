@@ -12,6 +12,9 @@ from clapy_basic_classes.basic_domain.task_scheduler_port import\
 from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter \
     import BasicTaskSchedulerAdapter
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
+from playerstars_adapters import EventReminderAssistantAdapter
+from aws_task_scheduler import AwsTaskSchedulerAdapter
+from chalicelib.settings import Settings
 
 bp_era_finish_duel = Blueprint(__name__)
 
@@ -114,3 +117,45 @@ class EraRunner(TaskSchedulerPort):
         next_era.set_adapter(self.persist_adapter)
         next_era.set_scheduler_adapter(self.scheduler_adapter)
         next_era.set_scheduler()
+
+
+def get_era_runner_name():
+    app_name = Settings.ERA_AWS_LAMBDA_FUNCTION_NAME
+    runner_name = Settings.ERA_RUNNER_NAME
+
+    return f'{app_name}-{runner_name}'
+
+
+def create_era(duel_id, event_time):
+    try:
+        persist_adapter = EventReminderAssistantAdapter(
+            table_name=Settings.ERA_TABLE_NAME)
+        scheduler_adapter = AwsTaskSchedulerAdapter(
+            name='duel-finisher',
+            lambda_runner=get_era_runner_name()
+        )
+        action_url = f'{Settings.ERA_FINISH_DUEL_URL}/{duel_id}'
+        era_action = EraAction(
+            url=action_url,
+            method='POST',
+            payload={'duel_id': duel_id}
+        )
+        era = EventReminderAssistant(name=f'finish-duel-{duel_id}',
+                                     event_time=event_time,
+                                     action=era_action)
+        era.set_adapter(persist_adapter)
+        era.set_scheduler_adapter(scheduler_adapter)
+        era.save()
+
+        return {
+            'Sucesso': {
+                'Era Id': era.entity_id
+            }
+        }
+    except Exception as e:
+        return {
+            'Erro': {
+                'Class': e.__class__.__name__,
+                'Value': str(e)
+            }
+        }
