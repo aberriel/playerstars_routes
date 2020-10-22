@@ -72,6 +72,6 @@ def get_aws_task_scheduler_adapter():
     aws_task_scheduler_adapter = AwsTaskSchedulerAdapter(
         name='duel-finisher',
         lambda_runner=f'{Settings.ERA_AWS_LAMBDA_FUNCTION_NAME}-'
-        f'{Settings.ERA_FINISH_DUEL_URL}'
+        f'{Settings.ERA_RUNNER_NAME}'
     )
     return aws_task_scheduler_adapter
