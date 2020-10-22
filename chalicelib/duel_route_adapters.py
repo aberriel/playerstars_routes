@@ -5,7 +5,8 @@ from playerstars_adapters import PreDuelAdapter, \
 from playerstars_aws_scheduled_task_adapter import AwsScheduleTaskAdapter
 from playerstars_graphql_adapters import DuelAdapter as DuelAdapterGraphql, \
     NotificationAdapter as NotificationAdapterGraphql
-
+from playerstars_adapters import EventReminderAssistantAdapter
+from aws_task_scheduler import AwsTaskSchedulerAdapter
 from chalicelib.settings import Settings
 
 
@@ -58,3 +59,19 @@ def get_schedule_task_adapter():
         task_identifier=Settings.DUEL_SCHEDULED_FINISHER_NAME,
         aws_region=Settings.AWS_DEFAULT_REGION)
     return schedule_task_adapter
+
+
+def get_era_adapter():
+    era_adapter = EventReminderAssistantAdapter(
+        table_name=Settings.ERA_TABLE_NAME
+    )
+    return era_adapter
+
+
+def get_aws_task_scheduler_adapter():
+    aws_task_scheduler_adapter = AwsTaskSchedulerAdapter(
+        name='duel-finisher',
+        lambda_runner=f'{Settings.ERA_AWS_LAMBDA_FUNCTION_NAME}-'
+        f'{Settings.ERA_FINISH_DUEL_URL}'
+    )
+    return aws_task_scheduler_adapter

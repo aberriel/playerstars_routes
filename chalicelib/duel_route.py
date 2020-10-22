@@ -39,7 +39,8 @@ from playerstars_interactors import (
     PostPreDuelInteractor,
     PostPreDuelRequestModel,
     PutPreDuelInteractor,
-    PutPreDuelRequestModel)
+    PutPreDuelRequestModel,
+    PutPreDuelAdapters)
 from playerstars_interactors.duel.end_duel import LoadDuelException, \
     LoadMemberException, UpdateDuelException, JudgeException, \
     UploadImageException, SubmitResultException
@@ -63,7 +64,9 @@ from .duel_route_adapters import (
     get_notification_adapter_graphql,
     get_player_adapter,
     get_team_adapter,
-    get_schedule_task_adapter)
+    get_schedule_task_adapter,
+    get_aws_task_scheduler_adapter,
+    get_era_adapter)
 import logging
 
 bp_cancel_duel = Blueprint(__name__)
@@ -448,16 +451,23 @@ def put_random_duel(entity_id, status):
             'status': status
         }
         request = PutPreDuelRequestModel(data)
-        interactor = PutPreDuelInteractor(
-            request=request,
+        adapters = PutPreDuelAdapters(
             preduel_adapter=get_preduel_adapter(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter_dynamo(),
             console_adapter=get_console_adapter(),
             notification_adapter=get_notification_adapter_graphql(),
+            schedule_task_adapter=get_schedule_task_adapter(),
+            era_adapter=get_era_adapter(),
+            scheduler_adapter=get_aws_task_scheduler_adapter()
+        )
+        interactor = PutPreDuelInteractor(
+            request=request,
             time_to_finish=Settings.TIME_TO_FINISH_DUEL,
-            schedule_task_adapter=get_schedule_task_adapter())
+            adapters=adapters,
+            era_finish_duel_url=Settings.ERA_FINISH_DUEL_URL
+        )
         response = interactor.run()
         return success(response())
     except BaseException as ex:

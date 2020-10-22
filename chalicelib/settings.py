@@ -111,3 +111,7 @@ class Settings:
     TIME_TO_FINISH_DUEL = config('TIME_TO_FINISH_DUEL', 300)
     TIME_TO_ACCEPT_DUEL = config('RESPONSE_TIME', 5)
     TOURNAMENT_REVIEW_TIME = config('TOURNAMENT_REVIEW_TIME', 500)
+    ERA_FINISH_DUEL_URL = config(
+        'ERA_FINISH_DUEL_URL',
+        'https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/'
+        'era-finish-duel')
