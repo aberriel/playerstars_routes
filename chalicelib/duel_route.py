@@ -157,13 +157,16 @@ def enter_duel_post(json_data):
         duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
-        team_adapter=get_team_adapter())
+        team_adapter=get_team_adapter(),
+        era_adapter=get_era_adapter(),
+        scheduler_adapter=get_aws_task_scheduler_adapter())
     interactor = EnterDuelInteractor(
         request=request,
         adapters=adapters,
         schedule_task_adapter=get_schedule_task_adapter(),
         time_to_accept_invitation=Settings.TIME_TO_ACCEPT_DUEL,
-        time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL)
+        time_to_finish_duel=Settings.TIME_TO_FINISH_DUEL,
+        era_finish_duel_url=Settings.ERA_FINISH_DUEL_URL)
     try:
         response = interactor.run()
 
