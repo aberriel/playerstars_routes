@@ -659,10 +659,14 @@ def test_put_random_duel_raises(client, resource, run):
 @patch('chalicelib.duel_route.get_player_adapter')
 @patch('chalicelib.duel_route.get_team_adapter')
 @patch('chalicelib.duel_route.get_schedule_task_adapter')
+@patch('chalicelib.duel_route.get_era_adapter')
+@patch('chalicelib.duel_route.get_aws_task_scheduler_adapter')
 @patch('chalicelib.duel_route.Settings')
 @patch('chalicelib.duel_route.success')
 def test_enter_duel(mock_success,
                     mock_settings,
+                    mock_aws_scheduler,
+                    mock_era,
                     mock_get_schedule,
                     mock_get_team,
                     mock_get_player,
@@ -681,13 +685,16 @@ def test_enter_duel(mock_success,
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team())
+        team_adapter=mock_get_team(),
+        era_adapter=mock_era(),
+        scheduler_adapter=mock_aws_scheduler())
     mock_interactor.assert_called_with(
         request=mock_request(),
         adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
-        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL,
+        era_finish_duel_url=mock_settings.ERA_FINISH_DUEL_URL)
 
     mock_interactor().run.assert_called_once()
     mock_success.assert_called_with(mock_interactor().run()())
@@ -705,10 +712,14 @@ def test_enter_duel(mock_success,
 @patch('chalicelib.duel_route.get_player_adapter')
 @patch('chalicelib.duel_route.get_team_adapter')
 @patch('chalicelib.duel_route.get_schedule_task_adapter')
+@patch('chalicelib.duel_route.get_era_adapter')
+@patch('chalicelib.duel_route.get_aws_task_scheduler_adapter')
 @patch('chalicelib.duel_route.Settings')
 @patch('chalicelib.duel_route.bad_request')
 def test_enter_duel_invalid_status(mock_bad_request,
                                    mock_settings,
+                                   mock_aws_scheduler,
+                                   mock_era,
                                    mock_get_schedule,
                                    mock_get_team,
                                    mock_get_player,
@@ -727,13 +738,16 @@ def test_enter_duel_invalid_status(mock_bad_request,
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team())
+        team_adapter=mock_get_team(),
+        era_adapter=mock_era(),
+        scheduler_adapter=mock_aws_scheduler())
     mock_interactor.assert_called_with(
         request=mock_request(),
         adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
-        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL,
+        era_finish_duel_url=mock_settings.ERA_FINISH_DUEL_URL)
 
     mock_interactor().run.assert_called_once()
     mock_bad_request.assert_called_with('invalido')
@@ -751,10 +765,14 @@ def test_enter_duel_invalid_status(mock_bad_request,
 @patch('chalicelib.duel_route.get_player_adapter')
 @patch('chalicelib.duel_route.get_team_adapter')
 @patch('chalicelib.duel_route.get_schedule_task_adapter')
+@patch('chalicelib.duel_route.get_era_adapter')
+@patch('chalicelib.duel_route.get_aws_task_scheduler_adapter')
 @patch('chalicelib.duel_route.Settings')
 @patch('chalicelib.duel_route.server_error')
 def test_enter_duel_error(mock_server_error,
                           mock_settings,
+                          mock_aws_scheduler,
+                          mock_era,
                           mock_get_schedule,
                           mock_get_team,
                           mock_get_player,
@@ -773,13 +791,16 @@ def test_enter_duel_error(mock_server_error,
         duel_adapter_graphql=mock_get_duel_gql(),
         notification_adapter=mock_get_notification(),
         player_adapter=mock_get_player(),
-        team_adapter=mock_get_team())
+        team_adapter=mock_get_team(),
+        era_adapter=mock_era(),
+        scheduler_adapter=mock_aws_scheduler())
     mock_interactor.assert_called_with(
         request=mock_request(),
         adapters=mock_interactor_adapters(),
         schedule_task_adapter=mock_get_schedule(),
         time_to_accept_invitation=mock_settings.TIME_TO_ACCEPT_DUEL,
-        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL)
+        time_to_finish_duel=mock_settings.TIME_TO_FINISH_DUEL,
+        era_finish_duel_url=mock_settings.ERA_FINISH_DUEL_URL)
 
     mock_interactor().run.assert_called_once()
     mock_server_error.assert_called_with('erro')
