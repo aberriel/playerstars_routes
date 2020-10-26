@@ -24,7 +24,9 @@ from playerstars_interactors import (
     GetAllGamesAdminException,
     GetAllGamesAdminInteractor,
     PutPlayerIsAdminInteractor,
-    UpdateEntityException)
+    UpdateEntityException, GetUploadMaskInteractor)
+
+from uuid import uuid4
 
 
 bp_admin = Blueprint(__name__)
@@ -165,6 +167,27 @@ def get_all_games_admin():
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
     except GetAllGamesAdminException as e:
+        return server_error(str(e))
+    return success(response)
+
+
+@bp_admin.route('/games/upload-mask', **private_get())
+def get_upload_mask_url():
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+        object_name = str(uuid4())
+        interactor = GetUploadMaskInteractor(
+            bucket_name=Settings.S3_BUCKET_NAME,
+            temp_url_expiration=Settings.S3_TEMP_URL_EXPIRATION,
+            folder=Settings.S3_FOLDER_MASK,
+            object_name=object_name)
+
+        response = interactor.run()
+
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    except BaseException as e:
         return server_error(str(e))
     return success(response)
 

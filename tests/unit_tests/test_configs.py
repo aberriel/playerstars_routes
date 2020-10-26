@@ -8,7 +8,8 @@ import json
 config_file_path = '.chalice/config.json'
 
 
-exclusion_list = ['AWS_DEFAULT_REGION', 'DYNAMODB_URL']
+exclusion_list = ['AWS_DEFAULT_REGION', 'DYNAMODB_URL',
+                  'S3_TEMP_URL_EXPIRATION', 'S3_FOLDER_MASK']
 
 
 def read_config_json():
