@@ -77,10 +77,12 @@ class Settings:
     RETURN_URL = config(
         'RETURN_URL',
         'http://playerstars-dev.s3-website-us-east-1.amazonaws.com')
+    S3_FOLDER_MASK = config('S3_FOLDER_MASK', 'game/mask')
     S3_BUCKET_NAME = config('S3_BUCKET_NAME', 'playerstars-dev-photos')
     S3_BUCKET_URL = config(
         'S3_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
+    S3_TEMP_URL_EXPIRATION = config('S3_TEMP_URL_EXPIRATION', 30, cast=int)
     GRAPHQL_API_URL = config(
         'GRAPHQL_API_URL',
         'https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-'
