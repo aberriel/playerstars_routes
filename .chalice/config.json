@@ -52,7 +52,7 @@
         "S3_BUCKET_NAME": "playerstars-dev-photos",
         "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
         "S3_FOLDER_MASK": "game/mask",
-        "S3_TEMP_URL_EXPIRATION": 60,
+        "S3_TEMP_URL_EXPIRATION": "60",
 
         "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
         "TIME_TO_FINISH_DUEL": "300",
@@ -119,7 +119,7 @@
                 "S3_BUCKET_NAME": "playerstars-dev-photos",
                 "S3_BUCKET_URL": "http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com",
                 "S3_FOLDER_MASK": "game/mask",
-                "S3_TEMP_URL_EXPIRATION": 60,
+                "S3_TEMP_URL_EXPIRATION": "60",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
@@ -186,7 +186,7 @@
                 "S3_BUCKET_NAME": "playerstars-stg-photos",
                 "S3_BUCKET_URL": "http://playerstars-stg-photos.s3-website-us-east-1.amazonaws.com",
                 "S3_FOLDER_MASK": "game/mask",
-                "S3_TEMP_URL_EXPIRATION": 60,
+                "S3_TEMP_URL_EXPIRATION": "60",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
@@ -253,7 +253,7 @@
                 "S3_BUCKET_NAME": "playerstars-photos",
                 "S3_BUCKET_URL": "http://playerstars-photos.s3-website-us-east-1.amazonaws.com",
                 "S3_FOLDER_MASK": "game/mask",
-                "S3_TEMP_URL_EXPIRATION": 60,
+                "S3_TEMP_URL_EXPIRATION": "60",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
