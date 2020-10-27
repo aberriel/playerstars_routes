@@ -1,7 +1,7 @@
 from playerstars_adapters import PreDuelAdapter, \
     DuelAdapter as DuelAdapterDynamo, ConsoleAdapter, \
     NotificationAdapter as NotificationAdapterDynamo, PlayerAdapter, \
-    TeamAdapter
+    TeamAdapter, ValuesAdapter
 from playerstars_aws_scheduled_task_adapter import AwsScheduleTaskAdapter
 from playerstars_graphql_adapters import DuelAdapter as DuelAdapterGraphql, \
     NotificationAdapter as NotificationAdapterGraphql
@@ -75,3 +75,10 @@ def get_aws_task_scheduler_adapter():
         f'{Settings.ERA_RUNNER_NAME}'
     )
     return aws_task_scheduler_adapter
+
+
+def get_values_adapter():
+    values_adapter = ValuesAdapter(
+        table_name=Settings.VALUES_TABLE_NAME
+    )
+    return values_adapter
