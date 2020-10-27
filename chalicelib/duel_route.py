@@ -66,7 +66,8 @@ from .duel_route_adapters import (
     get_team_adapter,
     get_schedule_task_adapter,
     get_aws_task_scheduler_adapter,
-    get_era_adapter)
+    get_era_adapter,
+    get_values_adapter)
 import logging
 
 bp_cancel_duel = Blueprint(__name__)
@@ -349,6 +350,7 @@ def end_duel_post(json_data):
         s3_bucket_name=Settings.S3_BUCKET_NAME,
         s3_bucket_url=Settings.S3_BUCKET_URL,
         team_adapter=get_team_adapter(),
+        values_adapter=get_values_adapter(),
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
