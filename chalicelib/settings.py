@@ -79,6 +79,9 @@ class Settings:
         'http://playerstars-dev.s3-website-us-east-1.amazonaws.com')
     S3_FOLDER_MASK = config('S3_FOLDER_MASK', 'game/mask')
     S3_BUCKET_NAME = config('S3_BUCKET_NAME', 'playerstars-dev-photos')
+    S3_BUCKET_IMAGE_NAME = config(
+        'S3_BUCKET_IMAGE_NAME',
+        'playerstars-images-dev')
     S3_BUCKET_URL = config(
         'S3_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
