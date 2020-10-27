@@ -134,7 +134,9 @@
           "Action": "s3:*",
           "Resource": [
             "arn:aws:s3:::playerstars-dev-photos",
-            "arn:aws:s3:::playerstars-dev-photos/*"
+            "arn:aws:s3:::playerstars-dev-photos/*",
+            "arn:aws:s3:::playerstars-images-dev",
+            "arn:aws:s3:::playerstars-images-dev/*"
           ]
         },
         {
