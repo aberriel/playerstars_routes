@@ -63,7 +63,6 @@ app.register_blueprint(bp_google, url_prefix='/purchase/google')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
 app.register_blueprint(bp_inform_invite_timeout,
                        url_prefix='/duel/inform-invite-timeout')
-
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
