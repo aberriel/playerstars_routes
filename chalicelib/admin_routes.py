@@ -178,7 +178,7 @@ def get_upload_mask_url():
         check_admin_authorization(user_id)
         object_name = str(uuid4())
         interactor = GetUploadMaskInteractor(
-            bucket_name=Settings.S3_BUCKET_NAME,
+            bucket_name=Settings.S3_BUCKET_IMAGE_NAME,
             temp_url_expiration=Settings.S3_TEMP_URL_EXPIRATION,
             folder=Settings.S3_FOLDER_MASK,
             object_name=object_name)
