@@ -562,7 +562,7 @@ def test_get_all_games_admin_get_all_error(server_error_mock,
 @patch(f'{path}.success')
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
-@patch(f'{path}.GetUploadMaskInteractor')
+@patch(f'{path}.GetUploadImageUrlInteractor')
 def test_get_upload_mask_url(mock_inter,
                              check_admin_mock,
                              get_user_id_from_jwt_mock,
@@ -577,7 +577,7 @@ def test_get_upload_mask_url(mock_inter,
 @patch(f'{path}.unauthorized')
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
-@patch(f'{path}.GetUploadMaskInteractor.run',
+@patch(f'{path}.GetUploadImageUrlInteractor.run',
        side_effect=BaseException('Erro obtendo url para upload de imagem:'))
 def test_get_upload_mask_url_raises(mock_inter,
                                     check_admin_mock,
@@ -593,7 +593,7 @@ def test_get_upload_mask_url_raises(mock_inter,
 @patch(f'{path}.unauthorized')
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
-@patch(f'{path}.GetUploadMaskInteractor.run',
+@patch(f'{path}.GetUploadImageUrlInteractor.run',
        side_effect=UserNotAdminAuthorized('ops'))
 def test_get_upload_mask_url_error(mock_inter,
                                    check_admin_mock,
