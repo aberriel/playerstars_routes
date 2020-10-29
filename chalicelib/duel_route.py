@@ -1,6 +1,7 @@
 from chalice import Blueprint
 from chalice_support import server_error, created, success, not_found, \
     bad_request
+from chalicelib.chalice_support.auth import cors
 from playerstars_domain import Duel, PreDuel
 from playerstars_interactors import (
     CancelDuelException,
@@ -330,7 +331,7 @@ def reject_duel(data):
     return success(response())
 
 
-@bp_duel.route('/end-duel', **private_post())
+@bp_duel.route('/end-duel', methods=['POST'], cors=cors)
 def end_duel():
     data = bp_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_duel)
