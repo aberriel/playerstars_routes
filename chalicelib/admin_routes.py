@@ -24,7 +24,7 @@ from playerstars_interactors import (
     GetAllGamesAdminException,
     GetAllGamesAdminInteractor,
     PutPlayerIsAdminInteractor,
-    UpdateEntityException, GetUploadMaskInteractor)
+    UpdateEntityException, GetUploadImageUrlInteractor)
 
 from uuid import uuid4
 
@@ -177,7 +177,7 @@ def get_upload_mask_url():
     try:
         check_admin_authorization(user_id)
         object_name = str(uuid4())
-        interactor = GetUploadMaskInteractor(
+        interactor = GetUploadImageUrlInteractor(
             bucket_name=Settings.S3_BUCKET_IMAGE_NAME,
             temp_url_expiration=Settings.S3_TEMP_URL_EXPIRATION,
             folder=Settings.S3_FOLDER_MASK,
