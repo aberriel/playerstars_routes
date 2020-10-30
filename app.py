@@ -85,6 +85,7 @@ app.register_blueprint(bp_webhook_wirecard,
                        url_prefix='/purchase/wirecard/webhook')
 app.register_blueprint(bp_wirecard, url_prefix='/purchase/wirecard')
 app.register_blueprint(tournament_route, url_prefix='/tournament')
+
 app.register_blueprint(bp_era_finish_duel, url_prefix='/era-finish-duel')
 
 
