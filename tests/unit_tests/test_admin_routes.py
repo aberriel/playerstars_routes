@@ -18,6 +18,7 @@ from chalicelib.admin_routes import (
     get_privacy_by_id_admin,
     get_terms_by_id_admin,
     get_upload_mask_url,
+    get_upload_game_url,
     post_console_admin,
     post_privacy_admin,
     post_terms_admin,
@@ -568,6 +569,21 @@ def test_get_upload_mask_url(mock_inter,
                              get_user_id_from_jwt_mock,
                              success_mock):
     response = get_upload_mask_url()
+    check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
+
+    mock_inter().run.assert_called_once()
+    assert response == success_mock(mock_inter().run()())
+
+
+@patch(f'{path}.success')
+@patch(f'{path}.get_user_id_from_jwt')
+@patch(f'{path}.check_admin_authorization')
+@patch(f'{path}.GetUploadImageUrlInteractor')
+def test_get_upload_game_url(mock_inter,
+                             check_admin_mock,
+                             get_user_id_from_jwt_mock,
+                             success_mock):
+    response = get_upload_game_url()
     check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
 
     mock_inter().run.assert_called_once()

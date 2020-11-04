@@ -192,6 +192,27 @@ def get_upload_mask_url():
     return success(response)
 
 
+@bp_admin.route('/games/upload-image', **private_get())
+def get_upload_game_url():
+    user_id = get_user_id_from_jwt(bp_admin)
+    try:
+        check_admin_authorization(user_id)
+        object_name = str(uuid4())
+        interactor = GetUploadImageUrlInteractor(
+            bucket_name=Settings.S3_BUCKET_IMAGE_NAME,
+            temp_url_expiration=Settings.S3_TEMP_URL_EXPIRATION,
+            folder=Settings.S3_FOLDER_GAME,
+            object_name=object_name)
+
+        response = interactor.run()
+
+    except UserNotAdminAuthorized as e:
+        return unauthorized(str(e))
+    except BaseException as e:
+        return server_error(str(e))
+    return success(response)
+
+
 @bp_admin.route('/duel', **private_get())
 def get_all_duel_admin():
     return get_all_admin(duel_router())
