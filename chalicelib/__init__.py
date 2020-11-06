@@ -31,7 +31,10 @@ from .basic_entity_route import BasicEntityRoute
 #     post_create_championship,
 #     post_join_open_championship)
 
-from .console_route import post_console, put_console
+from .console_route import (
+    get_all_consoles_external,
+    post_console,
+    put_console)
 from .convert_star_rate_route import (
     delete_convert_rate,
     get_all_convert_rate,
@@ -142,6 +145,7 @@ __all__ = [
     'delete_value',
 
     'get_accepted_teams_from_player',
+    'get_all_consoles_external',
     'get_all_convert_rate',
     'get_all_duel',
     'get_all_duel_admin',
