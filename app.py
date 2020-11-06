@@ -5,7 +5,10 @@ from chalice import Chalice
 
 from chalicelib import root
 from chalicelib.admin_routes import bp_admin
-from chalicelib.console_route import bp_console, bp_console_admin
+from chalicelib.console_route import (
+    bp_console,
+    bp_console_admin,
+    bp_console_external)
 from chalicelib.convert_star_rate_route import bp_convert
 from chalicelib.duel_route import (
     bp_cancel_duel,
@@ -52,6 +55,7 @@ app.register_blueprint(bp_admin, url_prefix='/admin')
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_console_admin, url_prefix='/admin/console')
+app.register_blueprint(bp_console_external, url_prefix='/console/external')
 app.register_blueprint(bp_convert, url_prefix='/convert-rate')
 app.register_blueprint(bp_create_duel, url_prefix='/create-duel')
 app.register_blueprint(bp_duel, url_prefix='/duel')
