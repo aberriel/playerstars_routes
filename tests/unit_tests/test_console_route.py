@@ -87,7 +87,7 @@ def make_put_mock_data():
 
 # noinspection PyUnusedLocal
 @patch(f'{prefix_console_route}.bp_console', make_post_mock_data())
-@patch(f'{prefix_console_route}.BasicPostInteractor.run')
+@patch(f'{prefix_basic_route}.BasicPostInteractor.run')
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_post_console(client, resource, run):
@@ -185,6 +185,7 @@ def test_get_all_consoles_external(mock_success,
     mock_interactor().run.assert_called_once()
     mock_success.assert_called_with(mock_interactor().run()())
     mock_server_error.assert_not_called()
+    assert consoles == mock_success()
 
 
 @patch(f'{prefix_console_route}.GetAllConsolesExternalInteractor',
@@ -199,7 +200,6 @@ def test_get_all_consoles_external_raises(mock_success,
     consoles = get_all_consoles_external()
     mock_interactor.assert_called_with(
         console_adapter=mock_console_adapter())
-    mock_interactor().run.assert_called_once()
     mock_success.assert_not_called()
     mock_server_error.assert_called_once_with('oops')
     assert consoles == mock_server_error()

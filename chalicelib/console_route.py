@@ -13,8 +13,7 @@ from playerstars_adapters import ConsoleAdapter
 from playerstars_domain import Console
 from playerstars_interactors import (
     GetAllConsolesExternalException,
-    GetAllConsolesExternalInteractor,
-    GetAllConsolesExternalResponseModel)
+    GetAllConsolesExternalInteractor)
 
 
 bp_console = Blueprint(__name__)
@@ -41,7 +40,7 @@ def get_console_by_id(entity_id):
     return get_router().get_by_id(entity_id)
 
 
-@bp_console_external('/', methods=['GET'], cors=cors)
+@bp_console_external.route('/', methods=['GET'], cors=cors)
 def get_all_consoles_external():
     try:
         interactor = GetAllConsolesExternalInteractor(
