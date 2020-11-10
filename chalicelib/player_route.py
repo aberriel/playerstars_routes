@@ -471,7 +471,7 @@ def get_player_consoles():
         entity_id = get_user_id_from_jwt(bp_player)
         request = GetPlayerConsolesRequestModel(entity_id)
         interactor = GetPlayerConsolesInteractor(
-            request, get_adapter(), get_console_adapter())
+            request, get_console_adapter(), get_adapter())
         response = interactor.run()
         if response:
             return success(response)
