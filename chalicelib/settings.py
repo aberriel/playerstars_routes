@@ -87,13 +87,14 @@ class Settings:
         'S3_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
     S3_TEMP_URL_EXPIRATION = config('S3_TEMP_URL_EXPIRATION', 30, cast=int)
+
     GRAPHQL_API_URL = config(
         'GRAPHQL_API_URL',
         'https://c7zo7ax3oze6rk3gko45hnjcpy.appsync-'
         'api.us-east-1.amazonaws.com/graphql')
     GRAPHQL_API_ID = config('GRAPHQL_API_ID', '3l2u7ok2cjfwdclv5qz3zb5z54')
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
-                             'da2-xqu7fukowrcilcwoxvcjsrfawm')
+                             'da2-ijpayoex4jai3dd2qgadkib7wu')
 
     WIRECARD_API_USER = config('WIRECARD_API_USER',
                                'KQXIFCN0ZMTKWXHIZMWO1U0AY0GYAKK4')
