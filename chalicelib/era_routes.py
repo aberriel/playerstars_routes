@@ -2,7 +2,6 @@ from copy import deepcopy
 from datetime import datetime
 from logging import getLogger
 from chalice import Blueprint
-from chalicelib.chalice_support import private_post
 import requests
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from playerstars_domain.utils.datetime_helper import aware_now
@@ -15,11 +14,12 @@ from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
 from playerstars_adapters import EventReminderAssistantAdapter
 from aws_task_scheduler import AwsTaskSchedulerAdapter
 from chalicelib.settings import Settings
+from chalicelib.chalice_support.auth import cors
 
 bp_era_finish_duel = Blueprint(__name__)
 
 
-@bp_era_finish_duel.route('/{duel_id}', **private_post())
+@bp_era_finish_duel.route('/{duel_id}', methods=['POST'], cors=cors)
 def receive_era(duel_id):
     return duel_scheduled_finisher(duel_id)
 
