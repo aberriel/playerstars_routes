@@ -1,9 +1,9 @@
 from chalicelib.settings import Settings
 from playerstars_adapters import (
     DuelAdapter as DuelAdapterDynamo,
-    PlayerAdapter,
+    PlayerAdapter, ValuesAdapter,
     TeamAdapter)
-from playerstars_aws_lambda import DuelFinishHandler
+from playerstars_aws_lambda import DuelFinishHandler, DuelFinishHandlerAdapters
 from playerstars_graphql_adapters import (
     DuelAdapter as DuelAdapterGraphql,
     NotificationAdapter)
@@ -38,14 +38,22 @@ def get_team_adapter():
     return TeamAdapter(Settings.TEAM_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
+def get_values_adapter():
+    return ValuesAdapter(Settings.VALUES_TABLE_NAME, Settings.DYNAMODB_URL)
+
+
 @logger_aspect
 def duel_scheduled_finisher(duel_id):
-    duel_finish_handler = DuelFinishHandler(
-        duel_id=duel_id,
+    adapters = DuelFinishHandlerAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter(),
+        values_adapter=get_values_adapter()
+    )
+    duel_finish_handler = DuelFinishHandler(
+        duel_id=duel_id,
+        adapters=adapters,
         duel_judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     return duel_finish_handler.duel_finish_handler()
