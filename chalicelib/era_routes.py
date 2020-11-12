@@ -78,7 +78,8 @@ class EraRunner(TaskSchedulerPort):
         era.set_scheduler_adapter(self.scheduler_adapter)
 
         args = {'url': era.action.url}
-        args_with_payload = _extend_dict(args, {'data': era.action.payload})
+        payload = era.action.payload or {}
+        args_with_payload = _extend_dict(args, {'json': payload})
         map_request = {
             'GET': (requests.get, args),
             'DELETE': (requests.delete, args),
