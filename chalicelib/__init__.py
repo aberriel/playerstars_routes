@@ -34,7 +34,8 @@ from .basic_entity_route import BasicEntityRoute
 from .console_route import (
     get_all_consoles_external,
     post_console,
-    put_console)
+    put_console,
+    get_all_consoles_active_games)
 from .convert_star_rate_route import (
     delete_convert_rate,
     get_all_convert_rate,
@@ -248,5 +249,6 @@ __all__ = [
     'enter_team',
     'inform_invitation_timeout',
     'leave_team',
-    'reject_duel_route'
+    'reject_duel_route',
+    'get_all_consoles_active_games'
 ]
