@@ -4,9 +4,11 @@ from chalicelib.console_route import (
     get_all_consoles_external,
     get_console_by_id,
     post_console,
-    put_console,)
+    put_console,
+    get_all_consoles_active_games)
 from playerstars_interactors import (
     GetAllConsolesExternalException,
+    GetAllConsolesActiveGamesException,
     SaveEntityException,
     UpdateEntityException)
 from unittest.mock import MagicMock, patch
@@ -198,6 +200,40 @@ def test_get_all_consoles_external_raises(mock_success,
                                           mock_console_adapter,
                                           mock_interactor):
     consoles = get_all_consoles_external()
+    mock_interactor.assert_called_with(
+        console_adapter=mock_console_adapter())
+    mock_success.assert_not_called()
+    mock_server_error.assert_called_once_with('oops')
+    assert consoles == mock_server_error()
+
+
+@patch(f'{prefix_console_route}.GetAllConsolesActiveGamesInteractor')
+@patch(f'{prefix_console_route}.get_console_adapter')
+@patch(f'{prefix_console_route}.server_error')
+@patch(f'{prefix_console_route}.success')
+def test_get_all_consoles_active_games(mock_success,
+                                       mock_server_error,
+                                       mock_console_adapter,
+                                       mock_interactor):
+    consoles = get_all_consoles_active_games()
+    mock_interactor.assert_called_once_with(
+        console_adapter=mock_console_adapter())
+    mock_interactor().run.assert_called_once()
+    mock_success.assert_called_with(mock_interactor().run()())
+    mock_server_error.assert_not_called()
+    assert consoles == mock_success()
+
+
+@patch(f'{prefix_console_route}.GetAllConsolesActiveGamesInteractor',
+       side_effect=GetAllConsolesActiveGamesException('oops'))
+@patch(f'{prefix_console_route}.get_console_adapter')
+@patch(f'{prefix_console_route}.server_error')
+@patch(f'{prefix_console_route}.success')
+def test_get_all_consoles_active_games_raises(mock_success,
+                                              mock_server_error,
+                                              mock_console_adapter,
+                                              mock_interactor):
+    consoles = get_all_consoles_active_games()
     mock_interactor.assert_called_with(
         console_adapter=mock_console_adapter())
     mock_success.assert_not_called()

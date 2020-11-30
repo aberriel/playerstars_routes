@@ -13,7 +13,9 @@ from playerstars_adapters import ConsoleAdapter
 from playerstars_domain import Console
 from playerstars_interactors import (
     GetAllConsolesExternalException,
-    GetAllConsolesExternalInteractor)
+    GetAllConsolesExternalInteractor,
+    GetAllConsolesActiveGamesInteractor,
+    GetAllConsolesActiveGamesException)
 
 
 bp_console = Blueprint(__name__)
@@ -49,6 +51,17 @@ def get_all_consoles_external():
     except GetAllConsolesExternalException as exc:
         return server_error(str(exc))
     return success(response())
+
+
+@bp_console.route('/active-games', **private_get())
+def get_all_consoles_active_games():
+    try:
+        interactor = GetAllConsolesActiveGamesInteractor(
+            console_adapter=get_console_adapter())
+        response = interactor.run()
+        return success(response())
+    except GetAllConsolesActiveGamesException as exc:
+        return server_error(str(exc))
 
 
 @bp_console.route('/', **private_post())
