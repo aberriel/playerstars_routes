@@ -55,6 +55,7 @@
         "S3_FOLDER_MASK": "game/mask",
         "S3_FOLDER_GAME": "game",
         "S3_TEMP_URL_EXPIRATION": "60",
+        "ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN": "arn:aws:sns:us-east-1:230639242520:app/GCM/playerstars_android",
 
         "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
         "TIME_TO_FINISH_DUEL": "300",
@@ -124,6 +125,7 @@
                 "S3_FOLDER_MASK": "game/mask",
                 "S3_FOLDER_GAME": "game",
                 "S3_TEMP_URL_EXPIRATION": "60",
+                "ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN": "arn:aws:sns:us-east-1:230639242520:app/GCM/playerstars_android",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
@@ -193,6 +195,7 @@
                 "S3_FOLDER_MASK": "game/mask",
                 "S3_FOLDER_GAME": "game",
                 "S3_TEMP_URL_EXPIRATION": "60",
+                "ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN": "arn:aws:sns:us-east-1:230639242520:app/GCM/playerstars_android",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
@@ -262,6 +265,7 @@
                 "S3_FOLDER_MASK": "game/mask",
                 "S3_FOLDER_GAME": "game",
                 "S3_TEMP_URL_EXPIRATION": "60",
+                "ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN": "arn:aws:sns:us-east-1:230639242520:app/GCM/playerstars_android",
 
                 "DUEL_JUDGE_MATRIX": "I\n1X\n12I\n122I\n2222X\n22221I\n222211I\nTXTTXTTT\nT2II1ITTT\nT2TI11ITTT",
                 "TIME_TO_FINISH_DUEL": "300",
