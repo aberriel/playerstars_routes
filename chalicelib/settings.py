@@ -103,6 +103,9 @@ class Settings:
     WIRECARD_API_URL_BASE = config(
         'WIRECARD_API_URL_BASE',
         'https://sandbox.moip.com.br/assinaturas/v1/')
+    ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN = config(
+        'ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN',
+        'arn:aws:sns:us-east-1:230639242520:app/GCM/playerstars_android')
 
     DUEL_JUDGE_MATRIX = config('DUEL_JUDGE_MATRIX', ''''\
         I
