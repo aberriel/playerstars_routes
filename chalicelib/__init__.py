@@ -60,7 +60,8 @@ from .duel_route import (
     get_random_duel,
     put_random_duel,
     delete_random_duel,
-    post_random_duel)
+    post_random_duel,
+    validate_photo_route)
 from .game_route import (
     delete_game,
     get_all_games,
@@ -250,5 +251,7 @@ __all__ = [
     'inform_invitation_timeout',
     'leave_team',
     'reject_duel_route',
-    'get_all_consoles_active_games'
+    'get_all_consoles_active_games',
+
+    'validate_photo_route'
 ]

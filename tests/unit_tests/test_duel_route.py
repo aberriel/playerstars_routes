@@ -15,6 +15,7 @@ from playerstars_interactors import (
     InformOpponentResponseTimeoutException,
     RejectDuelException,
     PostPreDuelException)
+from playerstars_interactors.duel.validate_photo import ValidatePhotoException
 from playerstars_interactors.duel.enter_duel import InvalidStatusException
 
 from chalicelib import (
@@ -23,7 +24,7 @@ from chalicelib import (
     get_match_list, get_opponent_list_route, inform_invitation_timeout,
     post_duel, reject_duel_route, get_duel_details,
     get_opponent_teams_for_duel, get_random_duel, put_random_duel,
-    delete_random_duel, post_random_duel
+    delete_random_duel, post_random_duel, validate_photo_route
 )
 from chalicelib.duel_route import enter_duel_post
 from tests.unit_tests.test_utils import jwt
@@ -805,3 +806,52 @@ def test_enter_duel_error(mock_server_error,
     mock_interactor().run.assert_called_once()
     mock_server_error.assert_called_with('erro')
     assert result == mock_server_error()
+
+
+def make_validate_photo_request():
+    payload = """{
+        "duel_id": "id1234",
+        "result": "win",
+        "image_base64": "iuasdiuhafiasjdiyhviuasd"
+    }"""
+    data = json.loads(payload)
+    return MagicMock(
+        current_request=MagicMock(json_body=data,
+                                  headers=dict(AUTHORIZATION=jwt)))
+
+
+@patch('chalicelib.duel_route.bp_duel', make_validate_photo_request())
+@patch('chalicelib.duel_route.ValidatePhotoInteractor.run')
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_validate_photo(client, resource, run):
+    result = validate_photo_route()
+    run.assert_called_once()
+    assert result.body['status'] == 'success'
+    assert result.status_code == 200
+
+
+@patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
+@patch('chalicelib.duel_route.ValidatePhotoInteractor.run',
+       MagicMock(side_effect=ValidatePhotoException('oops')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_validate_photo_route_raises(client, resource):
+    result = validate_photo_route()
+    assert result.body['message'] == 'Error in validate-photo: ' \
+                                     'ValidatePhotoException(oops)'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
+
+
+@patch('chalicelib.duel_route.bp_duel', make_end_duel_request())
+@patch('chalicelib.duel_route.ValidatePhotoInteractor.run',
+       MagicMock(side_effect=ValueError('Valor errado')))
+@patch('boto3.resource')
+@patch('boto3.client')
+def test_validate_photo_general_raises(client, resource):
+    result = validate_photo_route()
+    assert result.body['message'] == 'Unexpected error in validate-photo: ' \
+                                     'ValueError(Valor errado)'
+    assert result.body['status'] == 'error'
+    assert result.status_code == 500
