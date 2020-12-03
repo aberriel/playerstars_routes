@@ -42,6 +42,9 @@ from playerstars_interactors import (
     PutPreDuelInteractor,
     PutPreDuelRequestModel,
     PutPreDuelAdapters)
+from playerstars_interactors.duel.validate_photo import (
+    ValidatePhotoException, ValidatePhotoInteractor,
+    ValidatePhotoAdapters, ValidatePhotoRequestModel)
 from playerstars_interactors.duel.end_duel import LoadDuelException, \
     LoadMemberException, UpdateDuelException, JudgeException, \
     UploadImageException, SubmitResultException
@@ -329,6 +332,41 @@ def reject_duel(data):
     except RejectDuelException as e:
         return server_error(str(e))
     return success(response())
+
+
+@bp_duel.route('/validate-photo', methods=['POST'], cors=cors)
+def validate_photo_route():
+    data = bp_duel.current_request.json_body
+    entity_id = get_user_id_from_jwt(bp_duel)
+    data.update({'player_id': entity_id})
+    return validate_photo(data)
+
+
+@logger_aspect
+def validate_photo(json_data):
+    try:
+        request = ValidatePhotoRequestModel(json_data)
+        adapters = ValidatePhotoAdapters(
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter(),
+            duel_adapter=get_duel_adapter_dynamo(),
+            values_adapter=get_values_adapter()
+        )
+        interactor = ValidatePhotoInteractor(
+            request=request,
+            adapters=adapters,
+            s3_bucket_name=Settings.S3_BUCKET_NAME,
+            s3_bucket_url=Settings.S3_BUCKET_URL)
+        response = interactor.run()
+        return success(response())
+    except ValidatePhotoException as e:
+        msg = f'Error in validate-photo: {e.__class__.__name__}({e})'
+        return server_error(msg)
+
+    except Exception as e:
+        msg = f'Unexpected error in validate-photo: ' \
+            f'{e.__class__.__name__}({e})'
+        return server_error(msg)
 
 
 @bp_duel.route('/end-duel', methods=['POST'], cors=cors)
