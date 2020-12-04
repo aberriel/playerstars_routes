@@ -72,7 +72,8 @@ from .notification_route import (
     get_app_notification,
     get_app_notification_by_status,
     post_app_notification,
-    post_set_notification_as_read)
+    post_set_notification_as_read,
+    post_player_sns_token)
 from .pagseguro_purchase_route import get_history_route
 from .player_route import (
     get_all_player,
@@ -209,6 +210,7 @@ __all__ = [
     'post_google_purchase',
     'post_invitation_email',
     'post_player',
+    'post_player_sns_token',
     'post_privacy_admin',
     'post_product',
     'post_public_contact_email',

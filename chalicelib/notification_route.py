@@ -1,6 +1,7 @@
 from chalice import Blueprint
-from playerstars_adapters import \
-    NotificationAdapter as NotificationAdapterDynamo
+from playerstars_adapters import (
+    NotificationAdapter as NotificationAdapterDynamo,
+    PlayerAdapter)
 from playerstars_domain import Notification
 from playerstars_graphql_adapters import \
     NotificationAdapter as NotificationAdapterGraphql
@@ -13,6 +14,10 @@ from playerstars_interactors import (
     SetNotificationAsReadException,
     SetNotificationAsReadInteractor,
     SetNotificationAsReadRequestModel)
+from playerstars_interactors.notification import (
+    PostPlayerSnsEndpointException,
+    PostPlayerSnsEndpointInteractor,
+    PostPlayerSnsEndpointRequestModel)
 from chalicelib.chalice_support import private_post, private_get
 from chalice_support import (server_error, created, success, not_found)
 from chalicelib.settings import Settings
@@ -25,6 +30,11 @@ bp_notification_read = Blueprint(__name__)
 def get_notification_adapter_dynamo():
     return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
                                      Settings.DYNAMODB_URL)
+
+
+def get_player_adapter():
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME,
+                         Settings.DYNAMODB_URL)
 
 
 def get_notification_adapter_graphql():
@@ -97,3 +107,22 @@ def post_set_notification_as_read():
     except SetNotificationAsReadException as e:
         return server_error(str(e))
     return success(response)
+
+
+@bp_notification.route('/update-user-push-endpoint', **private_post())
+def post_player_sns_token():
+    player_id = get_user_id_from_jwt(bp_notification)
+    data = bp_notification.current_request.json_body
+    data.update({'player_id': player_id})
+
+    try:
+        request = PostPlayerSnsEndpointRequestModel(data)
+        interactor = PostPlayerSnsEndpointInteractor(
+            request=request,
+            player_adapter=get_player_adapter(),
+            platform_arn=Settings.ANDROID_PUSH_NOTIFICATION_PLATFORM_ARN,
+            aws_region=Settings.AWS_DEFAULT_REGION)
+        response = interactor.run()
+    except PostPlayerSnsEndpointException as exc:
+        return server_error(str(exc))
+    return success(response())
