@@ -99,6 +99,7 @@
                 "ses:VerifyDomainIdentity",
                 "ses:VerifyEmailAddress",
                 "ses:VerifyEmailIdentity",
+                "sns:CreatePlatformEndpoint",
                 "sqs:SendMessage",
                 "sqs:ServiceResource",
                 "sqs:GetQueueUrl",
