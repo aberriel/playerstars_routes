@@ -28,7 +28,7 @@ def get_user_id_from_jwt(blueprint):
         logger.debug('Token not found.')
         raise TokenNotFoundException("Token not found on JWT")
 
-    logger.debug(
+    logger.info(
         "Extracting user name from token: {}".format(authorization_token))
 
     entity_id_field = 'cognito:username'
