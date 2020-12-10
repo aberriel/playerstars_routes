@@ -9,15 +9,30 @@ from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import ConsoleAdapter, PlayerAdapter, TeamAdapter
 from playerstars_domain import Team
 from playerstars_interactors import (
-    AcceptTeamInvitationException, AcceptTeamInvitationInteractor,
-    AcceptTeamInvitationRequestModel, DeleteTeamException,
-    DeleteTeamInteractor, DeleteTeamRequestModel, EnterTeamException,
-    EnterTeamInteractor, EnterTeamRequestModel, GetTeamByUserInteractor,
-    GetTeamByUserRequestModel, LeaveTeamException, LeaveTeamInteractor,
-    LeaveTeamRequestModel, PostTeamInteractor, PostTeamRequestModel,
-    PutTeamInteractor, PutTeamRequestModel, SaveTeamException,
-    UpdateEntityException, GetTeamRequestModel, GetTeamInteractor,
-    DuplicateMemberException)
+    AcceptTeamInvitationException,
+    AcceptTeamInvitationInteractor,
+    AcceptTeamInvitationRequestModel,
+    DeleteTeamException,
+    DeleteTeamInteractor,
+    DeleteTeamRequestModel,
+    DuplicateMemberException,
+    EnterTeamException,
+    EnterTeamInteractor,
+    EnterTeamRequestModel,
+    GetTeamInteractor,
+    GetTeamRequestModel,
+    GetTeamByUserInteractor,
+    GetTeamByUserRequestModel,
+    LeaveTeamException,
+    LeaveTeamInteractor,
+    LeaveTeamRequestModel,
+    PostTeamInteractor,
+    PostTeamRequestModel,
+    PutTeamAdapters,
+    PutTeamInteractor,
+    PutTeamRequestModel,
+    SaveTeamException,
+    UpdateEntityException)
 from playerstars_graphql_adapters import (
     NotificationAdapter as NotificationAdapterGraphql)
 
@@ -128,17 +143,21 @@ def put_team(entity_id):
 def put(data):
     try:
         request = PutTeamRequestModel(data)
-        interactor = PutTeamInteractor(
-            request=request, player_adapter=get_player_adapter(),
-            team_adapter=get_team_adapter(),
+        adapters = PutTeamAdapters(
             notification_adapter=get_notification_graphql_adapter(),
-            settings=Settings)
+            player_adapter=get_player_adapter(),
+            team_adapter=get_team_adapter())
+        interactor = PutTeamInteractor(
+            request=request,
+            adapters=adapters,
+            s3_bucket_name=Settings.S3_BUCKET_NAME,
+            s3_bucket_url=Settings.S3_BUCKET_URL)
         response = interactor.run()
     except UpdateEntityException as e:
         return server_error(str(e))
     except DuplicateMemberException as e:
         return bad_request(str(e))
-    return success(response)
+    return success(response())
 
 
 @bp_team.route('/enter', **private_post())
