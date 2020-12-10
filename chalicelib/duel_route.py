@@ -383,7 +383,6 @@ def end_duel_post(json_data):
     interactor = EndDuelInteractor(
         request=request,
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
-        duel_adapter_graphql=get_duel_adapter_graphql(),
         notification_adapter=get_notification_adapter_graphql(),
         player_adapter=get_player_adapter(),
         s3_bucket_name=Settings.S3_BUCKET_NAME,
