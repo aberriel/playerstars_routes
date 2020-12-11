@@ -73,7 +73,6 @@ app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
 app.register_blueprint(bp_notification_read,
                        url_prefix='/notification/set-as-read')
-
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_player_by_console, url_prefix='/player-by-game')
 app.register_blueprint(bp_plan, url_prefix='/plan')
