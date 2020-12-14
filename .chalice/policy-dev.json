@@ -100,6 +100,7 @@
                 "ses:VerifyEmailAddress",
                 "ses:VerifyEmailIdentity",
                 "sns:CreatePlatformEndpoint",
+                "sns:Publish",
                 "sqs:SendMessage",
                 "sqs:ServiceResource",
                 "sqs:GetQueueUrl",
@@ -122,33 +123,39 @@
             "Resource": [
                 "arn:aws:logs:*:*:*"
             ]
-        },{
-          "Effect": "Allow",
-          "Action": [
-            "s3:ListAllMyBuckets",
-            "s3:GetBucketLocation"
-          ],
-          "Resource": "*"
         },
         {
-          "Effect": "Allow",
-          "Action": "s3:*",
-          "Resource": [
-            "arn:aws:s3:::playerstars-dev-photos",
-            "arn:aws:s3:::playerstars-dev-photos/*",
-            "arn:aws:s3:::playerstars-images-dev",
-            "arn:aws:s3:::playerstars-images-dev/*"
-          ]
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
         },
         {
-          "Effect": "Allow",
-          "Action": "events:*",
-          "Resource": "*"
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::playerstars-dev-photos",
+                "arn:aws:s3:::playerstars-dev-photos/*",
+                "arn:aws:s3:::playerstars-images-dev",
+                "arn:aws:s3:::playerstars-images-dev/*"
+            ]
         },
         {
-          "Effect": "Allow",
-          "Action": "lambda:*",
-          "Resource": "*"
+            "Effect": "Allow",
+            "Action": "sns:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "events:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "lambda:*",
+            "Resource": "*"
         }
     ]
 }
