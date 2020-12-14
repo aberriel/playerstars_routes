@@ -99,6 +99,7 @@
                 "ses:VerifyEmailAddress",
                 "ses:VerifyEmailIdentity",
                 "sns:CreatePlatformEndpoint",
+                "sns:Publish",
                 "sqs:SendMessage",
                 "sqs:ServiceResource",
                 "sqs:GetQueueUrl",
@@ -121,21 +122,27 @@
             "Resource": [
                 "arn:aws:logs:*:*:*"
             ]
-        },{
-          "Effect": "Allow",
-          "Action": [
-            "s3:ListAllMyBuckets",
-            "s3:GetBucketLocation"
-          ],
-          "Resource": "*"
         },
         {
-          "Effect": "Allow",
-          "Action": "s3:*",
-          "Resource": [
-            "arn:aws:s3:::playerstars-stg-photos",
-            "arn:aws:s3:::playerstars-stg-photos/*"
-          ]
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "sns:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::playerstars-stg-photos",
+                "arn:aws:s3:::playerstars-stg-photos/*"
+            ]
         }
     ]
 }
