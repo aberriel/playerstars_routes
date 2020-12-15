@@ -11,6 +11,7 @@ from playerstars_interactors import (
     CreateDuelException,
     CreateDuelInteractor,
     CreateDuelRequestModel,
+    EndDuelAdapters,
     EndDuelException,
     EndDuelInteractor,
     EndDuelRequestModel,
@@ -380,15 +381,17 @@ def end_duel():
 @logger_aspect
 def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
+    adapters = EndDuelAdapters(
+        duel_adapter=get_duel_adapter_dynamo(),
+        notification_adapter=get_notification_adapter_dynamo(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        values_adapter=get_values_adapter())
     interactor = EndDuelInteractor(
         request=request,
-        duel_adapter_dynamo=get_duel_adapter_dynamo(),
-        notification_adapter=get_notification_adapter_graphql(),
-        player_adapter=get_player_adapter(),
+        adapters=adapters,
         s3_bucket_name=Settings.S3_BUCKET_NAME,
         s3_bucket_url=Settings.S3_BUCKET_URL,
-        team_adapter=get_team_adapter(),
-        values_adapter=get_values_adapter(),
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
@@ -420,8 +423,7 @@ def mount_cancel_duel_interactor_adapters():
     return CancelDuelInteractorAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
-        notification_adapter_dynamo=get_notification_adapter_dynamo(),
-        notification_adapter_graphql=get_notification_adapter_graphql(),
+        notification_adapter=get_notification_adapter_dynamo(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
 
