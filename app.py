@@ -12,6 +12,11 @@ from chalicelib.console_route import (
     bp_console_admin,
     bp_console_external)
 from chalicelib.convert_star_rate_route import bp_convert
+from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, \
+    NullDashboardAdapter
+from chalicelib.dashboard.dashboard_entity import DashboardEntity
+from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, \
+    NullDashboardInteractor
 from chalicelib.duel_route import (
     bp_cancel_duel,
     bp_create_duel,
@@ -46,7 +51,7 @@ from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
 
 app = Chalice(app_name='PlayerStars')
-app.experimental_feature_flags.update(['BLUEPRINTS'])
+app.experimental_feature_flags.update(['BLUEPRINTS', 'WEBSOCKETS'])
 
 app.register_blueprint(root)
 app.register_blueprint(bp_admin, url_prefix='/admin')
@@ -191,3 +196,32 @@ def era_runner(event, context):
                        persist_adapter=persist_adapter)
 
     runner.run()
+
+
+# Websocket Handlers
+
+# table_name definido aqui mesmo, pois
+# não deve existir em nenhum outro ambiente
+if Settings.ENVIRONMENT == 'dev':
+    dashboard_adapter = DashboardAdapter('dashboard_dev')
+    dashboard_interactor = DashboardInteractor(app, dashboard_adapter)
+else:
+    dashboard_adapter = NullDashboardAdapter('dummy')
+    dashboard_interactor = NullDashboardInteractor(app, dashboard_adapter)
+
+
+@app.on_ws_connect()
+def connect(event):
+    dashboard = DashboardEntity(event.connection_id)
+    dashboard.set_adapter(dashboard_adapter)
+    dashboard.save()
+
+
+@app.on_ws_disconnect()
+def disconnect(event):
+    dashboard_adapter.delete(event.connection_id)
+
+
+@app.on_ws_message()
+def ws_message(event):
+    dashboard_interactor.handle_message(event.connection_id, event.body)
