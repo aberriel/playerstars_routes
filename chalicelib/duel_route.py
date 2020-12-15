@@ -130,7 +130,7 @@ def create_duel(json_data):
         interactor = CreateDuelInteractor(
             request=request,
             duel_adapter=get_duel_adapter_dynamo(),
-            notification_adapter=get_notification_adapter_graphql(),
+            notification_adapter=get_notification_adapter_dynamo(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             accept_time=Settings.TIME_TO_ACCEPT_DUEL,
@@ -502,7 +502,7 @@ def put_random_duel(entity_id, status):
             team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter_dynamo(),
             console_adapter=get_console_adapter(),
-            notification_adapter=get_notification_adapter_graphql(),
+            notification_adapter=get_notification_adapter_dynamo(),
             schedule_task_adapter=get_schedule_task_adapter(),
             era_adapter=get_era_adapter(),
             scheduler_adapter=get_aws_task_scheduler_adapter()
