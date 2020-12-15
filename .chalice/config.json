@@ -6,6 +6,7 @@
         "CentroCusto": "PlayerStars"
     },
     "environment_variables": {
+        "ENVIRONMENT": "dev",
         "ERA_FINISH_DUEL_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/era-finish-duel",
         "ERA_TABLE_NAME": "event_reminder_assistant",
         "ERA_RUNNER_NAME": "era_runner",
@@ -75,6 +76,7 @@
             "api_gateway_stage": "dev",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ENVIRONMENT": "dev",
                 "ERA_FINISH_DUEL_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/era-finish-duel",
                 "ERA_TABLE_NAME": "event_reminder_assistant_dev",
                 "ERA_RUNNER_NAME": "era_runner_dev",
@@ -145,6 +147,7 @@
             "api_gateway_stage": "stg",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ENVIRONMENT": "stg",
                 "ERA_FINISH_DUEL_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/stg/era-finish-duel",
                 "ERA_TABLE_NAME": "event_reminder_assistant_stg",
                 "ERA_RUNNER_NAME": "era_runner_stg",
@@ -215,6 +218,7 @@
             "api_gateway_stage": "api",
             "lambda_memory_size": 1024,
             "environment_variables": {
+                "ENVIRONMENT": "prd",
                 "ERA_FINISH_DUEL_URL": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/prd/era-finish-duel",
                 "ERA_TABLE_NAME": "event_reminder_assistant",
                 "ERA_RUNNER_NAME": "era_runner_prd",
