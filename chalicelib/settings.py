@@ -2,6 +2,7 @@ from decouple import config
 
 
 class Settings:
+    ENVIRONMENT = config('ENVIRONMENT', 'test_environment')
     ERA_TABLE_NAME = config('ERA_TABLE_NAME', 'test_era_table_name')
     ERA_RUNNER_NAME = config('ERA_RUNNER_NAME', 'DEBUG_ERA_RUNNER_NAME')
     ERA_AWS_LAMBDA_FUNCTION_NAME = config(
