@@ -1,24 +1,14 @@
+from uuid import uuid4
+
 from chalice import Blueprint
-from chalicelib.settings import Settings
-from chalicelib.basic_entity_route import BasicEntityRoute
-from playerstars_domain import Console, Duel, Player, PrivacyPolicy, Terms
+from chalice_support import server_error, success, unauthorized
 from playerstars_adapters import (
     ConsoleAdapter,
     DuelAdapter,
     PlayerAdapter,
     PrivacyPolicyAdapter,
     TermsAdapter)
-from chalicelib.utils import (
-    check_admin_authorization,
-    get_user_id_from_jwt,
-    make_fields_dot,
-    UserNotAdminAuthorized)
-from chalicelib.chalice_support import (
-    private_delete,
-    private_get,
-    private_post,
-    private_put)
-from chalice_support import server_error, success, unauthorized
+from playerstars_domain import Console, Duel, Player, PrivacyPolicy, Terms
 from playerstars_interactors import (
     BasicPutRequestModel,
     GetAllGamesAdminException,
@@ -26,8 +16,18 @@ from playerstars_interactors import (
     PutPlayerIsAdminInteractor,
     UpdateEntityException, GetUploadImageUrlInteractor)
 
-from uuid import uuid4
-
+from chalicelib.basic_entity_route import BasicEntityRoute
+from chalicelib.chalice_support import (
+    private_delete,
+    private_get,
+    private_post,
+    private_put)
+from chalicelib.settings import Settings
+from chalicelib.utils import (
+    check_admin_authorization,
+    get_user_id_from_jwt,
+    make_fields_dot,
+    UserNotAdminAuthorized)
 
 bp_admin = Blueprint(__name__)
 
