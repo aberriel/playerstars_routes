@@ -6,6 +6,7 @@ from playerstars_adapters import EventReminderAssistantAdapter
 from playerstars_domain import EraAction
 
 from chalicelib import root
+from chalicelib.admin.preduel_routes import get_preduel_admin_routes
 from chalicelib.admin_routes import bp_admin
 from chalicelib.console_route import (
     bp_console,
@@ -54,7 +55,10 @@ app = Chalice(app_name='PlayerStars')
 app.experimental_feature_flags.update(['BLUEPRINTS', 'WEBSOCKETS'])
 
 app.register_blueprint(root)
+
 app.register_blueprint(bp_admin, url_prefix='/admin')
+app.register_blueprint(get_preduel_admin_routes(), url_prefix='/admin/preduel')
+
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_console_admin, url_prefix='/admin/console')
