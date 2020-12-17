@@ -57,7 +57,7 @@ app.experimental_feature_flags.update(['BLUEPRINTS', 'WEBSOCKETS'])
 app.register_blueprint(root)
 
 app.register_blueprint(bp_admin, url_prefix='/admin')
-app.register_blueprint(get_preduel_admin_routes(), url_prefix='/admin/preduel')
+app.register_blueprint(get_preduel_admin_routes(), url_prefix='/admin')
 
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_console, url_prefix='/console')
