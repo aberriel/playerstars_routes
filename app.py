@@ -1,15 +1,26 @@
+import os
 from datetime import datetime
-from os import environ
 
+from aws_task_scheduler import AwsTaskSchedulerAdapter
+from boto3 import Session
 from chalice import Chalice
+from playerstars_adapters import EventReminderAssistantAdapter
+from playerstars_domain import EraAction
 
 from chalicelib import root
+from chalicelib.admin.preduel_routes import get_preduel_admin_routes
 from chalicelib.admin_routes import bp_admin
 from chalicelib.console_route import (
     bp_console,
     bp_console_admin,
     bp_console_external)
 from chalicelib.convert_star_rate_route import bp_convert
+from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, \
+    NullDashboardAdapter
+from chalicelib.dashboard.dashboard_entity import DashboardEntity
+from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, \
+    NullDashboardInteractor
+from chalicelib.dashboard.dashboard_utils import DashboardUtils
 from chalicelib.duel_route import (
     bp_cancel_duel,
     bp_create_duel,
@@ -19,6 +30,8 @@ from chalicelib.duel_route import (
     bp_match_list)
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
 from chalicelib.era_routes import EraRunner
+from chalicelib.era_routes import bp_era_finish_duel
+from chalicelib.era_routes import era_factory
 from chalicelib.game_route import bp_game, bp_game_by_console
 from chalicelib.mail_routes import (
     bp_contact_email, bp_invitation_email, bp_welcome_email)
@@ -40,18 +53,17 @@ from chalicelib.terms_policy_route import bp_terms, bp_policy
 from chalicelib.tournament.get_tournament_detail import tournament_route
 from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
-from playerstars_domain import EraAction
-from chalicelib.era_routes import era_factory
-from playerstars_adapters import EventReminderAssistantAdapter
-from aws_task_scheduler import AwsTaskSchedulerAdapter
-from chalicelib.era_routes import bp_era_finish_duel
-
 
 app = Chalice(app_name='PlayerStars')
-app.experimental_feature_flags.update(['BLUEPRINTS'])
+app.experimental_feature_flags.update(['BLUEPRINTS', 'WEBSOCKETS'])
+app.websocket_api.session = Session()
+app.websocket_api.configure(os.environ.get('WS_DOMAIN'), 'dev')
 
 app.register_blueprint(root)
+
 app.register_blueprint(bp_admin, url_prefix='/admin')
+app.register_blueprint(get_preduel_admin_routes(), url_prefix='/admin')
+
 app.register_blueprint(bp_cancel_duel, url_prefix='/cancel-duel')
 app.register_blueprint(bp_console, url_prefix='/console')
 app.register_blueprint(bp_console_admin, url_prefix='/admin/console')
@@ -102,7 +114,6 @@ def index():
 
 @app.route('/test_era', methods=['POST'])
 def do_era_test():
-
     try:
         body = app.current_request.json_body
 
@@ -193,3 +204,35 @@ def era_runner(event, context):
                        persist_adapter=persist_adapter)
 
     runner.run()
+
+
+# Websocket Handlers
+
+# table_name definido aqui mesmo, pois
+# não deve existir em nenhum outro ambiente
+if Settings.ENVIRONMENT == 'dev':
+    dashboard_adapter = DashboardAdapter('dashboard_dev')
+    dashboard_interactor = DashboardInteractor(app, dashboard_adapter)
+else:
+    dashboard_adapter = NullDashboardAdapter('dummy')
+    dashboard_interactor = NullDashboardInteractor(app, dashboard_adapter)
+
+
+dashboard_utils = DashboardUtils(app)
+
+
+@app.on_ws_connect()
+def connect(event):
+    dashboard = DashboardEntity(event.connection_id)
+    dashboard.set_adapter(dashboard_adapter)
+    dashboard.save()
+
+
+@app.on_ws_disconnect()
+def disconnect(event):
+    dashboard_adapter.delete(event.connection_id)
+
+
+@app.on_ws_message()
+def ws_message(event):
+    dashboard_interactor.handle_message(event.connection_id, event.body)

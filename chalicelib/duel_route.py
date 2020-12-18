@@ -11,6 +11,7 @@ from playerstars_interactors import (
     CreateDuelException,
     CreateDuelInteractor,
     CreateDuelRequestModel,
+    EndDuelAdapters,
     EndDuelException,
     EndDuelInteractor,
     EndDuelRequestModel,
@@ -59,6 +60,7 @@ from chalicelib.chalice_support import (
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from .basic_entity_route import BasicEntityRoute
+
 from .duel_route_adapters import (
     get_preduel_adapter,
     get_duel_adapter_dynamo,
@@ -129,7 +131,7 @@ def create_duel(json_data):
         interactor = CreateDuelInteractor(
             request=request,
             duel_adapter=get_duel_adapter_dynamo(),
-            notification_adapter=get_notification_adapter_graphql(),
+            notification_adapter=get_notification_adapter_dynamo(),
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             accept_time=Settings.TIME_TO_ACCEPT_DUEL,
@@ -380,15 +382,17 @@ def end_duel():
 @logger_aspect
 def end_duel_post(json_data):
     request = EndDuelRequestModel(json_data)
+    adapters = EndDuelAdapters(
+        duel_adapter=get_duel_adapter_dynamo(),
+        notification_adapter=get_notification_adapter_dynamo(),
+        player_adapter=get_player_adapter(),
+        team_adapter=get_team_adapter(),
+        values_adapter=get_values_adapter())
     interactor = EndDuelInteractor(
         request=request,
-        duel_adapter_dynamo=get_duel_adapter_dynamo(),
-        notification_adapter=get_notification_adapter_graphql(),
-        player_adapter=get_player_adapter(),
+        adapters=adapters,
         s3_bucket_name=Settings.S3_BUCKET_NAME,
         s3_bucket_url=Settings.S3_BUCKET_URL,
-        team_adapter=get_team_adapter(),
-        values_adapter=get_values_adapter(),
         judge_matrix=Settings.DUEL_JUDGE_MATRIX)
     try:
         response = interactor.run()
@@ -420,8 +424,7 @@ def mount_cancel_duel_interactor_adapters():
     return CancelDuelInteractorAdapters(
         duel_adapter_dynamo=get_duel_adapter_dynamo(),
         duel_adapter_graphql=get_duel_adapter_graphql(),
-        notification_adapter_dynamo=get_notification_adapter_dynamo(),
-        notification_adapter_graphql=get_notification_adapter_graphql(),
+        notification_adapter=get_notification_adapter_dynamo(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
 
@@ -476,8 +479,15 @@ def post_random_duel():
             get_team_adapter())
         response = interactor.run()
         preduel_id, operation = response()
+
+        #  DEBUG
+        from app import dashboard_utils as du
+
         if operation == 'created':
+            du.send_preduel_creation(preduel_id)
             return created(preduel_id)
+
+        du.send_preduel_match(preduel_id)
         return success(preduel_id)
     except BaseException as ex:
         return server_error(str(ex))
@@ -500,7 +510,7 @@ def put_random_duel(entity_id, status):
             team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter_dynamo(),
             console_adapter=get_console_adapter(),
-            notification_adapter=get_notification_adapter_graphql(),
+            notification_adapter=get_notification_adapter_dynamo(),
             schedule_task_adapter=get_schedule_task_adapter(),
             era_adapter=get_era_adapter(),
             scheduler_adapter=get_aws_task_scheduler_adapter()

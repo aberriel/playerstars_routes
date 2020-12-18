@@ -156,6 +156,15 @@
             "Effect": "Allow",
             "Action": "lambda:*",
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "execute-api:Invoke",
+                "execute-api:ManageConnections",
+                "execute-api:InvalidateCache"
+            ],
+            "Resource": "arn:aws:execute-api:*:*:*/*/*/*"
         }
     ]
 }
