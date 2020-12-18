@@ -7,7 +7,7 @@ playerstars_graphql_adapters==0.1.0
 playerstars-aws-scheduled-task-adapter==1.1.0
 playerstars_interactors==1.0.0
 playerstars_aws_lambda==0.1.0
-chalice_support==2.0.1
+chalice_support==2.0.2
 python-decouple==3.1
 defusedxml==0.6.0
 requests==2.23.0
