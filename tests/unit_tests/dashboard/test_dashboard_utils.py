@@ -1,3 +1,4 @@
+import json
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
@@ -30,24 +31,24 @@ class TestDashboardUtils(TestCase):
 
     def test_send_preduel_creation(self):
         du = self.factory()
-        mock_preduel_id = MagicMock()
+        mock_preduel_id = 'mocked_id'
         du.send_preduel_creation(mock_preduel_id)
 
-        expected = {
+        expected = json.dumps({
             "event": "preduel_creation",
             "preduel_id": mock_preduel_id
-        }
+        })
 
         self.mock_interactor().broadcast.assert_called_with(expected)
 
     def test_send_preduel_match(self):
         du = self.factory()
-        mock_preduel_id = MagicMock()
+        mock_preduel_id = 'mocked_id'
         du.send_preduel_match(mock_preduel_id)
 
-        expected = {
+        expected = json.dumps({
             "event": "preduel_match",
             "preduel_id": mock_preduel_id
-        }
+        })
 
         self.mock_interactor().broadcast.assert_called_with(expected)
