@@ -481,7 +481,7 @@ def post_random_duel():
         preduel_id, operation = response()
 
         #  DEBUG
-        du = DashboardUtils()
+        from app import dashboard_utils as du
 
         if operation == 'created':
             du.send_preduel_creation(preduel_id)

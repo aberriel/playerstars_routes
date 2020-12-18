@@ -6,8 +6,7 @@ from chalicelib.settings import Settings
 
 
 class DashboardUtils:
-    def __init__(self):
-        from app import app
+    def __init__(self, app):
         if Settings.ENVIRONMENT == 'dev':
             adapter = DashboardAdapter(table_name='dashboard_dev')
             self.interactor = DashboardInteractor(app, adapter)

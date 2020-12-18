@@ -18,6 +18,7 @@ from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, \
 from chalicelib.dashboard.dashboard_entity import DashboardEntity
 from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, \
     NullDashboardInteractor
+from chalicelib.dashboard.dashboard_utils import DashboardUtils
 from chalicelib.duel_route import (
     bp_cancel_duel,
     bp_create_duel,
@@ -212,6 +213,9 @@ if Settings.ENVIRONMENT == 'dev':
 else:
     dashboard_adapter = NullDashboardAdapter('dummy')
     dashboard_interactor = NullDashboardInteractor(app, dashboard_adapter)
+
+
+dashboard_utils = DashboardUtils(app)
 
 
 @app.on_ws_connect()
