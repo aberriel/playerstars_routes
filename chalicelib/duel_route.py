@@ -60,7 +60,7 @@ from chalicelib.chalice_support import (
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from .basic_entity_route import BasicEntityRoute
-from .dashboard.dashboard_utils import DashboardUtils
+
 from .duel_route_adapters import (
     get_preduel_adapter,
     get_duel_adapter_dynamo,

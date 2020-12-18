@@ -12,9 +12,10 @@ class TestDashboardUtils(TestCase):
                                     ENVIRONMENT='dev')
         self.adapter_patch = patch(f'{prefix}.DashboardAdapter')
         self.interactor_patch = patch(f'{prefix}.DashboardInteractor')
+        self.mock_app = MagicMock()
 
         def factory():
-            return DashboardUtils()
+            return DashboardUtils(self.mock_app)
 
         self.factory = factory
 
