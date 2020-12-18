@@ -3,13 +3,11 @@ from chalicelib.dashboard.dashboard_adapter import NullDashboardAdapter, \
 from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, \
     NullDashboardInteractor
 from chalicelib.settings import Settings
-from chalice import Chalice
-
-app = Chalice(app_name='PlayerStars')
 
 
 class DashboardUtils:
     def __init__(self):
+        from app import app
         if Settings.ENVIRONMENT == 'dev':
             adapter = DashboardAdapter(table_name='dashboard_dev')
             self.interactor = DashboardInteractor(app, adapter)
