@@ -12,6 +12,17 @@
       "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-dev-duel_scheduled_finisher_dev"
     },
     {
+      "name": "era_runner_dev_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-dev-era_runner_dev",
+      "role_name": "PlayerStars-dev-era_runner_dev"
+    },
+    {
+      "name": "era_runner_dev",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-dev-era_runner_dev"
+    },
+    {
       "name": "api_handler_role",
       "resource_type": "iam_role",
       "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-dev-api_handler",
@@ -27,6 +38,45 @@
       "resource_type": "rest_api",
       "rest_api_id": "mb45dn63b2",
       "rest_api_url": "https://mb45dn63b2.execute-api.us-east-1.amazonaws.com/dev/"
+    },
+    {
+      "name": "websocket_connect_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-dev-websocket_connect",
+      "role_name": "PlayerStars-dev-websocket_connect"
+    },
+    {
+      "name": "websocket_connect",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-dev-websocket_connect"
+    },
+    {
+      "name": "websocket_message_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-dev-websocket_message",
+      "role_name": "PlayerStars-dev-websocket_message"
+    },
+    {
+      "name": "websocket_message",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-dev-websocket_message"
+    },
+    {
+      "name": "websocket_disconnect_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::230639242520:role/PlayerStars-dev-websocket_disconnect",
+      "role_name": "PlayerStars-dev-websocket_disconnect"
+    },
+    {
+      "name": "websocket_disconnect",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:230639242520:function:PlayerStars-dev-websocket_disconnect"
+    },
+    {
+      "name": "websocket_api",
+      "resource_type": "websocket_api",
+      "websocket_api_url": "wss://mj2nu14the.execute-api.us-east-1.amazonaws.com/dev/",
+      "websocket_api_id": "mj2nu14the"
     }
   ],
   "schema_version": "2.0",
