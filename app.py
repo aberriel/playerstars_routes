@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from aws_task_scheduler import AwsTaskSchedulerAdapter
@@ -54,8 +55,9 @@ from chalicelib.user_admin_route import bp_user_admin
 from chalicelib.values_route import bp_value
 
 app = Chalice(app_name='PlayerStars')
-app.websocket_api.session = Session()
 app.experimental_feature_flags.update(['BLUEPRINTS', 'WEBSOCKETS'])
+app.websocket_api.session = Session()
+app.websocket_api.configure(os.environ.get('WS_DOMAIN'), 'dev')
 
 app.register_blueprint(root)
 
