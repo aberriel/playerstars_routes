@@ -3,8 +3,7 @@ from marshmallow import post_load
 
 
 class DashboardEntity(BasicEntity):
-    def __init__(self,
-                 entity_id=None):
+    def __init__(self, entity_id=None):
         super().__init__(entity_id)
 
     class Schema(BasicEntity.Schema):

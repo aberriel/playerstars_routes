@@ -1,8 +1,7 @@
 from chalice import Blueprint
 from playerstars_adapters import ValuesAdapter
 from playerstars_domain import Values
-from chalicelib.chalice_support import (
-    private_get, private_delete, private_put, private_post)
+from chalicelib.chalice_support import private_get, private_delete, private_put, private_post
 
 from chalicelib import BasicEntityRoute
 from chalicelib.settings import Settings
@@ -11,8 +10,7 @@ bp_value = Blueprint(__name__)
 
 
 def get_router():
-    adapter = ValuesAdapter(
-        Settings.VALUES_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = ValuesAdapter(Settings.VALUES_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Values, 'values')
 
 

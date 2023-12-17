@@ -18,10 +18,8 @@ tournament_route = PrivateRoute(__name__)
 
 def _get_tournament_adapter(request: PostTournamentRestModel):
     adapter_map = {
-        MemberType.PLAYER: (PlayerTournamentAdapter,
-                            Settings.PLAYER_TOURNAMENT_TABLE_NAME),
-        MemberType.TEAM: (TeamTournamentAdapter,
-                          Settings.TEAM_TOURNAMENT_TABLE_NAME)
+        MemberType.PLAYER: (PlayerTournamentAdapter, Settings.PLAYER_TOURNAMENT_TABLE_NAME),
+        MemberType.TEAM: (TeamTournamentAdapter, Settings.TEAM_TOURNAMENT_TABLE_NAME)
     }
 
     klass, table_name = adapter_map[request.duel_type]
@@ -66,10 +64,7 @@ def post_tournament():
         values=values_adapter,
         notification_gql=notification_gql_adapter)
 
-    interactor = PostTournamentInteractor(
-        request=request,
-        adapters=adapters,
-        player_id=player_id)
+    interactor = PostTournamentInteractor(request=request, adapters=adapters, player_id=player_id)
 
     try:
         result = interactor.run()

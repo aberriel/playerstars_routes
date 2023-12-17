@@ -16,10 +16,9 @@ def get_credit_card_adapter(customer_id):
 
 
 def get_plan_adapter():
-    return PlanAdapter(
-        auth_user=Settings.WIRECARD_API_USER,
-        auth_password=Settings.WIRECARD_API_PASSWORD,
-        url_base=Settings.WIRECARD_API_URL_BASE)
+    return PlanAdapter(auth_user=Settings.WIRECARD_API_USER,
+                       auth_password=Settings.WIRECARD_API_PASSWORD,
+                       url_base=Settings.WIRECARD_API_URL_BASE)
 
 
 def get_subscriber_adapter():

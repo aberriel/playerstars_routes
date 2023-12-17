@@ -1,8 +1,7 @@
 from chalice import Blueprint
 from playerstars_adapters import ConvertStarRateAdapter
 from playerstars_domain import ConvertStarRate
-from chalicelib.chalice_support import (
-    private_get, private_delete, private_put, private_post)
+from chalicelib.chalice_support import private_get, private_delete, private_put, private_post
 
 from chalicelib import BasicEntityRoute
 from chalicelib.settings import Settings
@@ -11,8 +10,7 @@ bp_convert = Blueprint(__name__)
 
 
 def get_router():
-    adapter = ConvertStarRateAdapter(
-        Settings.CONVERT_STAR_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = ConvertStarRateAdapter(Settings.CONVERT_STAR_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, ConvertStarRate, 'convert-rate')
 
 

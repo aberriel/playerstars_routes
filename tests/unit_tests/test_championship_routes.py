@@ -413,9 +413,7 @@
 # @patch('chalicelib.championship_route.AddFriendToChampionshipInteractor.run')
 # @patch('boto3.resource')
 # @patch('boto3.client')
-# def test_post_add_friend_to_championship(boto_client,
-#                                          boto_resource,
-#                                          run):
+# def test_post_add_friend_to_championship(boto_client, boto_resource, run):
 #     result = post_add_friend_to_championship()
 #     run.assert_called_once()
 #     assert result.body['status'] == 'success'

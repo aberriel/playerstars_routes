@@ -1,8 +1,7 @@
 from chalice import Blueprint
 from playerstars_adapters import ProductAdapter
 from playerstars_domain import Product
-from playerstars_interactors import \
-    GetAllProductsInteractor, GetPlanListInteractor
+from playerstars_interactors import GetAllProductsInteractor, GetPlanListInteractor
 
 from chalicelib.chalice_support import private_get, private_post
 from chalice_support import success, not_found
@@ -18,8 +17,7 @@ def get_router():
 
 
 def get_adapter():
-    return ProductAdapter(
-        Settings.PRODUCT_TABLE_NAME, Settings.DYNAMODB_URL)
+    return ProductAdapter(Settings.PRODUCT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @bp_product.route('/', **private_get())

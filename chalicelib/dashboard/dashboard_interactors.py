@@ -2,15 +2,12 @@ from typing import List
 
 from chalice import Chalice, WebsocketDisconnectedError
 
-from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, \
-    NullDashboardAdapter
+from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, NullDashboardAdapter
 from chalicelib.dashboard.dashboard_entity import DashboardEntity
 
 
 class DashboardInteractor:
-    def __init__(self,
-                 app: Chalice,
-                 dashboard_adapter: DashboardAdapter):
+    def __init__(self, app: Chalice, dashboard_adapter: DashboardAdapter):
         self.app = app
         self.adapter = dashboard_adapter
 
@@ -18,8 +15,7 @@ class DashboardInteractor:
         try:
             self.app.websocket_api.send(connection_id, message)
         except WebsocketDisconnectedError as e:
-            # If the websocket has been closed, we delete the connection
-            # from our database.
+            # If the websocket has been closed, we delete the connection from our database.
             self.adapter.delete(e.connection_id)
 
     def broadcast(self, message):

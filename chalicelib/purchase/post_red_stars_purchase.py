@@ -40,9 +40,7 @@ def post_wirecard_purchase():
     data = bp_wirecard.current_request.json_body
     player_id = get_user_id_from_jwt(bp_wirecard)
     data.update({'code': player_id})
-    return purchase_red_stars(
-        json_data=data,
-        player_id=player_id)
+    return purchase_red_stars(json_data=data, player_id=player_id)
 
 
 @logger_aspect
@@ -50,9 +48,7 @@ def purchase_red_stars(json_data, player_id):
     try:
         adapters = mount_interactor_adapters(player_id)
         request = RedStarsPurchaseRequestModel(json_data)
-        interactor = RedStarsPurchaseInteractor(
-            adapters=adapters,
-            request=request)
+        interactor = RedStarsPurchaseInteractor(adapters=adapters, request=request)
         response = interactor.run()
         return created(response())
     except BaseException as exc:

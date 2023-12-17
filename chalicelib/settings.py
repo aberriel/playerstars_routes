@@ -42,30 +42,19 @@ class Settings:
         'NOTIFICATION_MUTATION_NAME_PART',
         'NotificationDev')
 
-    CHAMPIONSHIP_CHECK_TASK_NAME = config('CHAMPIONSHIP_CHECK_TASK_NAME',
-                                          'championship_check_dev')
+    CHAMPIONSHIP_CHECK_TASK_NAME = config('CHAMPIONSHIP_CHECK_TASK_NAME', 'championship_check_dev')
 
     AWS_DEFAULT_REGION = config('AWS_DEFAULT_REGION', 'us-east-1')
-    CONTACT_EMAIL_RECIPIENTS = config(
-        'CONTACT_EMAIL_RECIPIENTS',
-        'noreply@stormsec.com.br')
-    DUEL_SCHEDULED_FINISHER_NAME = config(
-        'DUEL_SCHEDULED_FINISHER_NAME',
-        'duel_scheduled_finisher_dev')
+    CONTACT_EMAIL_RECIPIENTS = config('CONTACT_EMAIL_RECIPIENTS', 'noreply@stormsec.com.br')
+    DUEL_SCHEDULED_FINISHER_NAME = config('DUEL_SCHEDULED_FINISHER_NAME', 'duel_scheduled_finisher_dev')
     DYNAMODB_URL = config('DYNAMODB_URL', None)
     PAGSEGURO_EMAIL = config('PAGSEGURO_EMAIL', 'wanderley@stormsec.com.br')
-    PAGSEGURO_HOST_URL = config(
-        'PAGSEGURO_HOST_URL',
-        'https://ws.pagseguro.uol.com.br')
+    PAGSEGURO_HOST_URL = config('PAGSEGURO_HOST_URL', 'https://ws.pagseguro.uol.com.br')
     PAGSEGURO_RETURN_URL = config('PAGSEGURO_RETURN_URL', 'www.google.com.br')
     PAGSEGURO_SANDBOX_ENABLE = config('PAGSEGURO_SANDBOX_ENABLE', True)
-    PAGSEGURO_SANDBOX_HOST_URL = config(
-        'PAGSEGURO_SANDBOX_HOST_URL',
-        'https://ws.sandbox.pagseguro.uol.com.br')
-    PAGSEGURO_SANDBOX_TOKEN = config(
-        'PAGSEGURO_SANDBOX_TOKEN', '8D0B7247DE3B4F22ABBCCCE6AD802C19')
-    PAGSEGURO_TOKEN = config(
-        'PAGSEGURO_TOKEN', 'A0ABD34C342A474C8CEB112430FCCBD8')
+    PAGSEGURO_SANDBOX_HOST_URL = config('PAGSEGURO_SANDBOX_HOST_URL', 'https://ws.sandbox.pagseguro.uol.com.br')
+    PAGSEGURO_SANDBOX_TOKEN = config('PAGSEGURO_SANDBOX_TOKEN', '8D0B7247DE3B4F22ABBCCCE6AD802C19')
+    PAGSEGURO_TOKEN = config('PAGSEGURO_TOKEN', 'A0ABD34C342A474C8CEB112430FCCBD8')
     PAGSEGURO_UPDATE_NOTIFICATION_URL = config(
         'PAGSEGURO_UPDATE_NOTIFICATION_URL',
         '{host}/v3/transactions/notifications/{notification_code}'
@@ -81,9 +70,7 @@ class Settings:
     S3_FOLDER_MASK = config('S3_FOLDER_MASK', 'game/mask')
     S3_FOLDER_GAME = config('S3_FOLDER_GAME', 'game')
     S3_BUCKET_NAME = config('S3_BUCKET_NAME', 'playerstars-dev-photos')
-    S3_BUCKET_IMAGE_NAME = config(
-        'S3_BUCKET_IMAGE_NAME',
-        'playerstars-images-dev')
+    S3_BUCKET_IMAGE_NAME = config('S3_BUCKET_IMAGE_NAME', 'playerstars-images-dev')
     S3_BUCKET_URL = config(
         'S3_BUCKET_URL',
         'http://playerstars-dev-photos.s3-website-us-east-1.amazonaws.com')
@@ -97,10 +84,8 @@ class Settings:
     GRAPHQL_API_KEY = config('GRAPHQL_API_KEY',
                              'da2-ijpayoex4jai3dd2qgadkib7wu')
 
-    WIRECARD_API_USER = config('WIRECARD_API_USER',
-                               'KQXIFCN0ZMTKWXHIZMWO1U0AY0GYAKK4')
-    WIRECARD_API_PASSWORD = config('WIRECARD_API_PASSWORD',
-                                   'ZJAOG3V8NXTCEQOGM3BPUATY3RMQPCVAEUMEQWBY')
+    WIRECARD_API_USER = config('WIRECARD_API_USER', 'KQXIFCN0ZMTKWXHIZMWO1U0AY0GYAKK4')
+    WIRECARD_API_PASSWORD = config('WIRECARD_API_PASSWORD', 'ZJAOG3V8NXTCEQOGM3BPUATY3RMQPCVAEUMEQWBY')
     WIRECARD_API_URL_BASE = config(
         'WIRECARD_API_URL_BASE',
         'https://sandbox.moip.com.br/assinaturas/v1/')

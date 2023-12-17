@@ -41,14 +41,12 @@ def player_adapter():
 
 
 def duel_router():
-    adapter = DuelAdapter(
-        Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Duel, 'duel')
 
 
 def player_router():
-    adapter = PlayerAdapter(
-        Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, Player, 'player')
 
 
@@ -69,7 +67,6 @@ def get_all_admin(router):
     auth, msg = authorize(bp_admin)
     if not auth:
         return unauthorized(str(msg))
-
     query_params = make_fields_dot(bp_admin.current_request.query_params)
     return router.get_all(query_params=query_params)
 
@@ -146,8 +143,7 @@ def put_player_admin(entity_id):
         check_admin_authorization(user_id)
         json_data = bp_admin.current_request.json_body
         request = BasicPutRequestModel(json_data)
-        interactor = PutPlayerIsAdminInteractor(
-            request, player_adapter(), Player)
+        interactor = PutPlayerIsAdminInteractor(request, player_adapter(), Player)
         response = interactor.run()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
@@ -161,8 +157,7 @@ def get_all_games_admin():
     user_id = get_user_id_from_jwt(bp_admin)
     try:
         check_admin_authorization(user_id)
-        interactor = GetAllGamesAdminInteractor(
-            console_adapter=console_adapter())
+        interactor = GetAllGamesAdminInteractor(console_adapter=console_adapter())
         response = interactor.run()()
     except UserNotAdminAuthorized as e:
         return unauthorized(str(e))
@@ -255,8 +250,7 @@ def delete_terms_admin(entity_id):
 
 
 def privacy_router():
-    adapter = PrivacyPolicyAdapter(
-        Settings.PRIVACY_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = PrivacyPolicyAdapter(Settings.PRIVACY_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, PrivacyPolicy, 'privacy-policy')
 
 

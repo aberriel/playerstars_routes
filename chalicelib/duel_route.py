@@ -1,6 +1,5 @@
 from chalice import Blueprint
-from chalice_support import server_error, created, success, not_found, \
-    bad_request
+from chalice_support import server_error, created, success, not_found, bad_request
 from chalicelib.chalice_support.auth import cors
 from playerstars_domain import Duel, PreDuel
 from playerstars_interactors import (
@@ -52,11 +51,7 @@ from playerstars_interactors.duel.end_duel import LoadDuelException, \
 from playerstars_interactors.duel.enter_duel import InvalidStatusException
 
 from chalicelib.aspect.logging import logger_aspect, Logging
-from chalicelib.chalice_support import (
-    private_get,
-    private_post,
-    private_put,
-    private_delete)
+from chalicelib.chalice_support import private_get, private_post, private_put, private_delete
 from chalicelib.settings import Settings
 from chalicelib.utils import get_user_id_from_jwt
 from .basic_entity_route import BasicEntityRoute
@@ -112,8 +107,7 @@ def get_match_list_by_player(data):
     response_data = interactor.run()()
     if response_data:
         return success(response_data)
-    return not_found("Nenhum match encontrado para o player: {0}"
-                     .format(data['player_id']))
+    return not_found("Nenhum match encontrado para o player: {0}".format(data['player_id']))
 
 
 @bp_create_duel.route('/', **private_post())
@@ -147,9 +141,7 @@ def enter_duel():
     data = bp_enter_duel.current_request.json_body
     entity_id = get_user_id_from_jwt(bp_enter_duel)
     data.update({'player_id': entity_id})
-    data.update({
-        'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME
-    })
+    data.update({'lambda_function_name': Settings.DUEL_SCHEDULED_FINISHER_NAME})
     data.update({'aws_region': Settings.AWS_DEFAULT_REGION})
     data.update({'time_to_finish': int(Settings.TIME_TO_FINISH_DUEL)})
 
@@ -176,10 +168,8 @@ def enter_duel_post(json_data):
         era_finish_duel_url=Settings.ERA_FINISH_DUEL_URL)
     try:
         response = interactor.run()
-
     except InvalidStatusException as e:
         return bad_request(str(e))
-
     except EnterDuelException as e:
         return server_error(str(e))
     return success(response())
@@ -201,9 +191,7 @@ def inform_invitation_timeout_post(json_data):
         duel_adapter_graphql=get_duel_adapter_graphql(),
         player_adapter=get_player_adapter(),
         team_adapter=get_team_adapter())
-    interactor = InformOpponentResponseTimeoutInteractor(
-        request=request,
-        adapters=adapters)
+    interactor = InformOpponentResponseTimeoutInteractor(request=request, adapters=adapters)
 
     try:
         response = interactor.run()
@@ -250,8 +238,7 @@ def get_duels_by_status(entity_id, status):
         response = interactor.run()
         if response:
             return success(response)
-        return not_found(
-            f"No duel found with status {status} for the player {entity_id}")
+        return not_found(f"No duel found with status {status} for the player {entity_id}")
     except GetAllPlayerDuelByStatusError as e:
         return server_error(str(e))
 
@@ -276,9 +263,7 @@ def get_duel(entity_id):
 @logger_aspect
 def get_duel_details(entity_id):
     player_id = get_user_id_from_jwt(bp_duel)
-    get_data = {
-        "duel_id": entity_id,
-        "player_id": player_id}
+    get_data = {"duel_id": entity_id, "player_id": player_id}
     try:
         request = GetDuelRequestModel(get_data)
         interactor = GetDuelInteractor(
@@ -352,8 +337,7 @@ def validate_photo(json_data):
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             duel_adapter=get_duel_adapter_dynamo(),
-            values_adapter=get_values_adapter()
-        )
+            values_adapter=get_values_adapter())
         interactor = ValidatePhotoInteractor(
             request=request,
             adapters=adapters,
@@ -366,8 +350,7 @@ def validate_photo(json_data):
         return server_error(msg)
 
     except Exception as e:
-        msg = f'Unexpected error in validate-photo: ' \
-            f'{e.__class__.__name__}({e})'
+        msg = f'Unexpected error in validate-photo: {e.__class__.__name__}({e})'
         return server_error(msg)
 
 
@@ -406,7 +389,6 @@ def end_duel_post(json_data):
             SubmitResultException) as e:
         msg = f'Error in end_duel_post: {e.__class__.__name__}({e})'
         return server_error(msg)
-
     except Exception as e:
         msg = f'Unexpected error in end_duel: {e.__class__.__name__}({e})'
         return server_error(msg)
@@ -432,9 +414,7 @@ def mount_cancel_duel_interactor_adapters():
 @logger_aspect
 def cancel_duel_post(json_data):
     request = CancelDuelRequestModel(json_data)
-    interactor = CancelDuelInteractor(
-        request=request,
-        adapters=mount_cancel_duel_interactor_adapters())
+    interactor = CancelDuelInteractor(request=request, adapters=mount_cancel_duel_interactor_adapters())
     try:
         response = interactor.run()
     except CancelDuelException as e:
@@ -474,9 +454,7 @@ def post_random_duel():
         player_id = get_user_id_from_jwt(bp_duel)
         data.update({'player_id': player_id})
         request = PostPreDuelRequestModel(data)
-        interactor = PostPreDuelInteractor(
-            request, get_preduel_adapter(), get_player_adapter(),
-            get_team_adapter())
+        interactor = PostPreDuelInteractor(request, get_preduel_adapter(), get_player_adapter(), get_team_adapter())
         response = interactor.run()
         preduel_id, operation = response()
 

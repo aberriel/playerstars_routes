@@ -7,22 +7,18 @@ from playerstars_interactors.tournament.post_tournament_start import (
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_domain import DuelMemberType as MemmberType
 from chalicelib.duel_route_adapters import \
-    get_player_adapter, get_team_adapter, get_duel_adapter_dynamo, \
-    get_console_adapter
+    get_player_adapter, get_team_adapter, get_duel_adapter_dynamo, get_console_adapter
 from chalicelib.tournament.get_tournament_detail import (
     get_player_tournament_adapter, get_team_tournament_adapter
 )
-from chalicelib.tournament.post_tournament import (
-    _get_notification_gql_adapter
-)
+from chalicelib.tournament.post_tournament import _get_notification_gql_adapter
 from chalicelib.settings import Settings
 
 
 @tournament_route.post('/start/{entity_id}')
 def post_tournament_start(entity_id):
     try:
-        data = tournament_route.current_request.json_body \
-            if tournament_route.current_request else {}
+        data = tournament_route.current_request.json_body if tournament_route.current_request else {}
         data.update({'tournament_id': entity_id})
         player_id = get_user_id_from_jwt(tournament_route)
         request = PostTournamentStartRequestModel(

@@ -1,8 +1,7 @@
 from chalice import Blueprint
 from playerstars_adapters import CountryRegionAdapter
 from playerstars_domain import CountryRegion
-from chalicelib.chalice_support import (
-    private_get, private_put, private_post)
+from chalicelib.chalice_support import private_get, private_put, private_post
 
 from .basic_entity_route import BasicEntityRoute
 from chalicelib.settings import Settings
@@ -11,8 +10,7 @@ bp_region_country = Blueprint(__name__)
 
 
 def get_router():
-    adapter = CountryRegionAdapter(
-        Settings.REGION_COUNTRY_TABLE_NAME, Settings.DYNAMODB_URL)
+    adapter = CountryRegionAdapter(Settings.REGION_COUNTRY_TABLE_NAME, Settings.DYNAMODB_URL)
     return BasicEntityRoute(adapter, CountryRegion, 'region-country')
 
 

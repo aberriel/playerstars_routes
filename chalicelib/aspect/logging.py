@@ -30,14 +30,10 @@ def logger_aspect(cutpoint, *args, **kwargs):
     logger.info('Call {}({}, {})'.format(name, args, kwargs))
     try:
         fresult = yield Proceed(*args, **kwargs)
-
         if fresult:
             logger.info('{} returning {}'.format(name, fresult))
 
         yield Return(fresult)
     except Exception as exc:
-        logger.error('Calling {}({}, {}): {}'.format(name,
-                                                     args,
-                                                     kwargs,
-                                                     exc))
+        logger.error('Calling {}({}, {}): {}'.format(name, args, kwargs, exc))
         raise exc

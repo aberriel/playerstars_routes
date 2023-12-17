@@ -1,10 +1,8 @@
 from chalice import Blueprint
 from chalicelib.basic_entity_route import BasicEntityRoute
-from chalicelib.chalice_support import (
-    private_delete, private_get, private_put, private_post)
+from chalicelib.chalice_support import private_delete, private_get, private_put, private_post
 from chalicelib.settings import Settings
-from chalice_support import \
-    success, not_found, created, server_error, bad_request
+from chalice_support import success, not_found, created, server_error, bad_request
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_adapters import ConsoleAdapter, PlayerAdapter, TeamAdapter
 from playerstars_domain import Team

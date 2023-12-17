@@ -4,11 +4,8 @@ from playerstars_interactors import (
     BasicPutRequestModel, BasicPutInteractor, UpdateEntityException,
     BasicDeleteInteractor, BasicDeleteRequestModel
 )
-from clapy_basic_classes.basic_interactors.basic_get_all import (
-    BasicGetAllInteractor, BasicGetAllRequestModel
-)
-from chalice_support.api_responses import (
-    created, not_found, server_error, success, success_partial)
+from clapy_basic_classes.basic_interactors.basic_get_all import BasicGetAllInteractor, BasicGetAllRequestModel
+from chalice_support.api_responses import created, not_found, server_error, success, success_partial
 from marshmallow import ValidationError
 
 
@@ -30,8 +27,7 @@ class BasicEntityRoute:
                                    response.final,
                                    response.total)
         except ValidationError as e:
-            msg = f'Validation error obtaining list of ' \
-                  f'{self.entity_name}: {e}'
+            msg = f'Validation error obtaining list of {self.entity_name}: {e}'
             return server_error(msg)
         except BaseException as e:
             msg = f'Error obtaining list of {self.entity_name}: {e}'
@@ -53,8 +49,7 @@ class BasicEntityRoute:
     def post(self, json_data):
         try:
             request = BasicPostRequestModel(json_data)
-            interactor = BasicPostInteractor(
-                request, self.adapter_instance, self.entity_class)
+            interactor = BasicPostInteractor(request, self.adapter_instance, self.entity_class)
             response = interactor.run()
         except SaveEntityException as e:
             return server_error(str(e))
@@ -63,8 +58,7 @@ class BasicEntityRoute:
     def put(self, json_data):
         try:
             request = BasicPutRequestModel(json_data)
-            interactor = BasicPutInteractor(
-                request, self.adapter_instance, self.entity_class)
+            interactor = BasicPutInteractor(request, self.adapter_instance, self.entity_class)
             response = interactor.run()
         except UpdateEntityException as e:
             return server_error(str(e))
@@ -77,8 +71,7 @@ class BasicEntityRoute:
             response = interactor.run()
             if not response:
                 objeto = self.entity_name.capitalize()
-                return not_found(
-                    f'{objeto} not found to be deleted')
+                return not_found(f'{objeto} not found to be deleted')
             return success(response)
         except BaseException as e:
             return server_error(str(e))

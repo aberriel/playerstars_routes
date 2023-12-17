@@ -12,9 +12,7 @@ bp_google = Blueprint(__name__)
 
 
 def get_player_adapter():
-    return PlayerAdapter(
-        table_name=Settings.PLAYER_TABLE_NAME,
-        db_endpoint=Settings.DYNAMODB_URL)
+    return PlayerAdapter(table_name=Settings.PLAYER_TABLE_NAME, db_endpoint=Settings.DYNAMODB_URL)
 
 
 @bp_google.route('/', **private_post())
@@ -28,9 +26,7 @@ def post_google_purchase_notify():
 def notify_google_purchase(data):
     try:
         request = PostPurchaseNotificationByGoogleRequestModel(data)
-        interactor = PostPurchaseNotificationByGoogleInteractor(
-            request=request,
-            player_adapter=get_player_adapter())
+        interactor = PostPurchaseNotificationByGoogleInteractor(request=request, player_adapter=get_player_adapter())
         response = interactor.run()
         return success(response())
     except BaseException as exc:

@@ -1,5 +1,4 @@
-from chalicelib import (
-    get_all_values, get_value_by_id, put_value, post_value, delete_value)
+from chalicelib import get_all_values, get_value_by_id, put_value, post_value, delete_value
 from playerstars_interactors import SaveEntityException, UpdateEntityException
 from unittest.mock import MagicMock, patch
 
@@ -18,13 +17,11 @@ def test_get_all_values_rate(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run',
-       MagicMock(side_effect=BaseException('oops')))
+@patch('chalicelib.basic_entity_route.BasicGetAllInteractor.run', MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_all_values_rate_raises(client, resource):
     result = get_all_values()
-
     assert 'oops' in result.body['message']
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -42,26 +39,22 @@ def test_get_convert_rate(client, resource, run):
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
-       MagicMock(return_value=None))
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run', MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_convert_rate_not_found(client, resource):
     result = get_value_by_id('id1')
-
     assert result.body['message'] == 'Values not found'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicGetInteractor.run',
-       MagicMock(side_effect=BaseException('oops')))
+@patch('chalicelib.basic_entity_route.BasicGetInteractor.run', MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_get_convert_rate_raises(client, resource):
     result = get_value_by_id('id1')
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -91,7 +84,6 @@ def make_put_mock_data():
 @patch('boto3.client')
 def test_post_convert_rate(client, resource, run):
     result = post_value()
-
     run.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 201
@@ -105,7 +97,6 @@ def test_post_convert_rate(client, resource, run):
 @patch('boto3.client')
 def test_post_convert_rate_raises(client, resource):
     result = post_value()
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -118,7 +109,6 @@ def test_post_convert_rate_raises(client, resource):
 @patch('boto3.client')
 def test_put_convert_rate(client, resource, mock):
     result = put_value('id1')
-
     mock.assert_called_once()
     assert result.body['data']
     assert result.body['status'] == 'success'
@@ -127,13 +117,11 @@ def test_put_convert_rate(client, resource, mock):
 
 # noinspection PyUnusedLocal
 @patch('chalicelib.values_route.bp_value', make_put_mock_data())
-@patch('chalicelib.basic_entity_route.BasicPutInteractor.run',
-       MagicMock(side_effect=UpdateEntityException('oops')))
+@patch('chalicelib.basic_entity_route.BasicPutInteractor.run', MagicMock(side_effect=UpdateEntityException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_put_convert_rate_raises(client, resource):
     result = put_value('id1')
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500
@@ -145,33 +133,28 @@ def test_put_convert_rate_raises(client, resource):
 @patch('boto3.client')
 def test_delete_convert_rate(client, resource, mock):
     result = delete_value('id1')
-
     mock.assert_called_once()
     assert result.body['status'] == 'success'
     assert result.status_code == 200
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run',
-       MagicMock(return_value=None))
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run', MagicMock(return_value=None))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_delete_convert_rate_not_found(client, resource):
     result = delete_value('id1')
-
     assert result.body['message'] == 'Values not found to be deleted'
     assert result.body['status'] == 'error'
     assert result.status_code == 404
 
 
 # noinspection PyUnusedLocal
-@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run',
-       MagicMock(side_effect=BaseException('oops')))
+@patch('chalicelib.basic_entity_route.BasicDeleteInteractor.run', MagicMock(side_effect=BaseException('oops')))
 @patch('boto3.resource')
 @patch('boto3.client')
 def test_delete_convert_rate_raises(client, resource):
     result = delete_value('id1')
-
     assert result.body['message'] == 'oops'
     assert result.body['status'] == 'error'
     assert result.status_code == 500

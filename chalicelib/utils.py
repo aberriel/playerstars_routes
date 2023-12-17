@@ -28,8 +28,7 @@ def get_user_id_from_jwt(blueprint):
         logger.debug('Token not found.')
         raise TokenNotFoundException("Token not found on JWT")
 
-    logger.info(
-        "Extracting user name from token: {}".format(authorization_token))
+    logger.info("Extracting user name from token: {}".format(authorization_token))
 
     entity_id_field = 'cognito:username'
     payload = authorization_token.split('.')[1]
@@ -67,7 +66,6 @@ def _replace_dot(value):
 
 def make_fields_dot(params):
     new_params = deepcopy(params) if params else {}
-
     if 'sort_field' in new_params:
         new_value = _replace_dot(new_params['sort_field'])
         new_params['sort_field'] = new_value

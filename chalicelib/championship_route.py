@@ -32,8 +32,7 @@
 #
 #     JoinOpenChampionshipException,
 #     JoinOpenChampionshipInteractor,
-#     JoinOpenChampionshipRequestModel
-# )
+#     JoinOpenChampionshipRequestModel)
 #
 #
 # bp_accept_invitation = Blueprint(__name__)
@@ -43,13 +42,11 @@
 #
 #
 # def get_championship_adapter():
-#     return ChampionshipAdapter(Settings.CHAMPIONSHIP_TABLE_NAME,
-#                                Settings.DYNAMODB_URL)
+#     return ChampionshipAdapter(Settings.CHAMPIONSHIP_TABLE_NAME, Settings.DYNAMODB_URL)
 #
 #
 # def get_duel_adapter():
-#     return DuelAdapter(Settings.DUEL_TABLE_NAME,
-#                        Settings.DYNAMODB_URL)
+#     return DuelAdapter(Settings.DUEL_TABLE_NAME, Settings.DYNAMODB_URL)
 #
 #
 # def get_player_adapter():

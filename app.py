@@ -10,16 +10,11 @@ from playerstars_domain import EraAction
 from chalicelib import root
 from chalicelib.admin.preduel_routes import get_preduel_admin_routes
 from chalicelib.admin_routes import bp_admin
-from chalicelib.console_route import (
-    bp_console,
-    bp_console_admin,
-    bp_console_external)
+from chalicelib.console_route import bp_console, bp_console_admin, bp_console_external
 from chalicelib.convert_star_rate_route import bp_convert
-from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, \
-    NullDashboardAdapter
+from chalicelib.dashboard.dashboard_adapter import DashboardAdapter, NullDashboardAdapter
 from chalicelib.dashboard.dashboard_entity import DashboardEntity
-from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, \
-    NullDashboardInteractor
+from chalicelib.dashboard.dashboard_interactors import DashboardInteractor, NullDashboardInteractor
 from chalicelib.dashboard.dashboard_utils import DashboardUtils
 from chalicelib.duel_route import (
     bp_cancel_duel,
@@ -33,18 +28,12 @@ from chalicelib.era_routes import EraRunner
 from chalicelib.era_routes import bp_era_finish_duel
 from chalicelib.era_routes import era_factory
 from chalicelib.game_route import bp_game, bp_game_by_console
-from chalicelib.mail_routes import (
-    bp_contact_email, bp_invitation_email, bp_welcome_email)
-from chalicelib.notification_route import (
-    bp_notification,
-    bp_notification_read)
+from chalicelib.mail_routes import bp_contact_email, bp_invitation_email, bp_welcome_email
+from chalicelib.notification_route import bp_notification, bp_notification_read
 from chalicelib.pagseguro_purchase_route import bp_purchase
 from chalicelib.player_route import bp_player, bp_player_by_console
 from chalicelib.product_route import bp_plan, bp_product
-from chalicelib.purchase import (
-    bp_google,
-    bp_webhook_wirecard,
-    bp_wirecard)
+from chalicelib.purchase import bp_google, bp_webhook_wirecard, bp_wirecard
 from chalicelib.region_country_route import bp_region_country
 from chalicelib.region_state_route import bp_region_state
 from chalicelib.settings import Settings
@@ -77,14 +66,12 @@ app.register_blueprint(bp_game, url_prefix='/game')
 app.register_blueprint(bp_game_by_console, url_prefix='/game/console')
 app.register_blueprint(bp_google, url_prefix='/purchase/google')
 app.register_blueprint(bp_contact_email, url_prefix='/contact-email')
-app.register_blueprint(bp_inform_invite_timeout,
-                       url_prefix='/duel/inform-invite-timeout')
+app.register_blueprint(bp_inform_invite_timeout, url_prefix='/duel/inform-invite-timeout')
 app.register_blueprint(bp_invitation_email, url_prefix='/invitation-email')
 app.register_blueprint(bp_welcome_email, url_prefix='/welcome-email')
 app.register_blueprint(bp_match_list, url_prefix='/match-list')
 app.register_blueprint(bp_notification, url_prefix='/notification')
-app.register_blueprint(bp_notification_read,
-                       url_prefix='/notification/set-as-read')
+app.register_blueprint(bp_notification_read, url_prefix='/notification/set-as-read')
 app.register_blueprint(bp_player, url_prefix='/player')
 app.register_blueprint(bp_player_by_console, url_prefix='/player-by-game')
 app.register_blueprint(bp_plan, url_prefix='/plan')
@@ -97,8 +84,7 @@ app.register_blueprint(bp_team, url_prefix='/team')
 app.register_blueprint(bp_terms, url_prefix='/terms-and-conditions')
 app.register_blueprint(bp_user_admin, url_prefix='/user-admin')
 app.register_blueprint(bp_value, url_prefix='/values')
-app.register_blueprint(bp_webhook_wirecard,
-                       url_prefix='/purchase/wirecard/webhook')
+app.register_blueprint(bp_webhook_wirecard, url_prefix='/purchase/wirecard/webhook')
 app.register_blueprint(bp_wirecard, url_prefix='/purchase/wirecard')
 app.register_blueprint(tournament_route, url_prefix='/tournament')
 
@@ -127,20 +113,15 @@ def do_era_test():
                         "action": {
                             "url": "https://url_para_chamar.com/resource",
                             "method": "GET|POST|PUT|DELETE",
-                            "payload": {
-                                "answer": 42
-                            }
+                            "payload": {"answer": 42}
                         },
                         "name": "Me acorde",
                         "event_time": "datetime_utc_iso"
                     },
-                    "scheduler": {
-                        "name": "test_scheduler"
-                    }
+                    "scheduler": {"name": "test_scheduler"}
                 }
             """
-            persist_adapter = EventReminderAssistantAdapter(
-                table_name=Settings.ERA_TABLE_NAME)
+            persist_adapter = EventReminderAssistantAdapter(table_name=Settings.ERA_TABLE_NAME)
             scheduler_adapter = AwsTaskSchedulerAdapter(
                 name=body['scheduler']['name'],
                 lambda_runner=get_era_runner_name()
@@ -162,9 +143,7 @@ def do_era_test():
             era.save()
 
             return {
-                'Sucesso': {
-                    'Era Id': era.entity_id
-                }
+                'Sucesso': {'Era Id': era.entity_id}
             }
     except Exception as e:
         return {
@@ -192,16 +171,9 @@ def era_runner(event, context):
     scheduler_name = event['scheduler_name']
     era_id = event['era_id']
 
-    scheduler_adapter = AwsTaskSchedulerAdapter(
-        name=scheduler_name,
-        lambda_runner=get_era_runner_name())
-
-    persist_adapter = EventReminderAssistantAdapter(
-        table_name=Settings.ERA_TABLE_NAME)
-
-    runner = EraRunner(era_id=era_id,
-                       scheduler_adapter=scheduler_adapter,
-                       persist_adapter=persist_adapter)
+    scheduler_adapter = AwsTaskSchedulerAdapter(name=scheduler_name, lambda_runner=get_era_runner_name())
+    persist_adapter = EventReminderAssistantAdapter(table_name=Settings.ERA_TABLE_NAME)
+    runner = EraRunner(era_id=era_id, scheduler_adapter=scheduler_adapter, persist_adapter=persist_adapter)
 
     runner.run()
 

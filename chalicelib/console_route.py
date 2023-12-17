@@ -45,8 +45,7 @@ def get_console_by_id(entity_id):
 @bp_console_external.route('/', methods=['GET'], cors=cors)
 def get_all_consoles_external():
     try:
-        interactor = GetAllConsolesExternalInteractor(
-            console_adapter=get_console_adapter())
+        interactor = GetAllConsolesExternalInteractor(console_adapter=get_console_adapter())
         response = interactor.run()
     except GetAllConsolesExternalException as exc:
         return server_error(str(exc))
@@ -56,8 +55,7 @@ def get_all_consoles_external():
 @bp_console.route('/active-games', **private_get())
 def get_all_consoles_active_games():
     try:
-        interactor = GetAllConsolesActiveGamesInteractor(
-            console_adapter=get_console_adapter())
+        interactor = GetAllConsolesActiveGamesInteractor(console_adapter=get_console_adapter())
         response = interactor.run()
         return success(response())
     except GetAllConsolesActiveGamesException as exc:

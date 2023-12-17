@@ -6,8 +6,7 @@ from playerstars_interactors.tournament.post_invite_answer import (
 )
 from chalicelib.utils import get_user_id_from_jwt
 from playerstars_domain import DuelMemberType as MemmberType
-from chalicelib.duel_route_adapters import \
-    get_player_adapter, get_team_adapter
+from chalicelib.duel_route_adapters import get_player_adapter, get_team_adapter
 from chalicelib.tournament.get_tournament_detail import (
     get_player_tournament_adapter, get_team_tournament_adapter
 )
@@ -31,16 +30,13 @@ def invite_answer(answer, route):
             player_id=player_id,
             member_type=MemmberType.PLAYER,
             data=data,
-            answer=answer
-        )
+            answer=answer)
         adapters = PostInviteAnswerAdapters(
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             player_tournament_adapter=get_player_tournament_adapter(),
-            team_tournament_adapter=get_team_tournament_adapter()
-        )
-        interactor = PostInviteAnswerInteractor(
-            request=request, adapters=adapters)
+            team_tournament_adapter=get_team_tournament_adapter())
+        interactor = PostInviteAnswerInteractor(request=request, adapters=adapters)
         response = interactor.run()
         if response:
             return success(response())

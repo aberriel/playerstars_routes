@@ -1,13 +1,10 @@
-from clapy_dynamodb_adapter import BasicDynamodbAdapter
-
 from chalicelib.dashboard.dashboard_entity import DashboardEntity
+from clapy_dynamodb_adapter import BasicDynamodbAdapter
 
 
 class DashboardAdapter(BasicDynamodbAdapter):
     def __init__(self, table_name: str):
-        super().__init__(table_name=table_name,
-                         db_endpoint=None,
-                         adapted_class=DashboardEntity)
+        super().__init__(table_name=table_name, db_endpoint=None, adapted_class=DashboardEntity)
 
 
 # noinspection PyMethodMayBeStatic

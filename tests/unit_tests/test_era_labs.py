@@ -4,15 +4,13 @@
 # from unittest import TestCase
 # from unittest.mock import MagicMock, patch
 # import pytest
-# from clapy_basic_classes.basic_domain.util import \
-#     generic_serialize_roundtrip_test
+# from clapy_basic_classes.basic_domain.util import generic_serialize_roundtrip_test
 # from playerstars_domain.utils.datetime_helper import aware_utc
 # from pytest import raises, fixture
 # from chalicelib.era_routes import BasicTaskSchedulerAdapter, \
 #     TaskSchedulerPort, EventReminderAssistant, _extend_dict, EraRunner
 # from playerstars_domain import EraAction
-# from playerstars_domain.event_reminder_assistant.\
-#     event_reminder_assistant import era_factory
+# from playerstars_domain.event_reminder_assistant.event_reminder_assistant import era_factory
 #
 #
 # def test_basic_task_scheduler_adapter():
@@ -213,8 +211,7 @@
 #     @patch.object(EraRunner, '_execute_action')
 #     @patch.object(EraRunner, '_remove_current')
 #     @patch.object(EraRunner, '_setup_next')
-#     def test_run(self, mock_execute_action, mock_remove_current,
-#                  mock_setup_next):
+#     def test_run(self, mock_execute_action, mock_remove_current, mock_setup_next):
 #         runner: EraRunner = self.runner_factory().era_runner
 #         runner.run()
 #         mock_execute_action.assert_called_once()

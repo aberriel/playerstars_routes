@@ -1,10 +1,7 @@
 from chalice import Blueprint
-from playerstars_adapters import (
-    NotificationAdapter as NotificationAdapterDynamo,
-    PlayerAdapter)
+from playerstars_adapters import NotificationAdapter as NotificationAdapterDynamo, PlayerAdapter
 from playerstars_domain import Notification
-from playerstars_graphql_adapters import \
-    NotificationAdapter as NotificationAdapterGraphql
+from playerstars_graphql_adapters import NotificationAdapter as NotificationAdapterGraphql
 from playerstars_interactors import (
     BasicPostRequestModel,
     GetAppNotificationByUserInteractor,
@@ -28,13 +25,11 @@ bp_notification_read = Blueprint(__name__)
 
 
 def get_notification_adapter_dynamo():
-    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME,
-                                     Settings.DYNAMODB_URL)
+    return NotificationAdapterDynamo(Settings.NOTIFICATION_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_player_adapter():
-    return PlayerAdapter(Settings.PLAYER_TABLE_NAME,
-                         Settings.DYNAMODB_URL)
+    return PlayerAdapter(Settings.PLAYER_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 def get_notification_adapter_graphql():
@@ -85,8 +80,7 @@ def get_by_user_and_status(entity_id, status):
     response = interactor.run()
     if response:
         return success(response)
-    return not_found(f'No notifications found for player id:'
-                     f' {entity_id}')
+    return not_found(f'No notifications found for player id: {entity_id}')
 
 
 @bp_notification_read.route('/', **private_post())

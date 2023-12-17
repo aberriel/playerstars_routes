@@ -564,10 +564,7 @@ def test_get_all_games_admin_get_all_error(server_error_mock,
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
 @patch(f'{path}.GetUploadImageUrlInteractor')
-def test_get_upload_mask_url(mock_inter,
-                             check_admin_mock,
-                             get_user_id_from_jwt_mock,
-                             success_mock):
+def test_get_upload_mask_url(mock_inter, check_admin_mock, get_user_id_from_jwt_mock, success_mock):
     response = get_upload_mask_url()
     check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
 
@@ -579,13 +576,9 @@ def test_get_upload_mask_url(mock_inter,
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
 @patch(f'{path}.GetUploadImageUrlInteractor')
-def test_get_upload_game_url(mock_inter,
-                             check_admin_mock,
-                             get_user_id_from_jwt_mock,
-                             success_mock):
+def test_get_upload_game_url(mock_inter, check_admin_mock, get_user_id_from_jwt_mock, success_mock):
     response = get_upload_game_url()
     check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
-
     mock_inter().run.assert_called_once()
     assert response == success_mock(mock_inter().run()())
 
@@ -609,12 +602,8 @@ def test_get_upload_mask_url_raises(mock_inter,
 @patch(f'{path}.unauthorized')
 @patch(f'{path}.get_user_id_from_jwt')
 @patch(f'{path}.check_admin_authorization')
-@patch(f'{path}.GetUploadImageUrlInteractor.run',
-       side_effect=UserNotAdminAuthorized('ops'))
-def test_get_upload_mask_url_error(mock_inter,
-                                   check_admin_mock,
-                                   get_user_id_from_jwt_mock,
-                                   unauthorized_mock):
+@patch(f'{path}.GetUploadImageUrlInteractor.run', side_effect=UserNotAdminAuthorized('ops'))
+def test_get_upload_mask_url_error(mock_inter, check_admin_mock, get_user_id_from_jwt_mock, unauthorized_mock):
     response = get_upload_mask_url()
     check_admin_mock.assert_called_with(get_user_id_from_jwt_mock())
     unauthorized_mock.asert_called_with('ops')

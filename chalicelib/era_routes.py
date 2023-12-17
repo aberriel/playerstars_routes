@@ -6,10 +6,8 @@ import requests
 from clapy_basic_classes.basic_persist_adapter import BasicPersistAdapter
 from playerstars_domain.utils.datetime_helper import aware_now
 from playerstars_domain import EventReminderAssistant, EraAction
-from clapy_basic_classes.basic_domain.task_scheduler_port import\
-    TaskSchedulerPort
-from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter \
-    import BasicTaskSchedulerAdapter
+from clapy_basic_classes.basic_domain.task_scheduler_port import TaskSchedulerPort
+from clapy_basic_classes.basic_scheduler_adapter.basic_scheduler_adapter import BasicTaskSchedulerAdapter
 from chalicelib.duel_scheduled_finisher import duel_scheduled_finisher
 from playerstars_adapters import EventReminderAssistantAdapter
 from aws_task_scheduler import AwsTaskSchedulerAdapter
@@ -29,9 +27,7 @@ def era_factory(name: str,
                 action: EraAction,
                 persist_adapter: BasicPersistAdapter,
                 scheduler_adapter: BasicTaskSchedulerAdapter):
-    era = EventReminderAssistant(name=name,
-                                 event_time=event_time,
-                                 action=action)
+    era = EventReminderAssistant(name=name, event_time=event_time, action=action)
     era.set_adapter(persist_adapter)
     era.set_scheduler_adapter(scheduler_adapter)
     return era
@@ -72,8 +68,7 @@ class EraRunner(TaskSchedulerPort):
 
     def _execute_action(self):
         self.logger.info(f'Executando {self.era_id}...')
-        era: EventReminderAssistant = self.persist_adapter.get_by_id(
-            self.era_id)
+        era: EventReminderAssistant = self.persist_adapter.get_by_id(self.era_id)
         era.set_adapter(self.persist_adapter)
         era.set_scheduler_adapter(self.scheduler_adapter)
 
@@ -90,7 +85,6 @@ class EraRunner(TaskSchedulerPort):
         response = fn(**fn_args)
 
         self._log_response(response)
-
         return era
 
     def _log_response(self, response):
@@ -111,8 +105,7 @@ class EraRunner(TaskSchedulerPort):
 
         oredered_eras = sorted(all_eras, key=lambda x: x.event_time)
         next_era_type = type(oredered_eras[0]).__name__
-        self.logger.info(f'Next Era {next_era_type}: '
-                         f'{oredered_eras[0].entity_id}...')
+        self.logger.info(f'Next Era {next_era_type}: {oredered_eras[0].entity_id}...')
         next_era: EventReminderAssistant = oredered_eras[0]
 
         next_era.set_adapter(self.persist_adapter)
@@ -129,18 +122,10 @@ def get_era_runner_name():
 
 def create_era(duel_id, event_time):
     try:
-        persist_adapter = EventReminderAssistantAdapter(
-            table_name=Settings.ERA_TABLE_NAME)
-        scheduler_adapter = AwsTaskSchedulerAdapter(
-            name='duel-finisher',
-            lambda_runner=get_era_runner_name()
-        )
+        persist_adapter = EventReminderAssistantAdapter(table_name=Settings.ERA_TABLE_NAME)
+        scheduler_adapter = AwsTaskSchedulerAdapter(name='duel-finisher', lambda_runner=get_era_runner_name())
         action_url = f'{Settings.ERA_FINISH_DUEL_URL}/{duel_id}'
-        era_action = EraAction(
-            url=action_url,
-            method='POST',
-            payload={'duel_id': duel_id}
-        )
+        era_action = EraAction(url=action_url, method='POST', payload={'duel_id': duel_id})
         era = EventReminderAssistant(name=f'finish-duel-{duel_id}',
                                      event_time=event_time,
                                      action=era_action)
@@ -148,15 +133,8 @@ def create_era(duel_id, event_time):
         era.set_scheduler_adapter(scheduler_adapter)
         era.save()
 
-        return {
-            'Sucesso': {
-                'Era Id': era.entity_id
-            }
-        }
+        return {'Sucesso': {'Era Id': era.entity_id}}
     except Exception as e:
         return {
-            'Erro': {
-                'Class': e.__class__.__name__,
-                'Value': str(e)
-            }
+            'Erro': {'Class': e.__class__.__name__, 'Value': str(e)}
         }

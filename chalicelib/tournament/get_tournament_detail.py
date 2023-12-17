@@ -6,10 +6,8 @@ from playerstars_interactors.tournament.get_tournament_detail import (
     GetTournamentInteractor, GetTournamentRequestModel, GetTournamentError,
     GetTournamentAdapters
 )
-from chalicelib.duel_route_adapters import \
-    get_player_adapter, get_team_adapter
-from playerstars_adapters import \
-    PlayerTournamentAdapter, TeamTournamentAdapter
+from chalicelib.duel_route_adapters import get_player_adapter, get_team_adapter
+from playerstars_adapters import PlayerTournamentAdapter, TeamTournamentAdapter
 
 
 def get_player_tournament_adapter():
@@ -18,8 +16,7 @@ def get_player_tournament_adapter():
 
 
 def get_team_tournament_adapter():
-    return TeamTournamentAdapter(
-        Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
+    return TeamTournamentAdapter(Settings.TEAM_TOURNAMENT_TABLE_NAME, Settings.DYNAMODB_URL)
 
 
 @tournament_route.get('/{entity_id}')
@@ -32,8 +29,7 @@ def get_tournament_details(entity_id):
             player_adapter=get_player_adapter(),
             team_adapter=get_team_adapter(),
             player_tournament_adapter=get_player_tournament_adapter(),
-            team_tournament_adapter=get_team_tournament_adapter()
-        )
+            team_tournament_adapter=get_team_tournament_adapter())
         interactor = GetTournamentInteractor(
             request=request,
             adapters=adapters,
